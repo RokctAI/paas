@@ -1,0 +1,273 @@
+# Juvo Backend Conversion Progress
+
+## Authentication
+- [x] Auth: Register
+- [x] Auth: Login
+- [x] Auth: Check Phone
+- [x] Auth: Logout
+- [x] Auth: Verify Phone
+- [x] Auth: Resend Verification
+- [x] Auth: Verify Email
+- [x] Auth: Forgot Password
+- [x] Auth: Social Login
+
+## Installation (this i dont think they are necessary in frappe, are they?)
+- [-] Install: Check Init File (Skipped, handled by Frappe)
+- [-] Install: Set Init File (Skipped, handled by Frappe)
+- [-] Install: Set Database (Skipped, handled by Frappe)
+- [-] Install: Create Admin (Skipped, handled by Frappe)
+- [-] Install: Run Migration (Skipped, handled by Frappe)
+- [x] Implement Subscription Status Checks
+
+## General REST API
+- [x] REST: API Status
+- [x] REST: Weather (Note: Default location logic has been implemented)
+- [x] REST: Languages
+- [x] REST: Currencies
+- [x] REST: Coupon Check
+  - [x] Verified existing `check_coupon` logic against Laravel original (2024-09-21).
+  - [x] API endpoint in `api.py` needs to be updated to use `name` instead of `code` and `qty` instead of `quantity`.
+- [x] REST: Products
+  - [x] Custom fields for Item doctype created.
+  - [x] `get_products` API in `api.py` has been updated with new filters and logic.
+  - [x] New product-related API endpoints from patch need to be implemented.
+- [x] REST: Categories
+  - [x] Doctype and `category_translation` doctype created.
+  - [x] API endpoints in `api.py` need to be implemented.
+- [x] REST: Brands
+  - [x] Doctype created.
+  - [x] API endpoints in `api.py` need to be implemented.
+- [-] REST: Landing Pages (Skipped as per user request)
+- [x] REST: Shops (Superseded by Multi-Company Architecture)
+- [x] REST: Banners
+- [x] REST: FAQs
+- [x] REST: Payments
+- [x] REST: Blogs
+- [x] REST: Carts
+- [x] REST: Stories (Note: Expiration logic has been fixed)
+- [x] REST: Receipts (Note: Basic Doctype and API implemented. Complex pricing logic from Laravel not yet ported).
+- [x] REST: Order Statuses
+- [x] REST: Tags
+- [x] REST: Delivery Zones
+- [x] REST: Product Histories
+- [x] REST: Careers
+- [x] REST: Pages
+- [x] REST: Branches
+- [x] REST: Orders
+  - [x] Create Order
+  - [x] List Orders
+  - [x] Get Order Details
+  - [x] Update Order Status
+  - [x] Review Order
+- [x] REST: Push Notifications
+- [~] REST: Parcel Orders (Partially Implemented - Core APIs for create, list, and update status are present. Full management, options, and settings are missing)
+- [x] REST: Payment Gateways
+  - [x] Implemented PayFast (including tokenization)
+  - [x] Implemented PayPal integration.
+  - [x] Implemented PayStack integration.
+  - [x] Implemented Flutterwave integration.
+- [x] REST: Delivery Points
+
+## User Dashboard
+- [x] Dashboard (User): Profile
+- [ ] Dashboard (User): Loan Management (exclude this feature)
+- [ ] Dashboard (User): Loan Documents (exclude this feature)
+- [x] Dashboard (User): Booking Management
+- [x] Dashboard (User): Membership
+- [x] Dashboard (User): Orders
+- [ ] Dashboard (User): Parcel Orders (Incomplete)
+- [x] Dashboard (User): Addresses
+- [x] Dashboard (User): Invites
+- [x] Dashboard (User): Wallet
+- [x] Dashboard (User): Transactions
+- [x] Dashboard (User): Shop Management
+- [x] Dashboard (User): Request Models
+- [x] Dashboard (User): Tickets
+- [x] Dashboard (User): Export Orders
+- [x] Dashboard (User): Carts
+- [x] Dashboard (User): Order Refunds
+- [x] Dashboard (User): Notifications
+- [x] Dashboard (User): PayFast Card Management
+
+## Deliveryman Dashboard
+- [x] Dashboard (Deliveryman): Orders
+- [x] Dashboard (Deliveryman): Statistics
+- [x] Dashboard (Deliveryman): Settings
+- [x] Dashboard (Deliveryman): Shop Bans
+- [x] Dashboard (Deliveryman): Payouts
+- [x] Dashboard (Deliveryman): Order Reports
+- [ ] Dashboard (Deliveryman): Parcel Orders (Incomplete)
+- [x] Dashboard (Deliveryman): Payment to Partners
+- [x] Dashboard (Deliveryman): Delivery Zones
+
+## Waiter Dashboard
+- [x] Dashboard (Waiter): Orders
+- [x] Dashboard (Waiter): Order Reports
+- [x] Dashboard (Waiter): Booking Management
+
+## Cook Dashboard
+- [x] Dashboard (Cook): Orders
+- [x] Dashboard (Cook): Order Reports
+
+## Seller Dashboard
+- [x] Dashboard (Seller): Dashboard & Statistics
+- [x] Dashboard (Seller): Sales History & Reports
+- [x] Dashboard (Seller): Extras (Groups & Values)
+- [x] Dashboard (Seller): Units
+- [x] Dashboard (Seller): Shop Management
+- [x] Dashboard (Seller): Categories
+- [x] Dashboard (Seller): Brands
+- [x] Dashboard (Seller): Kitchens
+- [x] Dashboard (Seller): Shop Categories
+- [x] Dashboard (Seller): Products
+- [x] Dashboard (Seller): Coupons
+- [x] Dashboard (Seller): Shop Users
+- [x] Dashboard (Seller): Invites
+- [x] Dashboard (Seller): Discounts
+- [x] Dashboard (Seller): Banners
+- [x] Dashboard (Seller): Orders
+- [x] Dashboard (Seller): Transactions
+- [x] Dashboard (Seller): Bonuses
+- [x] Dashboard (Seller): Stories
+- [x] Dashboard (Seller): Tags
+- [x] Dashboard (Seller): Delivery Zones
+- [x] Dashboard (Seller): Shop Payments
+- [x] Dashboard (Seller): Order Refunds
+- [x] Dashboard (Seller): Shop Working Days
+- [x] Dashboard (Seller): Shop Closed Days
+- [x] Dashboard (Seller): Payouts
+- [x] Dashboard (Seller): Reviews
+- [x] Dashboard (Seller): Receipts
+- [x] Dashboard (Seller): Shop Galleries
+- [x] Dashboard (Seller): Shop Deliveryman Settings
+- [x] Dashboard (Seller): Menus
+- [x] Dashboard (Seller): Branches
+- [x] Dashboard (Seller): Inventory
+- [x] Dashboard (Seller): Inventory Items
+- [x] Dashboard (Seller): Ads Packages
+- [x] Dashboard (Seller): Shop Ads Packages
+- [x] Dashboard (Seller): Request Models
+- [x] Dashboard (Seller): Payment to Partners
+- [x] Dashboard (Seller): User Addresses
+- [x] Dashboard (Seller): Delivery Man Delivery Zones
+- [x] Dashboard (Seller): Combos
+- [x] Dashboard (Seller): Booking Management
+- [x] Dashboard (Seller): Subscription Management
+
+## Admin Dashboard
+- [x] Dashboard (Admin): Dashboard & Statistics
+- [x] Dashboard (Admin): Terms & Conditions
+- [x] Dashboard (Admin): Privacy & Policy
+- [x] Dashboard (Admin): Reviews
+- [x] Dashboard (Admin): Languages
+- [x] Dashboard (Admin): Currencies
+- [x] Dashboard (Admin): Categories
+- [x] Dashboard (Admin): Brands
+- [x] Dashboard (Admin): Landing Pages
+- [x] Dashboard (Admin): Banners
+- [x] Dashboard (Admin): Units
+- [x] Dashboard (Admin): Shops
+- [x] Dashboard (Admin): Extras (Groups & Values)
+- [x] Dashboard (Admin): Products
+- [x] Dashboard (Admin): Orders
+- [ ] Dashboard (Admin): Parcel Orders (Incomplete)
+- [ ] Dashboard (Admin): Parcel Options (Missing)
+- [ ] Dashboard (Admin): Parcel Order Settings (Incomplete)
+- [x] Dashboard (Admin): Users
+- [x] Dashboard (Admin): Roles
+- [x] Dashboard (Admin): Wallet Histories
+- [x] Dashboard (Admin): Points
+- [x] Dashboard (Admin): Payments
+- [x] Dashboard (Admin): Translations
+- [x] Dashboard (Admin): Transactions
+- [x] Dashboard (Admin): Payment to Partners
+- [x] Dashboard (Admin): Tickets
+- [x] Dashboard (Admin): FAQs
+- [x] Dashboard (Admin): Blogs
+- [x] Dashboard (Admin): Settings
+- [x] Dashboard (Admin): Backups
+- [x] Dashboard (Admin): Project Upload/Update
+- [x] Dashboard (Admin): Stories
+- [x] Dashboard (Admin): Order Statuses
+- [x] Dashboard (Admin): Tags
+- [x] Dashboard (Admin): Delivery Zones
+- [x] Dashboard (Admin): Delivery Man Delivery Zones
+- [x] Dashboard (Admin): Email Settings
+- [x] Dashboard (Admin): DeliveryMan Settings
+- [x] Dashboard (Admin): Delivery Vehicle Types
+- [x] Dashboard (Admin): Email Templates
+- [x] Dashboard (Admin): Order Refunds
+- [x] Dashboard (Admin): Shop Working Days
+- [x] Dashboard (Admin): Shop Closed Days
+- [x] Dashboard (Admin): Notifications
+- [x] Dashboard (Admin): Email Subscriptions
+- [x] Dashboard (Admin): Payouts
+- [x] Dashboard (Admin): Shop Tags
+- [x] Dashboard (Admin): Payment Payloads
+- [x] Dashboard (Admin): SMS Payloads
+- [x] Dashboard (Admin): Bonuses
+- [x] Dashboard (Admin): Referrals
+- [x] Dashboard (Admin): Reports
+- [x] Dashboard (Admin): Receipts
+- [x] Dashboard (Admin): Menus
+- [x] Dashboard (Admin): Careers
+- [x] Dashboard (Admin): Pages
+- [x] Dashboard (Admin): Booking Module
+- [x] Dashboard (Admin): Subscription Management
+- [x] Dashboard (Admin): Model Logs
+- [x] Dashboard (Admin): Inventory
+- [x] Dashboard (Admin): Ads Packages
+- [x] Dashboard (Admin): Kitchens
+- [x] Dashboard (Admin): Request Models
+- [x] Dashboard (Admin): Delivery Points
+- [x] Dashboard (Admin): Combos
+
+## Webhooks
+- [x] Webhook: PayPal
+- [ ] Webhook: Razorpay (exclude this feature)
+- [x] Webhook: Stripe
+- [ ] Webhook: MyFatoorah (exclude this feature)
+- [ ] Webhook: Iyzico (exclude this afeature)
+- [x] Webhook: FlutterWave
+- [ ] Webhook: MercadoPago (exclude this feature)
+- [x] Webhook: Paystack
+- [ ] Webhook: PayTabs (exclude this feature)
+- [ ] Webhook: Moyasar (exclude this feature)
+- [ ] Webhook: ZainCash (exclude this feature)
+- [ ] Webhook: Mollie (exclude this feature)
+- [ ] Webhook: Maksekeskus (exclude this feature)
+- [x] Webhook: PayFast
+- [ ] Webhook: Telegram (exclude this feature)
+
+## ERPGo Integration
+- [-] ERPGo: Connect/Disconnect (No longer needed)
+- [-] ERPGo: Status (No longer needed)
+- [-] ERPGo: Dashboard (No longer needed)
+- [-] ERPGo: Profile (No longer needed)
+- [-] ERPGo: Sync (No longer needed)
+- [-] ERPGo: Reports (No longer needed)
+- [-] ERPGo: Inventory (No longer needed)
+- [x] ERPGo: Employees (exclude this feature)
+- [x] ERPGo: Staff Access (exclude this feature)
+- [x] Webhooks (exclude this feature)
+
+## Resources
+- [x] Resources: Visions (Moved to rokct app)
+- [x] Resources: Pillars (Moved to rokct app)
+- [x] Resources: Strategic Objectives (Moved to rokct app)
+- [x] Resources: KPIs (Moved to rokct app)
+- [x] Resources: Plan on a Page (Moved to rokct app)
+- [x] Resources: Personal Mastery Goals (Moved to rokct app)
+- [x] Resources: Apps (exclude this feature)
+- [x] Roadmap Versions (exclude this feature)
+- [x] Resources: Expenses (exclude this feature)
+- [x] Resources: Energy Consumption (exclude this feature)
+- [x] Resources: RO Systems (exclude this feature)
+- [x] Resources: Maintenance Records (exclude this feature)
+- [x] Resources: Tanks (exclude this feature)
+
+## Multi-Company Vendor Architecture
+- [x] Phase 1: Foundational Setup
+- [ ] Phase 2: Core Transaction Flow
+- [ ] Phase 3: Automation and Reporting
+- [ ] Phase 4: Advanced Features
