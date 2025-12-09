@@ -15,6 +15,80 @@ def logout():
     return {"status": "success", "message": "User successfully logout"}
 
 
+@frappe.whitelist(allow_guest=True)
+def login(usr, pwd):
+    """
+    Login endpoint compatible with legacy Flutter app.
+    Returns API Key/Secret as Bearer token.
+    """
+    try:
+        login_manager = frappe.auth.LoginManager()
+        login_manager.authenticate(user=usr, pwd=pwd)
+        login_manager.post_login()
+    except frappe.AuthenticationError:
+        return {"status": False, "message": "Invalid credentials"}
+    
+    user = frappe.get_doc("User", frappe.session.user)
+    
+    # Generate API keys if missing
+    api_secret = None
+    if not user.api_key:
+        api_secret = frappe.generate_hash(length=15)
+        user.api_key = frappe.generate_hash(length=15)
+        user.api_secret = api_secret
+        user.save(ignore_permissions=True)
+    else:
+        # If keys exist, we cannot retrieve the secret.
+        # We must regenerate them to provide a valid token.
+        # WARNING: This invalidates previous sessions using the old key.
+        api_secret = frappe.generate_hash(length=15)
+        user.api_key = frappe.generate_hash(length=15)
+        user.api_secret = api_secret
+        user.save(ignore_permissions=True)
+
+    token = f"{user.api_key}:{api_secret}"
+    
+    # Fetch shop details if available
+    shop = None
+    try:
+        # Check if user has a shop linked via the 'user' field in Shop doctype
+        shop_name = frappe.db.get_value("Shop", {"user": user.name}, "name")
+        if shop_name:
+            shop_doc = frappe.get_doc("Shop", shop_name)
+            shop = {
+                "id": shop_doc.name,
+                "uuid": shop_doc.uuid,
+                "name": shop_doc.shop_name,
+                "logo": shop_doc.logo,
+                "cover_photo": shop_doc.cover_photo,
+                "active": shop_doc.open,
+                "status": shop_doc.status
+            }
+    except Exception:
+        pass
+
+    return {
+        "status": True,
+        "message": "Logged In",
+        "data": {
+            "access_token": token,
+            "token_type": "Bearer",
+            "user": {
+                "id": user.name, # Use email/name as ID
+                "email": user.email,
+                "firstname": user.first_name,
+                "lastname": user.last_name,
+                "phone": user.phone,
+                "role": "user", # Default role for mobile app
+                "active": 1,
+                "img": user.user_image,
+                "shop": shop,
+                "home_page": user.get_home_page()
+            }
+        }
+    }
+
+
 @frappe.whitelist()
 @check_subscription_feature("phone_verification")
 def check_phone(phone: str):
@@ -113,6 +187,10 @@ def register_user(email, password, first_name, last_name, phone=None):
         "last_name": last_name,
         "phone": phone,
         "send_welcome_email": 0,
+        "roles": [
+            {"role": "PaaS User"},
+            {"role": "user"}
+        ]
     })
     user.set("new_password", password)
 
@@ -135,7 +213,20 @@ def register_user(email, password, first_name, last_name, phone=None):
         args=email_context,
         now=True
     )
-    return {"status": "success", "message": "User registered successfully. Please check your email to verify your account."}
+    return {
+        "status": True,
+        "message": "User registered successfully. Please check your email to verify your account.",
+        "data": {
+            "user": {
+                "email": user.email,
+                "firstname": user.first_name,
+                "lastname": user.last_name,
+                "phone": user.phone,
+                "role": "user",
+                "active": 1
+            }
+        }
+    }
 
 
 @frappe.whitelist(allow_guest=True)

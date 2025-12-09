@@ -1,4 +1,5 @@
 import frappe
+import json
 from ..utils import _get_seller_shop
 
 @frappe.whitelist()
@@ -93,3 +94,65 @@ def delete_seller_delivery_zone(zone_name):
 
     frappe.delete_doc("Delivery Zone", zone_name, ignore_permissions=True)
     return {"status": "success", "message": "Delivery zone deleted successfully."}
+
+@frappe.whitelist()
+def check_delivery_fee(lat, lng):
+    """
+    Checks if a location is within any of the seller's delivery zones and returns the fee.
+    """
+    user = frappe.session.user
+    shop = _get_seller_shop(user)
+    
+    # Get all zones for the shop
+    zones = frappe.get_list("Delivery Zone", filters={"shop": shop}, fields=["name", "delivery_fee", "coordinates"])
+    
+    point = {"lat": float(lat), "lng": float(lng)}
+    
+    for zone in zones:
+        if not zone.coordinates:
+            continue
+            
+        try:
+            polygon = json.loads(zone.coordinates) if isinstance(zone.coordinates, str) else zone.coordinates
+            if is_point_in_polygon(point, polygon):
+                return {"fee": zone.delivery_fee, "zone": zone.name}
+        except Exception as e:
+            frappe.log_error(f"Error checking zone {zone.name}: {str(e)}")
+            continue
+            
+    return {"fee": None, "message": "Location not covered by any delivery zone."}
+
+def is_point_in_polygon(point, polygon):
+    """
+    Ray-casting algorithm to check if point is in polygon.
+    Polygon is expected to be a list of dicts with 'lat' and 'lng' or list of lists.
+    """
+    x = point["lng"]
+    y = point["lat"]
+    inside = False
+    
+    n = len(polygon)
+    p1x, p1y = _get_lat_lng(polygon[0])
+    
+    for i in range(n + 1):
+        p2x, p2y = _get_lat_lng(polygon[i % n])
+        
+        if y > min(p1y, p2y):
+            if y <= max(p1y, p2y):
+                if x <= max(p1x, p2x):
+                    if p1y != p2y:
+                        xinters = (y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
+                    if p1x == p2x or x <= xinters:
+                        inside = not inside
+        p1x, p1y = p2x, p2y
+        
+    return inside
+
+def _get_lat_lng(point_data):
+    # Handle different formats: dict or list/tuple
+    if isinstance(point_data, dict):
+        return point_data.get("lng"), point_data.get("lat")
+    elif isinstance(point_data, (list, tuple)):
+        # Standardize on [lat, lng] format for list inputs
+        return point_data[1], point_data[0] 
+    return 0, 0

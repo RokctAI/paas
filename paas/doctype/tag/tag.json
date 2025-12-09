@@ -20,6 +20,12 @@
             "label": "Tag Name",
             "reqd": 1,
             "in_list_view": 1
+        },
+        {
+            "fieldname": "translations",
+            "fieldtype": "Table",
+            "label": "Translations",
+            "options": "Tag Translation"
         }
     ]
 }

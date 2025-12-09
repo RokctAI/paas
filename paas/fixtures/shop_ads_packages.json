@@ -1,0 +1,57 @@
+[
+    {
+        "id": "1",
+        "active": "1",
+        "ads_package_id": "15",
+        "shop_id": "9003",
+        "banner_id": "10",
+        "status": "approved",
+        "position_page": "2147483647",
+        "expired_at": "2046-04-29 13:10:10",
+        "deleted_at": "2024-04-29 13:10:42"
+    },
+    {
+        "id": "2",
+        "active": "0",
+        "ads_package_id": "15",
+        "shop_id": "504",
+        "banner_id": "2",
+        "status": "new",
+        "position_page": "2147483647",
+        "expired_at": null,
+        "deleted_at": "2024-04-23 09:05:00"
+    },
+    {
+        "id": "4",
+        "active": "1",
+        "ads_package_id": "16",
+        "shop_id": "504",
+        "banner_id": "13",
+        "status": "approved",
+        "position_page": "2147483647",
+        "expired_at": "2046-08-05 21:26:57",
+        "deleted_at": null
+    },
+    {
+        "id": "5",
+        "active": "0",
+        "ads_package_id": "16",
+        "shop_id": "9000",
+        "banner_id": "2",
+        "status": "new",
+        "position_page": "2147483647",
+        "expired_at": null,
+        "deleted_at": "2024-04-29 11:51:24"
+    },
+    {
+        "id": "6",
+        "active": "1",
+        "ads_package_id": "17",
+        "shop_id": "9003",
+        "banner_id": "15",
+        "status": "approved",
+        "position_page": "2147483647",
+        "expired_at": "2046-08-05 21:32:19",
+        "deleted_at": null
+    }
+]

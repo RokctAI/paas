@@ -1,0 +1,12 @@
+[
+    {
+        "id": "1",
+        "title": "English",
+        "locale": "en",
+        "backward": "0",
+        "default": "1",
+        "active": "1",
+        "img": "https://s3.juvo.app/public/images/languages/101-1684356535.webp",
+        "deleted_at": null
+    }
+]

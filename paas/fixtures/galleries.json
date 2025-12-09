@@ -1,0 +1,2562 @@
+[
+    {
+        "id": "2",
+        "loadable_type": "101-1678369266.webp",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "1",
+        "title": "shop-tags",
+        "path": "https://s3.juvo.app/public/images/shop-tags/101-1678369266.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "3",
+        "loadable_type": "101-1678369278.webp",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "2",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678369278.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "23",
+        "loadable_type": "101-1678371666.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "1",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678371666.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "24",
+        "loadable_type": "101-1678371743.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "16",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678371743.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "26",
+        "loadable_type": "url.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "501",
+        "title": "url.webp",
+        "path": "https://s3.juvo.app/public/images/url.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "27",
+        "loadable_type": "url.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "501",
+        "title": "url.webp",
+        "path": "https://s3.juvo.app/public/images/url.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "30",
+        "loadable_type": "107-1678374236.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "17",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/107-1678374236.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "33",
+        "loadable_type": "101-1678372551.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "2",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678372551.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "35",
+        "loadable_type": "101-1678378400.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "3",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678378400.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "36",
+        "loadable_type": "101-1678378400.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "4",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678378400.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "62",
+        "loadable_type": "101-1678415980.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "19",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678415980.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "65",
+        "loadable_type": "108-1678416782.webp",
+        "loadable_id": "App\\Models\\Brand",
+        "type": "4",
+        "title": "brands",
+        "path": "https://s3.juvo.app/public/images/brands/108-1678416782.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "66",
+        "loadable_type": "108-1678416867.webp",
+        "loadable_id": "App\\Models\\Brand",
+        "type": "5",
+        "title": "brands",
+        "path": "https://s3.juvo.app/public/images/brands/108-1678416867.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "70",
+        "loadable_type": "101-1678430337.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "7",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678430337.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "77",
+        "loadable_type": "101-1678372551.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "1",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678372551.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "106",
+        "loadable_type": "101-1678369266.webp",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "4",
+        "title": "shop-tags",
+        "path": "https://s3.juvo.app/public/images/shop-tags/101-1678369266.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "107",
+        "loadable_type": "101-1678718561.webp",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "5",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678718561.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "108",
+        "loadable_type": "101-1678718945.webp",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "6",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678718945.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "118",
+        "loadable_type": "101-1678430337.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "8",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678430337.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "127",
+        "loadable_type": "101-1678969653.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "12",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678969653.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "128",
+        "loadable_type": "101-1678969866.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "18",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678969866.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "129",
+        "loadable_type": "101-1678969987.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "11",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678969987.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "130",
+        "loadable_type": "101-1678970074.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "13",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678970074.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "131",
+        "loadable_type": "101-1678970141.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "8",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678970141.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "132",
+        "loadable_type": "101-1678970331.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "7",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678970331.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "133",
+        "loadable_type": "101-1678970396.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "9",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678970396.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "134",
+        "loadable_type": "101-1678970513.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "6",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678970513.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "135",
+        "loadable_type": "101-1678970629.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "4",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678970629.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "136",
+        "loadable_type": "101-1678970794.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "10",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678970794.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "141",
+        "loadable_type": "101-1678970074.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "27",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678970074.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "142",
+        "loadable_type": "101-1678970629.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "28",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678970629.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "154",
+        "loadable_type": "101-1678369266.webp",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "1",
+        "title": "shop-tags",
+        "path": "https://s3.juvo.app/public/images/shop-tags/101-1678369266.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "155",
+        "loadable_type": "101-1679147933.webp",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "2",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1679147933.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "156",
+        "loadable_type": "101-1679147982.gif",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "3",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1679147982.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "157",
+        "loadable_type": "101-1679148057.gif",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "2",
+        "title": "shop-tags",
+        "path": "https://s3.juvo.app/public/images/shop-tags/101-1679148057.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "202",
+        "loadable_type": "101-1678430018.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "6",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678430018.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "249",
+        "loadable_type": "101-1679745145.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "34",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1679745145.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "250",
+        "loadable_type": "101-1679745346.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "33",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1679745346.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "251",
+        "loadable_type": "101-1679745471.gif",
+        "loadable_id": "App\\Models\\Product",
+        "type": "27",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1679745471.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "252",
+        "loadable_type": "101-1679745588.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "23",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1679745588.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "253",
+        "loadable_type": "101-1679745749.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "21",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1679745749.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "254",
+        "loadable_type": "101-1679745845.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "32",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1679745845.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "255",
+        "loadable_type": "101-1679745967.gif",
+        "loadable_id": "App\\Models\\Product",
+        "type": "19",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1679745967.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "256",
+        "loadable_type": "101-1679746097.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "20",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1679746097.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "257",
+        "loadable_type": "101-1679746891.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "35",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1679746891.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "278",
+        "loadable_type": "101-1678430337.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "9",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678430337.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "284",
+        "loadable_type": "101-1678970794.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "34",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678970794.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "285",
+        "loadable_type": "101-1678970396.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "33",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678970396.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "286",
+        "loadable_type": "101-1679744852.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "31",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1679744852.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "288",
+        "loadable_type": "101-1678969866.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "32",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678969866.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "292",
+        "loadable_type": "101-1678371666.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "14",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678371666.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "298",
+        "loadable_type": "logo/101-1679748453.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "512",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1679748453.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "299",
+        "loadable_type": "background/101-1679748725.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "512",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/background/101-1679748725.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "310",
+        "loadable_type": "logo/101-1679749037.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "511",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1679749037.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "311",
+        "loadable_type": "background/101-1679843171.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "511",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/background/101-1679843171.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "317",
+        "loadable_type": "107-1679847003.webp",
+        "loadable_id": "App\\Models\\User",
+        "type": "107",
+        "title": "users",
+        "path": "https://s3.juvo.app/public/images/users/107-1679847003.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "323",
+        "loadable_type": "logo/101-1678635551.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "507",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1678635551.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "324",
+        "loadable_type": "background/101-1678662132.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "507",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/background/101-1678662132.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "325",
+        "loadable_type": "logo/101-1679851089.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "509",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1679851089.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "326",
+        "loadable_type": "background/101-1679851944.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "509",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/background/101-1679851944.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "337",
+        "loadable_type": "101-1680090967.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "40",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680090967.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "344",
+        "loadable_type": "101-1680091773.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "46",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680091773.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "346",
+        "loadable_type": "101-1680091773.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "48",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680091773.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "347",
+        "loadable_type": "101-1680092862.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "49",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680092862.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "348",
+        "loadable_type": "101-1680092862.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "50",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680092862.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "351",
+        "loadable_type": "101-1680093417.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "53",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680093417.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "352",
+        "loadable_type": "101-1680093417.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "54",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680093417.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "353",
+        "loadable_type": "101-1680093417.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "55",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680093417.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "357",
+        "loadable_type": "101-1680093826.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "58",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680093826.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "358",
+        "loadable_type": "101-1680093826.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "59",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680093826.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "361",
+        "loadable_type": "101-1680094383.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "62",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680094383.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "362",
+        "loadable_type": "101-1680094383.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "63",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680094383.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "379",
+        "loadable_type": "101-1682068328.webp",
+        "loadable_id": "App\\Models\\Blog",
+        "type": "2",
+        "title": "blogs",
+        "path": "https://s3.juvo.app/public/images/blogs/101-1682068328.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "380",
+        "loadable_type": "101-1682068452.webp",
+        "loadable_id": "App\\Models\\Blog",
+        "type": "4",
+        "title": "blogs",
+        "path": "https://s3.juvo.app/public/images/blogs/101-1682068452.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "385",
+        "loadable_type": "101-1680094383.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "61",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680094383.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "386",
+        "loadable_type": "101-1679148057.gif",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "4",
+        "title": "shop-tags",
+        "path": "https://s3.juvo.app/public/images/shop-tags/101-1679148057.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "387",
+        "loadable_type": "101-1678369266.webp",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "5",
+        "title": "shop-tags",
+        "path": "https://s3.juvo.app/public/images/shop-tags/101-1678369266.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "399",
+        "loadable_type": "logo/101-1679749551.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "510",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1679749551.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "400",
+        "loadable_type": "background/101-1679749857.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "510",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/background/101-1679749857.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "411",
+        "loadable_type": "101-1678415980.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "44",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678415980.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "417",
+        "loadable_type": "101-1680089475.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "38",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680089475.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "419",
+        "loadable_type": "101-1684925253.webp",
+        "loadable_id": "App\\Models\\Blog",
+        "type": "6",
+        "title": "blogs",
+        "path": "https://s3.juvo.app/public/images/blogs/101-1684925253.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "420",
+        "loadable_type": "101-1684925972.webp",
+        "loadable_id": "App\\Models\\Blog",
+        "type": "5",
+        "title": "blogs",
+        "path": "https://s3.juvo.app/public/images/blogs/101-1684925972.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "421",
+        "loadable_type": "101-1682063020.jpeg",
+        "loadable_id": "App\\Models\\Page",
+        "type": "1",
+        "title": "receipts",
+        "path": "https://s3.juvo.app/public/images/receipts/101-1682063020.jpeg",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "422",
+        "loadable_type": "101-1682063824.webp",
+        "loadable_id": "App\\Models\\Page",
+        "type": "2",
+        "title": "receipts",
+        "path": "https://s3.juvo.app/public/images/receipts/101-1682063824.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "423",
+        "loadable_type": "101-1682064018.webp",
+        "loadable_id": "App\\Models\\Page",
+        "type": "3",
+        "title": "receipts",
+        "path": "https://s3.juvo.app/public/images/receipts/101-1682064018.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "425",
+        "loadable_type": "101-1682064088.webp",
+        "loadable_id": "App\\Models\\Page",
+        "type": "4",
+        "title": "receipts",
+        "path": "https://s3.juvo.app/public/images/receipts/101-1682064088.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "427",
+        "loadable_type": "101-1680090967.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "39",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680090967.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "429",
+        "loadable_type": "logo/101-1678456749.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "83",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1678456749.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "430",
+        "loadable_type": "logo/101-1678456749.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "84",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1678456749.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "431",
+        "loadable_type": "logo/101-1678456749.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "85",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1678456749.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "432",
+        "loadable_type": "logo/101-1678456749.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "86",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1678456749.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "435",
+        "loadable_type": "101-1678984271.gif",
+        "loadable_id": "App\\Models\\Product",
+        "type": "66",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678984271.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "439",
+        "loadable_type": "101-1685032518.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "87",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1685032518.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "444",
+        "loadable_type": "logo/101-1679748453.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "82",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1679748453.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "445",
+        "loadable_type": "logo/101-1679748453.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "81",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1679748453.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "446",
+        "loadable_type": "logo/101-1679748453.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "80",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1679748453.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "460",
+        "loadable_type": "logo/101-1679840101.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "68",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1679840101.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "466",
+        "loadable_type": "101-1685828199.webp",
+        "loadable_id": "App\\Models\\Page",
+        "type": "8",
+        "title": "receipts",
+        "path": "https://s3.juvo.app/public/images/receipts/101-1685828199.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "473",
+        "loadable_type": "101-1685828611.webp",
+        "loadable_id": "App\\Models\\Page",
+        "type": "9",
+        "title": "receipts",
+        "path": "https://s3.juvo.app/public/images/receipts/101-1685828611.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "474",
+        "loadable_type": "101-1685831143.webp",
+        "loadable_id": "App\\Models\\Page",
+        "type": "10",
+        "title": "receipts",
+        "path": "https://s3.juvo.app/public/images/receipts/101-1685831143.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "479",
+        "loadable_type": "background/101-1682418685.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "9004",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/background/101-1682418685.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "483",
+        "loadable_type": "101-1685827465.jpeg",
+        "loadable_id": "App\\Models\\Page",
+        "type": "7",
+        "title": "receipts",
+        "path": "https://s3.juvo.app/public/images/receipts/101-1685827465.jpeg",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "484",
+        "loadable_type": "109-1679848478.webp",
+        "loadable_id": "App\\Models\\User",
+        "type": "109",
+        "title": "users",
+        "path": "https://s3.juvo.app/public/images/users/109-1679848478.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "485",
+        "loadable_type": "101-1680090967.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "42",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680090967.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "487",
+        "loadable_type": "101-1680091773.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "44",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680091773.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "504",
+        "loadable_type": "101-1686933585.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "73",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686933585.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "505",
+        "loadable_type": "101-1686933981.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "73",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686933981.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "506",
+        "loadable_type": "101-1686934601.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "73",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686934601.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "507",
+        "loadable_type": "101-1686934618.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "73",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686934618.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "518",
+        "loadable_type": "101-1686957625.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "76",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686957625.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "519",
+        "loadable_type": "101-1686957633.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "76",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686957633.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "521",
+        "loadable_type": "109-1682418088.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "60",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/109-1682418088.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "522",
+        "loadable_type": "101-1687008941.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "37",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687008941.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "523",
+        "loadable_type": "101-1687008941.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "41",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687008941.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "524",
+        "loadable_type": "101-1687009541.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "45",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687009541.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "525",
+        "loadable_type": "101-1687009695.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "52",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687009695.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "527",
+        "loadable_type": "101-1687009982.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "78",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687009982.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "528",
+        "loadable_type": "101-1687010685.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "79",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687010685.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "529",
+        "loadable_type": "101-1687010881.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "80",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687010881.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "530",
+        "loadable_type": "101-1687011384.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "81",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687011384.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "531",
+        "loadable_type": "101-1687011954.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "82",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687011954.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "532",
+        "loadable_type": "101-1687012256.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "83",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687012256.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "533",
+        "loadable_type": "101-1687013194.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "84",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687013194.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "534",
+        "loadable_type": "101-1687013426.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "85",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687013426.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "535",
+        "loadable_type": "101-1687013570.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "86",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687013570.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "536",
+        "loadable_type": "101-1687013824.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "87",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687013824.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "537",
+        "loadable_type": "101-1687013901.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "88",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687013901.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "538",
+        "loadable_type": "101-1686957137.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "89",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686957137.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "539",
+        "loadable_type": "101-1686957152.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "89",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686957152.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "540",
+        "loadable_type": "101-1686957152.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "75",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686957152.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "542",
+        "loadable_type": "101-1686956589.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "74",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686956589.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "544",
+        "loadable_type": "101-1686933585.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "91",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686933585.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "545",
+        "loadable_type": "101-1686933981.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "92",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686933981.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "546",
+        "loadable_type": "101-1686934618.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "93",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686934618.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "547",
+        "loadable_type": "101-1686956597.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "90",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686956597.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "548",
+        "loadable_type": "101-1686934601.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "94",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686934601.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "549",
+        "loadable_type": "101-1686934601.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "95",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686934601.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "550",
+        "loadable_type": "101-1686956597.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "96",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686956597.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "551",
+        "loadable_type": "101-1686956589.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "97",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686956589.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "554",
+        "loadable_type": "101-1687122803.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "100",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687122803.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "574",
+        "loadable_type": "101-1686958083.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "77",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686958083.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "575",
+        "loadable_type": "101-1686957625.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "101",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686957625.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "576",
+        "loadable_type": "101-1686957633.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "102",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1686957633.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "577",
+        "loadable_type": "101-1687122073.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "98",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687122073.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "578",
+        "loadable_type": "101-1688385700.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "103",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1688385700.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "579",
+        "loadable_type": "101-1688385843.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "104",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1688385843.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "580",
+        "loadable_type": "101-1688386048.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "105",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1688386048.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "581",
+        "loadable_type": "101-1688386271.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "106",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1688386271.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "582",
+        "loadable_type": "101-1688386427.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "107",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1688386427.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "583",
+        "loadable_type": "101-1688386944.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "108",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1688386944.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "584",
+        "loadable_type": "101-1687122486.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "99",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1687122486.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "585",
+        "loadable_type": "101-1688387492.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "109",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1688387492.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "599",
+        "loadable_type": "101-1678970141.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "36",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678970141.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "608",
+        "loadable_type": "101-1691677458.webp",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "6",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1691677458.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "620",
+        "loadable_type": "101-1691677458.webp",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "6",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1691677458.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "629",
+        "loadable_type": "101-1691775004.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "92",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1691775004.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "630",
+        "loadable_type": "101-1691775215.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "93",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1691775215.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "631",
+        "loadable_type": "101-1691775336.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "88",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1691775336.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "632",
+        "loadable_type": "101-1691775376.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "89",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1691775376.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "633",
+        "loadable_type": "101-1691775448.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "91",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1691775448.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "634",
+        "loadable_type": "101-1691775613.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "90",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1691775613.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "635",
+        "loadable_type": "101-1691775855.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "96",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1691775855.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "636",
+        "loadable_type": "101-1691775948.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "97",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1691775948.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "637",
+        "loadable_type": "101-1691776013.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "94",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1691776013.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "638",
+        "loadable_type": "101-1691776066.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "95",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1691776066.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "668",
+        "loadable_type": "101-1699887824.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "116",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1699887824.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "688",
+        "loadable_type": "101-1680094383.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "64",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680094383.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "689",
+        "loadable_type": "101-1680093826.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "57",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680093826.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "690",
+        "loadable_type": "101-1680093417.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "56",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680093417.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "691",
+        "loadable_type": "101-1680092862.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "51",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680092862.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "693",
+        "loadable_type": "101-1680090967.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "43",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680090967.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "697",
+        "loadable_type": "101-1678369266.webp",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "5",
+        "title": "shop-tags",
+        "path": "https://s3.juvo.app/public/images/shop-tags/101-1678369266.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "698",
+        "loadable_type": "101-1679148057.gif",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "4",
+        "title": "shop-tags",
+        "path": "https://s3.juvo.app/public/images/shop-tags/101-1679148057.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "705",
+        "loadable_type": "logo/101-1678456749.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "127",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1678456749.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "755",
+        "loadable_type": "101-1678415980.webp",
+        "loadable_id": "App\\Models\\User",
+        "type": "137",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678415980.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "763",
+        "loadable_type": "101-1712436082.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "71",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1712436082.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "782",
+        "loadable_type": "109-1679848478.webp",
+        "loadable_id": "App\\Models\\User",
+        "type": "625",
+        "title": "users",
+        "path": "https://s3.juvo.app/public/images/users/109-1679848478.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "812",
+        "loadable_type": "101-1678369266.webp",
+        "loadable_id": "App\\Models\\ShopTag",
+        "type": "5",
+        "title": "shop-tags",
+        "path": "https://s3.juvo.app/public/images/shop-tags/101-1678369266.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "834",
+        "loadable_type": "101-1714650670.webp",
+        "loadable_id": "App\\Models\\Referral",
+        "type": "1",
+        "title": "referral",
+        "path": "https://s3.juvo.app/public/images/referral/101-1714650670.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "841",
+        "loadable_type": "101-1688387651.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "192",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1688387651.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "859",
+        "loadable_type": "101-1689336594.svg",
+        "loadable_id": "App\\Models\\ParcelOrderSetting",
+        "type": "1",
+        "title": "languages",
+        "path": "https://s3.juvo.app/public/images/languages/101-1689336594.svg",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "862",
+        "loadable_type": "101-1689344276.svg",
+        "loadable_id": "App\\Models\\ParcelOrderSetting",
+        "type": "2",
+        "title": "languages",
+        "path": "https://s3.juvo.app/public/images/languages/101-1689344276.svg",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "863",
+        "loadable_type": "101-1689345262.svg",
+        "loadable_id": "App\\Models\\ParcelOrderSetting",
+        "type": "3",
+        "title": "languages",
+        "path": "https://s3.juvo.app/public/images/languages/101-1689345262.svg",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "884",
+        "loadable_type": "lh3.googleusercontent.com",
+        "loadable_id": "App\\Models\\User",
+        "type": "101",
+        "title": "users",
+        "path": "https://lh3.googleusercontent.com/a/ACg8ocJ0ygMbIxMQ42Sssc64-BucQsjVKV3FZIf72d4FC7k5kG8R38HkkA=s96-c",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "903",
+        "loadable_type": "101-1688387651.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "110",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1688387651.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "904",
+        "loadable_type": "101-1712436082.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "72",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1712436082.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "907",
+        "loadable_type": "110-1720878672.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "193",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720878672.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "908",
+        "loadable_type": "110-1720878679.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "193",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720878679.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "909",
+        "loadable_type": "101-1680091773.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "47",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1680091773.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "910",
+        "loadable_type": "110-1720879348.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "47",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720879348.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "911",
+        "loadable_type": "110-1720879489.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "47",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720879489.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "912",
+        "loadable_type": "110-1720880250.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "194",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720880250.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "919",
+        "loadable_type": "110-1720880482.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "195",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720880482.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "920",
+        "loadable_type": "110-1720880804.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "195",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720880804.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "921",
+        "loadable_type": "110-1720880812.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "195",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720880812.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "922",
+        "loadable_type": "110-1720880822.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "195",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720880822.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "923",
+        "loadable_type": "110-1720881138.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "196",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720881138.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "924",
+        "loadable_type": "110-1720881155.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "196",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720881155.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "927",
+        "loadable_type": "110-1720881435.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "197",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720881435.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "930",
+        "loadable_type": "110-1720884737.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "204",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720884737.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "931",
+        "loadable_type": "110-1720884803.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "205",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720884803.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "933",
+        "loadable_type": "110-1720885690.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "206",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720885690.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "937",
+        "loadable_type": "110-1720886307.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "211",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720886307.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "940",
+        "loadable_type": "110-1720887707.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "210",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720887707.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "942",
+        "loadable_type": "110-1720887903.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "214",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720887903.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "943",
+        "loadable_type": "110-1720888208.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "215",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720888208.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "944",
+        "loadable_type": "110-1720886415.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "212",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720886415.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "945",
+        "loadable_type": "110-1720889153.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "216",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720889153.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "946",
+        "loadable_type": "110-1720889444.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "217",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/110-1720889444.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "965",
+        "loadable_type": "101-1721923092.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "38",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1721923092.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "966",
+        "loadable_type": "101-1721926729.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "30",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1721926729.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "967",
+        "loadable_type": "101-1721926867.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "37",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1721926867.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "968",
+        "loadable_type": "101-1721926905.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "29",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1721926905.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "970",
+        "loadable_type": "101-1721936631.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "15",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1721936631.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "972",
+        "loadable_type": "101-1721938477.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "35",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1721938477.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "977",
+        "loadable_type": "logo/101-1722718503.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "504",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1722718503.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "978",
+        "loadable_type": "background/101-1714398279.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "504",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/background/101-1714398279.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "983",
+        "loadable_type": "logo/101-1722720027.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "505",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1722720027.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "984",
+        "loadable_type": "background/101-1678456953.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "505",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/background/101-1678456953.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "985",
+        "loadable_type": "logo/101-1691772054.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "9002",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1691772054.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "986",
+        "loadable_type": "background/101-1691772067.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "9002",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/background/101-1691772067.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "989",
+        "loadable_type": "101-1722893357.webp",
+        "loadable_id": "App\\Models\\Banner",
+        "type": "15",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1722893357.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "992",
+        "loadable_type": "101-1721926729.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "158",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1721926729.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "993",
+        "loadable_type": "logo/101-1721855145.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "9001",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1721855145.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "994",
+        "loadable_type": "background/101-1721855317.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "9001",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/background/101-1721855317.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1036",
+        "loadable_type": "logo/101-1678635551.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "9000",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1678635551.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1037",
+        "loadable_type": "background/101-1691404383.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "9000",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/background/101-1691404383.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1050",
+        "loadable_type": "147-1727792180.webp",
+        "loadable_id": "App\\Models\\User",
+        "type": "147",
+        "title": "users",
+        "path": "https://s3.juvo.app/public/images/users/147-1727792180.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1053",
+        "loadable_type": "logo/101-1721855145.webp",
+        "loadable_id": "App\\Models\\User",
+        "type": "265",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1721855145.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1058",
+        "loadable_type": "logo/101-1721855145.webp",
+        "loadable_id": "App\\Models\\User",
+        "type": "868",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1721855145.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1059",
+        "loadable_type": "logo/101-1721855145.webp",
+        "loadable_id": "App\\Models\\DeliveryManSetting",
+        "type": "3",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1721855145.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1060",
+        "loadable_type": "101-1678984271.gif",
+        "loadable_id": "App\\Models\\Product",
+        "type": "5",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678984271.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1067",
+        "loadable_type": "101-1678430337.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "65",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1678430337.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1078",
+        "loadable_type": "101-1729808136.gif",
+        "loadable_id": "App\\Models\\Category",
+        "type": "159",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1729808136.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1082",
+        "loadable_type": "101-1678371666.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "160",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678371666.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1084",
+        "loadable_type": "101-1729808136.gif",
+        "loadable_id": "App\\Models\\Product",
+        "type": "220",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1729808136.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1085",
+        "loadable_type": "101-1729808136.gif",
+        "loadable_id": "App\\Models\\Product",
+        "type": "221",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1729808136.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1086",
+        "loadable_type": "101-1678371666.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "161",
+        "title": "categories",
+        "path": "https://s3.juvo.app/public/images/categories/101-1678371666.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1089",
+        "loadable_type": "101-1729808136.gif",
+        "loadable_id": "App\\Models\\Product",
+        "type": "223",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1729808136.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1090",
+        "loadable_type": "101-1729808136.gif",
+        "loadable_id": "App\\Models\\Product",
+        "type": "222",
+        "title": "products",
+        "path": "https://s3.juvo.app/public/images/products/101-1729808136.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1093",
+        "loadable_type": "logo/101-1682413198.webp",
+        "loadable_id": "App\\Models\\User",
+        "type": "241",
+        "title": "shops",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1682413198.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1095",
+        "loadable_type": "101-1684356535.webp",
+        "loadable_id": "App\\Models\\Language",
+        "type": "1",
+        "title": "languages",
+        "path": "https://s3.juvo.app/public/images/languages/101-1684356535.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1103",
+        "loadable_type": "logo/101-1682413198.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "9003",
+        "title": "",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1682413198.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1104",
+        "loadable_type": "background/101-1691405780.webp",
+        "loadable_id": "App\\Models\\Shop",
+        "type": "9003",
+        "title": "",
+        "path": "https://s3.juvo.app/public/images/shops/background/101-1691405780.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1108",
+        "loadable_type": "/s3.juvo.app/public/images/shops/logo/101-1721855145.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "218",
+        "title": "",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1721855145.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1112",
+        "loadable_type": "/s3.juvo.app/public/images/products/101-1729808136.gif",
+        "loadable_id": "App\\Models\\Product",
+        "type": "219",
+        "title": "",
+        "path": "https://s3.juvo.app/public/images/products/101-1729808136.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1113",
+        "loadable_type": "/s3.juvo.app/public/images/products/101-1729808136.gif",
+        "loadable_id": "App\\Models\\Product",
+        "type": "224",
+        "title": "",
+        "path": "https://s3.juvo.app/public/images/products/101-1729808136.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1116",
+        "loadable_type": "101-1678430337.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "69",
+        "title": "",
+        "path": "https://s3.juvo.app/public/images/products/101-1678430337.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1117",
+        "loadable_type": "101-1729808136.gif",
+        "loadable_id": "App\\Models\\Product",
+        "type": "225",
+        "title": "",
+        "path": "https://s3.juvo.app/public/images/products/101-1729808136.gif",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1141",
+        "loadable_type": "logo/101-1721855145.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "226",
+        "title": "",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1721855145.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1159",
+        "loadable_type": "101-1685032407.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "68",
+        "title": "",
+        "path": "https://s3.juvo.app/public/images/products/101-1685032407.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1160",
+        "loadable_type": "101-1685032263.webp",
+        "loadable_id": "App\\Models\\Product",
+        "type": "67",
+        "title": "",
+        "path": "https://s3.juvo.app/public/images/products/101-1685032263.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1161",
+        "loadable_type": "101-1750118877.webp",
+        "loadable_id": "App\\Models\\Category",
+        "type": "162",
+        "title": "",
+        "path": "https://s3.juvo.app/public/images/categories/101-1750118877.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1164",
+        "loadable_type": "101-1750273713.webp",
+        "loadable_id": "App\\Models\\Page",
+        "type": "11",
+        "title": "",
+        "path": "https://s3.juvo.app/public/images/receipts/101-1750273713.webp",
+        "isset": null,
+        "created_at": null
+    },
+    {
+        "id": "1165",
+        "loadable_type": "logo/101-1721855145.webp",
+        "loadable_id": "App\\Models\\User",
+        "type": "866",
+        "title": "",
+        "path": "https://s3.juvo.app/public/images/shops/logo/101-1721855145.webp",
+        "isset": null,
+        "created_at": null
+    }
+]

@@ -1,0 +1,26 @@
+[
+    {
+        "id": "1",
+        "subject": "3",
+        "body": "testing",
+        "alt_body": "<p>tester</p>",
+        "status": "test",
+        "type": "0",
+        "send_to": "2025-02-01 13:31:18",
+        "created_at": "2024-08-27 13:33:40",
+        "updated_at": "subscribe",
+        "deleted_at": "2024-08-27 08:32:20"
+    },
+    {
+        "id": "4",
+        "subject": "3",
+        "body": "testing",
+        "alt_body": "<p>test</p>",
+        "status": "test",
+        "type": "1",
+        "send_to": "2025-02-01 13:31:51",
+        "created_at": "2025-02-01 15:31:47",
+        "updated_at": "subscribe",
+        "deleted_at": "2025-02-01 13:31:51"
+    }
+]

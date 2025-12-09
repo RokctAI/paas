@@ -28,6 +28,12 @@
             "fieldname": "image",
             "fieldtype": "Attach Image",
             "label": "Image"
+        },
+        {
+            "fieldname": "translations",
+            "fieldtype": "Table",
+            "label": "Translations",
+            "options": "Shop Section Translation"
         }
     ],
     "permissions": [

@@ -1,0 +1,751 @@
+[
+    {
+        "id": "1",
+        "extra_group_id": "1",
+        "value": "500ml",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "2",
+        "extra_group_id": "1",
+        "value": "1 Litre",
+        "active": "1",
+        "deleted_at": "2023-03-18 12:32:25"
+    },
+    {
+        "id": "3",
+        "extra_group_id": "1",
+        "value": "5 Litre",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "4",
+        "extra_group_id": "1",
+        "value": "10 Litre",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "5",
+        "extra_group_id": "1",
+        "value": "20 Litre",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "6",
+        "extra_group_id": "1",
+        "value": "25 Litre",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "7",
+        "extra_group_id": "2",
+        "value": "500ml",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "8",
+        "extra_group_id": "2",
+        "value": "1 Litre",
+        "active": "1",
+        "deleted_at": "2023-03-18 12:32:45"
+    },
+    {
+        "id": "9",
+        "extra_group_id": "1",
+        "value": "1.5 Litre",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "10",
+        "extra_group_id": "2",
+        "value": "1.5 Litre",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "11",
+        "extra_group_id": "3",
+        "value": "Silver",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "12",
+        "extra_group_id": "3",
+        "value": "Bronze",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "13",
+        "extra_group_id": "3",
+        "value": "Gold",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "14",
+        "extra_group_id": "5",
+        "value": "One",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "15",
+        "extra_group_id": "6",
+        "value": "Signage & Board Design",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "16",
+        "extra_group_id": "6",
+        "value": "Letterhead Design",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "17",
+        "extra_group_id": "6",
+        "value": "Wall Calendar Design",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "18",
+        "extra_group_id": "6",
+        "value": "Tent Calendar Design",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "19",
+        "extra_group_id": "6",
+        "value": "Wall Banner Design",
+        "active": "1",
+        "deleted_at": "2023-03-21 13:44:05"
+    },
+    {
+        "id": "20",
+        "extra_group_id": "6",
+        "value": "Gazebo Design",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "21",
+        "extra_group_id": "6",
+        "value": "X-Banner Design",
+        "active": "1",
+        "deleted_at": "2023-03-21 13:44:12"
+    },
+    {
+        "id": "22",
+        "extra_group_id": "6",
+        "value": "Business Card Design",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "23",
+        "extra_group_id": "6",
+        "value": "Sticker Design",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "24",
+        "extra_group_id": "6",
+        "value": "Banner Design",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "25",
+        "extra_group_id": "6",
+        "value": "Telescpic/Sharkfin Banner Design",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "26",
+        "extra_group_id": "6",
+        "value": "Logo Design",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "27",
+        "extra_group_id": "7",
+        "value": "Tax Annual Return",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "28",
+        "extra_group_id": "7",
+        "value": "Tax Compliant Status",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "29",
+        "extra_group_id": "7",
+        "value": "VAT Registration",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "30",
+        "extra_group_id": "7",
+        "value": "CIPC Annual Return",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "31",
+        "extra_group_id": "7",
+        "value": "BEE Certificate",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "32",
+        "extra_group_id": "7",
+        "value": "Company Registration",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "33",
+        "extra_group_id": "7",
+        "value": "NPC and NPO Registration",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "34",
+        "extra_group_id": "7",
+        "value": "Letter of Good Standing",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "35",
+        "extra_group_id": "7",
+        "value": "CSD Registration",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "36",
+        "extra_group_id": "7",
+        "value": "NHBRC Certificate",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "37",
+        "extra_group_id": "7",
+        "value": "CIDB Certificate (Grade 1)",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "38",
+        "extra_group_id": "7",
+        "value": "NCR Certificate",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "39",
+        "extra_group_id": "7",
+        "value": "Liquor License",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "40",
+        "extra_group_id": "6",
+        "value": "Company Profile",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "41",
+        "extra_group_id": "2",
+        "value": "24 x 90gram (Garlic)",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "42",
+        "extra_group_id": "2",
+        "value": "24 x 90gram (Hot)",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "43",
+        "extra_group_id": "9",
+        "value": "2",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "44",
+        "extra_group_id": "9",
+        "value": "5",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "45",
+        "extra_group_id": "9",
+        "value": "1",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "46",
+        "extra_group_id": "9",
+        "value": "10",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "47",
+        "extra_group_id": "9",
+        "value": "12",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "48",
+        "extra_group_id": "9",
+        "value": "55",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "49",
+        "extra_group_id": "9",
+        "value": "100",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "50",
+        "extra_group_id": "9",
+        "value": "30",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "51",
+        "extra_group_id": "3",
+        "value": "Ambient",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "52",
+        "extra_group_id": "3",
+        "value": "Cold",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "53",
+        "extra_group_id": "8",
+        "value": "VERRY BERRY",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "54",
+        "extra_group_id": "8",
+        "value": "OREO",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "55",
+        "extra_group_id": "8",
+        "value": "VIRGIN MOJITO SPARKLING",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "56",
+        "extra_group_id": "8",
+        "value": "STRAWBERRY SUNRISE SPARKLING",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "57",
+        "extra_group_id": "8",
+        "value": "KIT KAT",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "58",
+        "extra_group_id": "8",
+        "value": "STRAWBERRY",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "59",
+        "extra_group_id": "8",
+        "value": "CHOCOLATE",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "60",
+        "extra_group_id": "8",
+        "value": "SWEET CHILLI",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "61",
+        "extra_group_id": "8",
+        "value": "COLONEL",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "62",
+        "extra_group_id": "1",
+        "value": "4 Wings",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "63",
+        "extra_group_id": "1",
+        "value": "10 Wings",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "64",
+        "extra_group_id": "11",
+        "value": "No, I will bring them",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "65",
+        "extra_group_id": "11",
+        "value": "Yes, Collect my empty Containers",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "66",
+        "extra_group_id": "10",
+        "value": "Ambient",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "67",
+        "extra_group_id": "10",
+        "value": "Cold",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "68",
+        "extra_group_id": "12",
+        "value": "Flash",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "69",
+        "extra_group_id": "12",
+        "value": "1Voucher",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "70",
+        "extra_group_id": "3",
+        "value": "Still",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "71",
+        "extra_group_id": "3",
+        "value": "Sparkling",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "72",
+        "extra_group_id": "8",
+        "value": "Original",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "73",
+        "extra_group_id": "8",
+        "value": "Coke Light",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "74",
+        "extra_group_id": "8",
+        "value": "No Sugar",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "75",
+        "extra_group_id": "8",
+        "value": "Mountain Blast",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "76",
+        "extra_group_id": "8",
+        "value": "Jagged Ice",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "77",
+        "extra_group_id": "8",
+        "value": "Naartjie",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "78",
+        "extra_group_id": "8",
+        "value": "Zero Mountain Blast",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "79",
+        "extra_group_id": "8",
+        "value": "Sugar Free",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "80",
+        "extra_group_id": "8",
+        "value": "Extra Hot",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "81",
+        "extra_group_id": "8",
+        "value": "Hot",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "82",
+        "extra_group_id": "8",
+        "value": "Mild",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "83",
+        "extra_group_id": "8",
+        "value": "Mozam Paprika",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "84",
+        "extra_group_id": "8",
+        "value": "Lemon & Herb",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "85",
+        "extra_group_id": "8",
+        "value": "Tangy Tomato",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "86",
+        "extra_group_id": "8",
+        "value": "No Sauce",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "87",
+        "extra_group_id": "13",
+        "value": "Add Feta",
+        "active": "1",
+        "deleted_at": "2024-07-13 14:57:02"
+    },
+    {
+        "id": "88",
+        "extra_group_id": "13",
+        "value": "Add Avo",
+        "active": "1",
+        "deleted_at": "2024-07-13 14:56:56"
+    },
+    {
+        "id": "89",
+        "extra_group_id": "13",
+        "value": "Extra Chicken Strips",
+        "active": "1",
+        "deleted_at": "2024-07-13 14:56:51"
+    },
+    {
+        "id": "90",
+        "extra_group_id": "13",
+        "value": "Add Veg Patty",
+        "active": "1",
+        "deleted_at": "2024-07-13 14:56:44"
+    },
+    {
+        "id": "91",
+        "extra_group_id": "13",
+        "value": "Pulled Chicken",
+        "active": "1",
+        "deleted_at": "2024-07-13 14:55:13"
+    },
+    {
+        "id": "92",
+        "extra_group_id": "13",
+        "value": "No Lettuce",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "93",
+        "extra_group_id": "13",
+        "value": "No Tomato",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "94",
+        "extra_group_id": "13",
+        "value": "No Onion",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "95",
+        "extra_group_id": "13",
+        "value": "No Cucumber",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "96",
+        "extra_group_id": "13",
+        "value": "No Olives",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "97",
+        "extra_group_id": "13",
+        "value": "No Mayo",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "98",
+        "extra_group_id": "14",
+        "value": "Tangy Tomato",
+        "active": "1",
+        "deleted_at": "2024-07-13 16:10:58"
+    },
+    {
+        "id": "99",
+        "extra_group_id": "14",
+        "value": "Lemon & Herb",
+        "active": "1",
+        "deleted_at": "2024-07-13 16:10:53"
+    },
+    {
+        "id": "100",
+        "extra_group_id": "14",
+        "value": "Hot",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "101",
+        "extra_group_id": "14",
+        "value": "Mild",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "102",
+        "extra_group_id": "14",
+        "value": "Mozam Paprika",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "103",
+        "extra_group_id": "14",
+        "value": "Lemon & Herb",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "104",
+        "extra_group_id": "14",
+        "value": "Tangy Tomato",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "105",
+        "extra_group_id": "14",
+        "value": "No Sauce",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "106",
+        "extra_group_id": "3",
+        "value": "Kids Chips",
+        "active": "1",
+        "deleted_at": null
+    },
+    {
+        "id": "107",
+        "extra_group_id": "3",
+        "value": "Kids Wedges",
+        "active": "1",
+        "deleted_at": null
+    }
+]

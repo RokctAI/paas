@@ -75,6 +75,12 @@
             "fieldtype": "Link",
             "label": "Author",
             "options": "User"
+        },
+        {
+            "fieldname": "translations",
+            "fieldtype": "Table",
+            "label": "Translations",
+            "options": "Blog Translation"
         }
     ]
 }

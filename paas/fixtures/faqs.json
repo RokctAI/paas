@@ -1,0 +1,200 @@
+[
+    {
+        "id": "1",
+        "uuid": "0e7f0b36-c11d-4b8d-b1d2-60bf11ac6c6e",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-21 07:47:32",
+        "updated_at": "2023-03-21 07:52:12",
+        "deleted_at": "2023-03-21 07:52:12",
+        "question": "How GOsouth works",
+        "answer": "You\u2019re busy, so every minute counts. Let us connect you with Shoppers in your area to shop and deliver items from your favorite stores in as fast as an hour. It\u2019s just that easy."
+    },
+    {
+        "id": "2",
+        "uuid": "3ce1d1fd-8490-4e91-98f0-1650c3e09228",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-21 07:47:55",
+        "updated_at": "2023-03-21 07:52:07",
+        "deleted_at": "2023-03-21 07:52:07",
+        "question": "How can I create my own shop",
+        "answer": "You can create it through admin panel or you visit become seller page on website"
+    },
+    {
+        "id": "3",
+        "uuid": "2e400043-6ee8-4cec-9e39-6858ca300faf",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-21 07:48:20",
+        "updated_at": "2023-03-21 07:52:04",
+        "deleted_at": "2023-03-21 07:52:04",
+        "question": "Schedule delivery",
+        "answer": "Schedule delivery for as fast as an hour, or for later in the day or week to fit your schedule. Delivery windows start as early as 9am and run as late as midnight. Check local store hours. Delivery hours are subject to store operating hours, which includes holidays."
+    },
+    {
+        "id": "4",
+        "uuid": "e3f0109e-877e-4455-9f88-847093f6556e",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-21 07:50:05",
+        "updated_at": "2023-03-21 07:51:59",
+        "deleted_at": "2023-03-21 07:51:59",
+        "question": "Get your groceries",
+        "answer": "Meet your shopper at your door to get your groceries. The GOsouth platform also offers a pickup option. You simply shop on GOsouth\u2019s website or app, select a pickup time, then pick up your groceries at the store. Available at select locations"
+    },
+    {
+        "id": "5",
+        "uuid": "2788b60a-b02e-4664-8289-207e8212a028",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-21 07:50:41",
+        "updated_at": "2023-03-21 07:51:55",
+        "deleted_at": "2023-03-21 07:51:55",
+        "question": "Adding an item to your favorites",
+        "answer": "Adding the items you love to your Favorites is an easy way to view or buy them again. To favorite an item, select the item and the heart icon below it. Once you favorite an item the button fills in green and says Favorited."
+    },
+    {
+        "id": "6",
+        "uuid": "06795850-c682-46d2-945c-9578913e7f23",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-21 07:52:42",
+        "updated_at": "2023-03-21 07:52:42",
+        "deleted_at": null,
+        "question": "Receiving your delivery",
+        "answer": "After the items in your order have been picked and packed, a personal shopper will start the delivery process. In some cases, the person who shops your order may not be the one who delivers it."
+    },
+    {
+        "id": "7",
+        "uuid": "5138c65b-ce7c-48b0-b6fd-466f85579235",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-21 07:53:05",
+        "updated_at": "2023-03-21 07:53:05",
+        "deleted_at": null,
+        "question": "Adding an item to your favorites",
+        "answer": "Adding the items you love to your Favorites is an easy way to view or buy them again. To favorite an item, select the item and the heart icon below it. Once you favorite an item the button fills in green and says Favorited."
+    },
+    {
+        "id": "8",
+        "uuid": "6f93dee8-30f7-4ddf-bae0-dcd6dcc1b068",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-21 07:53:47",
+        "updated_at": "2023-03-21 07:53:47",
+        "deleted_at": null,
+        "question": "Get your groceries",
+        "answer": "Meet your shopper at your door to get your groceries. The GOsouth platform also offers a pickup option. You simply shop on GOsouth\u2019s website or app, select a pickup time, then pick up your groceries at the store. Available at select locations"
+    },
+    {
+        "id": "9",
+        "uuid": "599eab2e-cc06-46f4-8a19-e741ee9ff81a",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-21 07:54:09",
+        "updated_at": "2023-03-21 07:54:09",
+        "deleted_at": null,
+        "question": "Schedule delivery",
+        "answer": "Schedule delivery for as fast as an hour, or for later in the day or week to fit your schedule. Delivery windows start as early as 9am and run as late as midnight. Check local store hours. Delivery hours are subject to store operating hours, which includes holidays."
+    },
+    {
+        "id": "10",
+        "uuid": "03e0dfe1-3a8f-4584-bd34-710db930960b",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-21 07:54:33",
+        "updated_at": "2023-03-21 07:54:33",
+        "deleted_at": null,
+        "question": "How can I create my own shop",
+        "answer": "You can create it through admin panel or you visit become seller page on website"
+    },
+    {
+        "id": "11",
+        "uuid": "198ae846-7ece-4998-ad23-2c7c20e01006",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-21 07:55:05",
+        "updated_at": "2023-03-21 07:55:05",
+        "deleted_at": null,
+        "question": "How GOsouth works",
+        "answer": "You\u2019re busy, so every minute counts. Let us connect you with Shoppers in your area to shop and deliver items from your favorite stores in as fast as an hour. It\u2019s just that easy."
+    },
+    {
+        "id": "12",
+        "uuid": "56ef23fd-817a-41b4-83a7-c686e26a65a4",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-25 10:37:44",
+        "updated_at": "2023-03-25 10:37:44",
+        "deleted_at": null,
+        "question": "What payment options are available?",
+        "answer": "Payment options are: Any Cheque, Credit or Debit cards suitable for online shopping (only VISA or Mastercards accepted), cash on delivery, EFT and GOwallet Note: GOsouth drivers don't carry credit card machines or petty cash. Please ensure that you have the exact cash amount required to complete delivery if you select cash on delivery."
+    },
+    {
+        "id": "13",
+        "uuid": "b289ff14-9c5a-46c3-b2ea-a4910606042c",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-25 12:07:12",
+        "updated_at": "2023-03-25 12:07:12",
+        "deleted_at": null,
+        "question": "How can I create an account?",
+        "answer": "Answer: Click on 'Login' at the top of the page. Then fill out your information in the 'Create an account' section and click the 'Sign Up' button. You can also create an account directly after placing an order. Your delivery address and the order details will then be saved in your account."
+    },
+    {
+        "id": "14",
+        "uuid": "0fec15b0-61e4-4dc5-81a2-eacd09e29df5",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-25 12:07:57",
+        "updated_at": "2023-03-25 12:07:57",
+        "deleted_at": null,
+        "question": "I don\u2019t remember my password?",
+        "answer": "Answer: You have already created an account but you can't remember your password? Click on 'Login' at the top of the page. Then click on 'Forgot Password?'. Fill out your phone number and a password recovery will be sent to you by phone"
+    },
+    {
+        "id": "15",
+        "uuid": "a413eea6-bbac-4e99-a732-d706a13f9c62",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-25 12:08:46",
+        "updated_at": "2023-03-25 12:08:46",
+        "deleted_at": null,
+        "question": "How do I know status of my order?",
+        "answer": "Answer: After you place your order, it is sent immediately to the bliss kitchen, which starts preparing it without any delay. The kitchen does everything to process your order as quickly as possible. However, sometimes GOsouth receives large amount of orders, or drivers get stuck in heavy traffic this might cause little delays."
+    },
+    {
+        "id": "16",
+        "uuid": "e88824cc-5153-4e0e-a362-038ae667ce55",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-25 12:10:19",
+        "updated_at": "2023-03-25 12:10:19",
+        "deleted_at": null,
+        "question": "How can I cancel or change my order?",
+        "answer": "Answer: Please contact helpline Number as soon as possible, we can let the kitchen know before it starts preparing your order. Once the order goes in the process, it can not be changed. With regard to any refund of a payment you have made online, please contact GOsouth. Please contact GOsouth"
+    },
+    {
+        "id": "17",
+        "uuid": "837d6561-5509-4353-8ebe-052f61ed6e8d",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-25 12:11:16",
+        "updated_at": "2023-03-25 12:11:16",
+        "deleted_at": null,
+        "question": "Do I have to create an account to place an order?",
+        "answer": "Creating an account is mandatory, but you can see order without having to sign up. We make sure that ordering food online at GOsouth is quick and fuss-free. After placing your order, you will have the option of creating an account."
+    },
+    {
+        "id": "18",
+        "uuid": "2958f85d-e0a8-4741-86ec-d622e1431744",
+        "type": "web",
+        "active": "1",
+        "created_at": "2023-03-25 12:12:05",
+        "updated_at": "2023-03-25 12:12:05",
+        "deleted_at": null,
+        "question": "Did not receive order confirmation SMS?",
+        "answer": "Please check if your text message. If not, please share the details via customer Support team."
+    }
+]

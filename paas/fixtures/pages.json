@@ -1,0 +1,122 @@
+[
+    {
+        "id": "1",
+        "type": "about",
+        "active": "0",
+        "img": "https://s3.juvo.app/public/images/receipts/101-1682063020.jpeg",
+        "bg_img": null,
+        "buttons": "[]",
+        "created_at": "2023-04-21 05:45:05",
+        "updated_at": "2023-05-24 11:16:54",
+        "deleted_at": "2023-05-24 11:16:54",
+        "title": "About GOsouth",
+        "description": "<p>Tens of millions of people look for design inspiration and feedback on Dribbble. We help players like you share small screenshots (shots) to show off your current projects, boost your portfolio, and love what you do—no matter what kind of creative professional you are. Founded in 2009, we are a bootstrapped and profitable company helping design talent share, grow, and get hired by over 40,000 of today’s most innovative brands around the world.</p>"
+    },
+    {
+        "id": "2",
+        "type": "about_second",
+        "active": "0",
+        "img": "https://s3.juvo.app/public/images/receipts/101-1682063824.webp",
+        "bg_img": null,
+        "buttons": "{\"google_play_button_link\":\"https:\\/\\/play.google.com\\/store\\/apps\\/details?id=com.southriver.user\"}",
+        "created_at": "2023-04-21 05:57:08",
+        "updated_at": "2023-05-24 11:16:51",
+        "deleted_at": "2023-05-24 11:16:51",
+        "title": "Water and Grocery customer app",
+        "description": "<p>Instead of traditional food delivery jobs where the hours aren’t flexible, try being your own boss with Foodyman. Get paid to deliver on your schedule using the food delivery app most downloaded by customers.</p>"
+    },
+    {
+        "id": "3",
+        "type": "delivery",
+        "active": "0",
+        "img": "https://s3.juvo.app/public/images/receipts/101-1682064018.webp",
+        "bg_img": null,
+        "buttons": "[]",
+        "created_at": "2023-04-21 06:00:44",
+        "updated_at": "2023-05-24 11:16:47",
+        "deleted_at": "2023-05-24 11:16:47",
+        "title": "Become a deliveryman",
+        "description": "<p>about</p>"
+    },
+    {
+        "id": "4",
+        "type": "about_fourth",
+        "active": "0",
+        "img": "https://s3.juvo.app/public/images/receipts/101-1682064088.webp",
+        "bg_img": null,
+        "buttons": "[]",
+        "created_at": "2023-04-21 06:01:42",
+        "updated_at": "2023-05-24 11:16:44",
+        "deleted_at": "2023-05-24 11:16:44",
+        "title": "Manager App",
+        "description": "<p>about</p>"
+    },
+    {
+        "id": "6",
+        "type": "about_third",
+        "active": "0",
+        "img": "https://s3.juvo.app/public/images/receipts/101-1682063824.webp",
+        "bg_img": null,
+        "buttons": "{\"google_play_button_link\":\"https:\\/\\/play.google.com\\/store\\/apps\\/details?id=com.southriver.user\"}",
+        "created_at": "2023-04-21 05:57:08",
+        "updated_at": "2023-05-24 11:16:40",
+        "deleted_at": "2023-05-24 11:16:40"
+    },
+    {
+        "id": "7",
+        "type": "about",
+        "active": "1",
+        "img": "https://s3.juvo.app/public/images/receipts/101-1685827465.jpeg",
+        "bg_img": null,
+        "buttons": "[]",
+        "created_at": "2023-06-03 19:24:30",
+        "updated_at": "2023-06-03 19:24:30",
+        "deleted_at": null
+    },
+    {
+        "id": "8",
+        "type": "delivery",
+        "active": "1",
+        "img": "https://s3.juvo.app/public/images/receipts/101-1685828199.webp",
+        "bg_img": null,
+        "buttons": "[]",
+        "created_at": "2023-06-03 19:39:47",
+        "updated_at": "2023-06-03 19:39:47",
+        "deleted_at": null,
+        "title": "Looking for delivery driver jobs?",
+        "description": "<p>Are you looking for a flexible and rewarding opportunity? Join our team as a delivery partner and become an essential part of connecting hungry customers with their favorites from local restaurants.</p>"
+    },
+    {
+        "id": "9",
+        "type": "about_second",
+        "active": "1",
+        "img": "https://s3.juvo.app/public/images/receipts/101-1685828611.webp",
+        "bg_img": null,
+        "buttons": "{\"google_play_button_link\":\"https:\\/\\/play.google.com\\/store\\/apps\\/details?id=com.southriver.user\",\"app_store_button_link\":\"https:\\/\\/gosouth.app\\/\"}",
+        "created_at": "2023-06-03 19:43:34",
+        "updated_at": "2023-06-03 19:56:20",
+        "deleted_at": null
+    },
+    {
+        "id": "10",
+        "type": "about_three",
+        "active": "1",
+        "img": "https://s3.juvo.app/public/images/receipts/101-1685831143.webp",
+        "bg_img": null,
+        "buttons": "{\"google_play_button_link\":\"https:\\/\\/play.google.com\\/store\\/apps\\/details?id=com.southriver.vendor\",\"app_store_button_link\":\"#\"}",
+        "created_at": "2023-06-03 19:46:38",
+        "updated_at": "2023-06-03 20:25:49",
+        "deleted_at": null
+    },
+    {
+        "id": "11",
+        "type": "about_fourth",
+        "active": "1",
+        "img": "https://s3.juvo.app/public/images/receipts/101-1750273713.webp",
+        "bg_img": null,
+        "buttons": "{\"google_play_button_link\":\"https:\\/\\/play.google.com\\/store\\/apps\\/details?id=com.juvo.driver\",\"app_store_button_link\":\"#\"}",
+        "created_at": "2023-06-03 19:49:57",
+        "updated_at": "2025-06-18 19:08:43",
+        "deleted_at": null
+    }
+]

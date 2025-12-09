@@ -42,6 +42,12 @@
             "fieldtype": "Check",
             "label": "Active",
             "default": "1"
+        },
+        {
+            "fieldname": "translations",
+            "fieldtype": "Table",
+            "label": "Translations",
+            "options": "Shop Unit Translation"
         }
     ]
 }

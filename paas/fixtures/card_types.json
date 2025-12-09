@@ -1,0 +1,42 @@
+[
+    {
+        "id": "1",
+        "name": "Visa",
+        "code": "visa",
+        "is_active": "1",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "2",
+        "name": "Mastercard",
+        "code": "mastercard",
+        "is_active": "1",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "3",
+        "name": "American Express",
+        "code": "amex",
+        "is_active": "1",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "4",
+        "name": "Discover",
+        "code": "discover",
+        "is_active": "1",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "5",
+        "name": "Diners Club",
+        "code": "diners",
+        "is_active": "1",
+        "created_at": null,
+        "updated_at": null
+    }
+]

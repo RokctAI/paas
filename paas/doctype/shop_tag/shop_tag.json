@@ -36,6 +36,12 @@
             "fieldtype": "Data",
             "label": "Name",
             "reqd": 1
+        },
+        {
+            "fieldname": "translations",
+            "fieldtype": "Table",
+            "label": "Translations",
+            "options": "Shop Tag Translation"
         }
     ]
 }

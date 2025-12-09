@@ -62,6 +62,12 @@
             "fieldtype": "Check",
             "label": "Active",
             "default": "1"
+        },
+        {
+            "fieldname": "translations",
+            "fieldtype": "Table",
+            "label": "Translations",
+            "options": "Ads Package Translation"
         }
     ]
 }

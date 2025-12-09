@@ -1,0 +1,632 @@
+[
+    {
+        "id": "1e7VbE9cUce8e8R1Qcd5",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/cqksop37839h003\",\"price\":2000,\"order_id\":1403}",
+        "model_type": "",
+        "model_id": "0",
+        "user_id": null
+    },
+    {
+        "id": "168d10f1V1f0B6faM5AR",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/xvxhh11707xdw31\",\"price\":500,\"order_id\":1450}",
+        "model_type": "",
+        "model_id": "0",
+        "user_id": null
+    },
+    {
+        "id": "69d7Q1Pa6Zc8K21a9aXe",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/01q8wbwru7eo7hr\",\"price\":1000,\"order_id\":1451}",
+        "model_type": "",
+        "model_id": "0",
+        "user_id": null
+    },
+    {
+        "id": "IVc043b614897YA3e5Fc",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/k2tgja0vfhpuv04\",\"price\":500,\"order_id\":1455}",
+        "model_type": "",
+        "model_id": "0",
+        "user_id": null
+    },
+    {
+        "id": "f1145aN371c0aUKb9cFG",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/im5pydyzecf02wh\",\"price\":500,\"order_id\":1461}",
+        "model_type": "",
+        "model_id": "0",
+        "user_id": null
+    },
+    {
+        "id": "DOd5aHZ5e7N563e134dd",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/x6t4x55km0ps5x9\",\"price\":500,\"order_id\":1464}",
+        "model_type": "",
+        "model_id": "0",
+        "user_id": null
+    },
+    {
+        "id": "7JD7b4Tfa58A9Z6c6f4f",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/bb6623425e7fe69\",\"price\":500,\"order_id\":1466}",
+        "model_type": "",
+        "model_id": "0",
+        "user_id": null
+    },
+    {
+        "id": "VP7eeM06c6D8b6f6E653",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/2sekfoh797hb77b\",\"price\":500,\"order_id\":1501}",
+        "model_type": "",
+        "model_id": "0",
+        "user_id": null
+    },
+    {
+        "id": "S25I2J1f92Xa776bGa7a",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/csy2drvv20rtb5l\",\"price\":500,\"order_id\":1502}",
+        "model_type": "",
+        "model_id": "0",
+        "user_id": null
+    },
+    {
+        "id": "0165MG25b90HVT0bdc0b",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/xei4sgwefllx9le\",\"price\":500,\"order_id\":1503}",
+        "model_type": "",
+        "model_id": "0",
+        "user_id": null
+    },
+    {
+        "id": "6e66deJI2e1RP78faB78",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/3ushhkg7ikbhpra\",\"price\":9105,\"order_id\":2486}",
+        "model_type": "",
+        "model_id": "0",
+        "user_id": null
+    },
+    {
+        "id": "I55fPf23Hb4f55fSE2e4",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/9h9gitqdxh1ow2d\",\"price\":10605}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2634",
+        "user_id": null
+    },
+    {
+        "id": "0V9c7d42F15Z6UXf3ed3",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/qafd2z7g292w6le\",\"price\":1000}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2636",
+        "user_id": null
+    },
+    {
+        "id": "bN9eGc9d7fe303fFQfbR",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/uhg1kf80yy0h4jz\",\"price\":9000}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2642",
+        "user_id": "147"
+    },
+    {
+        "id": "2643-1713939631",
+        "data": "{\"url\":\"https:\\/\\/checkout.flutterwave.com\\/v3\\/hosted\\/pay\\/flwlnk-01hw7c6kb6zkvxe137xs9h8eef\",\"price\":90}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2643",
+        "user_id": "101"
+    },
+    {
+        "id": "2650-1710933041",
+        "data": "{\"url\":\"https:\\/\\/checkout.flutterwave.com\\/v3\\/hosted\\/pay\\/flwlnk-01hsdrwrhsp16gettpbqwty3zp\",\"price\":7500}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2650",
+        "user_id": "109"
+    },
+    {
+        "id": "2647",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2647&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2647&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&m_payment_id=2647&amount=60.00&item_name=test&signature=b1b7511f3f434d6cd6366c5d998962f6\",\"price\":60}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2647",
+        "user_id": "101"
+    },
+    {
+        "id": "2652",
+        "data": "{\"url\":\"https:\\/\\/sandbox.payfast.co.za\\/eng\\/process?merchant_id=10033358&merchant_key=7foyrgt7atidi&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2652&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2652&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2652&m_payment_id=2652&amount=100.00&item_name=test&signature=63e39b29bfcce44dd2b9b5868c6846f2\",\"price\":135}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2652",
+        "user_id": "101"
+    },
+    {
+        "id": "2654-1710935405",
+        "data": "{\"url\":\"https:\\/\\/checkout.flutterwave.com\\/v3\\/hosted\\/pay\\/flwlnk-01hsdv4xb3858y6v9r99s397p1\",\"price\":75}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2654",
+        "user_id": "109"
+    },
+    {
+        "id": "2655-1710935509",
+        "data": "{\"url\":\"https:\\/\\/checkout.flutterwave.com\\/v3\\/hosted\\/pay\\/flwlnk-01hsdv82jm63c38wr61c2hwr1c\",\"price\":85}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2655",
+        "user_id": "109"
+    },
+    {
+        "id": "2656-1710935577",
+        "data": "{\"url\":\"https:\\/\\/checkout.flutterwave.com\\/v3\\/hosted\\/pay\\/flwlnk-01hsdva4wcmx01zv5c9g0zah1s\",\"price\":105}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2656",
+        "user_id": "109"
+    },
+    {
+        "id": "2657-1710936096",
+        "data": "{\"url\":\"https:\\/\\/checkout.flutterwave.com\\/v3\\/hosted\\/pay\\/flwlnk-01hsdvt0hfhjhth3e26k0xpqwd\",\"price\":105}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2657",
+        "user_id": "109"
+    },
+    {
+        "id": "1713975128",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/wallet-success&cancel_url=https:\\/\\/api.juvo.app\\/wallet-success&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&email_address=south@gosouth.app&m_payment_id=1713975128&amount=157.00&item_name=Wallet1713975128&signature=46efd9ac7cc28aded7da0894a1db6b4d\",\"price\":157,\"type\":\"wallet\",\"user_id\":147,\"trx_id\":3159}",
+        "model_type": "App\\Models\\Wallet",
+        "model_id": "21",
+        "user_id": "147"
+    },
+    {
+        "id": "1711966555",
+        "data": "{\"url\":\"https:\\/\\/checkout.flutterwave.com\\/v3\\/hosted\\/pay\\/flwlnk-01htcjh3hyce41ezqam5d8z234\",\"price\":10,\"type\":\"wallet\",\"user_id\":453,\"trx_id\":3160}",
+        "model_type": "App\\Models\\Wallet",
+        "model_id": "400",
+        "user_id": "453"
+    },
+    {
+        "id": "2662-1713523083",
+        "data": "{\"url\":\"https:\\/\\/checkout.flutterwave.com\\/v3\\/hosted\\/pay\\/flwlnk-01hvtyyk1wsfg5phqgjy64ssy4\",\"price\":22605}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2662",
+        "user_id": "286"
+    },
+    {
+        "id": "2664-1713523942",
+        "data": "{\"url\":\"https:\\/\\/checkout.flutterwave.com\\/v3\\/hosted\\/pay\\/flwlnk-01hvtzrsxfg90jpqz2rb6c1jmf\",\"price\":15280}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2664",
+        "user_id": "570"
+    },
+    {
+        "id": "2665",
+        "data": "{\"url\":\"https:\\/\\/sandbox.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2665&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2665&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2665&m_payment_id=2665&amount=100.00&item_name=test&signature=567faba7bfc724f49db741a385c36108\",\"price\":18930}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2665",
+        "user_id": "570"
+    },
+    {
+        "id": "2667-1713524714",
+        "data": "{\"url\":\"https:\\/\\/checkout.flutterwave.com\\/v3\\/hosted\\/pay\\/flwlnk-01hvv0gc0hn2m9t6nse5hb61fj\",\"price\":15280}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2667",
+        "user_id": "570"
+    },
+    {
+        "id": "6fa522a226bf061bc4676d0cd13c3fda",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2668\",\"price\":15280}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2668",
+        "user_id": "570"
+    },
+    {
+        "id": "707fe1ade0ec1cc86ec4617cd0ff6d36",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2669\",\"price\":15280}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2669",
+        "user_id": "570"
+    },
+    {
+        "id": "a8f5930de71880235ad27de8aef1e788",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2671\",\"price\":18930}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2671",
+        "user_id": "570"
+    },
+    {
+        "id": "57d79722e1860c9fc9afb7e0a2155fe2",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2672\",\"price\":18930}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2672",
+        "user_id": "570"
+    },
+    {
+        "id": "dcd8521574e73609b511d6598236b6ed",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2673\",\"price\":18930}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2673",
+        "user_id": "570"
+    },
+    {
+        "id": "8b1299e8ec2771b889263fdc36090be1",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2674\",\"price\":18930}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2674",
+        "user_id": "570"
+    },
+    {
+        "id": "20f8348a05c1da4d8813c1add4a39414",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2675\",\"price\":18930}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2675",
+        "user_id": "570"
+    },
+    {
+        "id": "4f90f97deecfc881b4b3bd33f0ba75e0",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2676\",\"price\":15280}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2676",
+        "user_id": "570"
+    },
+    {
+        "id": "1fa48df404d3f7ddd4eb005f6df115ab",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2678\",\"price\":18930}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2678",
+        "user_id": "570"
+    },
+    {
+        "id": "bd5601753c8a948eb9d9d32011754730",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2679\",\"price\":18930}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2679",
+        "user_id": "570"
+    },
+    {
+        "id": "3d6e11aebf2cae1e1260489a5af44055",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2680\",\"price\":18930}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2680",
+        "user_id": "570"
+    },
+    {
+        "id": "6b1f1d9ebcc5ea536b37c76e3fdccffa",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2681\",\"price\":18930}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2681",
+        "user_id": "570"
+    },
+    {
+        "id": "2ab733bacd82fb0d038be4557d805da8",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2682\",\"price\":110}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2682",
+        "user_id": "575"
+    },
+    {
+        "id": "6389ed76939d0989ebf297790b4a347e",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2683\",\"price\":110}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2683",
+        "user_id": "575"
+    },
+    {
+        "id": "99110855b919a79674323dbe0c67ce45",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2685\",\"price\":95}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2685",
+        "user_id": "575"
+    },
+    {
+        "id": "a1b79264adc44d9f65c14e78d749029f",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2687\",\"price\":95}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2687",
+        "user_id": "575"
+    },
+    {
+        "id": "2c50c78da13bf46be96a27747a7bbcb6",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2689\",\"price\":95}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2689",
+        "user_id": "575"
+    },
+    {
+        "id": "ff4c4b7bb0bfe5fcc5c9b7b8d203dcba",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2690\",\"price\":18930}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2690",
+        "user_id": "570"
+    },
+    {
+        "id": "3cda3178a853894692b3ded0bfa730a6",
+        "data": "{\"url\":\"https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2691\",\"price\":15280}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2691",
+        "user_id": "570"
+    },
+    {
+        "id": "b1f2c478d01a5aebe69a5e30c3f3bdfb",
+        "data": "{\"url\":\"https:\\/\\/sandbox.payfast.co.za\\/eng\\/process?merchant_id=10033358&merchant_key=7foyrgt7atidi&amount=234&item_name=asd&signature=02d905f6dd0e0a8fd2df82a8208d6580\",\"price\":15280}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2692",
+        "user_id": "570"
+    },
+    {
+        "id": "2693",
+        "data": "{\"url\":\"https:\\/\\/sandbox.payfast.co.za\\/eng\\/process?merchant_id=10033358&merchant_key=7foyrgt7atidi&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2693&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2693&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2693&m_payment_id=2693&amount=100.00&item_name=test&signature=00e1f8ca8887662eef95fba1dedef8c0\",\"price\":100}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2693",
+        "user_id": "101"
+    },
+    {
+        "id": "YSd95G9abfbaF395d1aQ",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/8pezd7549pv078h\",\"price\":10000}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2694",
+        "user_id": "101"
+    },
+    {
+        "id": "2695",
+        "data": "{\"url\":\"https:\\/\\/sandbox.payfast.co.za\\/eng\\/process?merchant_id=10033358&merchant_key=7foyrgt7atidi&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2695&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2695&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2695&m_payment_id=2695&amount=100.00&item_name=test&signature=f18f8dcf7fd9a8a16d796d8b9dc81821\",\"price\":98}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2695",
+        "user_id": "101"
+    },
+    {
+        "id": "2696",
+        "data": "{\"url\":\"https:\\/\\/sandbox.payfast.co.za\\/eng\\/process?merchant_id=10033358&merchant_key=7foyrgt7atidi&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2696&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2696&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2696&m_payment_id=2696&amount=100.00&item_name=test&signature=79736b20c69b64a5986318814a3e0fb9\",\"price\":98}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2696",
+        "user_id": "101"
+    },
+    {
+        "id": "2697",
+        "data": "{\"url\":\"https:\\/\\/sandbox.payfast.co.za\\/eng\\/process?merchant_id=10033358&merchant_key=7foyrgt7atidi&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2697&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2697&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2697&m_payment_id=2697&amount=100.00&item_name=test&signature=09dc5cba48d9409abcdad3898fc6ad0a\",\"price\":26512}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2697",
+        "user_id": "576"
+    },
+    {
+        "id": "2698",
+        "data": "{\"url\":\"https:\\/\\/sandbox.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2698&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2698&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2698&m_payment_id=2698&amount=100.00&item_name=test&signature=a071c13a4457d031dae6216dbda19cb9\",\"price\":26512}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2698",
+        "user_id": "576"
+    },
+    {
+        "id": "2700",
+        "data": "{\"url\":\"https:\\/\\/sandbox.payfast.co.za\\/eng\\/process?merchant_id=10033358&merchant_key=7foyrgt7atidi&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2700&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2700&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2700&m_payment_id=2700&amount=100.00&item_name=test&signature=8e0068ddb63531ce69e97cc769dd338e\",\"price\":26512}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2700",
+        "user_id": "576"
+    },
+    {
+        "id": "2701",
+        "data": "{\"url\":\"https:\\/\\/sandbox.payfast.co.za\\/eng\\/process?merchant_id=10033358&merchant_key=7foyrgt7atidi&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2701&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2701&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2701&m_payment_id=2701&amount=100.00&item_name=test&signature=d8993bbe8fba412f784b066e901301d0\",\"price\":26509}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2701",
+        "user_id": "286"
+    },
+    {
+        "id": "2703",
+        "data": "{\"url\":\"https:\\/\\/sandbox.payfast.co.za\\/eng\\/process?merchant_id=10033358&merchant_key=7foyrgt7atidi&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2703&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2703&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2703&m_payment_id=2703&amount=100.00&item_name=test&signature=4fa645df3255bb0a4b745607304d0e7e\",\"price\":80}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2703",
+        "user_id": "101"
+    },
+    {
+        "id": "2704",
+        "data": "{\"url\":\"https:\\/\\/sandbox.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2704&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2704&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment?order_id=2704&m_payment_id=2704&amount=100.00&item_name=test&signature=7a9f9a36b342199b426abc29153924c7\",\"price\":26509}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2704",
+        "user_id": "286"
+    },
+    {
+        "id": "2705",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2705&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2705&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&m_payment_id=2705&amount=100.00&item_name=test&signature=4317a373d7b44d587273c7a879da6ede\",\"price\":26509}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2705",
+        "user_id": "286"
+    },
+    {
+        "id": "2706",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2706&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2706&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&m_payment_id=2706&amount=100.00&item_name=test&signature=0932110bfd1676742bae98fd0c8c2cbd\",\"price\":26509}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2706",
+        "user_id": "286"
+    },
+    {
+        "id": "2707",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2707&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2707&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&m_payment_id=2707&amount=100.00&item_name=test&signature=a555063787d9f787b1df5b5ba05196d5\",\"price\":22859}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2707",
+        "user_id": "286"
+    },
+    {
+        "id": "2708",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2708&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2708&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&m_payment_id=2708&amount=26508.53&item_name=test&signature=70f62545d2324e3f9e14827bc5a917a8\",\"price\":26509}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2708",
+        "user_id": "286"
+    },
+    {
+        "id": "2709",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2709&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2709&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&email_address=mamatovmahmud1999@gmail.com&m_payment_id=2709&amount=26508.53&item_name=Order#2709&signature=9594aadb70b8975707b347e6dfe691c3\",\"price\":26509}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2709",
+        "user_id": "286"
+    },
+    {
+        "id": "2710",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2710&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2710&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&email_address=mamatovmahmud1999@gmail.com&m_payment_id=2710&amount=22858.53&item_name=Order#2710&signature=1dcbeb652fb7be578c8d1e7ae8dd811e\",\"price\":22859}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2710",
+        "user_id": "286"
+    },
+    {
+        "id": "2711",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2711&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2711&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&email_address=mamatovmahmud1999@gmail.com&m_payment_id=2711&amount=26508.53&item_name=Order#2711&signature=34244cb1c2a2ca6d90cde51fdb019a88\",\"price\":26509}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2711",
+        "user_id": "286"
+    },
+    {
+        "id": "2713",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2713&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2713&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&email_address=testing@gmail.com&m_payment_id=2713&amount=105.00&item_name=Order2713&signature=63eb9dda93845a3b53de993b81d3b643\",\"price\":105}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2713",
+        "user_id": "306"
+    },
+    {
+        "id": "2715",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2715&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2715&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&email_address=testing@gmail.com&m_payment_id=2715&amount=70.00&item_name=2715&signature=b389ba4ddd13cb271ef2cdcb21cd932f\",\"price\":70}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2715",
+        "user_id": "306"
+    },
+    {
+        "id": "2716",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2716&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2716&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&email_address=testing@gmail.com&m_payment_id=2716&amount=75.00&item_name=Order2716&signature=f99a203d19ff43a8757ed74b862c0974\",\"price\":75}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2716",
+        "user_id": "306"
+    },
+    {
+        "id": "1713962827",
+        "data": "{\"url\":\"https:\\/\\/checkout.flutterwave.com\\/v3\\/hosted\\/pay\\/flwlnk-01hw82afvacgk5gh0pmbf9rfht\",\"price\":100,\"type\":\"wallet\",\"user_id\":109,\"trx_id\":3223}",
+        "model_type": "App\\Models\\Wallet",
+        "model_id": "162",
+        "user_id": "109"
+    },
+    {
+        "id": "2717",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2717&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2717&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&email_address=sinyage@gmail.com&m_payment_id=2717&amount=70.00&item_name=Order2717&signature=2fecc7447e3776f2c8316808da6caff9\",\"price\":70}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2717",
+        "user_id": "101"
+    },
+    {
+        "id": "2718",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2718&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2718&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&email_address=testing@gmail.com&m_payment_id=2718&amount=75.00&item_name=Order2718&signature=9c2997f690401e05b553144775771b78\",\"price\":75}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2718",
+        "user_id": "306"
+    },
+    {
+        "id": "2722",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2722&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2722&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&email_address=testing@gmail.com&m_payment_id=2722&amount=105.00&item_name=Order2722&signature=739f36a7b1951b3c6b916669470c7f83\",\"price\":105}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2722",
+        "user_id": "306"
+    },
+    {
+        "id": "2723",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2723&cancel_url=https:\\/\\/api.juvo.app\\/order-pay-fast-success?order_id=2723&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&email_address=sinyage@gmail.com&m_payment_id=2723&amount=115.00&item_name=Order2723&signature=d7ebd3bc1fd7fef434a2b151631e30d7\",\"price\":115}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2723",
+        "user_id": "101"
+    },
+    {
+        "id": "2724-1713940680",
+        "data": "{\"url\":\"https:\\/\\/ravemodal-dev.herokuapp.com\\/v3\\/hosted\\/pay\\/05c99c4948a97d05bfb4\",\"price\":26505}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2724",
+        "user_id": "306"
+    },
+    {
+        "id": "2725-1713944198",
+        "data": "{\"url\":\"https:\\/\\/ravemodal-dev.herokuapp.com\\/v3\\/hosted\\/pay\\/759ad847fc7f33908372\",\"price\":26505}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2725",
+        "user_id": "306"
+    },
+    {
+        "id": "2726-1713945605",
+        "data": "{\"url\":\"https:\\/\\/ravemodal-dev.herokuapp.com\\/v3\\/hosted\\/pay\\/da2f1f1141247662dfba\",\"price\":26505}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "2726",
+        "user_id": "306"
+    },
+    {
+        "id": "1713959113",
+        "data": "{\"url\":\"https:\\/\\/www.payfast.co.za\\/eng\\/process?merchant_id=12035225&merchant_key=j5gtf8n3jvxo3&return_url=https:\\/\\/api.juvo.app\\/wallet-success&cancel_url=https:\\/\\/api.juvo.app\\/wallet-success&notify_url=https:\\/\\/api.juvo.app\\/api\\/v1\\/webhook\\/pay-fast\\/payment&email_address=studio@getbwi.com&m_payment_id=1713959113&amount=10.00&item_name=Wallet1713959113&signature=1c9a7584a83066010a046b40020fd462\",\"price\":10,\"type\":\"wallet\",\"user_id\":118,\"trx_id\":3256}",
+        "model_type": "App\\Models\\Wallet",
+        "model_id": "171",
+        "user_id": "118"
+    },
+    {
+        "id": "0cQ837eWLbac1MeP5d9a",
+        "data": "{\"url\":\"https:\\/\\/checkout.paystack.com\\/3ew989tzoty31yy\",\"price\":22990,\"cart\":{\"cart_id\":470,\"currency_id\":3,\"rate\":1,\"shop_id\":504,\"phone\":\"+27798084021\",\"payment_id\":5,\"delivery_fee\":0,\"delivery_type\":\"delivery\",\"location\":{\"latitude\":-22.340965081152575,\"longitude\":30.013799853622913},\"address\":{\"address\":\"3709, Musina, Messina-Nancefield, Freedom Street\",\"office\":null,\"house\":null,\"floor\":null},\"delivery_date\":\"2024-08-08\",\"delivery_time\":\"13:20\",\"note\":null,\"lang\":\"en\"},\"payment_id\":5}",
+        "model_type": "App\\Models\\Cart",
+        "model_id": "470",
+        "user_id": "702"
+    },
+    {
+        "id": "2bcb8574-7b7b-4404-b42b-b183cda0e4ec",
+        "data": "{\"price\":22,\"payment_id\":12,\"sandbox\":1,\"signature\":\"12ed14e95b6f6735f7d59ec20efe9121\",\"model_type\":\"App\\\\Models\\\\Cart\",\"model_id\":522,\"total_price\":22,\"tips\":0,\"currency\":\"ZAR\",\"cart_id\":522,\"user_id\":867,\"status\":\"new\",\"lang\":\"en\",\"location\":{\"latitude\":\"22.34058\",\"longitude\":\"30.01341\"},\"address\":{\"address\":\"7GJG82R7+69\",\"office\":null,\"house\":null,\"floor\":null},\"delivery_date\":\"2024-10-21\",\"delivery_time\":\"16:10\",\"delivery_type\":\"delivery\",\"currency_id\":\"3\",\"rate\":\"1\",\"shop_id\":\"9003\",\"type\":\"delivery\",\"uuid\":\"19ec1b4a-01bb-4abd-bb62-492f1ac57090\",\"return_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=522\",\"cancel_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=522\"}",
+        "model_type": "App\\Models\\Cart",
+        "model_id": "522",
+        "user_id": "867"
+    },
+    {
+        "id": "519b720b-13e3-414b-8c9a-1d4795999516",
+        "data": "{\"price\":5,\"payment_id\":12,\"sandbox\":1,\"signature\":\"91011a57a04b9f14654643f56d60173a\",\"model_type\":\"App\\\\Models\\\\Cart\",\"model_id\":526,\"total_price\":5,\"tips\":0,\"currency\":\"ZAR\",\"cart_id\":526,\"user_id\":575,\"status\":\"new\",\"lang\":\"en\",\"location\":{\"latitude\":\"22.34058\",\"longitude\":\"30.01341\"},\"address\":{\"address\":\"7GJG82R7+69\",\"office\":null,\"house\":null,\"floor\":null},\"delivery_date\":\"2024-10-21\",\"delivery_time\":\"17:10\",\"delivery_type\":\"delivery\",\"currency_id\":\"3\",\"rate\":\"1\",\"shop_id\":\"9003\",\"type\":\"delivery\",\"uuid\":\"fe850ee1-9270-4428-ba59-1ecd2437eb5b\",\"return_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=526\",\"cancel_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=526\"}",
+        "model_type": "App\\Models\\Cart",
+        "model_id": "526",
+        "user_id": "575"
+    },
+    {
+        "id": "934621da-e3b7-451e-b165-9d12bca37ef4",
+        "data": "{\"price\":5,\"payment_id\":12,\"sandbox\":1,\"signature\":\"1a3108db381099242485a4bcf90d24c7\",\"model_type\":\"App\\\\Models\\\\Cart\",\"model_id\":525,\"total_price\":5,\"tips\":0,\"currency\":\"ZAR\",\"cart_id\":525,\"user_id\":867,\"status\":\"new\",\"lang\":\"en\",\"location\":{\"latitude\":\"22.34058\",\"longitude\":\"30.01341\"},\"address\":{\"address\":\"7GJG82R7+69\",\"office\":null,\"house\":null,\"floor\":null},\"delivery_date\":\"2024-10-21\",\"delivery_time\":\"19:00\",\"delivery_type\":\"delivery\",\"currency_id\":\"3\",\"rate\":\"1\",\"shop_id\":\"9003\",\"type\":\"delivery\",\"uuid\":\"8fd90dca-3f97-4bc2-9ef8-ae48edd00b1e\",\"return_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=525\",\"cancel_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=525\"}",
+        "model_type": "App\\Models\\Cart",
+        "model_id": "525",
+        "user_id": "867"
+    },
+    {
+        "id": "5555a3a9-50bd-4464-836e-569c3e9a2ad6",
+        "data": "{\"price\":2,\"payment_id\":12,\"sandbox\":1,\"signature\":\"b571dd8d28b19351eba84d40bb3907fe\",\"model_type\":\"App\\\\Models\\\\Cart\",\"model_id\":527,\"total_price\":2,\"tips\":0,\"currency\":\"ZAR\",\"cart_id\":527,\"user_id\":575,\"status\":\"new\",\"lang\":\"en\",\"location\":{\"latitude\":\"22.34058\",\"longitude\":\"30.01341\"},\"address\":{\"address\":\"7GJG82R7+69\",\"office\":null,\"house\":null,\"floor\":null},\"delivery_date\":\"2024-10-21\",\"delivery_time\":\"19:00\",\"delivery_type\":\"delivery\",\"currency_id\":\"3\",\"rate\":\"1\",\"shop_id\":\"9003\",\"type\":\"delivery\",\"uuid\":\"d3864a11-bc62-435c-b4b5-38ba0d393619\",\"return_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=527\",\"cancel_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=527\"}",
+        "model_type": "App\\Models\\Cart",
+        "model_id": "527",
+        "user_id": "575"
+    },
+    {
+        "id": "316a49ce-0628-459c-8c71-665b3d41a463",
+        "data": "{\"price\":5,\"payment_id\":12,\"sandbox\":1,\"signature\":\"204ed93e6e640e6c4995b3b4688e92e5\",\"model_type\":\"App\\\\Models\\\\Cart\",\"model_id\":528,\"total_price\":5,\"tips\":0,\"currency\":\"ZAR\",\"cart_id\":528,\"user_id\":575,\"status\":\"new\",\"lang\":\"en\",\"location\":{\"latitude\":\"22.34058\",\"longitude\":\"30.01341\"},\"address\":{\"address\":\"7GJG82R7+69\",\"office\":null,\"house\":null,\"floor\":null},\"delivery_date\":\"2024-10-21\",\"delivery_time\":\"19:00\",\"delivery_type\":\"delivery\",\"currency_id\":\"3\",\"rate\":\"1\",\"shop_id\":\"9003\",\"type\":\"delivery\",\"uuid\":\"e7e6e0a3-4265-4de8-b01d-0a2596d15170\",\"return_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=528\",\"cancel_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=528\"}",
+        "model_type": "App\\Models\\Cart",
+        "model_id": "528",
+        "user_id": "575"
+    },
+    {
+        "id": "8a2bc481-50c2-4d8f-9856-90a748c7cef9",
+        "data": "{\"price\":10,\"payment_id\":12,\"sandbox\":1,\"signature\":\"9a3a00ae00ccee53004da7365177fde5\",\"model_type\":\"App\\\\Models\\\\Cart\",\"model_id\":530,\"total_price\":10,\"tips\":0,\"currency\":\"ZAR\",\"cart_id\":530,\"user_id\":575,\"status\":\"new\",\"lang\":\"en\",\"location\":{\"latitude\":\"22.34058\",\"longitude\":\"30.01341\"},\"address\":{\"address\":\"7GJG82R7+69\",\"office\":null,\"house\":null,\"floor\":null},\"delivery_date\":\"2024-10-21\",\"delivery_time\":\"19:05\",\"delivery_type\":\"delivery\",\"currency_id\":\"3\",\"rate\":\"1\",\"shop_id\":\"9003\",\"type\":\"delivery\",\"uuid\":\"666ac244-cc10-4cbf-8be9-d9a55117dc02\",\"return_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=530\",\"cancel_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=530\"}",
+        "model_type": "App\\Models\\Cart",
+        "model_id": "530",
+        "user_id": "575"
+    },
+    {
+        "id": "dfd7ca6a-9f34-4a68-95eb-2a13c659f79b",
+        "data": "{\"price\":5,\"payment_id\":12,\"sandbox\":1,\"signature\":\"3fa3e3fd71da0cf7f87a762ff76194fd\",\"model_type\":\"App\\\\Models\\\\Cart\",\"model_id\":531,\"total_price\":5,\"tips\":0,\"currency\":\"ZAR\",\"cart_id\":531,\"user_id\":867,\"status\":\"new\",\"lang\":\"en\",\"location\":{\"latitude\":\"22.34058\",\"longitude\":\"30.01341\"},\"address\":{\"address\":\"7GJG82R7+69\",\"office\":null,\"house\":null,\"floor\":null},\"delivery_date\":\"2024-10-21\",\"delivery_time\":\"19:20\",\"delivery_type\":\"delivery\",\"currency_id\":\"3\",\"rate\":\"1\",\"shop_id\":\"9003\",\"type\":\"delivery\",\"uuid\":\"e81c731a-1907-4c85-a2b5-bee0de31b744\",\"return_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=531\",\"cancel_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=531\"}",
+        "model_type": "App\\Models\\Cart",
+        "model_id": "531",
+        "user_id": "867"
+    },
+    {
+        "id": "0082cfce-0d32-49cd-b4e3-17b8aaffdafb",
+        "data": "{\"price\":2,\"payment_id\":12,\"sandbox\":1,\"signature\":\"d06ef7bed478821d3e22f40939e0f0ae\",\"model_type\":\"App\\\\Models\\\\Cart\",\"model_id\":532,\"total_price\":2,\"tips\":0,\"currency\":\"ZAR\",\"cart_id\":532,\"user_id\":575,\"status\":\"new\",\"lang\":\"en\",\"location\":{\"latitude\":\"22.34058\",\"longitude\":\"30.01341\"},\"address\":{\"address\":\"7GJG82R7+69\",\"office\":null,\"house\":null,\"floor\":null},\"delivery_date\":\"2024-10-21\",\"delivery_time\":\"19:25\",\"delivery_type\":\"delivery\",\"currency_id\":\"3\",\"rate\":\"1\",\"shop_id\":\"9003\",\"type\":\"delivery\",\"uuid\":\"ecc2cd62-fdcf-490a-bc33-ccb7db0cb8b1\",\"return_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=532\",\"cancel_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=532\"}",
+        "model_type": "App\\Models\\Cart",
+        "model_id": "532",
+        "user_id": "575"
+    },
+    {
+        "id": "8bea405d-4a93-40c0-9cf6-34f5ee8675b7",
+        "data": "{\"price\":300,\"payment_id\":12,\"sandbox\":1,\"signature\":\"e1ce305aed6430e6f75055e0faa4cfba\",\"model_type\":\"App\\\\Models\\\\Cart\",\"model_id\":533,\"total_price\":300,\"tips\":0,\"currency\":\"ZAR\",\"cart_id\":533,\"user_id\":575,\"status\":\"new\",\"lang\":\"en\",\"location\":{\"latitude\":\"41.2785581\",\"longitude\":\"69.2110059\"},\"address\":{\"address\":\"Bunyodkor shoh ko'chasi 52, 100097, \\u0422\\u043eshkent, Toshkent, Uzbekistan\",\"office\":null,\"house\":null,\"floor\":null},\"delivery_date\":\"2024-10-21\",\"delivery_time\":\"19:40\",\"delivery_type\":\"delivery\",\"currency_id\":\"3\",\"rate\":\"1\",\"shop_id\":\"9001\",\"type\":\"delivery\",\"uuid\":\"1373e35b-de3d-4d5f-9708-66041e146f32\",\"return_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=533\",\"cancel_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=533\"}",
+        "model_type": "App\\Models\\Cart",
+        "model_id": "533",
+        "user_id": "575"
+    },
+    {
+        "id": "a3c782a7-156a-422f-95e8-3a979bc505ec",
+        "data": "{\"price\":10,\"payment_id\":12,\"sandbox\":1,\"signature\":\"814e643b25ab3ed3d35b46f2fd7d560c\",\"model_type\":\"App\\\\Models\\\\Cart\",\"model_id\":534,\"total_price\":10,\"tips\":0,\"currency\":\"ZAR\",\"cart_id\":534,\"user_id\":867,\"status\":\"new\",\"lang\":\"en\",\"location\":{\"latitude\":\"22.34058\",\"longitude\":\"30.01341\"},\"address\":{\"address\":\"7GJG82R7+69\",\"office\":null,\"house\":null,\"floor\":null},\"delivery_date\":\"2024-10-21\",\"delivery_time\":\"20:05\",\"delivery_type\":\"delivery\",\"currency_id\":\"3\",\"rate\":\"1\",\"shop_id\":\"9003\",\"type\":\"delivery\",\"uuid\":\"837911d6-3a77-4fff-ad56-0236baf3b817\",\"return_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=534\",\"cancel_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?cart_id=534\"}",
+        "model_type": "App\\Models\\Cart",
+        "model_id": "534",
+        "user_id": "867"
+    },
+    {
+        "id": "c09d7008-342d-45c8-aae9-1a24e45e5bd7",
+        "data": "{\"price\":3.59,\"payment_id\":12,\"sandbox\":1,\"signature\":\"cc6f7618c638141a0153e7f13d152cad\",\"model_type\":\"App\\\\Models\\\\Order\",\"model_id\":3246,\"total_price\":3.59,\"tips\":3.59,\"currency\":\"ZAR\",\"uuid\":\"6a59796f-cf26-4a65-8c21-e4fb3b55179a\",\"return_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?order_id=3246\",\"cancel_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?order_id=3246\"}",
+        "model_type": "App\\Models\\Order",
+        "model_id": "3246",
+        "user_id": "827"
+    },
+    {
+        "id": "f03da215-6630-4133-bfed-bbdc259fedbb",
+        "data": "{\"price\":200,\"payment_id\":12,\"sandbox\":0,\"signature\":\"b3ac39750493656384d3f2ef5cf3eaf6\",\"uuid\":\"faa7c471-c38c-4b2b-a4e4-33adef72dbac\",\"m_payment_id\":\"f03da215-6630-4133-bfed-bbdc259fedbb\",\"model_type\":\"App\\\\Models\\\\Wallet\",\"model_id\":768,\"total_price\":\"200\",\"currency\":\"ZAR\",\"return_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?wallet_id=768&capture_token=true\",\"cancel_url\":\"https:\\/\\/api.juvo.app\\/order-stripe-success?wallet_id=768\"}",
+        "model_type": "App\\Models\\Wallet",
+        "model_id": "768",
+        "user_id": "827"
+    }
+]

@@ -1,0 +1,114 @@
+[
+    {
+        "id": "1",
+        "type": "text",
+        "active": "1",
+        "shop_id": null,
+        "deleted_at": null,
+        "title": "Size"
+    },
+    {
+        "id": "2",
+        "type": "text",
+        "active": "1",
+        "shop_id": null,
+        "deleted_at": null,
+        "title": "Pack"
+    },
+    {
+        "id": "3",
+        "type": "text",
+        "active": "1",
+        "shop_id": null,
+        "deleted_at": null,
+        "title": "Options"
+    },
+    {
+        "id": "4",
+        "type": "text",
+        "active": "1",
+        "shop_id": null,
+        "deleted_at": null,
+        "title": "Level"
+    },
+    {
+        "id": "5",
+        "type": "text",
+        "active": "1",
+        "shop_id": null,
+        "deleted_at": null,
+        "title": "Grade"
+    },
+    {
+        "id": "6",
+        "type": "text",
+        "active": "1",
+        "shop_id": null,
+        "deleted_at": null,
+        "title": "Design Service"
+    },
+    {
+        "id": "7",
+        "type": "text",
+        "active": "1",
+        "shop_id": null,
+        "deleted_at": null,
+        "title": "Compliance Options"
+    },
+    {
+        "id": "8",
+        "type": "text",
+        "active": "1",
+        "shop_id": null,
+        "deleted_at": null,
+        "title": "Flavour"
+    },
+    {
+        "id": "9",
+        "type": "text",
+        "active": "1",
+        "shop_id": null,
+        "deleted_at": null,
+        "title": "Amount"
+    },
+    {
+        "id": "10",
+        "type": "text",
+        "active": "1",
+        "shop_id": null,
+        "deleted_at": null,
+        "title": "Temparature"
+    },
+    {
+        "id": "11",
+        "type": "text",
+        "active": "1",
+        "shop_id": null,
+        "deleted_at": null,
+        "title": "Container Collection"
+    },
+    {
+        "id": "12",
+        "type": "text",
+        "active": "1",
+        "shop_id": "9003",
+        "deleted_at": null,
+        "title": "Product"
+    },
+    {
+        "id": "13",
+        "type": "text",
+        "active": "1",
+        "shop_id": "505",
+        "deleted_at": null,
+        "title": "How d'ya Like It?"
+    },
+    {
+        "id": "14",
+        "type": "text",
+        "active": "1",
+        "shop_id": "505",
+        "deleted_at": null,
+        "title": "Mielie Flavour"
+    }
+]

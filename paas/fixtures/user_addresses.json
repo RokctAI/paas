@@ -1,0 +1,363 @@
+[
+    {
+        "id": "1",
+        "title": "Ext9",
+        "user_id": "147",
+        "address_details": {
+            "address": "Musina, Messina-Nancefield, Amarula Street, 4023",
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.34238537630079,
+            30.01627720892429
+        ],
+        "is_active": "0",
+        "created_at": "2023-11-12 23:34:00",
+        "updated_at": "2024-05-25 23:36:13",
+        "deleted_at": null
+    },
+    {
+        "id": "2",
+        "title": "jruuoy",
+        "user_id": "289",
+        "address_details": {
+            "address": null,
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.34239281885734,
+            30.016276538372036
+        ],
+        "is_active": "1",
+        "created_at": "2023-11-16 04:47:24",
+        "updated_at": "2023-11-16 04:47:24",
+        "deleted_at": null
+    },
+    {
+        "id": "3",
+        "title": null,
+        "user_id": "101",
+        "address_details": {
+            "address": "Musina, Messina-Nancefield, Amarula Street, 4023",
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.34238537630079,
+            30.01627720892429
+        ],
+        "is_active": "1",
+        "created_at": "2024-03-11 12:32:32",
+        "updated_at": "2024-04-27 15:38:50",
+        "deleted_at": null
+    },
+    {
+        "id": "4",
+        "title": null,
+        "user_id": "101",
+        "address_details": {
+            "address": null,
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.340973764223644,
+            30.01362785696983
+        ],
+        "is_active": "0",
+        "created_at": "2024-04-17 08:37:45",
+        "updated_at": "2024-04-17 22:22:52",
+        "deleted_at": null
+    },
+    {
+        "id": "5",
+        "title": null,
+        "user_id": "101",
+        "address_details": {
+            "address": "Musina, Messina-Nancefield, Freedom Street, 3709",
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.340973764223644,
+            30.01362785696983
+        ],
+        "is_active": "0",
+        "created_at": "2024-04-17 22:22:52",
+        "updated_at": "2024-04-27 15:38:50",
+        "deleted_at": null
+    },
+    {
+        "id": "6",
+        "title": null,
+        "user_id": "306",
+        "address_details": {
+            "address": "3631 Mooketsi St, Messina-Nancefield, Musina, South Africa",
+            "floor": null,
+            "house": null,
+            "comment": null
+        },
+        "location": [
+            -22.3407851,
+            30.0134107
+        ],
+        "is_active": "1",
+        "created_at": "2024-04-29 10:36:34",
+        "updated_at": "2024-04-29 10:37:26",
+        "deleted_at": null
+    },
+    {
+        "id": "7",
+        "title": "eomsdv",
+        "user_id": "722",
+        "address_details": {
+            "address": null,
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.340579924384844,
+            30.013409927487373
+        ],
+        "is_active": "1",
+        "created_at": "2024-05-12 20:05:06",
+        "updated_at": "2024-05-12 20:05:06",
+        "deleted_at": null
+    },
+    {
+        "id": "8",
+        "title": null,
+        "user_id": "702",
+        "address_details": {
+            "address": "Musina, Messina-Nancefield, Freedom Street, 3709",
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.340965081152575,
+            30.013799853622913
+        ],
+        "is_active": "1",
+        "created_at": "2024-05-15 13:25:39",
+        "updated_at": "2024-07-02 15:41:00",
+        "deleted_at": null
+    },
+    {
+        "id": "9",
+        "title": null,
+        "user_id": "744",
+        "address_details": {
+            "address": null,
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.342372661932423,
+            30.016263462603096
+        ],
+        "is_active": "1",
+        "created_at": "2024-05-15 15:36:40",
+        "updated_at": "2024-05-15 15:36:40",
+        "deleted_at": null
+    },
+    {
+        "id": "10",
+        "title": null,
+        "user_id": "147",
+        "address_details": {
+            "address": "Musina, Messina-Nancefield, Amarula Street, 4023",
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.34238537630079,
+            30.01627720892429
+        ],
+        "is_active": "1",
+        "created_at": "2024-05-25 23:36:13",
+        "updated_at": "2024-05-25 23:36:13",
+        "deleted_at": null
+    },
+    {
+        "id": "11",
+        "title": "irxggd",
+        "user_id": "790",
+        "address_details": {
+            "address": null,
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.34238537630079,
+            30.01627720892429
+        ],
+        "is_active": "1",
+        "created_at": "2024-06-12 11:41:15",
+        "updated_at": "2024-06-12 11:41:15",
+        "deleted_at": null
+    },
+    {
+        "id": "12",
+        "title": null,
+        "user_id": "109",
+        "address_details": {
+            "address": "Musina, Messina-Nancefield, Motswiri Street, 4006",
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.34227311769125,
+            30.016510561108593
+        ],
+        "is_active": "1",
+        "created_at": "2024-08-01 23:27:49",
+        "updated_at": "2024-08-01 23:27:49",
+        "deleted_at": null
+    },
+    {
+        "id": "13",
+        "title": "Work",
+        "user_id": "119",
+        "address_details": {
+            "address": "Musina, Messina-Nancefield, Lethlaka Street, 3753",
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.33936180483378,
+            30.017004422843456
+        ],
+        "is_active": "1",
+        "created_at": "2024-08-03 22:28:18",
+        "updated_at": "2025-06-22 23:42:05",
+        "deleted_at": null
+    },
+    {
+        "id": "14",
+        "title": "Home",
+        "user_id": "119",
+        "address_details": {
+            "address": "Musina, Musina",
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.344395782446586,
+            30.010150037705902
+        ],
+        "is_active": "0",
+        "created_at": "2024-08-03 22:29:02",
+        "updated_at": "2025-06-22 23:42:05",
+        "deleted_at": null
+    },
+    {
+        "id": "15",
+        "title": "uuuty",
+        "user_id": "853",
+        "address_details": {
+            "address": null,
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.329818363036058,
+            30.022716186940666
+        ],
+        "is_active": "1",
+        "created_at": "2024-09-19 15:00:33",
+        "updated_at": "2024-09-19 15:00:33",
+        "deleted_at": null
+    },
+    {
+        "id": "16",
+        "title": null,
+        "user_id": "854",
+        "address_details": {
+            "address": "Musina, Messina-Nancefield, Mthetheleli Ncube Street, 1485",
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.326407772483428,
+            30.02486832439899
+        ],
+        "is_active": "1",
+        "created_at": "2024-09-28 12:51:03",
+        "updated_at": "2024-09-28 12:51:47",
+        "deleted_at": null
+    },
+    {
+        "id": "17",
+        "title": null,
+        "user_id": "844",
+        "address_details": {
+            "address": "Musina, Messina-Nancefield, Amarula Street, 4023",
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.34238537630079,
+            30.01627720892429
+        ],
+        "is_active": "1",
+        "created_at": "2024-10-02 01:33:31",
+        "updated_at": "2024-10-02 01:33:31",
+        "deleted_at": null
+    },
+    {
+        "id": "18",
+        "title": null,
+        "user_id": "860",
+        "address_details": {
+            "address": "Musina, Messina-Nancefield, Amarula Street, 4023",
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.34238537630079,
+            30.01627720892429
+        ],
+        "is_active": "1",
+        "created_at": "2024-10-12 05:40:22",
+        "updated_at": "2024-10-12 05:40:22",
+        "deleted_at": null
+    },
+    {
+        "id": "19",
+        "title": null,
+        "user_id": "880",
+        "address_details": {
+            "address": "Musina, Messina-Nancefield, Amarula Street, 4023",
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.34238537630079,
+            30.01627720892429
+        ],
+        "is_active": "1",
+        "created_at": "2025-01-14 22:25:02",
+        "updated_at": "2025-01-14 22:25:02",
+        "deleted_at": null
+    },
+    {
+        "id": "20",
+        "title": null,
+        "user_id": "856",
+        "address_details": {
+            "address": "Musina, Messina-Nancefield, Freedom Street, 3837",
+            "house": null,
+            "floor": null
+        },
+        "location": [
+            -22.342274978331922,
+            30.014437213540077
+        ],
+        "is_active": "1",
+        "created_at": "2025-02-02 23:56:14",
+        "updated_at": "2025-02-02 23:56:14",
+        "deleted_at": null
+    }
+]

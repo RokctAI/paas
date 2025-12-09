@@ -1,0 +1,58 @@
+[
+    {
+        "id": "97",
+        "type": "orders",
+        "price": "100",
+        "month": "1",
+        "active": "1",
+        "title": "title1",
+        "product_limit": "1000",
+        "order_limit": "1000",
+        "with_report": "0",
+        "created_at": "2024-02-21 04:02:13",
+        "updated_at": "2024-02-21 04:02:13",
+        "deleted_at": null
+    },
+    {
+        "id": "98",
+        "type": "orders",
+        "price": "250",
+        "month": "3",
+        "active": "1",
+        "title": "title3",
+        "product_limit": "3000",
+        "order_limit": "3000",
+        "with_report": "1",
+        "created_at": "2024-02-21 04:02:13",
+        "updated_at": "2024-02-21 04:02:13",
+        "deleted_at": null
+    },
+    {
+        "id": "99",
+        "type": "orders",
+        "price": "450",
+        "month": "6",
+        "active": "1",
+        "title": "title6",
+        "product_limit": "6000",
+        "order_limit": "6000",
+        "with_report": "1",
+        "created_at": "2024-02-21 04:02:13",
+        "updated_at": "2024-02-21 04:02:13",
+        "deleted_at": null
+    },
+    {
+        "id": "100",
+        "type": "orders",
+        "price": "800",
+        "month": "12",
+        "active": "1",
+        "title": "title12",
+        "product_limit": "12000",
+        "order_limit": "12000",
+        "with_report": "1",
+        "created_at": "2024-02-21 04:02:13",
+        "updated_at": "2024-02-21 04:02:13",
+        "deleted_at": null
+    }
+]

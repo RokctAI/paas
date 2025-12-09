@@ -83,6 +83,12 @@
             "label": "Likes",
             "default": "0",
             "read_only": 1
+        },
+        {
+            "fieldname": "translations",
+            "fieldtype": "Table",
+            "label": "Translations",
+            "options": "Banner Translation"
         }
     ]
 }

@@ -1,0 +1,10 @@
+[
+    {
+        "id": "1",
+        "type": "welcome",
+        "data": "{\"title\":{\"en\":\"Water & Groceries, delivered!\"},\"description\":{\"en\":\"Choose your address and start ordering\"},\"img\":\"https:\\/\\/s3.juvo.app\\/public\\/images\\/languages\\/101-1750275705.webp\",\"features\":[{\"img\":\"https:\\/\\/s3.juvo.app\\/public\\/images\\/languages\\/101-1750275680.feature-1.mp4\",\"title\":{\"en\":\"Choose what you want\"},\"description\":{\"en\":\"Select items from your favorite stores at Juvo\"}},{\"img\":\"https:\\/\\/s3.juvo.app\\/public\\/images\\/languages\\/101-1750275684.feature-2.mp4\",\"title\":{\"en\":\"See real-time updates\"},\"description\":{\"en\":\"Personal shoppers pick items with care\"}},{\"img\":\"https:\\/\\/s3.juvo.app\\/public\\/images\\/languages\\/101-1750275690.feature-3.mp4\",\"title\":{\"en\":\"Get your items same-day\"},\"description\":{\"en\":\"Enjoy our 100% quality guarantee on every order\"}}]}",
+        "created_at": "2023-06-03 19:15:10",
+        "updated_at": "2025-06-18 19:41:50",
+        "deleted_at": null
+    }
+]

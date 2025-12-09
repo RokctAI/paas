@@ -73,3 +73,27 @@ def update_shop(shop_data):
 
     shop.save(ignore_permissions=True)
     return shop.as_dict()
+
+@frappe.whitelist()
+def set_working_status(status):
+    """
+    Updates the shop's open status.
+    """
+    user = frappe.session.user
+    shop_id = _get_seller_shop(user)
+    
+    shop = frappe.get_doc("Shop", shop_id)
+    
+    # status can be boolean or string "true"/"false" or 0/1
+    if isinstance(status, str):
+        if status.lower() == "true":
+            status = 1
+        elif status.lower() == "false":
+            status = 0
+        else:
+            status = int(status)
+            
+    shop.open = 1 if status else 0
+    shop.save(ignore_permissions=True)
+    
+    return shop.open

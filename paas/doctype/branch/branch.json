@@ -52,6 +52,12 @@
             "fieldname": "longitude",
             "fieldtype": "Float",
             "label": "Longitude"
+        },
+        {
+            "fieldname": "translations",
+            "fieldtype": "Table",
+            "label": "Translations",
+            "options": "Branch Translation"
         }
     ]
 }

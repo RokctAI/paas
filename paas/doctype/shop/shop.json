@@ -194,6 +194,12 @@
             "label": "Auto Approve Orders",
             "default": "0",
             "description": "Enable auto-approval for orders in this shop. This will only take effect if the global 'Auto Approve All Orders' setting is also enabled by the admin."
+        },
+        {
+            "fieldname": "translations",
+            "fieldtype": "Table",
+            "label": "Translations",
+            "options": "Shop Translation"
         }
     ]
 }

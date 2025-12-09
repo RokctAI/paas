@@ -48,6 +48,12 @@
             "fieldtype": "Table",
             "label": "Combo Items",
             "options": "Combo Item"
+        },
+        {
+            "fieldname": "translations",
+            "fieldtype": "Table",
+            "label": "Translations",
+            "options": "Combo Translation"
         }
     ]
 }

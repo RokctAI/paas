@@ -10,6 +10,10 @@ app_license = "AGPL-3.0"
 before_install = "paas.install.check_site_role"
 after_install = "paas.install.run_seeders"
 
+# Authentication
+# --------------
+auth_hooks = ["paas.api.auth.auth.validate"]
+
 # Scheduler Events
 # ----------------
 import frappe

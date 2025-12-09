@@ -1,0 +1,47 @@
+[
+    {
+        "id": "1",
+        "img": "https://s3.juvo.app/public/images/shop-tags/101-1678369266.webp",
+        "created_at": "2023-03-18 07:57:44",
+        "updated_at": "2023-12-01 09:27:00",
+        "deleted_at": "2023-12-01 09:27:00"
+    },
+    {
+        "id": "2",
+        "img": "https://s3.juvo.app/public/images/shop-tags/101-1679148057.gif",
+        "created_at": "2023-03-18 07:58:58",
+        "updated_at": "2023-12-01 09:27:00",
+        "deleted_at": "2023-12-01 09:27:00"
+    },
+    {
+        "id": "3",
+        "img": "https://s3.juvo.app/public/images/products/101-1679147982.gif",
+        "created_at": "2023-03-18 08:00:24",
+        "updated_at": "2023-12-01 09:26:39",
+        "deleted_at": null,
+        "title": "Water"
+    },
+    {
+        "id": "4",
+        "img": "https://s3.juvo.app/public/images/shop-tags/101-1679148057.gif",
+        "created_at": "2023-04-25 06:09:28",
+        "updated_at": "2024-02-21 09:44:25",
+        "deleted_at": null,
+        "title": "Vegan"
+    },
+    {
+        "id": "5",
+        "img": "https://s3.juvo.app/public/images/shop-tags/101-1678369266.webp",
+        "created_at": "2023-04-25 06:09:42",
+        "updated_at": "2024-02-21 09:42:53",
+        "deleted_at": null,
+        "title": "Halal"
+    },
+    {
+        "id": "6",
+        "img": "https://s3.juvo.app/public/images/products/101-1691677458.webp",
+        "created_at": "2023-08-10 12:24:21",
+        "updated_at": "2023-12-01 09:27:00",
+        "deleted_at": "2023-12-01 09:27:00"
+    }
+]

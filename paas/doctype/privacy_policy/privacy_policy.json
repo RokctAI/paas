@@ -27,6 +27,12 @@
             "fieldname": "active",
             "fieldtype": "Check",
             "label": "Active"
+        },
+        {
+            "fieldname": "translations",
+            "fieldtype": "Table",
+            "label": "Translations",
+            "options": "Privacy Policy Translation"
         }
     ],
     "issingle": 0,

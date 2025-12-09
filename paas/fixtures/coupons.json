@@ -1,0 +1,72 @@
+[
+    {
+        "id": "2",
+        "shop_id": "9003",
+        "code": "FREE100",
+        "type": "fix",
+        "qty": "1",
+        "price": "100",
+        "expire": "2026-10-10 00:00:00",
+        "created_at": "2023-06-15 16:18:23",
+        "updated_at": "2024-10-30 12:41:52",
+        "deleted_at": null,
+        "title": "FREE100",
+        "description": null
+    },
+    {
+        "id": "3",
+        "shop_id": "9003",
+        "code": "R5Off",
+        "type": "fix",
+        "qty": "999999998",
+        "price": "5",
+        "expire": "2027-12-11 00:00:00",
+        "created_at": "2024-10-30 12:38:01",
+        "updated_at": "2024-10-30 12:52:42",
+        "deleted_at": null,
+        "title": "R5Off",
+        "description": null
+    },
+    {
+        "id": "4",
+        "shop_id": "9003",
+        "code": "R10off",
+        "type": "fix",
+        "qty": "2147483645",
+        "price": "10",
+        "expire": "2027-11-03 00:00:00",
+        "created_at": "2024-10-30 12:40:44",
+        "updated_at": "2024-10-30 13:39:15",
+        "deleted_at": null,
+        "title": "R10off",
+        "description": null
+    },
+    {
+        "id": "5",
+        "shop_id": "9003",
+        "code": "R20off",
+        "type": "fix",
+        "qty": "2147483647",
+        "price": "20",
+        "expire": "2027-11-06 00:00:00",
+        "created_at": "2024-10-30 12:41:30",
+        "updated_at": "2024-10-30 12:41:30",
+        "deleted_at": null,
+        "title": "R20off",
+        "description": null
+    },
+    {
+        "id": "6",
+        "shop_id": "9003",
+        "code": "FREE25",
+        "type": "fix",
+        "qty": "2147483633",
+        "price": "25",
+        "expire": "2027-12-11 00:00:00",
+        "created_at": "2024-11-30 09:43:36",
+        "updated_at": "2025-08-25 16:19:47",
+        "deleted_at": null,
+        "title": "FREE25",
+        "description": null
+    }
+]

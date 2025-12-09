@@ -42,6 +42,12 @@
             "fieldtype": "Table",
             "label": "Menu Items",
             "options": "Menu Item"
+        },
+        {
+            "fieldname": "translations",
+            "fieldtype": "Table",
+            "label": "Translations",
+            "options": "Menu Translation"
         }
     ]
 }
