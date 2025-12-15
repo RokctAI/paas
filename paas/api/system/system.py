@@ -26,7 +26,7 @@ def get_weather(location: str):
 
     # Construct the secure API call
     scheme = frappe.conf.get("control_plane_scheme", "https")
-    api_url = f"{scheme}://{control_plane_url}/api/method/rokct.rokct.api.get_weather"
+    api_url = f"{scheme}://{control_plane_url}/api/method/rokct.rokct.weather.get_weather_data"
     headers = {
         "X-Rokct-Secret": api_secret,
         "Accept": "application/json"
