@@ -200,6 +200,13 @@
             "fieldtype": "Table",
             "label": "Translations",
             "options": "Shop Translation"
+        },
+        {
+            "fieldname": "enable_cod",
+            "fieldtype": "Check",
+            "label": "Enable COD? (Cash on Delivery)",
+            "default": "1",
+            "description": "If disabled, customers cannot choose Cash on Delivery for this shop."
         }
     ]
 }

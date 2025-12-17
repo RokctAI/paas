@@ -474,6 +474,17 @@ from paas.api.system.system import (
     get_currencies,
 )
 from paas.api.remote_config import get_remote_config
+from paas.paas.whatsapp.api import webhook as whatsapp_webhook
+
+@frappe.whitelist(allow_guest=True)
+def whatsapp_hook():
+    return whatsapp_webhook()
+
+@frappe.whitelist(allow_guest=True)
+def whatsapp_flow_endpoint():
+    # Helper to route to the data endpoint
+    from paas.paas.whatsapp.api import whatsapp_flow_data
+    return whatsapp_flow_data()
 from paas.api.repeating_order import create_repeating_order, delete_repeating_order
 from paas.api.payment.payment import (
     get_saved_cards as _get_saved_cards,

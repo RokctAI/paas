@@ -1,1 +1,4 @@
 # Frappe App Requirements
+staticmap
+pillow
+cryptography
