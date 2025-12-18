@@ -96,6 +96,7 @@ def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str =
             'min_amount': shop.min_amount,
             'status': shop.status,
             'enable_cod': bool(is_cod),
+            'type': shop.type, # Expose as standard 'type'
             'delivery_time': {
                 'type': shop.delivery_time_type,
                 'from': shop.delivery_time_from,
@@ -146,6 +147,7 @@ def get_shop_details(uuid: str):
         'min_amount': shop.min_amount,
         'status': shop.status,
         'enable_cod': bool(is_cod),
+        'type': shop.type, # Expose as standard 'type'
         'delivery_time': {
             'type': shop.delivery_time_type,
             'from': shop.delivery_time_from,
@@ -157,3 +159,73 @@ def get_shop_details(uuid: str):
             'address': shop.address
         }
     }
+
+@frappe.whitelist(allow_guest=True)
+def search_shops(search: str, category_id: int = None, limit_start: int = 0, limit_page_length: int = 20):
+    """
+    Searches for shops by name, optionally filtered by category.
+    """
+    filters = [
+        ["Shop", "shop_name", "like", f"%{search}%"],
+        ["Shop", "open", "=", 1],
+        ["Shop", "status", "=", "approved"],
+        ["Shop", "visibility", "=", 1]
+    ]
+
+    if category_id:
+        filters.append(["Shop", "category", "=", category_id])
+
+    shops = frappe.get_list(
+        "Shop",
+        filters=filters,
+        fields=[
+            "name", "uuid", "slug", "user", "logo", "cover_photo",
+            "phone", "address", "location", "status", "type", "min_amount",
+            "tax", "delivery_time_type", "delivery_time_from", "delivery_time_to",
+            "open", "visibility", "verify", "service_fee", "percentage", "enable_cod"
+        ],
+        limit_start=limit_start,
+        limit_page_length=limit_page_length,
+        order_by="shop_name"
+    )
+
+    # Global COD Check
+    cash_gateway = frappe.db.get_value("PaaS Payment Gateway", {"gateway_controller": "Cash", "enabled": 1})
+    is_global_cod_enabled = bool(cash_gateway)
+
+    formatted_shops = []
+    for shop in shops:
+        # Hierarchical COD: Global AND Shop
+        is_cod = is_global_cod_enabled and (shop.enable_cod if shop.enable_cod is not None else 1)
+        
+        formatted_shops.append({
+            'id': shop.name,
+            'uuid': shop.uuid,
+            'slug': shop.slug,
+            'user_id': shop.user,
+            'tax': shop.tax,
+            'service_fee': shop.service_fee,
+            'percentage': shop.percentage,
+            'phone': shop.phone,
+            'open': bool(shop.open),
+            'visibility': bool(shop.visibility),
+            'verify': bool(shop.verify),
+            'logo_img': shop.logo,
+            'background_img': shop.cover_photo,
+            'min_amount': shop.min_amount,
+            'status': shop.status,
+            'enable_cod': bool(is_cod),
+            'type': shop.type,
+            'delivery_time': {
+                'type': shop.delivery_time_type,
+                'from': shop.delivery_time_from,
+                'to': shop.delivery_time_to
+            },
+            'location': shop.location,
+            'translation': {
+                'title': shop.name,
+                'address': shop.address
+            }
+        })
+
+    return formatted_shops

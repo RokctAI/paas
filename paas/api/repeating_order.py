@@ -28,9 +28,13 @@ def create_repeating_order(original_order: str, start_date: str, cron_pattern: s
                              saved_card: str = None, lang: str = "en"):
     """
     Creates a new repeating order with payment preferences and ringfencing.
+    Note: Payment method is enforced to 'Wallet' for auto-orders.
     """
     user = frappe.session.user
     order_doc = frappe.get_doc("Order", original_order)
+    
+    # Enforce Wallet for Auto Orders
+    payment_method = "Wallet"
     
     ringfenced_amount = 0
     if payment_method == "Wallet":
@@ -39,7 +43,8 @@ def create_repeating_order(original_order: str, start_date: str, cron_pattern: s
         
         balance = user_doc.get("wallet_balance") or 0.0
         if balance < ringfenced_amount:
-            frappe.throw("Insufficient Wallet Balance to reserve funds for this auto-order schedule.")
+            # Specific error message for frontend interception
+            frappe.throw(f"Insufficient Wallet Balance. Required: {ringfenced_amount}, Available: {balance}. Suggest Topup")
         
         # Ringfence
         user_doc.set("wallet_balance", balance - ringfenced_amount)

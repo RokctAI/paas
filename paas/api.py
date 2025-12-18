@@ -22,7 +22,7 @@
 
 import frappe
 from paas.paas.utils import check_subscription_feature, get_subscription_details
-from paas.api.shop.shop import get_shops, get_shop_details
+from paas.api.shop.shop import get_shops, get_shop_details, search_shops
 from paas.api.product.product import (
     get_products,
     most_sold_products,
