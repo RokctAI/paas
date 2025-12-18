@@ -1,0 +1,62 @@
+[
+    {
+        "name": "restaurant",
+        "title": "Restaurant",
+        "description": "Restaurants, Fast Food, and Cafes",
+        "icon": "restaurant-2-fill"
+    },
+    {
+        "name": "store",
+        "title": "Store",
+        "description": "Supermarkets, Grocery, and Retail Stores",
+        "icon": "store-3-fill"
+    },
+    {
+        "name": "service",
+        "title": "Service",
+        "description": "Professional Services and Providers",
+        "icon": "customer-service-2-fill"
+    },
+    {
+        "name": "shop",
+        "title": "Shop",
+        "description": "General Shops and Boutiques",
+        "icon": "shopping-bag-3-fill"
+    },
+    {
+        "name": "liquor",
+        "title": "Liquor",
+        "description": "Liquor Stores and Bottle Shops",
+        "icon": "goblet-fill"
+    },
+    {
+        "name": "pharmacy",
+        "title": "Pharmacy",
+        "description": "Pharmacies and Drug Stores",
+        "icon": "medicine-bottle-fill"
+    },
+    {
+        "name": "water",
+        "title": "Water",
+        "description": "Water Refills and Purification",
+        "icon": "drop-fill"
+    },
+    {
+        "name": "home_care",
+        "title": "Home Care",
+        "description": "Home Services and Maintenance",
+        "icon": "home-gear-fill"
+    },
+    {
+        "name": "ecommerce",
+        "title": "Ecommerce",
+        "description": "Nationwide Online Shopping and Courier Delivery",
+        "icon": "global-line"
+    },
+    {
+        "name": "laundry",
+        "title": "Laundry",
+        "description": "Laundry and Dry Cleaning Services",
+        "icon": "shirt-line"
+    }
+]

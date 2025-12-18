@@ -22,7 +22,7 @@
 
 import frappe
 from paas.paas.utils import check_subscription_feature, get_subscription_details
-from paas.api.shop.shop import get_shops, get_shop_details, search_shops
+from paas.api.shop.shop import get_shops, get_shop_details, search_shops, get_shop_types
 from paas.api.product.product import (
     get_products,
     most_sold_products,
@@ -543,9 +543,13 @@ def get_nearby_shops(latitude: float, longitude: float, radius_km: float = 10, l
 
         return R * c
 
-    shops = frappe.get_all("Shop", fields=["name", "latitude", "longitude"])
+    shops = frappe.get_all("Shop", fields=["name", "latitude", "longitude", "is_ecommerce"])
     nearby_shops = []
     for shop in shops:
+        if shop.is_ecommerce:
+            nearby_shops.append(shop)
+            continue
+
         if shop.latitude and shop.longitude:
             distance = haversine(latitude, longitude, shop.latitude, shop.longitude)
             if distance <= radius_km:

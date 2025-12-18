@@ -555,7 +555,7 @@ def get_saved_cards():
     cards = frappe.get_list(
         "Saved Card",
         filters={"user": user},
-        fields=["name", "token", "last_four", "card_type", "expiry_date", "card_holder_name"]
+        fields=["name", "gateway", "token", "last_four", "card_type", "expiry_date", "card_holder_name"]
     )
     return cards
 
@@ -641,18 +641,164 @@ def process_direct_card_payment(order_id, card_number, card_holder, expiry_date,
 
     return {"status": "success", "transaction_id": transaction.name}
 
+def _charge_card_token(token, amount, currency, description, user):
+    """
+    Internal helper to charge a saved card token via the appropriate gateway.
+    """
+    saved_card_name = frappe.db.get_value("Saved Card", {"token": token, "user": user})
+    if not saved_card_name:
+         frappe.throw("Invalid or unauthorized token.", frappe.PermissionError)
+    
+    saved_card = frappe.get_doc("Saved Card", saved_card_name)
+    gateway_name = saved_card.gateway or "PayFast"  # Default to PayFast for legacy
+
+    if gateway_name == "Flutterwave":
+        return _charge_flutterwave_token(token, amount, currency, description, user)
+    elif gateway_name == "PayFast":
+        return _charge_payfast_token(token, amount, currency, description)
+    else:
+        # Fallback to local simulation if no production gateway is matched, 
+        # but log a warning as this shouldn't happen in production.
+        frappe.log_error(f"Unsupported gateway {gateway_name} for token charge.", "Payment Warning")
+        return {"status": "success", "message": "Simulated success (Unconfigured Gateway)"}
+
+def _charge_flutterwave_token(token, amount, currency, description, user):
+    """
+    Executes a tokenized charge via Flutterwave.
+    """
+    settings = frappe.get_doc("Flutterwave Settings")
+    if not settings.enabled:
+        frappe.throw("Flutterwave payments are not enabled.")
+
+    url = "https://api.flutterwave.com/v3/tokenized-charges"
+    headers = {
+        "Authorization": f"Bearer {settings.get_password('secret_key')}",
+        "Content-Type": "application/json"
+    }
+    
+    user_email = frappe.db.get_value("User", user, "email")
+    
+    payload = {
+        "token": token,
+        "currency": currency,
+        "amount": amount,
+        "email": user_email,
+        "tx_ref": f"pay-{frappe.utils.generate_hash()[:10]}",
+        "narrative": description
+    }
+
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=30)
+        response.raise_for_status()
+        res_data = response.json()
+        if res_data.get("status") == "success":
+            return res_data
+        else:
+            frappe.throw(f"Flutterwave Error: {res_data.get('message')}")
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), "Flutterwave Token Charge Failed")
+        frappe.throw("Card payment failed. Please check your card balance or try another card.")
+
+def _charge_payfast_token(token, amount, currency, description):
+    """
+    Executes a tokenized charge via PayFast (Ad Hoc Subscription pattern).
+    Uses the v1 subscriptions charge API with proper signature generation.
+    """
+    settings = get_payfast_settings()
+    is_sandbox = settings.get('is_sandbox', True)
+    base_url = "api.payfast.co.za" if not is_sandbox else "sandbox.payfast.co.za"
+    
+    merchant_id = settings.get("merchant_id")
+    merchant_key = settings.get("merchant_key")
+    pass_phrase = settings.get("pass_phrase")
+    
+    # Ad-hoc charge endpoint
+    url = f"https://{base_url}/subscriptions/{token}/adhoc"
+    if is_sandbox and not url.endswith("/api"): # Sandbox API is usually under /api
+        url = f"https://sandbox.payfast.co.za/api/subscriptions/{token}/adhoc"
+
+    # PayFast API requires amount in cents for adhoc charges
+    amount_in_cents = int(float(amount) * 100)
+    
+    # 1. Prepare base parameters
+    params = {
+        'merchant-id': merchant_id,
+        'version': 'v1',
+        'timestamp': frappe.utils.now_datetime().strftime('%Y-%m-%dT%H:%M:%S'),
+    }
+    
+    # 2. Add body parameters (these are also signed)
+    body = {
+        'amount': amount_in_cents,
+        'item_name': description,
+        'm_payment_id': frappe.utils.generate_hash()[:10]
+    }
+    
+    # 3. Generate Signature
+    # According to PayFastCardService.php:
+    # a) Merge base params with body
+    all_params = {**params, **body}
+    # b) Initial Sort
+    keys_sorted = sorted(all_params.keys())
+    
+    # c) Add passphrase (if exists) after initial sort but then sort AGAIN
+    signature_params = all_params.copy()
+    if pass_phrase:
+         signature_params['passphrase'] = pass_phrase
+    
+    final_sorted_keys = sorted(signature_params.keys())
+    
+    # d) Build query string
+    from urllib.parse import urlencode
+    # PayFast expects standard urlencoding for the signature string
+    signature_string = "&".join([f"{k}={urlencode(str(signature_params[k]))}" for k in final_sorted_keys])
+    
+    import hashlib
+    signature = hashlib.md5(signature_string.encode('utf-8')).hexdigest()
+    
+    # 4. Prepare Headers
+    headers = {
+        'merchant-id': merchant_id,
+        'version': 'v1',
+        'timestamp': params['timestamp'],
+        'signature': signature,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
+    
+    try:
+        response = requests.post(url, json=body, headers=headers, timeout=30)
+        res_data = response.json() if response.text else {}
+        
+        if response.status_code in [200, 202] and res_data.get('status') == 'success':
+            return res_data
+        else:
+            error_msg = res_data.get('data', {}).get('response', 'Unknown PayFast Error')
+            frappe.log_error(f"PayFast API Error ({response.status_code}): {response.text}", "PayFast Token Charge Failed")
+            frappe.throw(f"Payment failed: {error_msg}")
+            
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), "PayFast Token Charge Exception")
+        frappe.throw("Error connecting to payment gateway.")
+
 @frappe.whitelist()
 def process_token_payment(order_id, token):
     user = frappe.session.user
     if user == "Guest":
         frappe.throw("You must be logged in to make a payment.")
 
-    if not frappe.db.exists("Saved Card", {"token": token, "user": user}):
-        frappe.throw("Invalid or unauthorized token.", frappe.PermissionError)
-
     order = frappe.get_doc("Order", order_id)
     if order.user != user:
         frappe.throw("You can only pay for your own orders.", frappe.PermissionError)
+
+    # Execute actual charge
+    _charge_card_token(
+        token=token,
+        amount=order.grand_total,
+        currency=frappe.db.get_single_value("System Settings", "currency") or "ZAR",
+        description=f"Payment for Order {order_id}",
+        user=user
+    )
 
     transaction = frappe.get_doc({
         "doctype": "Transaction",
@@ -670,10 +816,22 @@ def process_token_payment(order_id, token):
     return {"status": "success", "transaction_id": transaction.name}
 
 @frappe.whitelist()
-def process_wallet_top_up(amount):
+def process_wallet_top_up(amount, token=None):
     user = frappe.session.user
     if user == "Guest":
         frappe.throw("You must be logged in to top up your wallet.")
+
+    if not token:
+        frappe.throw("A payment token is required to top up your wallet.")
+
+    # Execute actual charge via gateway
+    _charge_card_token(
+        token=token,
+        amount=amount,
+        currency=frappe.db.get_single_value("System Settings", "currency") or "ZAR",
+        description=f"Wallet Top-up for {user}",
+        user=user
+    )
 
     transaction = frappe.get_doc({
         "doctype": "Transaction",
@@ -681,7 +839,8 @@ def process_wallet_top_up(amount):
         "reference_doctype": "User",
         "reference_docname": user,
         "amount": amount,
-        "status": "Success"
+        "status": "Success",
+        "type": "Wallet Top-up"
     })
     transaction.insert(ignore_permissions=True)
 

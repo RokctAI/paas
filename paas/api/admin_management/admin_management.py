@@ -9,8 +9,8 @@ def get_all_shops(limit_start: int = 0, limit_page_length: int = 20):
     """
     _require_admin()
     return frappe.get_list(
-        "Company",
-        fields=["name", "company_name", "user_id"],
+        "Shop",
+        fields=["name", "shop_name", "user", "shop_type", "is_ecommerce"],
         limit_start=limit_start,
         limit_page_length=limit_page_length
     )
@@ -39,7 +39,7 @@ def create_shop(shop_data):
         shop_data = json.loads(shop_data)
 
     new_shop = frappe.get_doc({
-        "doctype": "Company",
+        "doctype": "Shop",
         **shop_data
     })
     new_shop.insert(ignore_permissions=True)
@@ -55,7 +55,7 @@ def update_shop(shop_name, shop_data):
     if isinstance(shop_data, str):
         shop_data = json.loads(shop_data)
 
-    shop = frappe.get_doc("Company", shop_name)
+    shop = frappe.get_doc("Shop", shop_name)
     shop.update(shop_data)
     shop.save(ignore_permissions=True)
     return shop.as_dict()
@@ -67,7 +67,7 @@ def delete_shop(shop_name):
     Deletes a shop (for admins).
     """
     _require_admin()
-    frappe.delete_doc("Company", shop_name, ignore_permissions=True)
+    frappe.delete_doc("Shop", shop_name, ignore_permissions=True)
     return {"status": "success", "message": "Shop deleted successfully."}
 
 

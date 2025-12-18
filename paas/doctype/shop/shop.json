@@ -79,11 +79,22 @@
             "in_list_view": 1
         },
         {
+            "fieldname": "shop_type",
+            "fieldtype": "Link",
+            "label": "Shop Type",
+            "options": "Shop Type"
+        },
+        {
+            "fieldname": "is_ecommerce",
+            "fieldtype": "Check",
+            "label": "Is Ecommerce (Nationwide)"
+        },
+        {
             "fieldname": "type",
             "fieldtype": "Select",
-            "label": "Type",
-            "options": "retail\nagri\nall",
-            "default": "retail"
+            "hidden": 1,
+            "label": "Type (Legacy)",
+            "options": "shop\nrestaurant\nstore\nservice\nliquor\npharmacy\nwater\nhome_care\necommerce\nlaundry"
         },
         {
             "fieldname": "min_amount",

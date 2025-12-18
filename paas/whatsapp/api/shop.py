@@ -103,8 +103,10 @@ def handle_interactive(reply, session):
             
             if config.is_multi_vendor:
                 # Mocking Geo Search
-                shops = get_shops(limit_page_length=10) 
-                send_shop_list(session.wa_id, shops)
+                all_shops = get_shops(limit_page_length=20) 
+                # Filter out Ecommerce shops for WhatsApp
+                shops = [s for s in all_shops if s.get('shop_type') != 'Ecommerce' and not s.get('is_ecommerce')]
+                send_shop_list(session.wa_id, shops[:10])
             else:
                 # Single Vendor -> Go to Default Shop
                 session.current_shop = config.default_shop

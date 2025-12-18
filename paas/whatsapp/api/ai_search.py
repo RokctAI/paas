@@ -237,6 +237,7 @@ def search_global_shops(query):
         SELECT name, uuid, description, logo_img, back_img
         FROM `tabShop`
         WHERE status='Approved' 
+        AND (shop_type != 'Ecommerce' AND is_ecommerce = 0)
         AND (
             name LIKE %s OR 
             description LIKE %s OR

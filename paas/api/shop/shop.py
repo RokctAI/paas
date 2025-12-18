@@ -62,7 +62,8 @@ def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str =
             "name", "uuid", "slug", "user", "logo", "cover_photo",
             "phone", "address", "location", "status", "type", "min_amount",
             "tax", "delivery_time_type", "delivery_time_from", "delivery_time_to",
-            "open", "visibility", "verify", "service_fee", "percentage", "enable_cod"
+            "open", "visibility", "verify", "service_fee", "percentage", "enable_cod",
+            "shop_type", "is_ecommerce"
         ],
         limit_start=limit_start,
         limit_page_length=limit_page_length,
@@ -96,7 +97,9 @@ def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str =
             'min_amount': shop.min_amount,
             'status': shop.status,
             'enable_cod': bool(is_cod),
-            'type': shop.type, # Expose as standard 'type'
+            'type': shop.shop_type or shop.type, # Map new shop_type to legacy type field
+            'shop_type': shop.shop_type,
+            'is_ecommerce': bool(shop.is_ecommerce),
             'delivery_time': {
                 'type': shop.delivery_time_type,
                 'from': shop.delivery_time_from,
@@ -147,7 +150,9 @@ def get_shop_details(uuid: str):
         'min_amount': shop.min_amount,
         'status': shop.status,
         'enable_cod': bool(is_cod),
-        'type': shop.type, # Expose as standard 'type'
+        'type': shop.shop_type or shop.type, # Map new shop_type to legacy type field
+        'shop_type': shop.shop_type,
+        'is_ecommerce': bool(shop.is_ecommerce),
         'delivery_time': {
             'type': shop.delivery_time_type,
             'from': shop.delivery_time_from,
@@ -182,7 +187,8 @@ def search_shops(search: str, category_id: int = None, limit_start: int = 0, lim
             "name", "uuid", "slug", "user", "logo", "cover_photo",
             "phone", "address", "location", "status", "type", "min_amount",
             "tax", "delivery_time_type", "delivery_time_from", "delivery_time_to",
-            "open", "visibility", "verify", "service_fee", "percentage", "enable_cod"
+            "open", "visibility", "verify", "service_fee", "percentage", "enable_cod",
+            "shop_type", "is_ecommerce"
         ],
         limit_start=limit_start,
         limit_page_length=limit_page_length,
@@ -215,7 +221,9 @@ def search_shops(search: str, category_id: int = None, limit_start: int = 0, lim
             'min_amount': shop.min_amount,
             'status': shop.status,
             'enable_cod': bool(is_cod),
-            'type': shop.type,
+            'type': shop.shop_type or shop.type, # Map new shop_type to legacy type field
+            'shop_type': shop.shop_type,
+            'is_ecommerce': bool(shop.is_ecommerce),
             'delivery_time': {
                 'type': shop.delivery_time_type,
                 'from': shop.delivery_time_from,
@@ -229,3 +237,10 @@ def search_shops(search: str, category_id: int = None, limit_start: int = 0, lim
         })
 
     return formatted_shops
+
+@frappe.whitelist(allow_guest=True)
+def get_shop_types():
+    """
+    Retrieves all available Shop Types.
+    """
+    return frappe.get_all("Shop Type", fields=["name", "title", "description", "icon"], order_by="title asc")

@@ -38,6 +38,7 @@
         "wifi_name": null,
         "new_order_after_payment": "0",
         "name": "KFC MUSINA CBD",
+        "shop_type": "restaurant",
         "description": "Finger lickin good",
         "address": "J2VM+72 Musina, South Africa"
     },
@@ -80,6 +81,7 @@
         "wifi_name": null,
         "new_order_after_payment": "0",
         "name": "Nandos",
+        "shop_type": "restaurant",
         "description": "Nando's PERi-PERi",
         "address": "Nando's Musina, Musina, South Africa"
     },
@@ -122,6 +124,7 @@
         "wifi_name": null,
         "new_order_after_payment": "0",
         "name": "Axelgroup",
+        "shop_type": "service",
         "description": "Aircon Experts",
         "address": "South Africa, Musina, Limpopo"
     },
@@ -164,6 +167,7 @@
         "wifi_name": null,
         "new_order_after_payment": "0",
         "name": "Boxer Liquors",
+        "shop_type": "liquor",
         "description": "Never Pay more than the Boxer Liquors Price",
         "address": "South Africa, Musina, Limpopo"
     },
@@ -206,6 +210,7 @@
         "wifi_name": null,
         "new_order_after_payment": "0",
         "name": "McDonalds (Musina)",
+        "shop_type": "restaurant",
         "description": "\u201cI'm lovin' it\u201d",
         "address": "Messina, N1 National, Musina, 0900, South Africa"
     },
@@ -248,6 +253,7 @@
         "wifi_name": null,
         "new_order_after_payment": "0",
         "name": "Debonairs (Musina)",
+        "shop_type": "restaurant",
         "description": "Try Something amazing",
         "address": "Great North Road Plaza, Shop 35 Corner National Road &, Smelter Ave, Musina, 0900, South Africa"
     },
@@ -290,6 +296,7 @@
         "wifi_name": null,
         "new_order_after_payment": "0",
         "name": "BWI Studios",
+        "shop_type": "service",
         "description": "Design Studio",
         "address": "BWI STUDIOS, Mooketsi Street, Musina, South Africa"
     },
@@ -332,6 +339,7 @@
         "wifi_name": null,
         "new_order_after_payment": "0",
         "name": "JuvoMart",
+        "shop_type": "store",
         "description": "Your online supermarket",
         "address": "3631 Mooketsi St, Messina-Nancefield, Musina, South Africa"
     },
@@ -374,6 +382,7 @@
         "wifi_name": null,
         "new_order_after_payment": "0",
         "name": "Kota Too",
+        "shop_type": "restaurant",
         "description": "Handful Gourmet Kotas",
         "address": "38 Riverside M-east, Thohoyandou-M, Thohoyandou, 0950, South Africa"
     },
@@ -416,6 +425,7 @@
         "wifi_name": null,
         "new_order_after_payment": "0",
         "name": "South River",
+        "shop_type": "water",
         "description": "Refills at Home",
         "address": "3631 Mooketsi st, nancefield, musina, 0900"
     },
@@ -458,6 +468,7 @@
         "wifi_name": null,
         "new_order_after_payment": "0",
         "name": "KFC MUSINA DRIVE THRU",
+        "shop_type": "restaurant",
         "description": "Finger lickin good",
         "address": "KFC Musina 2, Cnr N1 &, Pat Harrison Road, Musina, South Africa"
     },
@@ -500,6 +511,7 @@
         "wifi_name": null,
         "new_order_after_payment": "0",
         "name": "South River",
+        "shop_type": "water",
         "description": "Refills at Home",
         "address": "3631 Mooketsi st, nancefield, musina, 0900"
     },
@@ -542,6 +554,7 @@
         "wifi_name": null,
         "new_order_after_payment": "0",
         "name": "South River",
+        "shop_type": "water",
         "description": "Refills at Home",
         "address": "3631 Mooketsi st, nancefield, musina, 0900"
     }
