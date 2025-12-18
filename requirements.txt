@@ -2,3 +2,4 @@
 staticmap
 pillow
 cryptography
+sentence-transformers

@@ -62,16 +62,23 @@ def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str =
             "name", "uuid", "slug", "user", "logo", "cover_photo",
             "phone", "address", "location", "status", "type", "min_amount",
             "tax", "delivery_time_type", "delivery_time_from", "delivery_time_to",
-            "open", "visibility", "verify", "service_fee", "percentage"
+            "open", "visibility", "verify", "service_fee", "percentage", "enable_cod"
         ],
         limit_start=limit_start,
         limit_page_length=limit_page_length,
         order_by=f"{order_by} {order}"
     )
 
+    # Global COD Check
+    cash_gateway = frappe.db.get_value("PaaS Payment Gateway", {"gateway_controller": "Cash", "enabled": 1})
+    is_global_cod_enabled = bool(cash_gateway)
+
     # Replicating the structure of the legacy ShopResource
     formatted_shops = []
     for shop in shops:
+        # Hierarchical COD: Global AND Shop
+        is_cod = is_global_cod_enabled and (shop.enable_cod if shop.enable_cod is not None else 1)
+        
         formatted_shops.append({
             'id': shop.name,
             'uuid': shop.uuid,
@@ -88,6 +95,7 @@ def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str =
             'background_img': shop.cover_photo,
             'min_amount': shop.min_amount,
             'status': shop.status,
+            'enable_cod': bool(is_cod),
             'delivery_time': {
                 'type': shop.delivery_time_type,
                 'from': shop.delivery_time_from,
@@ -112,6 +120,14 @@ def get_shop_details(uuid: str):
     if not shop:
         frappe.throw(f"Shop with UUID {uuid} not found.", frappe.DoesNotExistError)
 
+    # Global COD Check
+    cash_gateway = frappe.db.get_value("PaaS Payment Gateway", {"gateway_controller": "Cash", "enabled": 1})
+    is_global_cod_enabled = bool(cash_gateway)
+    
+    # Hierarchical COD: Global AND Shop
+    # Note: shop object from get_doc has attributes directly
+    is_cod = is_global_cod_enabled and (shop.enable_cod if shop.enable_cod is not None else 1)
+
     # Replicating the structure of the legacy ShopResource
     return {
         'id': shop.name,
@@ -129,6 +145,7 @@ def get_shop_details(uuid: str):
         'background_img': shop.cover_photo,
         'min_amount': shop.min_amount,
         'status': shop.status,
+        'enable_cod': bool(is_cod),
         'delivery_time': {
             'type': shop.delivery_time_type,
             'from': shop.delivery_time_from,

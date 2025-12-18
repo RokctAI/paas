@@ -317,12 +317,26 @@ def finalize_order(session):
 
     try:
         new_order = paas_create_order(order_payload)
+        order_id = new_order.get('name')
         
-        # If Wallet, we might need to deduct now if create_order didn't?
+        # 3. Process Payment
         if payment_method == 'wallet':
-             # Deduct manually if API didn't. Usually safer to do in API. 
-             # We assume API handles it or we call process_wallet_payment(amount)
-             pass 
+             # Call Real Wallet Payment
+             from paas.paas.api.payment.payment import process_wallet_payment
+             process_wallet_payment(order_id)
+             send_text(session.wa_id, f"✅ Payment Successful (Wallet)!")
+
+        elif payment_method.startswith('card_'):
+             # Call Real Card Payment
+             card_name = payment_method.replace("card_", "")
+             token = frappe.db.get_value("Saved Card", card_name, "token")
+             
+             if token:
+                 from paas.paas.api.payment.payment import process_token_payment
+                 process_token_payment(order_id, token)
+                 send_text(session.wa_id, f"✅ Payment Successful (Card)!")
+             else:
+                 send_text(session.wa_id, "⚠️ Card Token not found. Order created as Unpaid.") 
 
         send_text(session.wa_id, f"🎉 Order Placed! ID: {new_order.get('name')}")
         session.cart_items = "[]"

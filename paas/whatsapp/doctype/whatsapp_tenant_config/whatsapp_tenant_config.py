@@ -38,3 +38,20 @@ class WhatsAppTenantConfig(Document):
         self.public_key = pem_public.decode('utf-8')
         self.save()
         return "Keys Generated Successfully"
+
+@frappe.whitelist(allow_guest=True)
+def get_config():
+    """
+    Returns public configuration for the WhatsApp / Flutter Tenant.
+    """
+    try:
+        config = frappe.get_single("WhatsApp Tenant Config")
+        return {
+            "is_multi_vendor": bool(config.is_multi_vendor),
+            "default_shop": config.default_shop
+        }
+    except Exception:
+        return {
+            "is_multi_vendor": True, # Default to safe fallback
+            "default_shop": None
+        }

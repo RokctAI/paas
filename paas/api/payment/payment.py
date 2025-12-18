@@ -690,3 +690,43 @@ def process_wallet_top_up(amount):
     user_doc.save()
 
     return {"status": "success", "transaction_id": transaction.name}
+
+@frappe.whitelist()
+def process_wallet_payment(order_id):
+    """
+    Deducts payment from User's wallet.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+        frappe.throw("You must be logged in.")
+        
+    order = frappe.get_doc("Order", order_id)
+    if order.user != user:
+        frappe.throw("Unauthorized.", frappe.PermissionError)
+        
+    user_doc = frappe.get_doc("User", user)
+    balance = user_doc.wallet_balance or 0.0
+    
+    if balance < order.grand_total:
+         frappe.throw("Insufficient Wallet Balance.")
+         
+    # Deduct
+    user_doc.wallet_balance = balance - order.grand_total
+    user_doc.save(ignore_permissions=True)
+    
+    # Transaction
+    transaction = frappe.get_doc({
+        "doctype": "Transaction",
+        "user": user,
+        "reference_doctype": "Order",
+        "reference_docname": order_id,
+        "amount": -order.grand_total,
+        "status": "Success",
+        "type": "Debit" 
+    })
+    transaction.insert(ignore_permissions=True)
+    
+    order.payment_status = "Paid"
+    order.save()
+    
+    return {"status": "success"}
