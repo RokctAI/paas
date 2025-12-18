@@ -13,6 +13,27 @@ def get_whatsapp_config():
         return None
     return config
 
+@frappe.whitelist()
+def get_admin_whatsapp_config():
+    """
+    Returns the config for the Admin Settings page (even if disabled).
+    """
+    return frappe.get_single("WhatsApp Tenant Config")
+
+@frappe.whitelist()
+def save_whatsapp_config(enabled=0, phone_number_id=None, access_token=None, app_secret=None, verify_token=None):
+    """
+    Updates the WhatsApp Tenant Config.
+    """
+    doc = frappe.get_single("WhatsApp Tenant Config")
+    doc.enabled = 1 if (enabled == 1 or enabled == "1" or enabled is True) else 0
+    doc.phone_number_id = phone_number_id
+    doc.access_token = access_token
+    doc.app_secret = app_secret
+    doc.verify_token = verify_token
+    doc.save()
+    return doc
+
 def get_or_create_session(wa_id, phone_number=None, name=None):
     """
     Retrieves or creates a WhatsApp Session for the given wa_id.

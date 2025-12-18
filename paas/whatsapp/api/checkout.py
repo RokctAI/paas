@@ -165,32 +165,16 @@ def get_payment_options(session, total):
             options.append({"id": f"card_{card['name']}", "label": f"{card['card_type']} ({card['last_four']})"})
             
     # 3. Cash on Delivery (COD) Logic
-    # Global Check: PaaS Payment Gateway "Cash" enabled?
-    # Logic: If 'Cash' gateway exists and is enabled, OR if it doesn't exist (assuming default legacy behavior).
-    # Safe approach: Check if explicit "disabled" flag exists. 
-    # Actually, user said "Admin to enable or disable". 
-    # Let's check if "Cash" gateway exists.
-    global_cod = frappe.db.get_value("PaaS Payment Gateway", {"gateway_controller": "Cash", "enabled": 1})
-    
-    # Shop Check
+    # Check 1: Shop Level Toggle
     shop_cod = frappe.db.get_value("Shop", session.current_shop, "enable_cod")
-    # Determine Shop COD: Default to 1 if None
-    if shop_cod is None: shop_cod = 1
     
-    # Logic: Show COD if Global AND Shop are OK.
-    # Note: If "Cash" gateway is NOT in DB, we assume Global is OFF (strict) or ON?
-    # Given user request "I want to give admin to enable", strict is better. 
-    # BUT, if I haven't created the Gateway record, this will break COD for everyone.
-    # PROVISO: I will assume if *no* COD gateway exists, check some System Settings or fallback to True?
-    # Let's assume strict: `if global_cod and shop_cod`. 
-    # WARNING: If I don't create the record, this fails. I should probably fallback to True if "Cash" gateway doc doesn't exist at all?
-    # No, logic: "if enabled... shop can choose". 
-    # I'll stick to: `if (global_cod or not frappe.db.exists('PaaS Payment Gateway', {'gateway_controller': 'Cash'})) and shop_cod:`
-    # This implies default ON unless explicitly disabled in Gateway.
+    # Default to Enabled if not set
+    if shop_cod is None: 
+        shop_cod = 1
     
-    cash_gateway_exists = frappe.db.exists("PaaS Payment Gateway", {"gateway_controller": "Cash"})
+    # Check 2: Global Payment Gateway Toggle
     is_global_enabled = True
-    if cash_gateway_exists:
+    if frappe.db.exists("PaaS Payment Gateway", {"gateway_controller": "Cash"}):
          is_global_enabled = bool(frappe.db.get_value("PaaS Payment Gateway", {"gateway_controller": "Cash", "enabled": 1}))
          
     if is_global_enabled and shop_cod:
