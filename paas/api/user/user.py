@@ -232,17 +232,133 @@ def register_user(email, password, first_name, last_name, phone=None):
 @frappe.whitelist(allow_guest=True)
 def forgot_password(user: str):
     """
-    Wrapper for Frappe's built-in reset_password method.
-    `user` can be the user's email address.
+    Initiate a password reset for a given user.
+    Handles both email and phone number inputs.
     """
     try:
-        frappe.core.doctype.user.user.reset_password(user=user)
-        # Don't reveal if the user exists or not, always return success
-        return {"status": "success", "message": "If a user with this email exists, a password reset link has been sent."}
+        is_phone = user.startswith('+') or user.isdigit()
+        if is_phone:
+            user_doc_name = frappe.db.get_value("User", {"phone": user}, "name")
+            if user_doc_name:
+                # Generate and send 6-digit OTP
+                otp = "".join([str(random.randint(0, 9)) for _ in range(6)])
+                frappe.cache().set_value(f"password_reset_otp:{user}", otp, expires_in_sec=600)
+                try:
+                    frappe.send_sms(receivers=[user], message=f"Your password reset code is: {otp}")
+                except Exception as sms_error:
+                    frappe.log_error(f"Failed to send password reset SMS to {user}: {sms_error}", "SMS Reset Error")
+        else:
+            # Frappe's standard email flow
+            frappe.core.doctype.user.user.reset_password(user=user)
+            
+        return {"status": "success", "message": "If a user with this email/phone exists, a password reset code/link has been sent."}
+    except Exception:
+        # For security, always return success
+        return {"status": "success", "message": "If a user with this email/phone exists, a password reset code/link has been sent."}
+
+@frappe.whitelist(allow_guest=True)
+def forgot_password_confirm(email, verify_code, password=None):
+    """
+    Confirm password reset using a verification code (OTP) or token.
+    'email' can be the email address OR the phone number used for reset.
+    """
+    try:
+        is_phone = email.startswith('+') or email.isdigit()
+        user_name = None
+        
+        if is_phone:
+            user_name = frappe.db.get_value("User", {"phone": email}, "name")
+            cached_otp = frappe.cache().get_value(f"password_reset_otp:{email}")
+            if not cached_otp or cached_otp != verify_code:
+                return {"status": False, "message": "Invalid or expired verification code"}
+        else:
+            user_name = frappe.db.get_value("User", {"email": email}, "name")
+            if user_name:
+                user_doc = frappe.get_doc("User", user_name)
+                # Verify standard Frappe reset token
+                if user_doc.reset_password_key != verify_code:
+                    return {"status": False, "message": "Invalid or expired reset token"}
+        
+        if not user_name:
+            return {"status": False, "message": "User not found"}
+            
+        if password:
+            user_doc = frappe.get_doc("User", user_name)
+            user_doc.set("new_password", password)
+            user_doc.reset_password_key = None # Clear token after use
+            user_doc.save(ignore_permissions=True)
+            if is_phone:
+                frappe.cache().delete_value(f"password_reset_otp:{email}")
+            return {"status": True, "message": "Password updated successfully"}
+        
+        return {"status": True, "message": "Code verified"}
     except Exception as e:
-        frappe.log_error(frappe.get_traceback(), "Forgot Password Error")
-        # For security, still return a generic success message to the user
-        return {"status": "success", "message": "If a user with this email exists, a password reset link has been sent."}
+        return {"status": False, "message": str(e)}
+
+@frappe.whitelist(allow_guest=True)
+def login_with_google(email, display_name, id, avatar=None):
+    """
+    Social login endpoint. Links accounts by email or creates new ones.
+    """
+    if not email:
+        return {"status": False, "message": "Email is required"}
+
+    user_name = frappe.db.get_value("User", {"email": email}, "name")
+    
+    if not user_name:
+        # Create new user
+        names = display_name.split(" ", 1)
+        first_name = names[0]
+        last_name = names[1] if len(names) > 1 else ""
+        
+        user = frappe.get_doc({
+            "doctype": "User",
+            "email": email,
+            "first_name": first_name,
+            "last_name": last_name,
+            "user_image": avatar,
+            "enabled": 1,
+            "send_welcome_email": 0,
+            "roles": [{"role": "PaaS User"}, {"role": "user"}]
+        })
+        # Generate a random password for social users
+        user.set("new_password", frappe.generate_hash(length=12))
+        user.insert(ignore_permissions=True)
+        user_name = user.name
+    else:
+        user = frappe.get_doc("User", user_name)
+        if avatar and not user.user_image:
+            user.user_image = avatar
+            user.save(ignore_permissions=True)
+
+    # Generate or retrieve secret for API authentication
+    api_secret = user.get_password("api_secret")
+    if not user.api_key or not api_secret:
+        api_secret = frappe.generate_hash(length=15)
+        user.api_key = frappe.generate_hash(length=15)
+        user.api_secret = api_secret
+        user.save(ignore_permissions=True)
+
+    token = f"{user.api_key}:{api_secret}"
+    
+    return {
+        "status": True,
+        "message": "Logged In via Google",
+        "data": {
+            "access_token": token,
+            "token_type": "Bearer",
+            "user": {
+                "id": user.name,
+                "email": user.email,
+                "firstname": user.first_name,
+                "lastname": user.last_name,
+                "phone": user.phone,
+                "role": "user",
+                "active": 1,
+                "img": user.user_image
+            }
+        }
+    }
 
 @frappe.whitelist()
 def get_user_membership():
@@ -789,6 +905,7 @@ def get_user_profile():
         "birth_date": user_doc.birth_date,
         "location": user_doc.location,
         "gender": user_doc.gender,
+        "ringfenced_balance": user_doc.ringfenced_balance or 0,
     }
 
 

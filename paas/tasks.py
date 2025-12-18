@@ -59,17 +59,8 @@ def process_repeating_orders():
             "start_date": ["<=", now.date()],
             "next_execution": ["<=", now]
         },
-        fields=["name", "original_order", "cron_pattern", "next_execution", "end_date"]
+        fields=["name", "user", "original_order", "cron_pattern", "next_execution", "end_date", "payment_method", "saved_card", "ringfenced_amount"]
     )
-
-    # Also fetch those that haven't run yet (next_execution is None) but start_date is past
-    # Actually, we should have set next_execution on creation.
-    # If None, we process it now? Or verify logic.
-    # For now, let's query those with next_execution <= now OR next_execution IS NULL
-
-    # Simplified query to catch NULLs if Frappe supports it easily, or just separate query.
-    # frappe.get_all doesn't support OR easily in filters dict.
-    # We'll iterate what we found.
 
     count = 0
     for ro in repeating_orders:
@@ -79,18 +70,87 @@ def process_repeating_orders():
             continue
 
         try:
-            # Create the order
+            # Set context to the user who owns the repeating order for payment processing
+            frappe.set_user(ro.user)
+
+            # Create the order doc (don't insert yet, we need to verify payment)
             original_order_doc = frappe.get_doc("Order", ro.original_order)
             new_order = frappe.copy_doc(original_order_doc)
-
-            # Update specific fields
             new_order.transaction_date = now
-            new_order.delivery_date = now.date() # Or calculated based on original delta?
-            new_order.status = "New"
+            new_order.delivery_date = now.date() 
             new_order.amended_from = None
-            new_order.insert(ignore_permissions=True)
+            
+            # Initial status is "Draft" or "Payment Failed" until payment succeeds
+            new_order.status = "Payment Failed" 
+            new_order.payment_status = "Pending"
 
-            print(f"Created recurring order {new_order.name} from {ro.name}")
+            # Process Payment
+            payment_success = False
+            if ro.payment_method == "Wallet":
+                if ro.ringfenced_amount >= new_order.grand_total:
+                    # Use Ringfenced funds
+                    user_doc = frappe.get_doc("User", ro.user)
+                    user_doc.set("ringfenced_balance", (user_doc.get("ringfenced_balance") or 0.0) - new_order.grand_total)
+                    user_doc.save(ignore_permissions=True)
+                    
+                    # Update RO
+                    frappe.db.set_value("Repeating Order", ro.name, "ringfenced_amount", ro.ringfenced_amount - new_order.grand_total)
+                    
+                    new_order.payment_status = "Paid"
+                    new_order.status = "New"
+                    payment_success = True
+                    
+                    # Log Capture Transaction
+                    transaction = frappe.get_doc({
+                        "doctype": "Transaction",
+                        "user": ro.user,
+                        "amount": -new_order.grand_total,
+                        "status": "Success",
+                        "type": "Wallet Capture",
+                        "reference_doctype": "Repeating Order",
+                        "reference_docname": ro.name
+                    })
+                    transaction.insert(ignore_permissions=True)
+                else:
+                    print(f"Insufficient ringfenced funds for {ro.name}")
+            
+            elif ro.payment_method == "Saved Card" and ro.saved_card:
+                try:
+                    from paas.paas.api.payment.payment import process_token_payment
+                    card = frappe.get_doc("Saved Card", ro.saved_card)
+                    # This method inserts the order if it hasn't been already, or we can insert first.
+                    # Here we insert first to provide the ID to the payment processor.
+                    new_order.insert(ignore_permissions=True)
+                    res = process_token_payment(new_order.name, card.token)
+                    if res.get("status") == "success":
+                        payment_success = True
+                except Exception as e:
+                    print(f"Card payment failed for {new_order.name}: {e}")
+
+            if not payment_success:
+                # If order wasn't inserted by card logic yet
+                if not new_order.name:
+                    new_order.insert(ignore_permissions=True)
+                
+                print(f"Payment failed for order {new_order.name}. Order status set to {new_order.status}")
+                
+                # Notify User
+                try:
+                    from paas.paas.api.notification.notification import send_push_notification
+                    send_push_notification(
+                        user=ro.user,
+                        title="Auto-Order Payment Failed",
+                        body=f"Your repeating order for {new_order.shop} could not be paid. Please pay manually or check your wallet.",
+                        data={"order_id": new_order.name, "type": "payment_failed"}
+                    )
+                except:
+                    pass
+            else:
+                # If Wallet payment succeeded, order might not be inserted yet
+                if not new_order.name:
+                    new_order.insert(ignore_permissions=True)
+                print(f"Payment successful for order {new_order.name}")
+
             count += 1
 
             # Calculate next execution
@@ -104,7 +164,25 @@ def process_repeating_orders():
 
         except Exception as e:
             frappe.log_error(frappe.get_traceback(), f"Failed to process Repeating Order {ro.name}")
+        finally:
+            # Reset user context to Administrator/System
+            frappe.set_user("Administrator")
 
     if count > 0:
         frappe.db.commit()
     print(f"Processed {count} repeating orders.")
+
+    # Cleanup: Find paused or active orders that have expired and ensure they are inactive
+    expired_ro = frappe.get_all("Repeating Order",
+        filters={
+            "is_active": 1,
+            "end_date": ["<", now.date()]
+        },
+        pluck="name"
+    )
+    for ro_name in expired_ro:
+        frappe.db.set_value("Repeating Order", ro_name, "is_active", 0)
+    
+    if expired_ro:
+        frappe.db.commit()
+        print(f"Cleaned up {len(expired_ro)} expired auto-orders.")

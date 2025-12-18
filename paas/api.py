@@ -89,11 +89,13 @@ from paas.api.user.user import (
     get_user_ticket,
     create_ticket,
     reply_to_ticket,
-    get_user_profile,
     update_user_profile,
     get_user_order_refunds,
     create_order_refund,
     get_user_notifications,
+    login_with_google,
+    forgot_password_confirm,
+    get_user_profile,
 )
 from paas.api.payment.payment import (
     get_payment_gateways,
@@ -117,6 +119,7 @@ from paas.api.cart.cart import (
     get_cart,
     add_to_cart,
     remove_from_cart,
+    remove_product_cart,
     calculate_cart_totals,
 )
 from paas.api.order.order import (
@@ -127,6 +130,7 @@ from paas.api.order.order import (
     add_order_review,
     cancel_order,
     get_order_statuses,
+    get_calculate,
 )
 from paas.api.receipt.receipt import (
     get_receipts,
@@ -640,15 +644,37 @@ def get_shops_recommend(page: int = 1, lang: str = "en"):
 @frappe.whitelist()
 def get_story(page: int = 1, lang: str = "en"):
     """
-    Retrieves a list of stories.
+    Retrieves a list of stories grouped by shop for Flutter.
     """
     stories = frappe.get_list(
         "Story",
-        fields=["name", "shop", "image"],
+        fields=["name", "shop", "image", "title", "product", "creation", "modified"],
         limit_start=(page - 1) * 10,
         limit_page_length=10,
     )
-    return stories
+    
+    grouped = {}
+    for s in stories:
+        shop_id = s.shop
+        if not shop_id: continue
+        
+        if shop_id not in grouped:
+            grouped[shop_id] = []
+        
+        shop_logo = frappe.db.get_value("Shop", shop_id, "logo")
+        
+        grouped[shop_id].append({
+            "shop_id": int(shop_id) if shop_id.isdigit() else shop_id,
+            "logo_img": shop_logo,
+            "title": s.title,
+            "product_uuid": s.product,
+            "product_title": frappe.db.get_value("Product", s.product, "product_name") if s.product else None,
+            "url": s.image,
+            "created_at": s.creation.isoformat() if s.creation else None,
+            "updated_at": s.modified.isoformat() if s.modified else None,
+        })
+        
+    return list(grouped.values())
 
 @frappe.whitelist()
 def get_tags(category_id: int, lang: str = "en"):
@@ -660,11 +686,19 @@ def get_tags(category_id: int, lang: str = "en"):
 @frappe.whitelist()
 def get_suggest_price(lang: str = "en"):
     """
-    Retrieves a suggested price.
+    Retrieves a suggested price range.
     """
-    # This is a placeholder for the actual implementation.
-    # In a real system, this would involve some calculation based on existing data.
-    return {"min": 10, "max": 100}
+    # Simply return a response that matches PriceModel.fromJson
+    import datetime
+    return {
+        "timestamp": datetime.datetime.now().isoformat(),
+        "status": True,
+        "message": "Suggested price retrieved",
+        "data": {
+            "min": 10.0,
+            "max": 1000.0
+        }
+    }
 
 @frappe.whitelist()
 def get_referral_details(lang: str = "en"):

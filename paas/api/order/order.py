@@ -229,25 +229,46 @@ def get_order_statuses():
 
 @frappe.whitelist()
 def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type='Delivery'):
-    if isinstance(address, str):
-        address = json.loads(address)
+    if isinstance(address, str) and address:
+        try:
+            address = json.loads(address)
+        except:
+            address = None
 
     cart = frappe.get_doc("Cart", cart_id)
     shop = frappe.get_doc("Shop", cart.shop)
 
     # 1. Calculate Product Totals
-    price = 0
-    total_tax = 0
+    product_tax = 0
+    product_total = 0
     discount = 0
+    calculated_products = []
+
     for item in cart.items:
-        item_doc = frappe.get_doc("Item", item.item_code)
-        price += item_doc.standard_rate * item.qty
-        # Assuming a 'tax' field on the Item doc
-        if item_doc.tax:
-            total_tax += item_doc.tax * item.qty
-        # Discount logic might be more complex, this is a simplification
-        if item.discount_percentage:
-            discount += (item_doc.standard_rate * item.qty) * (item.discount_percentage / 100)
+        # Using 'Product' instead of 'Item' as per project conventions
+        product_doc = frappe.get_doc("Product", item.item)
+        
+        item_price = product_doc.price or 0
+        item_qty = item.quantity or 0
+        item_tax = (item_price * (product_doc.tax or 0) / 100) * item_qty
+        item_discount = (item_price * (item.discount_percentage or 0) / 100) * item_qty
+        
+        item_total = (item_price * item_qty) - item_discount + item_tax
+        
+        product_total += (item_price * item_qty)
+        product_tax += item_tax
+        discount += item_discount
+
+        calculated_products.append({
+            "id": product_doc.name,
+            "price": item_price,
+            "qty": item_qty,
+            "tax": item_tax,
+            "shop_tax": 0, # Placeholder or specific shop tax per item
+            "discount": item_discount,
+            "price_without_tax": item_price,
+            "total_price": item_total
+        })
 
     # 2. Calculate Delivery Fee
     delivery_fee = 0
@@ -264,12 +285,13 @@ def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type
             c = 2 * atan2(sqrt(a), sqrt(1 - a))
             return R * c
 
-        if shop.latitude and shop.longitude:
+        if shop.latitude and shop.longitude and address.get('latitude') and address.get('longitude'):
             distance = haversine(shop.latitude, shop.longitude, address['latitude'], address['longitude'])
             delivery_fee = distance * shop.price_per_km if shop.price_per_km else 0
 
     # 3. Calculate Shop Tax
-    shop_tax = (price - discount) * (shop.tax / 100) if shop.tax else 0
+    # Total tax on the whole order from the shop's tax setting
+    shop_tax = (product_total - discount) * (shop.tax / 100) if shop.tax else 0
 
     # 4. Get Service Fee from Permission Settings
     paas_settings = frappe.get_single("Permission Settings")
@@ -279,27 +301,28 @@ def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type
     coupon_price = 0
     if coupon_code:
         try:
-            coupon_doc = frappe.get_doc("Coupon", {"coupon_code": coupon_code, "shop": cart.shop})
+            # Check for coupon linked to this shop or global
+            coupon_doc = frappe.db.get_value("Coupon", {"coupon_code": coupon_code, "shop": cart.shop}, ["name", "coupon_type", "discount_percentage", "discount_amount"], as_dict=True)
             if coupon_doc:
-                # Basic coupon logic, can be expanded
                 if coupon_doc.coupon_type == 'Percentage':
-                    coupon_price = (price - discount) * (coupon_doc.discount_percentage / 100)
+                    coupon_price = (product_total - discount) * (coupon_doc.discount_percentage / 100)
                 else: # Fixed Amount
                     coupon_price = coupon_doc.discount_amount
-        except frappe.DoesNotExistError:
-            pass # Coupon not found, so no discount applied
+        except:
+            pass 
 
     # 6. Calculate Final Total
-    total_price = (price - discount) + delivery_fee + shop_tax + service_fee - coupon_price + float(tips)
+    order_total = (product_total - discount) + delivery_fee + shop_tax + service_fee - coupon_price + float(tips)
 
+    # Return in the format expected by GetCalculateModel
     return {
-        'total_tax': total_tax,
-        'price': price,
-        'total_shop_tax': shop_tax,
-        'total_price': max(total_price, 0),
-        'total_discount': discount + coupon_price,
-        'delivery_fee': delivery_fee,
-        'service_fee': service_fee,
-        'tips': tips,
-        'coupon_price': coupon_price,
+        "total_tax": product_tax,
+        "price": product_total,
+        "total_shop_tax": shop_tax,
+        "total_price": max(order_total, 0),
+        "total_discount": discount + coupon_price,
+        "delivery_fee": delivery_fee,
+        "service_fee": service_fee,
+        "tips": float(tips),
+        "coupon_price": coupon_price,
     }
