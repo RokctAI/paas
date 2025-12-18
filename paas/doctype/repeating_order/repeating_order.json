@@ -73,6 +73,25 @@
             "fieldtype": "Datetime",
             "label": "Last Execution",
             "read_only": 1
+        },
+        {
+            "fieldname": "payment_method",
+            "fieldtype": "Select",
+            "label": "Payment Method",
+            "options": "Wallet\nSaved Card",
+            "default": "Wallet"
+        },
+        {
+            "fieldname": "saved_card",
+            "fieldtype": "Link",
+            "label": "Saved Card",
+            "options": "Saved Card"
+        },
+        {
+            "fieldname": "ringfenced_amount",
+            "fieldtype": "Currency",
+            "label": "Ringfenced Amount",
+            "read_only": 1
         }
     ]
 }
