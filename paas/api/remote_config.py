@@ -129,5 +129,7 @@ def get_remote_config(app_type="Customer", site_name=None):
         "imageBaseUrl": get_val("image_base_url"),
 
         # Extras
-        "projectTitle": project_title
+        "projectTitle": project_title,
+        "enableMarketplace": frappe.db.get_single_value("Settings", "enable_marketplace"),
+        "defaultShopId": frappe.db.get_single_value("Settings", "default_shop")
     }

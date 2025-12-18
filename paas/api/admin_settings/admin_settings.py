@@ -149,3 +149,48 @@ def delete_email_subscription(subscription_name):
     _require_admin()
     frappe.delete_doc("Email Subscription", subscription_name, ignore_permissions=True)
     return {"status": "success", "message": "Email subscription deleted successfully."}
+
+@frappe.whitelist()
+def get_general_settings():
+    """
+    Retrieves the General Settings (Settings Doctype).
+    """
+    _require_admin()
+    return frappe.get_single("Settings").as_dict()
+
+@frappe.whitelist()
+def update_general_settings(settings_data):
+    """
+    Updates the General Settings.
+    """
+    _require_admin()
+    if isinstance(settings_data, str):
+        settings_data = json.loads(settings_data)
+
+    settings = frappe.get_single("Settings")
+    settings.update(settings_data)
+    settings.save(ignore_permissions=True)
+    return settings.as_dict()
+
+@frappe.whitelist()
+def get_app_settings():
+    """
+    Retrieves the App Settings.
+    """
+    _require_admin()
+    return frappe.get_single("App Settings").as_dict()
+
+@frappe.whitelist()
+def update_app_settings(settings_data):
+    """
+    Updates the App Settings.
+    """
+    _require_admin()
+    if isinstance(settings_data, str):
+        settings_data = json.loads(settings_data)
+
+    settings = frappe.get_single("App Settings")
+    settings.update(settings_data)
+    settings.save(ignore_permissions=True)
+    return settings.as_dict()
+

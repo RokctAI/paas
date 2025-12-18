@@ -45,6 +45,18 @@
             "fieldname": "logo",
             "fieldtype": "Attach Image",
             "label": "Logo"
+        },
+        {
+            "fieldname": "enable_marketplace",
+            "fieldtype": "Check",
+            "label": "Enable Marketplace (Multi-Vendor)",
+            "default": "0"
+        },
+        {
+            "fieldname": "default_shop",
+            "fieldtype": "Link",
+            "label": "Default Shop (Single Vendor)",
+            "options": "Shop"
         }
     ],
     "permissions": [
