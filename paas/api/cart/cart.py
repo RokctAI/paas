@@ -141,6 +141,14 @@ def remove_from_cart(cart_detail_name: str):
     return {"status": "success", "message": "Item removed from cart."}
 
 
+@frappe.whitelist()
+def remove_product_cart(cart_detail_id: str):
+    """
+    Alias for remove_from_cart, used by Flutter app.
+    """
+    return remove_from_cart(cart_detail_name=cart_detail_id)
+
+
 def calculate_cart_totals(cart_name: str):
     """
     Helper function to recalculate the total price of a cart.
