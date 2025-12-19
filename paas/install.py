@@ -32,6 +32,11 @@ def run_seeders():
         print("Running PaaS Juvo settings seeder from rokct...")
         seed_paas_juvo_settings.execute()
         
+        # Run main PaaS seeder (handles global data + conditional Juvo data)
+        print("Running main PaaS seeder...")
+        from paas import seed
+        seed.execute()
+
         print("PaaS seeders completed successfully.")
     except ImportError:
         # Seeders not available (rokct doesn't have them or not installed)
