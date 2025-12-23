@@ -479,7 +479,12 @@ from paas.api.system.system import (
 )
 from paas.api.remote_config import get_remote_config
 from paas.paas.whatsapp.api import webhook as whatsapp_webhook
-from rokct.lending.api import create_loan_application as _create_loan_application
+from rokct.lending.api import (
+    create_loan_application as _create_loan_application,
+    disburse_loan as _disburse_loan,
+    get_my_loan_applications as _get_my_loan_applications,
+    request_payout as _request_payout,
+)
 
 @frappe.whitelist()
 def create_loan_application(applicant_type, applicant, loan_product, loan_amount, income=0, total_expenses=0):
@@ -495,6 +500,20 @@ def get_my_loan_applications():
     """
     from rokct.lending.api import get_my_loan_applications as _get_apps
     return _get_apps()
+
+@frappe.whitelist()
+def disburse_loan(loan_application):
+    """
+    Proxy for disbursing/withdrawing an approved loan.
+    """
+    return _disburse_loan(loan_application)
+
+@frappe.whitelist()
+def request_payout(loan_application):
+    """
+    Proxy for requesting a payout of withdrawable funds.
+    """
+    return _request_payout(loan_application)
 
 @frappe.whitelist(allow_guest=True)
 def whatsapp_hook():
