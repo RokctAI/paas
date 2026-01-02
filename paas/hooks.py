@@ -49,6 +49,7 @@ scheduler_events = get_safe_scheduler_events()
 # -------------------
 whitelisted_methods = {
     # Notification APIs
+    "paas.api.get_version": "paas.version.get_version",
     "paas.api.get_notification_types": "paas.api.get_notification_types",
     "paas.api.get_user_notification_preferences": "paas.api.get_user_notification_preferences",
     "paas.api.set_user_notification_preference": "paas.api.set_user_notification_preference",

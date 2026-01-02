@@ -487,11 +487,11 @@ from rokct.lending.api import (
 )
 
 @frappe.whitelist()
-def create_loan_application(applicant_type, applicant, loan_product, loan_amount, income=0, total_expenses=0):
+def create_loan_application(applicant_type, applicant, loan_product, loan_amount, income=0, total_expenses=0, skip_documents=0):
     """
     Proxy for creating a loan application via Rokct Lending logic.
     """
-    return _create_loan_application(applicant_type, applicant, loan_product, loan_amount, income, total_expenses)
+    return _create_loan_application(applicant_type, applicant, loan_product, loan_amount, income, total_expenses, skip_documents)
 
 @frappe.whitelist()
 def get_my_loan_applications():
