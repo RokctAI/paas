@@ -1,6 +1,6 @@
 import frappe
 import json
-from ..seller.utils import _get_seller_shop
+from paas.api.utils import _get_seller_shop
 
 @frappe.whitelist()
 def get_seller_shop_working_days():
