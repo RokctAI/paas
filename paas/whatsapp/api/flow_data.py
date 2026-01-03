@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
-from paas.paas.whatsapp.utils import get_whatsapp_config
+from paas.whatsapp.utils import get_whatsapp_config
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
