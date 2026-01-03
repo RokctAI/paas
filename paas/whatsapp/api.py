@@ -2,8 +2,8 @@
 # For license information, please see license.txt
 
 import frappe
-from paas.paas.whatsapp.utils import get_whatsapp_config
-from paas.paas.whatsapp.handlers import handle_message
+from paas.whatsapp.utils import get_whatsapp_config
+from paas.whatsapp.handlers import handle_message
 
 @frappe.whitelist(allow_guest=True)
 def webhook():

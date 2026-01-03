@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 import frappe
-from paas.paas.utils import check_subscription_feature, get_subscription_details
+from paas.utils import check_subscription_feature, get_subscription_details
 from paas.api.shop.shop import get_shops, get_shop_details, search_shops, get_shop_types
 from paas.api.product.product import (
     get_products,
@@ -478,7 +478,7 @@ from paas.api.system.system import (
     get_currencies,
 )
 from paas.api.remote_config import get_remote_config
-from paas.paas.whatsapp.api import webhook as whatsapp_webhook
+from paas.whatsapp.api import webhook as whatsapp_webhook
 from rokct.lending.api import (
     create_loan_application as _create_loan_application,
     disburse_loan as _disburse_loan,
@@ -522,7 +522,7 @@ def whatsapp_hook():
 @frappe.whitelist(allow_guest=True)
 def whatsapp_flow_endpoint():
     # Helper to route to the data endpoint
-    from paas.paas.whatsapp.api import whatsapp_flow_data
+    from paas.whatsapp.api import whatsapp_flow_data
     return whatsapp_flow_data()
 from paas.api.repeating_order import create_repeating_order, delete_repeating_order
 from paas.api.payment.payment import (

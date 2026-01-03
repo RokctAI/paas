@@ -116,7 +116,7 @@ def process_repeating_orders():
             
             elif ro.payment_method == "Saved Card" and ro.saved_card:
                 try:
-                    from paas.paas.api.payment.payment import process_token_payment
+                    from paas.api.payment.payment import process_token_payment
                     card = frappe.get_doc("Saved Card", ro.saved_card)
                     # This method inserts the order if it hasn't been already, or we can insert first.
                     # Here we insert first to provide the ID to the payment processor.
@@ -136,7 +136,7 @@ def process_repeating_orders():
                 
                 # Notify User
                 try:
-                    from paas.paas.api.notification.notification import send_push_notification
+                    from paas.api.notification.notification import send_push_notification
                     send_push_notification(
                         user=ro.user,
                         title="Auto-Order Payment Failed",

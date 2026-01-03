@@ -4,7 +4,7 @@
 import frappe
 import requests
 import json
-from paas.paas.whatsapp.utils import get_whatsapp_config
+from paas.whatsapp.utils import get_whatsapp_config
 
 def send_message(wa_id, payload):
     """

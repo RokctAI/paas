@@ -3,8 +3,8 @@
 
 import frappe
 import json
-from paas.paas.whatsapp.utils import get_or_create_session, get_whatsapp_config
-from paas.paas.whatsapp.responses import (
+from paas.whatsapp.utils import get_or_create_session, get_whatsapp_config
+from paas.whatsapp.responses import (
     send_text, send_shop_list, send_category_list, 
     send_product_list, send_product_card, send_static_map_confirmation
 )

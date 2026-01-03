@@ -4,7 +4,7 @@ import json
 import uuid
 import csv
 import io
-from paas.paas.utils import check_subscription_feature
+from paas.utils import check_subscription_feature
 
 @frappe.whitelist()
 def logout():
