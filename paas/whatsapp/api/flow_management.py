@@ -4,7 +4,7 @@
 import frappe
 import requests
 import json
-from paas.paas.whatsapp.utils import get_whatsapp_config
+from paas.whatsapp.utils import get_whatsapp_config
 
 @frappe.whitelist()
 def create_flow():
