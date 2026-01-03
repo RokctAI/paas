@@ -2,10 +2,10 @@
 # For license information, please see license.txt
 
 import frappe
-from paas.paas.whatsapp.utils import get_or_create_session
-from paas.paas.whatsapp.responses import send_text, send_cart_summary
-from paas.paas.whatsapp.api.location import handle_location
-from paas.paas.whatsapp.api.shop import handle_interactive
+from paas.whatsapp.utils import get_or_create_session
+from paas.whatsapp.responses import send_text, send_cart_summary
+from paas.whatsapp.api.location import handle_location
+from paas.whatsapp.api.shop import handle_interactive
 
 def handle_message(message, wa_id, profile_name):
     """
