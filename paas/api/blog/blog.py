@@ -67,10 +67,36 @@ def get_admin_blogs(page: int = 1, limit: int = 10, lang: str = "en"):
     """
     Retrieves all Blogs for Admin (including inactive).
     """
-    return frappe.get_list("Blog",
-        fields=["name", "title", "short_description", "img", "published_at", "author", "type", "active"],
-        order_by="creation desc",
-        limit_start=(page - 1) * limit,
-        limit_page_length=limit
     )
+
+
+# --- Admin Aliases ---
+@frappe.whitelist()
+def create_admin_blog(data):
+    """
+    Alias for create_blog (Admin usage).
+    """
+    return create_blog(data)
+
+@frappe.whitelist()
+def update_admin_blog(name, data):
+    """
+    Alias for update_blog (Admin usage).
+    """
+    return update_blog(name, data)
+
+@frappe.whitelist()
+def delete_admin_blog(name):
+    """
+    Alias for delete_blog (Admin usage).
+    """
+    return delete_blog(name)
+
+@frappe.whitelist(allow_guest=True)
+def get_blog(name):
+    """
+    Alias for get_blog_details.
+    """
+    return get_blog_details(name)
+
 
