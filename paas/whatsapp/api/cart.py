@@ -3,7 +3,7 @@
 
 import frappe
 import json
-from paas.paas.whatsapp.responses import send_text
+from paas.whatsapp.responses import send_text
 
 def add_to_cart(session, item_code, options=None):
     """
