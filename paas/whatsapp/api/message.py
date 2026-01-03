@@ -43,13 +43,13 @@ def handle_text(text, session):
         
     elif session.current_flow == 'checkout_address_input':
         # Routing text as Address Input
-        from paas.paas.whatsapp.api.checkout import handle_checkout_action
+        from paas.whatsapp.api.checkout import handle_checkout_action
         handle_checkout_action(session, 'address_input', payload=text)
         
     else:
         # --- Advanced NLP Router ---
-        from paas.paas.whatsapp.api.ai_search import classify_intent, extract_entity, semantic_search, search_global_shops
-        from paas.paas.whatsapp.responses import send_product_list, send_shop_list
+        from paas.whatsapp.api.ai_search import classify_intent, extract_entity, semantic_search, search_global_shops
+        from paas.whatsapp.responses import send_product_list, send_shop_list
         
         # 1. Classify Intent
         intent, score = classify_intent(text)
