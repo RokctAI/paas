@@ -1,9 +1,12 @@
+```python
 # Copyright (c) 2025, ROKCT and contributors
 # For license information, please see license.txt
 
 import frappe
 import json
-from paas.paas.whatsapp.responses import send_text, send_message
+from paas.whatsapp.responses import send_text, send_message
+from paas.api.payment.payment import process_wallet_payment
+from paas.api.payment.payment import process_token_payment
 from paas.api.order.order import create_order as paas_create_order
 
 def handle_checkout_action(session, action, payload=None):
@@ -306,7 +309,7 @@ def finalize_order(session):
         # 3. Process Payment
         if payment_method == 'wallet':
              # Call Real Wallet Payment
-             from paas.paas.api.payment.payment import process_wallet_payment
+             from paas.api.payment.payment import process_wallet_payment
              process_wallet_payment(order_id)
              send_text(session.wa_id, f"✅ Payment Successful (Wallet)!")
 
@@ -316,7 +319,7 @@ def finalize_order(session):
              token = frappe.db.get_value("Saved Card", card_name, "token")
              
              if token:
-                 from paas.paas.api.payment.payment import process_token_payment
+                 from paas.api.payment.payment import process_token_payment
                  process_token_payment(order_id, token)
                  send_text(session.wa_id, f"✅ Payment Successful (Card)!")
              else:
