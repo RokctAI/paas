@@ -361,6 +361,26 @@ def login_with_google(email, display_name, id, avatar=None):
     }
 
 @frappe.whitelist()
+def search_user(name: str, page: int = 1, lang: str = "en"):
+    pass
+
+@frappe.whitelist()
+def get_user_order_refunds(page: int = 1, lang: str = "en"):
+    """
+    Retrieves a list of order refunds for the current user.
+    """
+    user = frappe.session.user
+    refunds = frappe.get_list(
+        "Order Refund",
+        filters={"user": user},
+        fields=["name", "amount", "reason", "status", "creation", "modified"],
+        limit_start=(page - 1) * 10,
+        limit_page_length=10,
+        order_by="creation desc"
+    )
+    return refunds
+
+@frappe.whitelist()
 def get_user_membership():
     """
     Retrieves the active membership for the currently logged-in user.
