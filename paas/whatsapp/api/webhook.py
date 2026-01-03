@@ -2,8 +2,9 @@
 # For license information, please see license.txt
 
 import frappe
-from paas.paas.whatsapp.utils import get_whatsapp_config
-from paas.paas.whatsapp.api.message import handle_message
+from paas.whatsapp.utils import get_whatsapp_config
+from paas.whatsapp.api.message import handle_message
+from paas.whatsapp.utils import validate_signature
 
 @frappe.whitelist(allow_guest=True)
 def webhook():
@@ -23,7 +24,6 @@ def webhook():
                 frappe.throw("Missing Signature", frappe.PermissionError)
             
             # frappe.request.get_data() gives raw bytes needed for HMAC
-            from paas.paas.whatsapp.utils import validate_signature
             if not validate_signature(frappe.request.get_data(), signature, config.get_password('app_secret')):
                  frappe.throw("Invalid Signature", frappe.PermissionError)
 
