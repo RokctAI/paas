@@ -288,3 +288,46 @@ def manage_shop_booking_closed_dates(shop_id, closed_dates):
         shop.append("booking_closed_dates", date)
     shop.save()
     return shop
+
+# --- Aliases for Backward Compatibility ---
+
+@frappe.whitelist()
+def create_booking(data):
+    return create_booking_slot(data)
+
+@frappe.whitelist()
+def get_booking(name):
+    return frappe.get_doc("Booking", name)
+
+@frappe.whitelist()
+def update_booking(name, data):
+    return update_booking_slot(name, data)
+
+@frappe.whitelist()
+def delete_booking(name):
+    return delete_booking_slot(name)
+
+@frappe.whitelist()
+def create_user_booking(data):
+    return create_reservation(data)
+
+@frappe.whitelist()
+def get_user_bookings():
+    return get_my_reservations()
+
+@frappe.whitelist()
+def update_user_booking_status(name, status):
+    return update_reservation_status(name, status)
+
+@frappe.whitelist()
+def get_shop_bookings(shop_id, status=None, date_from=None, date_to=None):
+    return get_shop_reservations(shop_id, status, date_from, date_to)
+
+@frappe.whitelist()
+def get_shop_user_bookings(shop_id, status=None, date_from=None, date_to=None):
+    return get_shop_reservations(shop_id, status, date_from, date_to)
+
+@frappe.whitelist()
+def update_shop_user_booking_status(name, status):
+    return update_reservation_status(name, status)
+
