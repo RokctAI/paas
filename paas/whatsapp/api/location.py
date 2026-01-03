@@ -3,7 +3,7 @@
 
 import frappe
 import json
-from paas.paas.whatsapp.responses import send_static_map_confirmation
+from paas.whatsapp.responses import send_static_map_confirmation
 
 def handle_location(lat, long, session):
     """
