@@ -346,11 +346,84 @@ class JSONSeeder:
                 # print(f"Error assigning role: {e}")
                 pass
 
+    def seed_generic(self, filename, doctype, unique_field='id', name_field='name'):
+        data = self.load_json(filename)
+        if not data: return
+
+        print(f"Seeding {doctype} from {filename}...")
+        for item in data:
+            try:
+                # Basic mapping
+                doc_data = {"doctype": doctype}
+                
+                # Check if already exists
+                unique_val = item.get(unique_field)
+                if not unique_val: continue
+
+                # Map id to name if needed (common in Laravel migration)
+                if 'id' in item and 'name' not in item:
+                    doc_data['name'] = str(item['id'])
+                elif unique_field in item:
+                    doc_data['name'] = str(item[unique_field])
+
+                if frappe.db.exists(doctype, doc_data.get('name')):
+                    continue
+
+                # Copy all fields from item to doc_data
+                # Exclude id if mapped to name
+                for k, v in item.items():
+                    if k == 'id': continue 
+                    doc_data[k] = v
+                
+                # Inject 'active' if missing and 'active' is 1/0
+                if 'active' in item:
+                    doc_data['docstatus'] = 0 # Draft by default
+
+                frappe.get_doc(doc_data).insert(ignore_permissions=True)
+            except Exception as e:
+                # print(f"Error {doctype} {item.get('id')}: {e}")
+                pass
+
+    def seed_remaining(self):
+        # Map of filename -> DocType for generic seeding
+        # Only seed what we haven't handled manually
+        generic_map = {
+            "ads_packages.json": "Ads Package",
+            "banners.json": "Banner",
+            "blogs.json": "Blog",
+            "careers.json": "Career",
+            "cook_offering_categories.json": "Cook Offering Category",
+            "delivery_vehicle_types.json": "Delivery Vehicle Type",
+            "faqs.json": "FAQ",
+            "kitchens.json": "Kitchen",
+            "memberships.json": "Membership",
+            "notifications.json": "Notification",
+            "pages.json": "Page",
+            "payouts.json": "Payout",
+            "reviews.json": "Review",
+            "shop_types.json": "Shop Type",
+            "shop_sections.json": "Shop Section",
+            "tags.json": "Tag",
+            "taxes.json": "Tax",
+            "tickets.json": "Ticket",
+            "wallets.json": "Wallet",
+             # Add more as needed based on file list
+        }
+
+        for filename, doctype in generic_map.items():
+            try:
+                self.seed_generic(filename, doctype)
+            except Exception as e:
+                print(f"Failed generic seed for {filename}: {e}")
+
     def run(self):
         print(f"--- Seeder Started: {self.site_name} ---")
         
         # Always run global seeds
         self.seed_global()
+        
+        # Run generic seeds for simple types
+        self.seed_remaining()
 
         # Conditional Juvo seeds
         if self.site_name == "juvo.tenant.rokct.ai" or "paas" in self.site_name:
@@ -362,7 +435,8 @@ class JSONSeeder:
 
 def execute():
     site = frappe.local.site
-    fixtures_path = os.path.join(get_bench_path(), "apps/paas/paas/fixtures")
+    # UPDATED: Use seeds_data directory instead of fixtures to prevent auto-import
+    fixtures_path = os.path.join(get_bench_path(), "apps/paas/paas/seeds_data")
     seeder = JSONSeeder(site, fixtures_path)
     seeder.run()
 
