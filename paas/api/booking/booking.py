@@ -331,3 +331,11 @@ def get_shop_user_bookings(shop_id, status=None, date_from=None, date_to=None):
 def update_shop_user_booking_status(name, status):
     return update_reservation_status(name, status)
 
+@frappe.whitelist()
+def get_my_bookings():
+    return get_my_reservations()
+
+@frappe.whitelist()
+def cancel_my_booking(name):
+    return update_reservation_status(name, "Cancelled")
+
