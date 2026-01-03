@@ -2,13 +2,13 @@
 # For license information, please see license.txt
 
 import frappe
-from paas.paas.whatsapp.responses import (
+from paas.whatsapp.responses import (
     send_text, send_shop_list, send_category_list, 
     send_product_list, send_product_card, send_product_flow,
     send_cart_summary
 )
-from paas.paas.whatsapp.utils import get_whatsapp_config
-from paas.paas.whatsapp.api.cart import add_to_cart
+from paas.whatsapp.utils import get_whatsapp_config
+from paas.whatsapp.api.cart import add_to_cart
 from paas.api.shop.shop import get_shops
 from paas.api.product.product import get_products_by_category
 
@@ -45,7 +45,7 @@ def handle_interactive(reply, session):
         item_id = reply['list_reply']['id']
         
         if item_id.startswith("addr_"):
-             from paas.paas.whatsapp.api.checkout import handle_checkout_action
+             from paas.whatsapp.api.checkout import handle_checkout_action
              # Handle Address Select
              if item_id == "addr_new":
                  # Trigger manual input
@@ -122,7 +122,7 @@ def handle_interactive(reply, session):
             add_to_cart(session, prod_name)
             
         elif btn_id == 'cart_checkout':
-            from paas.paas.whatsapp.api.checkout import handle_checkout_action
+            from paas.whatsapp.api.checkout import handle_checkout_action
             handle_checkout_action(session, 'start')
 
         elif btn_id == 'cart_clear':
@@ -131,9 +131,9 @@ def handle_interactive(reply, session):
             send_text(session.wa_id, "Cart cleared.")
             
         elif btn_id == 'cmd_place_order':
-             from paas.paas.whatsapp.api.checkout import handle_checkout_action
+             from paas.whatsapp.api.checkout import handle_checkout_action
              handle_checkout_action(session, 'place_order')
 
         elif btn_id.startswith('pay_'):
-             from paas.paas.whatsapp.api.checkout import handle_checkout_action
+             from paas.whatsapp.api.checkout import handle_checkout_action
              handle_checkout_action(session, 'payment_selected', payload=btn_id)
