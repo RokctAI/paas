@@ -1,5 +1,5 @@
 import frappe
-from ..seller.utils import _get_seller_shop
+from paas.api.utils import _get_seller_shop
 
 @frappe.whitelist()
 def get_seller_delivery_man_delivery_zones(limit_start: int = 0, limit_page_length: int = 20):

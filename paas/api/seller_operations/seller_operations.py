@@ -1,7 +1,7 @@
 import frappe
 import json
 import uuid
-from ..seller.utils import _get_seller_shop
+from paas.api.utils import _get_seller_shop
 
 @frappe.whitelist()
 def get_seller_kitchens(limit_start: int = 0, limit_page_length: int = 20):

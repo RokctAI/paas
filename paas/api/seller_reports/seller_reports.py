@@ -1,5 +1,5 @@
 import frappe
-from ..seller.utils import _get_seller_shop
+from paas.api.utils import _get_seller_shop
 
 @frappe.whitelist()
 def get_seller_statistics():
