@@ -1,13 +1,13 @@
 import frappe
 from functools import wraps
 
-# Try to import from rokct, otherwise use fallback
+# Try to import from core, otherwise use fallback
 try:
-    from rokct.rokct.utils.subscription_checker import check_subscription_feature as rokct_check_feature
-    from rokct.rokct.tenant.api import get_subscription_details as rokct_get_details
-    HAS_ROKCT = True
+    from core.utils.subscription_checker import check_subscription_feature as core_check_feature
+    from core.tenant.api import get_subscription_details as core_get_details
+    HAS_CORE = True
 except ImportError:
-    HAS_ROKCT = False
+    HAS_CORE = False
 
 def check_subscription_feature(feature_module):
     """
@@ -15,8 +15,8 @@ def check_subscription_feature(feature_module):
     If rokct is installed, it delegates to rokct's checker.
     If not, it allows the feature (standalone mode).
     """
-    if HAS_ROKCT:
-        return rokct_check_feature(feature_module)
+    if HAS_CORE:
+        return core_check_feature(feature_module)
     
     def decorator(fn):
         @wraps(fn)
@@ -32,8 +32,8 @@ def get_subscription_details():
     If rokct is installed, delegates to rokct.
     If not, returns a default 'Active' subscription with all modules.
     """
-    if HAS_ROKCT:
-        return rokct_get_details()
+    if HAS_CORE:
+        return core_get_details()
     
     # Default fallback for standalone PaaS
     return {
