@@ -8,7 +8,8 @@ app_license = "AGPL-3.0"
 # Installation
 # ------------
 before_install = "paas.install.check_site_role"
-after_install = "paas.install.run_seeders"
+after_install = "paas.install.after_install"
+before_uninstall = ["paas.builder.utils.prevent_uninstall_if_build_active"]
 
 # Authentication
 # --------------

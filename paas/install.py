@@ -1,4 +1,5 @@
 import frappe
+import os
 
 def check_site_role():
     """
@@ -9,6 +10,13 @@ def check_site_role():
     """
     app_role = frappe.conf.get("app_role", "tenant")
     print(f"PaaS installation on site: {frappe.local.site} (app_role: {app_role})")
+
+def after_install():
+    """
+    Wrapper to run all post-installation tasks.
+    """
+    run_seeders()
+    check_and_fetch_sources()
 
 def run_seeders():
     """
@@ -23,14 +31,28 @@ def run_seeders():
     
     # Only seed on tenant sites
     try:
-        # Check if rokct app has the seeders module
-        from rokct.control.seeders import seed_paas_payments, seed_paas_juvo_settings
-        
-        print("Running PaaS payment gateway seeder from rokct...")
-        seed_paas_payments.execute()
-        
-        print("Running PaaS Juvo settings seeder from rokct...")
-        seed_paas_juvo_settings.execute()
+        # Dynamic loading to avoid strict module dependency (prevents install crashes)
+        def run_seeder_script(script_name):
+            try:
+                # Path: apps/control/control/seeds/scripts/{script_name}.py
+                script_path = os.path.join(get_bench_path(), "apps", "control", "control", "seeds", "scripts", f"{script_name}.py")
+                
+                if not os.path.exists(script_path):
+                    print(f"Seeder script not found: {script_path}")
+                    return
+
+                print(f"Running {script_name} from {script_path}...")
+                import importlib.util
+                spec = importlib.util.spec_from_file_location(script_name, script_path)
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                module.execute()
+            except Exception as e:
+                print(f"Failed to run {script_name}: {e}")
+
+        # Execute
+        run_seeder_script("seed_paas_payments")
+        run_seeder_script("seed_paas_juvo_settings")
         
         # Run main PaaS seeder (handles global data + conditional Juvo data)
         print("Running main PaaS seeder...")
@@ -45,3 +67,41 @@ def run_seeders():
         print(f"Error running PaaS seeders: {e}")
         frappe.log_error(f"Error running PaaS seeders: {e}", "PaaS Seeder Error")
 
+def check_and_fetch_sources():
+    """
+    Checks if Flutter source code exists. If not, requests Control to fetch it.
+    """
+    print("--- Checking for Flutter Source Code ---")
+    
+    # Path: paas/builder/source_code
+    source_code_path = frappe.get_app_path("paas", "builder", "source_code")
+    
+    # Check if directory exists and has content (ignoring .keep)
+    missing = True
+    if os.path.exists(source_code_path):
+        contents = [c for c in os.listdir(source_code_path) if c != ".keep"]
+        if contents:
+            missing = False
+            print(f"✅ PaaS Source Code detected: {contents}")
+            
+    if missing:
+        print(f"⚠️ PaaS Flutter Source Code missing in {source_code_path}.")
+        print("Requesting Control app to fetch sources...")
+        try:
+            if "control" in frappe.get_installed_apps():
+                # Dynamically call the function in Control app
+                # Note: This function (control.control.api.fetch_paas_sources) must exist in Control
+                try:
+                    fetch_sources = frappe.get_attr("control.control.api.fetch_paas_sources")
+                    fetch_sources()
+                    print("✅ Successfully requested Control to fetch sources.")
+                except AttributeError:
+                    print("❌ Error: 'control.control.api.fetch_paas_sources' method not found.")
+                    print("Please ensure Control app is updated.")
+                except Exception as ex:
+                     print(f"❌ Error during fetch request: {ex}")
+            else:
+                 print("ℹ️ Control app is not installed. Cannot auto-fetch sources.")
+                 print("Please manually clone sources into: " + source_code_path)
+        except Exception as e:
+            print(f"❌ Error initiating source check: {e}")

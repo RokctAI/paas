@@ -103,3 +103,33 @@ AGPLv3 © Rokct Holdings. See the [LICENSE](LICENSE) file for details.
 - **Clear separation** – all core logic lives inside the PaaS app.
 
 Enjoy building on a lean, flexible platform!
+
+## 📱 Flutter Builder Source Code
+
+The **Flutter Builder** module (moved from Core) requires the source code for the mobile apps to be present to generate builds.
+
+### Directory Structure
+The source code for the apps (Customer, Driver, Manager, POS) must be placed in:
+`paas/paas/builder/source_code/`
+
+Expected structure:
+```
+paas/paas/builder/source_code/
+├── customer/
+├── driver/
+├── manager/
+└── pos/
+```
+
+### Auto-Fetch (Control App)
+If the Control app is installed, PaaS will automatically request it to fetch the latest sources during installation via:
+`control.control.api.fetch_paas_sources()`
+
+### Manual Setup
+If you do not have the Control app, you must manually clone the repositories:
+```bash
+cd apps/paas/paas/builder/source_code
+git clone https://github.com/YourUser/juvo_customer.git customer
+git clone https://github.com/YourUser/juvo_driver.git driver
+# ... repeat for manager and pos
+```

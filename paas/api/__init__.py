@@ -479,7 +479,7 @@ from paas.api.system.system import (
 )
 from paas.api.remote_config import get_remote_config
 from paas.whatsapp.api import webhook as whatsapp_webhook
-from rokct.lending.api import (
+from core.rlending.api import (
     create_loan_application as _create_loan_application,
     disburse_loan as _disburse_loan,
     get_my_loan_applications as _get_my_loan_applications,
@@ -498,7 +498,7 @@ def get_my_loan_applications():
     """
     Proxy for retrieving the current user's loan applications.
     """
-    from rokct.lending.api import get_my_loan_applications as _get_apps
+    from core.rlending.api import get_my_loan_applications as _get_apps
     return _get_apps()
 
 @frappe.whitelist()

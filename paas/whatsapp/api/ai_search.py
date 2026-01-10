@@ -124,7 +124,7 @@ def load_intents_from_config():
     
     try:
         # Robust way: Get path relative to the 'rokct' app module
-        path = frappe.get_app_path("rokct", "ai_config", "customer_intents.json")
+        path = frappe.get_app_path("brain", "ai_config", "customer_intents.json")
     except Exception as e:
         print(f"⚠️ Could not resolve app path for 'rokct': {e}")
         return get_fallback_intents()

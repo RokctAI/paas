@@ -23,7 +23,7 @@ class JSONSeeder:
 
     def seed_users(self):
         # Users are in rokct app for security
-        rokct_fixtures_path = os.path.join(get_bench_path(), "apps/rokct/rokct/seeds")
+        rokct_fixtures_path = os.path.join(get_bench_path(), "apps/control/control/seeds")
         users_file = os.path.join(rokct_fixtures_path, 'users.json')
 
         if not os.path.exists(users_file):
