@@ -1,5 +1,6 @@
 import frappe
 import os
+from frappe.utils import get_bench_path
 
 def check_site_role():
     """
