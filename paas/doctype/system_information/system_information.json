@@ -5,7 +5,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "core",
+  "rcore",
   "rokct",
   "paas",
   "brain",
@@ -15,7 +15,7 @@
  ],
  "fields": [
   {
-   "fieldname": "core",
+   "fieldname": "rcore",
    "fieldtype": "Data",
    "label": "Core Version",
    "read_only": 1
