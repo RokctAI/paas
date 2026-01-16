@@ -481,7 +481,7 @@ from paas.api.system.system import (
 from paas.api.remote_config import get_remote_config
 from paas.whatsapp.api import webhook as whatsapp_webhook
 try:
-    from core.rlending.api import (
+    from rcore.rlending.api import (
         create_loan_application as _create_loan_application,
         disburse_loan as _disburse_loan,
         get_my_loan_applications as _get_my_loan_applications,
@@ -492,16 +492,16 @@ except ImportError:
     HAS_CORE_LENDING = False
     
     def _create_loan_application(*args, **kwargs):
-        frappe.throw("Core app (Lending) is not installed.")
+        frappe.throw("Rcore app (Lending) is not installed.")
 
     def _disburse_loan(*args, **kwargs):
-        frappe.throw("Core app (Lending) is not installed.")
+        frappe.throw("Rcore app (Lending) is not installed.")
 
     def _get_my_loan_applications(*args, **kwargs):
         return []
 
     def _request_payout(*args, **kwargs):
-        frappe.throw("Core app (Lending) is not installed.")
+        frappe.throw("Rcore app (Lending) is not installed.")
 
 @frappe.whitelist()
 def create_loan_application(applicant_type, applicant, loan_product, loan_amount, income=0, total_expenses=0, skip_documents=0):
