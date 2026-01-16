@@ -57,7 +57,7 @@ Certain functionality in PaaS (Lending, Billing, Verification) is designed to be
 * **Status**: Disabled (Python dependencies missing).
 * **Requirement**: Implement the following methods in your custom app to handle loan logic.
 * **Integration**:
-    * Current implementation expects `core.rlending.api`.
+    * Current implementation expects `rcore.rlending.api`.
     * **Action**: You must either alias your custom module to this namespace or update `paas/api/__init__.py` to import from your custom app (e.g., `from my_app.lending.api import ...`).
     * **Methods to Implement**:
         - `create_loan_application(applicant_type, applicant, loan_product, ...)`
