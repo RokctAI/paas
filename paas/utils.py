@@ -3,8 +3,8 @@ from functools import wraps
 
 # Try to import from core, otherwise use fallback
 try:
-    from core.utils.subscription_checker import check_subscription_feature as core_check_feature
-    from core.tenant.api import get_subscription_details as core_get_details
+    from rcore.utils.subscription_checker import check_subscription_feature as core_check_feature
+    from rcore.tenant.api import get_subscription_details as core_get_details
     HAS_CORE = True
 except ImportError:
     HAS_CORE = False
