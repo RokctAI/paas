@@ -201,7 +201,7 @@ def register_user(email, password, first_name, last_name, phone=None):
 
     # Send the verification email
     verification_url = frappe.utils.get_url_to_method(
-        "core.tenant.api.verify_my_email", {"token": token}
+        "rcore.tenant.api.verify_my_email", {"token": token}
     )
     email_context = {
         "first_name": user.first_name,
