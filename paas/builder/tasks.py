@@ -337,7 +337,7 @@ def modify_project_files(temp_dir, app_config):
                 color_hex = color_value.replace("#", "").upper()
                 new_line = f"static const Color {var_name} = Color(0xFF{color_hex});"
                 # Regex to find and replace a color definition line
-                pattern = re.compile(f"static const Color {var_name} = Color\(0x[0-9a-fA-F]+\);.*", re.IGNORECASE)
+                pattern = re.compile(rf"static const Color {var_name} = Color\(0x[0-9a-fA-F]+\);.*", re.IGNORECASE)
                 if pattern.search(style_content):
                     style_content = pattern.sub(new_line, style_content)
                     log_message(f"Updated {var_name} color in app_style.dart", app_config.name)
@@ -734,4 +734,5 @@ def _generate_flutter_app(app_config_name):
         if os.path.exists(temp_dir):
             shutil.rmtree(temp_dir)
             print(f"Cleaned up temporary directory: {temp_dir}")
+
 
