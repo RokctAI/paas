@@ -6,7 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "rcore",
-  "rokct",
+  "control",
   "paas",
   "brain",
   "payments",
@@ -21,9 +21,9 @@
    "read_only": 1
   },
   {
-   "fieldname": "rokct",
+   "fieldname": "control",
    "fieldtype": "Data",
-   "label": "Platform Version",
+   "label": "Control Version",
    "read_only": 1
   },
   {
