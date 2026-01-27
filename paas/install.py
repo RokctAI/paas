@@ -21,7 +21,7 @@ def after_install():
 
 def run_seeders():
     """
-    Runs sensitive seeders from rokct if available.
+    Runs sensitive seeders from control app if available.
     Only runs on tenant sites - control sites skip seeding.
     """
     app_role = frappe.conf.get("app_role", "tenant")
@@ -62,8 +62,8 @@ def run_seeders():
 
         print("PaaS seeders completed successfully.")
     except ImportError:
-        # Seeders not available (rokct doesn't have them or not installed)
-        print("Rokct seeders not found. Skipping sensitive data seeding.")
+        # Seeders not available (control app doesn't have them or not installed)
+        print("Control seeders not found. Skipping sensitive data seeding.")
     except Exception as e:
         print(f"Error running PaaS seeders: {e}")
         frappe.log_error(f"Error running PaaS seeders: {e}", "PaaS Seeder Error")
