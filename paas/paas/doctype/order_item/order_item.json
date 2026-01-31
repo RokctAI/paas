@@ -29,6 +29,11 @@
             "fieldtype": "Currency",
             "label": "Price",
             "reqd": 1
+        },
+        {
+            "fieldname": "discount",
+            "fieldtype": "Currency",
+            "label": "Discount"
         }
     ]
 }
