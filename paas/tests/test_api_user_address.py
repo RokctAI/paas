@@ -9,15 +9,17 @@ import json
 class TestUserAddressAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
-        self.test_user = frappe.get_doc({
-            "doctype": "User",
-            "email": "test_address@example.com",
-            "first_name": "Test",
-            "last_name": "Address",
-            "send_welcome_email": 0
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "test_address@example.com"):
+            self.test_user = frappe.get_doc({
+                "doctype": "User",
+                "email": "test_address@example.com",
+                "first_name": "Test",
+                "last_name": "Address",
+                "send_welcome_email": 0
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_user = frappe.get_doc("User", "test_address@example.com")
         self.test_user.add_roles("System Manager")
-        frappe.db.commit()
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
@@ -28,7 +30,6 @@ class TestUserAddressAPI(FrappeTestCase):
         # Clean up created documents
         frappe.db.delete("User Address", {"user": self.test_user.name})
         self.test_user.delete(ignore_permissions=True)
-        frappe.db.commit()
 
     def test_add_and_get_user_address(self):
         address_data = {
