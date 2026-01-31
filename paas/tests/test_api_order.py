@@ -121,7 +121,14 @@ class TestOrderAPI(FrappeTestCase):
             "doctype": "Order",
             "user": self.test_user.name,
             "shop": self.test_shop.name,
-            "status": "Delivered"
+            "status": "Delivered",
+            "order_items": [
+                {
+                    "product": self.test_product.name,
+                    "quantity": 1,
+                    "price": 100
+                }
+            ]
         }).insert(ignore_permissions=True)
 
         frappe.set_user(self.test_user.name)
