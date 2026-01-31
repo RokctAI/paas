@@ -18,12 +18,42 @@ class TestPayStackAPI(FrappeTestCase):
         else:
             self.test_user = frappe.get_doc("User", "test_paystack_user@example.com")
 
+        # Create a test shop
+        if not frappe.db.exists("Shop", "Test PayStack Shop"):
+            self.test_shop = frappe.get_doc({
+                "doctype": "Shop",
+                "shop_name": "Test PayStack Shop",
+                "user": self.test_user.name,
+                "uuid": "test_paystack_shop_uuid"
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_shop = frappe.get_doc("Shop", "Test PayStack Shop")
+
+        # Create a test product
+        if not frappe.db.exists("Product", {"title": "Test Product", "shop": self.test_shop.name}):
+            self.test_product = frappe.get_doc({
+                "doctype": "Product",
+                "title": "Test Product",
+                "shop": self.test_shop.name,
+                "price": 100
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_product = frappe.get_doc("Product", {"title": "Test Product", "shop": self.test_shop.name})
+
         # Create a test order
         self.test_order = frappe.get_doc({
             "doctype": "Order",
             "user": self.test_user.name,
+            "shop": self.test_shop.name,
             "total_price": 100,
             "currency": "USD",
+            "order_items": [
+                {
+                    "product": self.test_product.name,
+                    "quantity": 1,
+                    "price": 100
+                }
+            ]
         }).insert(ignore_permissions=True)
 
         # Create PayStack Payment Gateway
@@ -38,8 +68,7 @@ class TestPayStackAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
 
     def tearDown(self):
-        frappe.delete_doc("User", self.test_user.name, ignore_permissions=True)
-        frappe.delete_doc("Order", self.test_order.name, ignore_permissions=True)
+        pass
 
     @patch('paas.api.payment.payment.requests.post')
     def test_initiate_paystack_payment(self, mock_post):
