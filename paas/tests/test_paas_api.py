@@ -45,16 +45,13 @@ class TestPhoneVerificationAPI(FrappeTestCase):
     @patch("paas.api.user.user.frappe.send_sms")
     @patch("paas.api.user.user.frappe.cache")
     def test_send_verification_code(self, mock_cache, mock_send_sms):
-        mock_cache_instance = MagicMock()
-        mock_cache.return_value = mock_cache_instance
-
         phone_number = "+11223344556"
         response = send_phone_verification_code(phone=phone_number)
 
         self.assertEqual(response["status"], "success")
 
         # Check that cache was called correctly
-        args, kwargs = mock_cache_instance.set_value.call_args
+        args, kwargs = mock_cache.set_value.call_args
         self.assertEqual(args[0], f"phone_otp:{phone_number}")
         self.assertTrue(args[1].isdigit())
         self.assertEqual(len(args[1]), 6)
@@ -69,13 +66,10 @@ class TestPhoneVerificationAPI(FrappeTestCase):
 
     @patch("paas.api.user.user.frappe.cache")
     def test_verify_code_correct(self, mock_cache):
-        mock_cache_instance = MagicMock()
-        mock_cache.return_value = mock_cache_instance
-
         phone_number = self.test_user_phone
         correct_otp = "123456"
 
-        mock_cache_instance.get_value.return_value = correct_otp
+        mock_cache.get_value.return_value = correct_otp
 
         response = verify_phone_code(phone=phone_number, otp=correct_otp)
 
@@ -87,18 +81,15 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         self.assertIsNotNone(self.test_user.phone_verified_at)
 
         # Verify cache deletion
-        mock_cache_instance.delete_value.assert_called_once_with(f"phone_otp:{phone_number}")
+        mock_cache.delete_value.assert_called_once_with(f"phone_otp:{phone_number}")
 
     @patch("paas.api.user.user.frappe.cache")
     def test_verify_code_incorrect(self, mock_cache):
-        mock_cache_instance = MagicMock()
-        mock_cache.return_value = mock_cache_instance
-
         phone_number = self.test_user_phone
         correct_otp = "123456"
         incorrect_otp = "654321"
 
-        mock_cache_instance.get_value.return_value = correct_otp
+        mock_cache.get_value.return_value = correct_otp
 
         response = verify_phone_code(phone=phone_number, otp=incorrect_otp)
 
@@ -110,13 +101,11 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         self.assertIsNone(self.test_user.phone_verified_at)
 
         # Verify cache was not deleted
-        mock_cache_instance.delete_value.assert_not_called()
+        mock_cache.delete_value.assert_not_called()
 
     @patch("paas.api.user.user.frappe.cache")
     def test_verify_code_expired(self, mock_cache):
-        mock_cache_instance = MagicMock()
-        mock_cache.return_value = mock_cache_instance
-        mock_cache_instance.get_value.return_value = None
+        mock_cache.get_value.return_value = None
 
         response = verify_phone_code(phone=self.test_user_phone, otp="123456")
 
@@ -193,7 +182,10 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         from paas.api import register_user
         new_user_email = "new_user@example.com"
         if frappe.db.exists("User", new_user_email):
-            frappe.delete_doc("User", new_user_email, ignore_permissions=True)
+            try:
+                frappe.delete_doc("User", new_user_email, ignore_permissions=True)
+            except Exception:
+                pass
 
         # Act
         response = register_user(
