@@ -8,12 +8,15 @@ from paas.api import initiate_paystack_payment, handle_paystack_callback
 class TestPayStackAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
-        self.test_user = frappe.get_doc({
-            "doctype": "User",
-            "email": "test_paystack_user@example.com",
-            "first_name": "Test",
-            "last_name": "User"
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "test_paystack_user@example.com"):
+            self.test_user = frappe.get_doc({
+                "doctype": "User",
+                "email": "test_paystack_user@example.com",
+                "first_name": "Test",
+                "last_name": "User"
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_user = frappe.get_doc("User", "test_paystack_user@example.com")
 
         # Create a test order
         self.test_order = frappe.get_doc({
@@ -35,9 +38,8 @@ class TestPayStackAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
 
     def tearDown(self):
-        frappe.delete_doc("User", self.test_user.name)
-        frappe.delete_doc("Order", self.test_order.name)
-        frappe.db.commit()
+        frappe.delete_doc("User", self.test_user.name, ignore_permissions=True)
+        frappe.delete_doc("Order", self.test_order.name, ignore_permissions=True)
 
     @patch('paas.api.payment.payment.requests.post')
     def test_initiate_paystack_payment(self, mock_post):
