@@ -7,46 +7,56 @@ from paas.api import check_coupon
 class TestCouponAPI(FrappeTestCase):
     def setUp(self):
         # Create a shop
-        self.shop = frappe.get_doc({
-            "doctype": "Shop",
-            "shop_name": "TestShopAPICoupon",
-            "owner": "Administrator"
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Shop", "TestShopAPICoupon"):
+            self.shop = frappe.get_doc({
+                "doctype": "Shop",
+                "shop_name": "TestShopAPICoupon",
+                "owner": "Administrator"
+            }).insert(ignore_permissions=True)
+        else:
+            self.shop = frappe.get_doc("Shop", "TestShopAPICoupon")
 
         # Create coupons
-        self.valid_coupon = frappe.get_doc({
-            "doctype": "Coupon",
-            "code": "VALID10",
-            "shop": self.shop.name,
-            "type": "Percentage",
-            "amount": 10
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Coupon", {"code": "VALID10", "shop": self.shop.name}):
+            self.valid_coupon = frappe.get_doc({
+                "doctype": "Coupon",
+                "code": "VALID10",
+                "shop": self.shop.name,
+                "type": "Percentage",
+                "amount": 10
+            }).insert(ignore_permissions=True)
+        else:
+            self.valid_coupon = frappe.get_doc("Coupon", {"code": "VALID10", "shop": self.shop.name})
 
-        self.expired_coupon = frappe.get_doc({
-            "doctype": "Coupon",
-            "code": "EXPIRED",
-            "shop": self.shop.name,
-            "type": "Fixed",
-            "amount": 5,
-            "expired_at": "2020-01-01 00:00:00"
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Coupon", {"code": "EXPIRED", "shop": self.shop.name}):
+            self.expired_coupon = frappe.get_doc({
+                "doctype": "Coupon",
+                "code": "EXPIRED",
+                "shop": self.shop.name,
+                "type": "Fixed",
+                "amount": 5,
+                "expired_at": "2020-01-01 00:00:00"
+            }).insert(ignore_permissions=True)
+        else:
+            self.expired_coupon = frappe.get_doc("Coupon", {"code": "EXPIRED", "shop": self.shop.name})
 
-        self.zero_quantity_coupon = frappe.get_doc({
-            "doctype": "Coupon",
-            "code": "ZEROQ",
-            "shop": self.shop.name,
-            "type": "Percentage",
-            "amount": 20,
-            "quantity": 0
-        }).insert(ignore_permissions=True)
-        frappe.db.commit()
+        if not frappe.db.exists("Coupon", {"code": "ZEROQ", "shop": self.shop.name}):
+            self.zero_quantity_coupon = frappe.get_doc({
+                "doctype": "Coupon",
+                "code": "ZEROQ",
+                "shop": self.shop.name,
+                "type": "Percentage",
+                "amount": 20,
+                "quantity": 0
+            }).insert(ignore_permissions=True)
+        else:
+            self.zero_quantity_coupon = frappe.get_doc("Coupon", {"code": "ZEROQ", "shop": self.shop.name})
 
     def tearDown(self):
         self.valid_coupon.delete(ignore_permissions=True)
         self.expired_coupon.delete(ignore_permissions=True)
         self.zero_quantity_coupon.delete(ignore_permissions=True)
         self.shop.delete(ignore_permissions=True)
-        frappe.db.commit()
 
     def test_check_valid_coupon(self):
         result = check_coupon(coupon_code="VALID10", shop_id=self.shop.name)
