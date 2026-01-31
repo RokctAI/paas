@@ -8,34 +8,41 @@ from paas.api import get_user_membership, get_user_membership_history
 class TestMembershipAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
-        self.test_user = frappe.get_doc({
-            "doctype": "User",
-            "email": "test_membership@example.com",
-            "first_name": "Test",
-            "last_name": "Membership",
-            "send_welcome_email": 0
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "test_membership@example.com"):
+            self.test_user = frappe.get_doc({
+                "doctype": "User",
+                "email": "test_membership@example.com",
+                "first_name": "Test",
+                "last_name": "Membership",
+                "send_welcome_email": 0
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_user = frappe.get_doc("User", "test_membership@example.com")
         self.test_user.add_roles("System Manager")
 
         # Create a membership plan
-        self.membership_plan = frappe.get_doc({
-            "doctype": "Membership",
-            "title": "Gold Plan",
-            "price": 100.0,
-            "duration": 1,
-            "duration_unit": "Month"
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Membership", {"title": "Gold Plan"}):
+            self.membership_plan = frappe.get_doc({
+                "doctype": "Membership",
+                "title": "Gold Plan",
+                "price": 100.0,
+                "duration": 1,
+                "duration_unit": "Month"
+            }).insert(ignore_permissions=True)
+        else:
+            self.membership_plan = frappe.get_doc("Membership", {"title": "Gold Plan"})
 
         # Create a user membership
-        self.user_membership = frappe.get_doc({
-            "doctype": "User Membership",
-            "user": self.test_user.name,
-            "membership": self.membership_plan.name,
-            "start_date": frappe.utils.nowdate(),
-            "end_date": frappe.utils.add_months(frappe.utils.nowdate(), 1)
-        }).insert(ignore_permissions=True)
-
-        frappe.db.commit()
+        if not frappe.db.exists("User Membership", {"user": self.test_user.name, "membership": self.membership_plan.name}):
+            self.user_membership = frappe.get_doc({
+                "doctype": "User Membership",
+                "user": self.test_user.name,
+                "membership": self.membership_plan.name,
+                "start_date": frappe.utils.nowdate(),
+                "end_date": frappe.utils.add_months(frappe.utils.nowdate(), 1)
+            }).insert(ignore_permissions=True)
+        else:
+            self.user_membership = frappe.get_doc("User Membership", {"user": self.test_user.name, "membership": self.membership_plan.name})
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
@@ -46,7 +53,6 @@ class TestMembershipAPI(FrappeTestCase):
         self.user_membership.delete(ignore_permissions=True)
         self.membership_plan.delete(ignore_permissions=True)
         self.test_user.delete(ignore_permissions=True)
-        frappe.db.commit()
 
     def test_get_user_membership(self):
         membership = get_user_membership()
@@ -62,7 +68,6 @@ class TestMembershipAPI(FrappeTestCase):
     def test_get_user_membership_no_active_membership(self):
         self.user_membership.is_active = 0
         self.user_membership.save(ignore_permissions=True)
-        frappe.db.commit()
 
         membership = get_user_membership()
         self.assertIsNone(membership)
