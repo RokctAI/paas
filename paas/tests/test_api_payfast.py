@@ -1,5 +1,6 @@
 # Copyright (c) 2025 ROKCT Holdings
 # For license information, please see license.txt
+import json
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from paas.api import get_payfast_settings, save_payfast_card, get_saved_payfast_cards, delete_payfast_card, handle_payfast_callback, process_payfast_token_payment
@@ -7,19 +8,51 @@ from paas.api import get_payfast_settings, save_payfast_card, get_saved_payfast_
 class TestPayFastAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
-        self.test_user = frappe.get_doc({
-            "doctype": "User",
-            "email": "test_payfast_user@example.com",
-            "first_name": "Test",
-            "last_name": "User"
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "test_payfast_user@example.com"):
+            self.test_user = frappe.get_doc({
+                "doctype": "User",
+                "email": "test_payfast_user@example.com",
+                "first_name": "Test",
+                "last_name": "User"
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_user = frappe.get_doc("User", "test_payfast_user@example.com")
+
+        # Create Shop
+        if not frappe.db.exists("Shop", {"shop_name": "PayFast Shop"}):
+            self.shop = frappe.get_doc({
+                "doctype": "Shop",
+                "shop_name": "PayFast Shop",
+                "user": self.test_user.name,
+                "uuid": "payfast-shop-uuid",
+                "status": "approved"
+            }).insert(ignore_permissions=True)
+        else:
+            self.shop = frappe.get_doc("Shop", {"shop_name": "PayFast Shop"})
+
+        # Create Product
+        if not frappe.db.exists("Product", {"title": "PayFast Product"}):
+             self.product = frappe.get_doc({
+                "doctype": "Product",
+                "shop": self.shop.name,
+                "title": "PayFast Product",
+                "price": 100
+             }).insert(ignore_permissions=True)
+        else:
+             self.product = frappe.get_doc("Product", {"title": "PayFast Product"})
 
         # Create a test order
         self.test_order = frappe.get_doc({
             "doctype": "Order",
             "user": self.test_user.name,
+            "shop": self.shop.name,
             "total_price": 100,
             "currency": "USD",
+            "order_items": [{
+                "product": self.product.name,
+                "quantity": 1,
+                "price": 100
+            }]
         }).insert(ignore_permissions=True)
 
         # Create PayFast Payment Gateway
@@ -37,9 +70,10 @@ class TestPayFastAPI(FrappeTestCase):
 
     def tearDown(self):
         # Clean up the test data
-        frappe.delete_doc("User", self.test_user.name)
-        frappe.delete_doc("Order", self.test_order.name)
-        frappe.db.commit()
+        frappe.delete_doc("User", self.test_user.name, force=True)
+        # Shop and Product linked to user might be auto-deleted or cascade, or we leave them for rollback
+        # We'll rely on FrappeTestCase rollback for most, but user deletion is good practice if we create validation issues
+        pass
 
     def test_get_payfast_settings(self):
         # Test getting PayFast settings
