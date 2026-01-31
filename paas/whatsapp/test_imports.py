@@ -2,8 +2,8 @@
 try:
     import frappe
     import staticmap
-    from paas.paas.whatsapp.api import webhook
-    from paas.paas.whatsapp import utils
+    from paas.whatsapp.api import webhook
+    from paas.whatsapp import utils
     print("✅ All modules imported successfully.")
 except ImportError as e:
     print(f"❌ Import Error: {e}")
