@@ -17,6 +17,7 @@ def before_tests():
     create_gender()
     create_user_custom_fields()
     frappe.db.commit()
+    frappe.clear_cache()
     print("DEBUG: Fixtures Created. Stock Entry Types:", frappe.db.get_all("Stock Entry Type", pluck="name"))
 
 def create_warehouse_types():
