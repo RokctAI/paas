@@ -8,6 +8,8 @@ def before_tests():
     create_customer_groups()
     create_item_groups()
     create_territories()
+    create_supplier_groups()
+    create_sales_persons()
 
 def create_warehouse_types():
     if not frappe.db.exists("Warehouse Type", "Transit"):
@@ -41,4 +43,22 @@ def create_territories():
             "territory_name": "All Territories",
             "is_group": 1,
             "parent_territory": ""
+        }).insert(ignore_permissions=True)
+
+def create_supplier_groups():
+    if not frappe.db.exists("Supplier Group", "All Supplier Groups"):
+        frappe.get_doc({
+            "doctype": "Supplier Group",
+            "supplier_group_name": "All Supplier Groups",
+            "is_group": 1,
+            "parent_supplier_group": ""
+        }).insert(ignore_permissions=True)
+
+def create_sales_persons():
+    if not frappe.db.exists("Sales Person", "All Sales Persons"):
+        frappe.get_doc({
+            "doctype": "Sales Person",
+            "sales_person_name": "All Sales Persons",
+            "is_group": 1,
+            "parent_sales_person": ""
         }).insert(ignore_permissions=True)
