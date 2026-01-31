@@ -1,12 +1,10 @@
 # Copyright (c) 2025 ROKCT Holdings
 # For license information, please see license.txt
 import frappe
-import unittest
-from unittest.mock import patch, MagicMock
-
+from frappe.tests.utils import FrappeTestCase
 from paas.api import initiate_flutterwave_payment, flutterwave_callback
 
-class TestFlutterwave(unittest.TestCase):
+class TestFlutterwave(FrappeTestCase):
 
     def setUp(self):
         # Create a mock user
@@ -28,8 +26,8 @@ class TestFlutterwave(unittest.TestCase):
         self.flutterwave_settings.success_redirect_url = "https://test.com/success"
         self.flutterwave_settings.failure_redirect_url = "https://test.com/failure"
 
-    @patch('paas.api.frappe.get_doc')
-    @patch('paas.api.requests.post')
+    @patch('paas.api.payment.payment.frappe.get_doc')
+    @patch('paas.api.payment.payment.requests.post')
     def test_initiate_flutterwave_payment_success(self, mock_post, mock_get_doc):
         # Arrange
         mock_get_doc.side_effect = [self.order, self.flutterwave_settings, self.user]
@@ -51,7 +49,7 @@ class TestFlutterwave(unittest.TestCase):
         self.assertIn("TEST-ORDER-001", self.order.custom_payment_transaction_id)
 
 
-    @patch('paas.api.frappe.get_doc')
+    @patch('paas.api.payment.payment.frappe.get_doc')
     def test_initiate_flutterwave_payment_already_paid(self, mock_get_doc):
         # Arrange
         self.order.payment_status = "Paid"
@@ -61,8 +59,8 @@ class TestFlutterwave(unittest.TestCase):
         with self.assertRaises(frappe.ValidationError):
             initiate_flutterwave_payment(self.order.name)
 
-    @patch('paas.api.frappe.get_doc')
-    @patch('paas.api.requests.get')
+    @patch('paas.api.payment.payment.frappe.get_doc')
+    @patch('paas.api.payment.payment.requests.get')
     def test_flutterwave_callback_success(self, mock_get, mock_get_doc):
         # Arrange
         mock_get_doc.side_effect = [self.flutterwave_settings, self.order]
@@ -96,7 +94,7 @@ class TestFlutterwave(unittest.TestCase):
         self.assertEqual(frappe.local.response["type"], "redirect")
         self.assertEqual(frappe.local.response["location"], self.flutterwave_settings.success_redirect_url)
 
-    @patch('paas.api.frappe.get_doc')
+    @patch('paas.api.payment.payment.frappe.get_doc')
     def test_flutterwave_callback_cancelled(self, mock_get_doc):
         # Arrange
         mock_get_doc.side_effect = [self.flutterwave_settings, self.order]
