@@ -3,7 +3,7 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from unittest.mock import patch, MagicMock
-from paas.paas.api import check_phone, send_phone_verification_code, verify_phone_code
+from paas.api import check_phone, send_phone_verification_code, verify_phone_code
 
 class TestPhoneVerificationAPI(FrappeTestCase):
     def setUp(self):
@@ -42,8 +42,8 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         with self.assertRaises(frappe.ValidationError):
             check_phone(phone="")
 
-    @patch("paas.paas.api.frappe.send_sms")
-    @patch("paas.paas.api.frappe.cache")
+    @patch("paas.api.frappe.send_sms")
+    @patch("paas.api.frappe.cache")
     def test_send_verification_code(self, mock_cache, mock_send_sms):
         mock_cache_instance = MagicMock()
         mock_cache.return_value = mock_cache_instance
@@ -67,7 +67,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
             message=f"Your verification code is: {otp}"
         )
 
-    @patch("paas.paas.api.frappe.cache")
+    @patch("paas.api.frappe.cache")
     def test_verify_code_correct(self, mock_cache):
         mock_cache_instance = MagicMock()
         mock_cache.return_value = mock_cache_instance
@@ -89,7 +89,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         # Verify cache deletion
         mock_cache_instance.delete_value.assert_called_once_with(f"phone_otp:{phone_number}")
 
-    @patch("paas.paas.api.frappe.cache")
+    @patch("paas.api.frappe.cache")
     def test_verify_code_incorrect(self, mock_cache):
         mock_cache_instance = MagicMock()
         mock_cache.return_value = mock_cache_instance
@@ -112,7 +112,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         # Verify cache was not deleted
         mock_cache_instance.delete_value.assert_not_called()
 
-    @patch("paas.paas.api.frappe.cache")
+    @patch("paas.api.frappe.cache")
     def test_verify_code_expired(self, mock_cache):
         mock_cache_instance = MagicMock()
         mock_cache.return_value = mock_cache_instance
@@ -125,7 +125,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
 
     def test_api_status(self):
         # Act
-        from paas.paas.api import api_status
+        from paas.api import api_status
         response = api_status()
 
         # Assert
@@ -136,7 +136,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
     @patch("frappe.core.doctype.user.user.reset_password")
     def test_forgot_password(self, mock_reset_password):
         # Arrange
-        from paas.paas.api import forgot_password
+        from paas.api import forgot_password
 
         # Act
         response = forgot_password(user=self.test_user.email)
@@ -147,7 +147,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
 
     def test_get_languages(self):
         # Arrange
-        from paas.paas.api import get_languages
+        from paas.api import get_languages
         # Ensure there is at least one enabled and one disabled language
         if not frappe.db.exists("Language", "en"):
             frappe.get_doc({"doctype": "Language", "language_code": "en", "language_name": "English", "enabled": 1}).insert()
@@ -168,7 +168,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
 
     def test_get_currencies(self):
         # Arrange
-        from paas.paas.api import get_currencies
+        from paas.api import get_currencies
         # Ensure there is at least one enabled and one disabled currency
         if not frappe.db.exists("Currency", "USD"):
             frappe.get_doc({"doctype": "Currency", "currency_name": "USD", "symbol": "$", "enabled": 1}).insert()
@@ -187,10 +187,10 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         self.assertIn("USD", response_names)
         self.assertNotIn("KLG", response_names)
 
-    @patch("paas.paas.api.frappe.sendmail")
+    @patch("paas.api.frappe.sendmail")
     def test_register_user(self, mock_sendmail):
         # Arrange
-        from paas.paas.api import register_user
+        from paas.api import register_user
         new_user_email = "new_user@example.com"
 
         # Act
