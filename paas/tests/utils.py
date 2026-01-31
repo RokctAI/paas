@@ -15,6 +15,7 @@ def before_tests():
     create_stock_entry_types()
     create_fiscal_year()
     create_gender()
+    create_user_custom_fields()
     frappe.db.commit()
     print("DEBUG: Fixtures Created. Stock Entry Types:", frappe.db.get_all("Stock Entry Type", pluck="name"))
 
@@ -143,3 +144,17 @@ def create_gender():
                 "doctype": "Gender",
                 "gender": gender
             }).insert(ignore_permissions=True)
+
+def create_user_custom_fields():
+    """
+    Creates custom fields for User DocType that are required by PaaS.
+    """
+    if not frappe.db.exists("Custom Field", {"dt": "User", "fieldname": "ringfenced_balance"}):
+        frappe.get_doc({
+            "doctype": "Custom Field",
+            "dt": "User",
+            "fieldname": "ringfenced_balance",
+            "fieldtype": "Currency",
+            "label": "Ringfenced Balance",
+            "default": "0"
+        }).insert(ignore_permissions=True)
