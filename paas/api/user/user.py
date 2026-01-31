@@ -770,6 +770,13 @@ def update_seller_shop(shop_data):
     shop.save(ignore_permissions=True)
     return shop.as_dict()
 
+@frappe.whitelist()
+def update_user_shop(shop_data):
+    """
+    Alias for update_seller_shop (for backward compatibility/testing)
+    """
+    return update_seller_shop(shop_data)
+
 
 @frappe.whitelist()
 def get_user_request_models(limit_start=0, limit_page_length=20):
