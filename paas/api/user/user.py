@@ -119,7 +119,7 @@ def send_phone_verification_code(phone: str):
 
     # Store the OTP in cache for 10 minutes (600 seconds)
     cache_key = f"phone_otp:{phone}"
-    frappe.cache().set_value(cache_key, otp, expires_in_sec=600)
+    frappe.cache.set_value(cache_key, otp, expires_in_sec=600)
 
     # Send SMS
     try:
@@ -146,7 +146,7 @@ def verify_phone_code(phone: str, otp: str):
         frappe.throw("Phone number and OTP are required parameters.")
 
     cache_key = f"phone_otp:{phone}"
-    cached_otp = frappe.cache().get_value(cache_key)
+    cached_otp = frappe.cache.get_value(cache_key)
 
     if not cached_otp:
         return {"status": "error", "message": "OTP expired or was not sent. Please request a new one."}
@@ -166,7 +166,7 @@ def verify_phone_code(phone: str, otp: str):
         frappe.throw("An error occurred while verifying your phone number. Please try again.")
 
     # Clear the OTP from cache
-    frappe.cache().delete_value(cache_key)
+    frappe.cache.delete_value(cache_key)
 
     return {"status": "success", "message": "Phone number verified successfully."}
 
@@ -242,7 +242,7 @@ def forgot_password(user: str):
             if user_doc_name:
                 # Generate and send 6-digit OTP
                 otp = "".join([str(random.randint(0, 9)) for _ in range(6)])
-                frappe.cache().set_value(f"password_reset_otp:{user}", otp, expires_in_sec=600)
+                frappe.cache.set_value(f"password_reset_otp:{user}", otp, expires_in_sec=600)
                 try:
                     frappe.send_sms(receivers=[user], message=f"Your password reset code is: {otp}")
                 except Exception as sms_error:
@@ -268,7 +268,7 @@ def forgot_password_confirm(email, verify_code, password=None):
         
         if is_phone:
             user_name = frappe.db.get_value("User", {"phone": email}, "name")
-            cached_otp = frappe.cache().get_value(f"password_reset_otp:{email}")
+            cached_otp = frappe.cache.get_value(f"password_reset_otp:{email}")
             if not cached_otp or cached_otp != verify_code:
                 return {"status": False, "message": "Invalid or expired verification code"}
         else:
@@ -288,7 +288,7 @@ def forgot_password_confirm(email, verify_code, password=None):
             user_doc.reset_password_key = None # Clear token after use
             user_doc.save(ignore_permissions=True)
             if is_phone:
-                frappe.cache().delete_value(f"password_reset_otp:{email}")
+                frappe.cache.delete_value(f"password_reset_otp:{email}")
             return {"status": True, "message": "Password updated successfully"}
         
         return {"status": True, "message": "Code verified"}
@@ -717,12 +717,11 @@ def get_user_shop():
     if user == "Guest":
         frappe.throw("You must be logged in to view your shop.", frappe.AuthenticationError)
 
-    # Assuming user_id is a custom field on Company, or we're using another linking mechanism
     try:
-        shop_name = frappe.db.get_value("Company", {"user_id": user}, "name")
+        shop_name = frappe.db.get_value("Shop", {"user": user}, "name")
         if not shop_name:
             return None
-        return frappe.get_doc("Company", shop_name).as_dict()
+        return frappe.get_doc("Shop", shop_name).as_dict()
     except frappe.DoesNotExistError:
         return None
 
@@ -738,28 +737,22 @@ def update_seller_shop(shop_data):
     if user == "Guest":
         frappe.throw("You must be logged in to update your shop.", frappe.AuthenticationError)
 
-    shop_name = frappe.db.get_value("Company", {"user_id": user}, "name")
+    shop_name = frappe.db.get_value("Shop", {"user": user}, "name")
     if not shop_name:
         frappe.throw("You do not own a shop.", frappe.PermissionError)
 
-    shop = frappe.get_doc("Company", shop_name)
+    shop = frappe.get_doc("Shop", shop_name)
 
     # List of fields that a user is allowed to update
-    updatable_fields = ["phone", "location", "delivery_time", "open"]
+    updatable_fields = ["phone", "location", "open", "shop_name"]
 
     for key, value in shop_data.items():
         if key in updatable_fields:
-            if key in ["location", "delivery_time"]:
-                shop.set(key, json.dumps(value))
-            else:
-                shop.set(key, value)
+            shop.set(key, value)
 
-    # Handle translations separately (simplified)
+    # Handle legacy title mapping
     if "title" in shop_data:
-        shop.company_name = shop_data.get("title")
-    if "description" in shop_data:
-        # Assuming a custom field 'description' exists on Company
-        shop.description = shop_data.get("description")
+        shop.shop_name = shop_data.get("title")
 
     shop.save(ignore_permissions=True)
     return shop.as_dict()
