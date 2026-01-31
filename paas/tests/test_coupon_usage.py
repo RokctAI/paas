@@ -1,11 +1,10 @@
 # Copyright (c) 2025 ROKCT Holdings
 # For license information, please see license.txt
 import frappe
-import unittest
-import json
+from frappe.tests.utils import FrappeTestCase
 from paas.api import create_order
 
-class TestCouponUsage(unittest.TestCase):
+class TestCouponUsage(FrappeTestCase):
     def setUp(self):
         self.test_user = frappe.get_doc({
             "doctype": "User",
