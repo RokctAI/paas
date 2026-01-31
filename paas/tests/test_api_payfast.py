@@ -1,11 +1,10 @@
 # Copyright (c) 2025 ROKCT Holdings
 # For license information, please see license.txt
 import frappe
-import unittest
-import json
+from frappe.tests.utils import FrappeTestCase
 from paas.api import get_payfast_settings, save_payfast_card, get_saved_payfast_cards, delete_payfast_card, handle_payfast_callback, process_payfast_token_payment
 
-class TestPayFastAPI(unittest.TestCase):
+class TestPayFastAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
         self.test_user = frappe.get_doc({
