@@ -9,16 +9,17 @@ import uuid
 class TestTicketsAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
-        self.test_user = frappe.get_doc({
-            "doctype": "User",
-            "email": "test_tickets@example.com",
-            "first_name": "Test",
-            "last_name": "Tickets",
-            "send_welcome_email": 0
-        }).insert(ignore_permissions=True)
-        self.test_user.add_roles("System Manager")
-
-        frappe.db.commit()
+        if not frappe.db.exists("User", "test_tickets@example.com"):
+            self.test_user = frappe.get_doc({
+                "doctype": "User",
+                "email": "test_tickets@example.com",
+                "first_name": "Test",
+                "last_name": "Tickets",
+                "send_welcome_email": 0
+            }).insert(ignore_permissions=True)
+            self.test_user.add_roles("System Manager")
+        else:
+            self.test_user = frappe.get_doc("User", "test_tickets@example.com")
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
@@ -26,9 +27,6 @@ class TestTicketsAPI(FrappeTestCase):
     def tearDown(self):
         # Log out
         frappe.set_user("Administrator")
-        frappe.db.delete("Ticket", {"user": self.test_user.name})
-        self.test_user.delete(ignore_permissions=True)
-        frappe.db.commit()
 
     def test_create_and_get_ticket(self):
         ticket = create_ticket(subject="Test Subject", content="Test Content")
