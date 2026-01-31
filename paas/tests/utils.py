@@ -108,8 +108,8 @@ def create_fiscal_year():
         frappe.get_doc({
             "doctype": "Fiscal Year",
             "year": "_Test Fiscal Year 2026",
-            "year_start_date": "2020-01-01",
-            "year_end_date": "2030-12-31",
+            "year_start_date": "2026-01-01",
+            "year_end_date": "2026-12-31",
             "companies": [{"company": "_Test Company"}]
         }).insert(ignore_permissions=True)
 
