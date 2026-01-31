@@ -69,5 +69,5 @@ class TestUserProfileAPI(FrappeTestCase):
         # Verify that the unauthorized fields were not changed
         updated_profile = get_user_profile()
         self.assertEqual(updated_profile.get("email"), "test_user_profile@example.com")
-        self.assertTrue("Administrator" not in self.test_user.get_roles())
+        self.assertTrue("Administrator" not in frappe.get_roles(self.test_user.name))
 
