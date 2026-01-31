@@ -164,7 +164,7 @@ from paas.api.delivery.delivery import (
     get_delivery_points,
     get_delivery_point,
 )
-from paas.doctype.delivery_point.delivery_point import get_nearest_delivery_points
+from paas.paas.doctype.delivery_point.delivery_point import get_nearest_delivery_points
 from paas.api.branch.branch import (
     get_branches,
     get_branch,
