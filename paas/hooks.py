@@ -5,6 +5,8 @@ app_description = "PaaS App for Rokct"
 app_email = "admin@rokct.ai"
 app_license = "AGPL-3.0"
 
+required_apps = ["erpnext"]
+
 # Installation
 # ------------
 before_install = "paas.install.check_site_role"
