@@ -52,8 +52,8 @@ def create_booking_slot(data):
         else:
              frappe.throw("Not permitted", frappe.PermissionError)
 
+    data["doctype"] = "Booking"
     doc = frappe.get_doc(data)
-    doc.doctype = "Booking"
     doc.insert()
     return doc
 
