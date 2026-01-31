@@ -13,41 +13,53 @@ from frappe.utils import add_days, now_datetime
 
 class TestBookingFeature(FrappeTestCase):
     def setUp(self):
+        # Create a Test User
+        if not frappe.db.exists("User", "test_booker@example.com"):
+            self.user = frappe.get_doc({
+                "doctype": "User",
+                "email": "test_booker@example.com",
+                "first_name": "Test",
+                "last_name": "Booker"
+            }).insert(ignore_permissions=True)
+        else:
+            self.user = frappe.get_doc("User", "test_booker@example.com")
+            
         # Create a Shop
-        self.shop = frappe.get_doc({
-            "doctype": "Shop",
-            "shop_name": "Test Shop",
-            "title": "Test Shop"
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Shop", "Test Shop"):
+            self.shop = frappe.get_doc({
+                "doctype": "Shop",
+                "shop_name": "Test Shop",
+                "user": self.user.name,
+                "uuid": "test_booking_shop_uuid"
+            }).insert(ignore_permissions=True)
+        else:
+            self.shop = frappe.get_doc("Shop", "Test Shop")
 
         # Create a Shop Section
-        self.section = frappe.get_doc({
-            "doctype": "Shop Section",
-            "shop": self.shop.name,
-            "area": "Main Hall"
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Shop Section", {"shop": self.shop.name, "area": "Main Hall"}):
+            self.section = frappe.get_doc({
+                "doctype": "Shop Section",
+                "shop": self.shop.name,
+                "area": "Main Hall"
+            }).insert(ignore_permissions=True)
+        else:
+            self.section = frappe.get_doc("Shop Section", {"shop": self.shop.name, "area": "Main Hall"})
 
         # Create a Table
-        self.table = frappe.get_doc({
-            "doctype": "Table",
-            "name": "T1",
-            "shop_section": self.section.name,
-            "chair_count": 4
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Table", "T1"):
+            self.table = frappe.get_doc({
+                "doctype": "Table",
+                "name": "T1",
+                "shop_section": self.section.name,
+                "chair_count": 4
+            }).insert(ignore_permissions=True)
+        else:
+            self.table = frappe.get_doc("Table", "T1")
 
-        # Create a Test User
-        self.user = frappe.get_doc({
-            "doctype": "User",
-            "email": "test_booker@example.com",
-            "first_name": "Test",
-            "last_name": "Booker"
-        }).insert(ignore_permissions=True)
-        
         frappe.set_user(self.user.name)
 
     def tearDown(self):
         frappe.set_user("Administrator")
-        frappe.db.rollback()
 
     def test_booking_flow(self):
         # 1. Create a Booking Slot (as Admin/Seller)
