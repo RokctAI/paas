@@ -13,6 +13,7 @@ def before_tests():
     create_test_company()
     create_test_warehouse()
     create_stock_entry_types()
+    frappe.db.commit()
 
 def create_warehouse_types():
     if not frappe.db.exists("Warehouse Type", "Transit"):
