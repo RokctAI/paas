@@ -8,23 +8,57 @@ from paas.api import create_order_refund, get_user_order_refunds
 class TestOrderRefundsAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
-        self.test_user = frappe.get_doc({
-            "doctype": "User",
-            "email": "test_refunds@example.com",
-            "first_name": "Test",
-            "last_name": "Refunds",
-            "send_welcome_email": 0
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "test_refunds@example.com"):
+            self.test_user = frappe.get_doc({
+                "doctype": "User",
+                "email": "test_refunds@example.com",
+                "first_name": "Test",
+                "last_name": "Refunds",
+                "send_welcome_email": 0
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_user = frappe.get_doc("User", "test_refunds@example.com")
         self.test_user.add_roles("System Manager")
 
-        # Create a test order
-        self.order = frappe.get_doc({
-            "doctype": "Order",
-            "user": self.test_user.name,
-            "status": "Delivered"
-        }).insert(ignore_permissions=True)
+        # Create a test shop
+        if not frappe.db.exists("Shop", "Test Refund Shop"):
+            self.test_shop = frappe.get_doc({
+                "doctype": "Shop",
+                "shop_name": "Test Refund Shop",
+                "user": self.test_user.name,
+                "uuid": "test_refund_shop_uuid"
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_shop = frappe.get_doc("Shop", "Test Refund Shop")
 
-        frappe.db.commit()
+        # Create a test product
+        if not frappe.db.exists("Product", {"title": "Test Refund Product", "shop": self.test_shop.name}):
+            self.test_product = frappe.get_doc({
+                "doctype": "Product",
+                "title": "Test Refund Product",
+                "shop": self.test_shop.name,
+                "price": 50
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_product = frappe.get_doc("Product", {"title": "Test Refund Product", "shop": self.test_shop.name})
+
+        # Create a test order
+        if not frappe.db.exists("Order", {"user": self.test_user.name, "status": "Delivered"}):
+            self.order = frappe.get_doc({
+                "doctype": "Order",
+                "user": self.test_user.name,
+                "shop": self.test_shop.name,
+                "status": "Delivered",
+                "order_items": [
+                    {
+                        "product": self.test_product.name,
+                        "quantity": 1,
+                        "price": 50
+                    }
+                ]
+            }).insert(ignore_permissions=True)
+        else:
+            self.order = frappe.get_doc("Order", {"user": self.test_user.name, "status": "Delivered"})
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
@@ -32,10 +66,6 @@ class TestOrderRefundsAPI(FrappeTestCase):
     def tearDown(self):
         # Log out
         frappe.set_user("Administrator")
-        frappe.db.delete("Order Refund", {"order": self.order.name})
-        self.order.delete(ignore_permissions=True)
-        self.test_user.delete(ignore_permissions=True)
-        frappe.db.commit()
 
     def test_create_and_get_order_refund(self):
         refund = create_order_refund(order=self.order.name, cause="Item was damaged")
