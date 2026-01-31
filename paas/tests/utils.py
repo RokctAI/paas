@@ -14,6 +14,7 @@ def before_tests():
     create_test_warehouses()
     create_stock_entry_types()
     create_fiscal_year()
+    create_gender()
     frappe.db.commit()
     print("DEBUG: Fixtures Created. Stock Entry Types:", frappe.db.get_all("Stock Entry Type", pluck="name"))
 
@@ -134,3 +135,11 @@ def create_fiscal_year():
             "year_end_date": "2026-12-31",
             "companies": [{"company": "_Test Company"}]
         }).insert(ignore_permissions=True)
+
+def create_gender():
+    for gender in ["Male", "Female", "Other"]:
+        if not frappe.db.exists("Gender", gender):
+            frappe.get_doc({
+                "doctype": "Gender",
+                "gender": gender
+            }).insert(ignore_permissions=True)
