@@ -1,11 +1,10 @@
 import frappe
-import unittest
-from unittest.mock import patch
+from frappe.tests.utils import FrappeTestCase
 
 # Import the functions to be tested
 from paas.api.shop.shop import create_shop, get_shops, get_shop_details
 
-class TestShopAPI(unittest.TestCase):
+class TestShopAPI(FrappeTestCase):
     def setUp(self):
         # This method will be run before each test
         frappe.db.delete("Shop")
