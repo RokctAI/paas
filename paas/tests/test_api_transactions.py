@@ -20,12 +20,42 @@ class TestTransactionsAPI(FrappeTestCase):
             self.test_user = frappe.get_doc("User", "test_transactions@example.com")
         self.test_user.add_roles("System Manager")
 
+        # Create a test shop
+        if not frappe.db.exists("Shop", "Test Transaction Shop"):
+            self.test_shop = frappe.get_doc({
+                "doctype": "Shop",
+                "shop_name": "Test Transaction Shop",
+                "user": self.test_user.name,
+                "uuid": "test_transaction_shop_uuid"
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_shop = frappe.get_doc("Shop", "Test Transaction Shop")
+
+        # Create a test product
+        if not frappe.db.exists("Product", {"title": "Test Product", "shop": self.test_shop.name}):
+            self.test_product = frappe.get_doc({
+                "doctype": "Product",
+                "title": "Test Product",
+                "shop": self.test_shop.name,
+                "price": 50
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_product = frappe.get_doc("Product", {"title": "Test Product", "shop": self.test_shop.name})
+
         # Create a test order to associate with a transaction
         if not frappe.db.exists("Order", {"user": self.test_user.name, "status": "New"}):
             self.order = frappe.get_doc({
                 "doctype": "Order",
                 "user": self.test_user.name,
-                "status": "New"
+                "shop": self.test_shop.name,
+                "status": "New",
+                "order_items": [
+                    {
+                        "product": self.test_product.name,
+                        "quantity": 1,
+                        "price": 50
+                    }
+                ]
             }).insert(ignore_permissions=True)
         else:
             self.order = frappe.get_doc("Order", {"user": self.test_user.name, "status": "New"})
@@ -37,8 +67,8 @@ class TestTransactionsAPI(FrappeTestCase):
                 "payable_type": "Order",
                 "payable_id": self.order.name,
                 "user": self.test_user.name,
-                "price": 50.0,
-                "status": "Paid",
+                "amount": 50.0,
+                "status": "paid",
                 "type": "model"
             }).insert(ignore_permissions=True)
         else:
@@ -50,30 +80,27 @@ class TestTransactionsAPI(FrappeTestCase):
     def tearDown(self):
         # Log out
         frappe.set_user("Administrator")
-        self.transaction.delete(ignore_permissions=True)
-        self.order.delete(ignore_permissions=True)
-        self.test_user.delete(ignore_permissions=True)
 
     def test_get_user_transactions_pagination(self):
         # Create a second transaction
-        if not frappe.db.exists("Transaction", {"user": self.test_user.name, "price": 25.0}):
+        if not frappe.db.exists("Transaction", {"user": self.test_user.name, "amount": 25.0}):
             frappe.get_doc({
                 "doctype": "Transaction",
                 "payable_type": "Order",
                 "payable_id": self.order.name,
                 "user": self.test_user.name,
-                "price": 25.0,
-                "status": "Paid",
+                "amount": 25.0,
+                "status": "paid",
                 "type": "model"
             }).insert(ignore_permissions=True)
 
         # Get the first page with a limit of 1
         transactions = get_user_transactions(limit_page_length=1)
         self.assertEqual(len(transactions), 1)
-        self.assertEqual(transactions[0].get("price"), 25.0) # It's ordered by creation desc
+        self.assertEqual(transactions[0].get("amount"), 25.0) # It's ordered by creation desc
 
         # Get the second page
         transactions = get_user_transactions(limit_start=1, limit_page_length=1)
         self.assertEqual(len(transactions), 1)
-        self.assertEqual(transactions[0].get("price"), 50.0)
+        self.assertEqual(transactions[0].get("amount"), 50.0)
 
