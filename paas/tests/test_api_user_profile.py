@@ -9,18 +9,20 @@ import json
 class TestUserProfileAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
-        self.test_user = frappe.get_doc({
-            "doctype": "User",
-            "email": "test_user_profile@example.com",
-            "first_name": "Test",
-            "last_name": "User",
-            "phone": "1234567890",
-            "birth_date": "1990-01-01",
-            "gender": "Male",
-            "send_welcome_email": 0
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "test_user_profile@example.com"):
+            self.test_user = frappe.get_doc({
+                "doctype": "User",
+                "email": "test_user_profile@example.com",
+                "first_name": "Test",
+                "last_name": "User",
+                "phone": "1234567890",
+                "birth_date": "1990-01-01",
+                "gender": "Male",
+                "send_welcome_email": 0
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_user = frappe.get_doc("User", "test_user_profile@example.com")
         self.test_user.add_roles("System Manager")
-        frappe.db.commit()
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
@@ -29,7 +31,6 @@ class TestUserProfileAPI(FrappeTestCase):
         # Log out
         frappe.set_user("Administrator")
         self.test_user.delete(ignore_permissions=True)
-        frappe.db.commit()
 
     def test_get_user_profile(self):
         profile = get_user_profile()
