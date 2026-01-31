@@ -1,11 +1,10 @@
 # Copyright (c) 2025 ROKCT Holdings
 # For license information, please see license.txt
 import frappe
-import unittest
-import json
+from frappe.tests.utils import FrappeTestCase
 from paas.api import create_order, list_orders, get_order_details, update_order_status, add_order_review, cancel_order
 
-class TestOrderAPI(unittest.TestCase):
+class TestOrderAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
         self.test_user = frappe.get_doc({
@@ -22,23 +21,7 @@ class TestOrderAPI(unittest.TestCase):
             "tax": 10
         }).insert(ignore_permissions=True)
 
-        # Create Permission Settings
-        if not frappe.db.exists("DocType", "Permission Settings"):
-            frappe.get_doc({
-                "doctype": "DocType",
-                "name": "Permission Settings",
-                "module": "paas",
-                "custom": 1,
-                "issingle": 1,
-                "fields": [
-                    {
-                        "fieldname": "service_fee",
-                        "fieldtype": "Currency",
-                        "label": "Service Fee"
-                    }
-                ]
-            }).insert(ignore_permissions=True)
-
+        # Update Permission Settings
         permission_settings = frappe.get_doc("Permission Settings")
         permission_settings.service_fee = 10
         permission_settings.save(ignore_permissions=True)
