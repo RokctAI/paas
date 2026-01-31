@@ -7,6 +7,10 @@ app_license = "AGPL-3.0"
 
 required_apps = ["erpnext"]
 
+# Testing
+# -------
+before_tests = "paas.tests.utils.before_tests"
+
 # Installation
 # ------------
 before_install = "paas.install.check_site_role"
