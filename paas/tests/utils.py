@@ -14,6 +14,7 @@ def before_tests():
     create_test_warehouse()
     create_stock_entry_types()
     frappe.db.commit()
+    print("DEBUG: Fixtures Created. Stock Entry Types:", frappe.db.get_all("Stock Entry Type", pluck="name"))
 
 def create_warehouse_types():
     if not frappe.db.exists("Warehouse Type", "Transit"):
@@ -97,7 +98,8 @@ def create_stock_entry_types():
             frappe.get_doc({
                 "doctype": "Stock Entry Type",
                 "name": name,
-                "purpose": purpose
+                "purpose": purpose,
+                "is_standard": 1
             }).insert(ignore_permissions=True)
 
 def create_customer_groups():
