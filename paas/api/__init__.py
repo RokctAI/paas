@@ -97,6 +97,7 @@ from paas.api.user.user import (
     login_with_google,
     forgot_password_confirm,
     get_user_profile,
+    update_user_shop,
 )
 from paas.api.payment.payment import (
     get_payment_gateways,
