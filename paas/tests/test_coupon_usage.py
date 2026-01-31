@@ -6,36 +6,48 @@ from paas.api import create_order
 
 class TestCouponUsage(FrappeTestCase):
     def setUp(self):
-        self.test_user = frappe.get_doc({
-            "doctype": "User",
-            "email": "test_coupon_user@example.com",
-            "first_name": "Test",
-            "last_name": "User"
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "test_coupon_user@example.com"):
+            self.test_user = frappe.get_doc({
+                "doctype": "User",
+                "email": "test_coupon_user@example.com",
+                "first_name": "Test",
+                "last_name": "User"
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_user = frappe.get_doc("User", "test_coupon_user@example.com")
 
-        self.test_shop = frappe.get_doc({
-            "doctype": "Shop",
-            "shop_name": "Test Shop for Coupon Usage",
-            "min_amount": 0,
-            "user": self.test_user.name
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Shop", "Test Shop for Coupon Usage"):
+            self.test_shop = frappe.get_doc({
+                "doctype": "Shop",
+                "shop_name": "Test Shop for Coupon Usage",
+                "min_amount": 0,
+                "user": self.test_user.name
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_shop = frappe.get_doc("Shop", "Test Shop for Coupon Usage")
 
-        self.test_product = frappe.get_doc({
-            "doctype": "Product",
-            "title": "Test Product for Coupon",
-            "shop": self.test_shop.name,
-            "price": 100,
-            "active": 1
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Product", "Test Product for Coupon"):
+            self.test_product = frappe.get_doc({
+                "doctype": "Product",
+                "title": "Test Product for Coupon",
+                "shop": self.test_shop.name,
+                "price": 100,
+                "active": 1
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_product = frappe.get_doc("Product", "Test Product for Coupon")
 
-        self.test_coupon = frappe.get_doc({
-            "doctype": "Coupon",
-            "coupon_name": "Test Coupon",
-            "code": "TEST10",
-            "type": "Percentage",
-            "discount_percentage": 10,
-            "shop": self.test_shop.name
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Coupon", {"code": "TEST10", "shop": self.test_shop.name}):
+            self.test_coupon = frappe.get_doc({
+                "doctype": "Coupon",
+                "coupon_name": "Test Coupon",
+                "code": "TEST10",
+                "type": "Percentage",
+                "discount_percentage": 10,
+                "shop": self.test_shop.name
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_coupon = frappe.get_doc("Coupon", {"code": "TEST10", "shop": self.test_shop.name})
 
         if not frappe.db.exists("Currency", "USD"):
             frappe.get_doc({
@@ -45,14 +57,13 @@ class TestCouponUsage(FrappeTestCase):
                 "enabled": 1
             }).insert(ignore_permissions=True)
         self.test_currency = "USD"
-        frappe.db.commit()
+        self.test_currency = "USD"
 
     def tearDown(self):
         frappe.delete_doc("User", self.test_user.name, ignore_permissions=True)
         frappe.delete_doc("Shop", self.test_shop.name, ignore_permissions=True)
         frappe.delete_doc("Product", self.test_product.name, ignore_permissions=True)
         frappe.delete_doc("Coupon", self.test_coupon.name, ignore_permissions=True)
-        frappe.db.commit()
 
     def test_create_order_with_coupon_records_usage(self):
         frappe.set_user(self.test_user.name)
