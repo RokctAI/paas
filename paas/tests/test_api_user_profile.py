@@ -30,7 +30,6 @@ class TestUserProfileAPI(FrappeTestCase):
     def tearDown(self):
         # Log out
         frappe.set_user("Administrator")
-        self.test_user.delete(ignore_permissions=True)
 
     def test_get_user_profile(self):
         profile = get_user_profile()
