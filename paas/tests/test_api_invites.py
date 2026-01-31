@@ -38,7 +38,6 @@ class TestInvitesAPI(FrappeTestCase):
         self.shop.delete(ignore_permissions=True)
         self.inviting_user.delete(ignore_permissions=True)
         self.invited_user.delete(ignore_permissions=True)
-        frappe.db.commit()
 
     def test_create_and_get_invites(self):
         # Log in as the inviting user to create the invite
