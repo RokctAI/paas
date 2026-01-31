@@ -42,8 +42,8 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         with self.assertRaises(frappe.ValidationError):
             check_phone(phone="")
 
-    @patch("paas.api.frappe.send_sms")
-    @patch("paas.api.frappe.cache")
+    @patch("paas.api.user.user.frappe.send_sms")
+    @patch("paas.api.user.user.frappe.cache")
     def test_send_verification_code(self, mock_cache, mock_send_sms):
         mock_cache_instance = MagicMock()
         mock_cache.return_value = mock_cache_instance
@@ -67,7 +67,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
             message=f"Your verification code is: {otp}"
         )
 
-    @patch("paas.api.frappe.cache")
+    @patch("paas.api.user.user.frappe.cache")
     def test_verify_code_correct(self, mock_cache):
         mock_cache_instance = MagicMock()
         mock_cache.return_value = mock_cache_instance
@@ -89,7 +89,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         # Verify cache deletion
         mock_cache_instance.delete_value.assert_called_once_with(f"phone_otp:{phone_number}")
 
-    @patch("paas.api.frappe.cache")
+    @patch("paas.api.user.user.frappe.cache")
     def test_verify_code_incorrect(self, mock_cache):
         mock_cache_instance = MagicMock()
         mock_cache.return_value = mock_cache_instance
@@ -112,7 +112,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         # Verify cache was not deleted
         mock_cache_instance.delete_value.assert_not_called()
 
-    @patch("paas.api.frappe.cache")
+    @patch("paas.api.user.user.frappe.cache")
     def test_verify_code_expired(self, mock_cache):
         mock_cache_instance = MagicMock()
         mock_cache.return_value = mock_cache_instance
@@ -187,7 +187,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         self.assertIn("USD", response_names)
         self.assertNotIn("KLG", response_names)
 
-    @patch("paas.api.frappe.sendmail")
+    @patch("paas.api.user.user.frappe.sendmail")
     def test_register_user(self, mock_sendmail):
         # Arrange
         from paas.api import register_user
