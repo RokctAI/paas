@@ -698,16 +698,10 @@ def get_user_transactions(limit_start=0, limit_page_length=20):
     if user == "Guest":
         frappe.throw("You must be logged in to view your transactions.", frappe.AuthenticationError)
 
-    # The 'Transaction' doctype in Frappe links to a 'Party' which can be a customer.
-    # We first need to get the customer associated with the user.
-    customer = frappe.db.get_value("Customer", {"email": user}, "name")
-    if not customer:
-        return []
-
     return frappe.get_all(
         "Transaction",
-        filters={"party": customer},
-        fields=["name", "transaction_date", "reference_doctype", "reference_name", "debit", "credit", "currency"],
+        filters={"user": user},
+        fields=["name", "user", "amount", "status", "payable_type", "payable_id", "creation"],
         order_by="creation desc",
         limit_start=limit_start,
         limit_page_length=limit_page_length
