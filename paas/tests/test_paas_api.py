@@ -26,7 +26,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
 
 
     def tearDown(self):
-        frappe.db.rollback()
+        pass
 
     def test_check_phone_exists(self):
         response = check_phone(phone=self.test_user_phone)
@@ -192,6 +192,8 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         # Arrange
         from paas.api import register_user
         new_user_email = "new_user@example.com"
+        if frappe.db.exists("User", new_user_email):
+            frappe.delete_doc("User", new_user_email, ignore_permissions=True)
 
         # Act
         response = register_user(
