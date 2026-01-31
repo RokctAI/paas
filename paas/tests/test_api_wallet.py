@@ -9,35 +9,40 @@ import uuid
 class TestWalletAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
-        self.test_user = frappe.get_doc({
-            "doctype": "User",
-            "email": "test_wallet@example.com",
-            "first_name": "Test",
-            "last_name": "Wallet",
-            "send_welcome_email": 0
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "test_wallet@example.com"):
+            self.test_user = frappe.get_doc({
+                "doctype": "User",
+                "email": "test_wallet@example.com",
+                "first_name": "Test",
+                "last_name": "Wallet",
+                "send_welcome_email": 0
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_user = frappe.get_doc("User", "test_wallet@example.com")
         self.test_user.add_roles("System Manager")
 
         # Create a wallet for the user
-        self.wallet = frappe.get_doc({
-            "doctype": "Wallet",
-            "uuid": str(uuid.uuid4()),
-            "user": self.test_user.name,
-            "currency": "USD",
-            "price": 100.0
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Wallet", {"user": self.test_user.name}):
+            self.wallet = frappe.get_doc({
+                "doctype": "Wallet",
+                "uuid": str(uuid.uuid4()),
+                "user": self.test_user.name,
+                "currency": "USD",
+                "price": 100.0
+            }).insert(ignore_permissions=True)
+        else:
+            self.wallet = frappe.get_doc("Wallet", {"user": self.test_user.name})
 
         # Create wallet history
-        frappe.get_doc({
-            "doctype": "Wallet History",
-            "uuid": str(uuid.uuid4()),
-            "wallet": self.wallet.name,
-            "type": "Topup",
-            "price": 100.0,
-            "status": "Paid"
-        }).insert(ignore_permissions=True)
-
-        frappe.db.commit()
+        if not frappe.db.exists("Wallet History", {"wallet": self.wallet.name, "type": "Topup"}):
+            frappe.get_doc({
+                "doctype": "Wallet History",
+                "uuid": str(uuid.uuid4()),
+                "wallet": self.wallet.name,
+                "type": "Topup",
+                "price": 100.0,
+                "status": "Paid"
+            }).insert(ignore_permissions=True)
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
@@ -48,7 +53,6 @@ class TestWalletAPI(FrappeTestCase):
         frappe.db.delete("Wallet History", {"wallet": self.wallet.name})
         self.wallet.delete(ignore_permissions=True)
         self.test_user.delete(ignore_permissions=True)
-        frappe.db.commit()
 
     def test_get_user_wallet(self):
         wallet = get_user_wallet()
@@ -57,15 +61,15 @@ class TestWalletAPI(FrappeTestCase):
 
     def test_get_wallet_history_pagination(self):
         # Create a second history record
-        frappe.get_doc({
-            "doctype": "Wallet History",
-            "uuid": str(uuid.uuid4()),
-            "wallet": self.wallet.name,
-            "type": "Withdraw",
-            "price": 50.0,
-            "status": "Paid"
-        }).insert(ignore_permissions=True)
-        frappe.db.commit()
+        if not frappe.db.exists("Wallet History", {"wallet": self.wallet.name, "type": "Withdraw"}):
+            frappe.get_doc({
+                "doctype": "Wallet History",
+                "uuid": str(uuid.uuid4()),
+                "wallet": self.wallet.name,
+                "type": "Withdraw",
+                "price": 50.0,
+                "status": "Paid"
+            }).insert(ignore_permissions=True)
 
         # Get the first page with a limit of 1
         history = get_wallet_history(limit_page_length=1)
