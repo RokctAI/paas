@@ -8,20 +8,21 @@ from paas.api import get_nearest_delivery_points
 class TestDeliveryPointAPI(FrappeTestCase):
     def setUp(self):
         # Create a test delivery point
-        self.delivery_point = frappe.get_doc({
-            "doctype": "Delivery Point",
-            "name": "Test Delivery Point",
-            "active": 1,
-            "price": 10.0,
-            "address": "123 Test Street",
-            "latitude": 12.340000,
-            "longitude": 56.780000,
-        }).insert(ignore_permissions=True)
-        frappe.db.commit()
+        if not frappe.db.exists("Delivery Point", "Test Delivery Point"):
+            self.delivery_point = frappe.get_doc({
+                "doctype": "Delivery Point",
+                "name": "Test Delivery Point",
+                "active": 1,
+                "price": 10.0,
+                "address": "123 Test Street",
+                "latitude": 12.340000,
+                "longitude": 56.780000,
+            }).insert(ignore_permissions=True)
+        else:
+            self.delivery_point = frappe.get_doc("Delivery Point", "Test Delivery Point")
 
     def tearDown(self):
         self.delivery_point.delete(ignore_permissions=True)
-        frappe.db.commit()
 
     def test_get_nearest_delivery_points(self):
         # Test with coordinates close to the test point
@@ -39,7 +40,6 @@ class TestDeliveryPointAPI(FrappeTestCase):
     def test_get_inactive_delivery_point(self):
         self.delivery_point.active = 0
         self.delivery_point.save(ignore_permissions=True)
-        frappe.db.commit()
 
         points = get_nearest_delivery_points(latitude=12.34, longitude=56.78)
         self.assertEqual(len(points), 0)
