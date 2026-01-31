@@ -7,19 +7,25 @@ from paas.api import create_order, list_orders, get_order_details, update_order_
 class TestOrderAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
-        self.test_user = frappe.get_doc({
-            "doctype": "User",
-            "email": "test_order_user@example.com",
-            "first_name": "Test",
-            "last_name": "User"
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "test_order_user@example.com"):
+            self.test_user = frappe.get_doc({
+                "doctype": "User",
+                "email": "test_order_user@example.com",
+                "first_name": "Test",
+                "last_name": "User"
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_user = frappe.get_doc("User", "test_order_user@example.com")
 
         # Create a test shop
-        self.test_shop = frappe.get_doc({
-            "doctype": "Seller",
-            "seller_name": "Test Shop",
-            "tax": 10
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Seller", "Test Shop"):
+            self.test_shop = frappe.get_doc({
+                "doctype": "Seller",
+                "seller_name": "Test Shop",
+                "tax": 10
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_shop = frappe.get_doc("Seller", "Test Shop")
 
         # Update Permission Settings
         permission_settings = frappe.get_doc("Permission Settings")
@@ -27,11 +33,14 @@ class TestOrderAPI(FrappeTestCase):
         permission_settings.save(ignore_permissions=True)
 
         # Create a test product
-        self.test_product = frappe.get_doc({
-            "doctype": "Product",
-            "product_name": "Test Product",
-            "price": 100
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Product", "Test Product"):
+            self.test_product = frappe.get_doc({
+                "doctype": "Product",
+                "product_name": "Test Product",
+                "price": 100
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_product = frappe.get_doc("Product", "Test Product")
 
         # Ensure USD currency exists
         if not frappe.db.exists("Currency", "USD"):
@@ -45,10 +54,9 @@ class TestOrderAPI(FrappeTestCase):
 
     def tearDown(self):
         # Clean up the test data
-        frappe.delete_doc("User", self.test_user.name)
-        frappe.delete_doc("Seller", self.test_shop.name)
-        frappe.delete_doc("Product", self.test_product.name)
-        frappe.db.commit()
+        frappe.delete_doc("User", self.test_user.name, ignore_permissions=True)
+        frappe.delete_doc("Seller", self.test_shop.name, ignore_permissions=True)
+        frappe.delete_doc("Product", self.test_product.name, ignore_permissions=True)
 
     def test_create_order_and_calculation(self):
         # Test creating a new order and that the calculation is correct
