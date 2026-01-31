@@ -13,9 +13,10 @@ class Order(Document):
         total_discount = sum(item.discount or 0 for item in self.order_items)
 
         # Calculate shop tax
+        # Calculate shop tax
         shop_tax = 0
         if self.shop:
-            shop = frappe.get_doc("Seller", self.shop)
+            shop = frappe.get_doc("Shop", self.shop)
             if shop.tax:
                 shop_tax = total_price * (shop.tax / 100)
 
@@ -44,9 +45,9 @@ class Order(Document):
         # Commission fee
         commission_fee = 0
         if self.shop:
-            # Assuming commission percentage is stored on the Seller doctype
-            if shop.commission_percentage:
-                commission_fee = total_price * (shop.commission_percentage / 100)
+            # Assuming commission percentage is stored on the Shop doctype
+            if shop.percentage:
+                commission_fee = total_price * (shop.percentage / 100)
 
         self.total_price = total_price
         self.tax = shop_tax
