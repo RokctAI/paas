@@ -97,6 +97,13 @@ class TestOrderAPI(FrappeTestCase):
             "doctype": "Order",
             "user": self.test_user.name,
             "shop": self.test_shop.name,
+            "order_items": [
+                {
+                    "product": self.test_product.name,
+                    "quantity": 1,
+                    "price": 100
+                }
+            ]
         }).insert(ignore_permissions=True)
         frappe.set_user(self.test_user.name)
         order_details = get_order_details(order.name)
@@ -109,6 +116,13 @@ class TestOrderAPI(FrappeTestCase):
             "doctype": "Order",
             "user": self.test_user.name,
             "shop": self.test_shop.name,
+            "order_items": [
+                {
+                    "product": self.test_product.name,
+                    "quantity": 1,
+                    "price": 100
+                }
+            ]
         }).insert(ignore_permissions=True)
         frappe.set_user(self.test_user.name)
         updated_order = update_order_status(order.name, "Accepted")
