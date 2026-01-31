@@ -11,7 +11,7 @@ def get_weather(location: str):
 
     # Use a different cache key for the proxy to avoid conflicts
     cache_key = f"weather_proxy_{location.lower().replace(' ', '_')}"
-    cached_data = frappe.cache().get_value(cache_key)
+    cached_data = frappe.cache.get_value(cache_key)
 
     if cached_data:
         return cached_data
@@ -38,7 +38,7 @@ def get_weather(location: str):
         response = frappe.make_get_request(api_url, headers=headers, params={"location": location})
 
         # Cache the successful response for 10 minutes on the tenant site
-        frappe.cache().set_value(cache_key, response, expires_in_sec=600)
+        frappe.cache.set_value(cache_key, response, expires_in_sec=600)
 
         return response
 
