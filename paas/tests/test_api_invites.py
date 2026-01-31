@@ -8,19 +8,30 @@ from paas.api import create_invite, get_user_invites, update_invite_status
 class TestInvitesAPI(FrappeTestCase):
     def setUp(self):
         # Create test users
-        self.inviting_user = frappe.get_doc({
-            "doctype": "User", "email": "inviter@example.com", "first_name": "Inviter"
-        }).insert(ignore_permissions=True)
-        self.invited_user = frappe.get_doc({
-            "doctype": "User", "email": "invited@example.com", "first_name": "Invited"
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "inviter@example.com"):
+            self.inviting_user = frappe.get_doc({
+                "doctype": "User", "email": "inviter@example.com", "first_name": "Inviter"
+            }).insert(ignore_permissions=True)
+        else:
+            self.inviting_user = frappe.get_doc("User", "inviter@example.com")
+            
+        if not frappe.db.exists("User", "invited@example.com"):
+            self.invited_user = frappe.get_doc({
+                "doctype": "User", "email": "invited@example.com", "first_name": "Invited"
+            }).insert(ignore_permissions=True)
+        else:
+            self.invited_user = frappe.get_doc("User", "invited@example.com")
 
         # Create a test shop (Company)
-        self.shop = frappe.get_doc({
-            "doctype": "Company", "company_name": "Test Invite Shop"
-        }).insert(ignore_permissions=True)
-
-        frappe.db.commit()
+        if not frappe.db.exists("Company", "Test Invite Shop"):
+            self.shop = frappe.get_doc({
+                "doctype": "Company",
+                "company_name": "Test Invite Shop",
+                "default_currency": "INR",
+                "country": "India"
+            }).insert(ignore_permissions=True)
+        else:
+             self.shop = frappe.get_doc("Company", "Test Invite Shop")
 
     def tearDown(self):
         frappe.db.delete("Invitation")
