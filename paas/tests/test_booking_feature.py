@@ -16,7 +16,7 @@ class TestBookingFeature(FrappeTestCase):
         # Create a Shop
         self.shop = frappe.get_doc({
             "doctype": "Shop",
-            "name": "Test Shop",
+            "shop_name": "Test Shop",
             "title": "Test Shop"
         }).insert(ignore_permissions=True)
 
