@@ -6,73 +6,88 @@ from paas.api.shop.shop import create_shop, get_shops, get_shop_details
 
 class TestShopAPI(FrappeTestCase):
     def setUp(self):
-        # This method will be run before each test
-        frappe.db.delete("Shop")
-        frappe.db.delete("User", {"email": "test-seller@example.com"})
-        frappe.db.delete("User", {"email": "test-seller-2@example.com"})
-        frappe.db.delete("User", {"email": "non-seller@example.com"})
-
         # Create users
-        self.seller_user = frappe.get_doc({
-            "doctype": "User",
-            "email": "test-seller@example.com",
-            "first_name": "Test",
-            "last_name": "Seller",
-            "roles": [{"role": "Seller"}]
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "test-seller@example.com"):
+            self.seller_user = frappe.get_doc({
+                "doctype": "User",
+                "email": "test-seller@example.com",
+                "first_name": "Test",
+                "last_name": "Seller",
+                "roles": [{"role": "Seller"}]
+            }).insert(ignore_permissions=True)
+        else:
+            self.seller_user = frappe.get_doc("User", "test-seller@example.com")
 
-        self.seller_user_2 = frappe.get_doc({
-            "doctype": "User",
-            "email": "test-seller-2@example.com",
-            "first_name": "Test",
-            "last_name": "Seller 2",
-            "roles": [{"role": "Seller"}]
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "test-seller-2@example.com"):
+            self.seller_user_2 = frappe.get_doc({
+                "doctype": "User",
+                "email": "test-seller-2@example.com",
+                "first_name": "Test",
+                "last_name": "Seller 2",
+                "roles": [{"role": "Seller"}]
+            }).insert(ignore_permissions=True)
+        else:
+            self.seller_user_2 = frappe.get_doc("User", "test-seller-2@example.com")
 
-        self.non_seller_user = frappe.get_doc({
-            "doctype": "User",
-            "email": "non-seller@example.com",
-            "first_name": "Non",
-            "last_name": "Seller",
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "non-seller@example.com"):
+            self.non_seller_user = frappe.get_doc({
+                "doctype": "User",
+                "email": "non-seller@example.com",
+                "first_name": "Non",
+                "last_name": "Seller",
+            }).insert(ignore_permissions=True)
+        else:
+            self.non_seller_user = frappe.get_doc("User", "non-seller@example.com")
 
         # Log in as a seller to create shops
         frappe.set_user(self.seller_user.name)
 
         # Create some mock shops
-        self.shop1 = create_shop({
-            "shop_name": "Test Shop 1",
-            "status": "approved",
-            "open": 1,
-            "visibility": 1,
-            "delivery": 1,
-            "user": self.seller_user.name,
-        })
+        if not frappe.db.exists("Shop", {"shop_name": "Test Shop 1"}):
+            self.shop1 = create_shop({
+                "shop_name": "Test Shop 1",
+                "status": "approved",
+                "open": 1,
+                "visibility": 1,
+                "delivery": 1,
+                "user": self.seller_user.name,
+            })
+        else:
+            self.shop1 = frappe.get_doc("Shop", {"shop_name": "Test Shop 1"}).as_dict()
 
-        self.shop2 = create_shop({
-            "shop_name": "Test Shop 2",
-            "status": "approved",
-            "open": 1,
-            "visibility": 1,
-            "pickup": 1,
-            "user": self.seller_user_2.name,
-        })
+        if not frappe.db.exists("Shop", {"shop_name": "Test Shop 2"}):
+            self.shop2 = create_shop({
+                "shop_name": "Test Shop 2",
+                "status": "approved",
+                "open": 1,
+                "visibility": 1,
+                "pickup": 1,
+                "user": self.seller_user_2.name,
+            })
+        else:
+            self.shop2 = frappe.get_doc("Shop", {"shop_name": "Test Shop 2"}).as_dict()
 
-        self.shop3_not_approved = create_shop({
-            "shop_name": "Test Shop 3 Not Approved",
-            "status": "new",
-            "open": 1,
-            "visibility": 1,
-            "user": self.seller_user.name,
-        })
+        if not frappe.db.exists("Shop", {"shop_name": "Test Shop 3 Not Approved"}):
+            self.shop3_not_approved = create_shop({
+                "shop_name": "Test Shop 3 Not Approved",
+                "status": "new",
+                "open": 1,
+                "visibility": 1,
+                "user": self.seller_user.name,
+            })
+        else:
+            self.shop3_not_approved = frappe.get_doc("Shop", {"shop_name": "Test Shop 3 Not Approved"}).as_dict()
 
-        self.shop4_not_visible = create_shop({
-            "shop_name": "Test Shop 4 Not Visible",
-            "status": "approved",
-            "open": 1,
-            "visibility": 0,
-            "user": self.seller_user.name,
-        })
+        if not frappe.db.exists("Shop", {"shop_name": "Test Shop 4 Not Visible"}):
+            self.shop4_not_visible = create_shop({
+                "shop_name": "Test Shop 4 Not Visible",
+                "status": "approved",
+                "open": 1,
+                "visibility": 0,
+                "user": self.seller_user.name,
+            })
+        else:
+            self.shop4_not_visible = frappe.get_doc("Shop", {"shop_name": "Test Shop 4 Not Visible"}).as_dict()
 
         # Switch back to administrator
         frappe.set_user("Administrator")
@@ -80,7 +95,6 @@ class TestShopAPI(FrappeTestCase):
     def tearDown(self):
         # This method will be run after each test
         frappe.set_user("Administrator")
-        frappe.db.rollback()
 
     def test_create_shop_unauthorized(self):
         """Test that a user without the Seller role cannot create a shop."""
