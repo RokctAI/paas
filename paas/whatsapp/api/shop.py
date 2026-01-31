@@ -49,7 +49,7 @@ def handle_interactive(reply, session):
              # Handle Address Select
              if item_id == "addr_new":
                  # Trigger manual input
-                 from paas.paas.whatsapp.responses import send_text
+                 from paas.whatsapp.responses import send_text
                  send_text(session.wa_id, "📍 Please type your full delivery address:")
                  session.current_flow = "checkout_address_input"
                  session.save(ignore_permissions=True)
