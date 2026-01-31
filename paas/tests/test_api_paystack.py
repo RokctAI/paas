@@ -1,11 +1,10 @@
 # Copyright (c) 2025 ROKCT Holdings
 # For license information, please see license.txt
 import frappe
-import unittest
-from unittest.mock import patch, Mock
+from frappe.tests.utils import FrappeTestCase
 from paas.api import initiate_paystack_payment, handle_paystack_callback
 
-class TestPayStackAPI(unittest.TestCase):
+class TestPayStackAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
         self.test_user = frappe.get_doc({
@@ -39,7 +38,7 @@ class TestPayStackAPI(unittest.TestCase):
         frappe.delete_doc("Order", self.test_order.name)
         frappe.db.commit()
 
-    @patch('paas.api.requests.post')
+    @patch('paas.api.payment.payment.requests.post')
     def test_initiate_paystack_payment(self, mock_post):
         # Mock the response from PayStack API
         mock_response = Mock()
@@ -60,7 +59,7 @@ class TestPayStackAPI(unittest.TestCase):
         # Verify a transaction was created
         self.assertTrue(frappe.db.exists("Transaction", {"transaction_id": "test_reference"}))
 
-    @patch('paas.api.requests.get')
+    @patch('paas.api.payment.payment.requests.get')
     def test_handle_paystack_callback(self, mock_get):
         # Create a dummy transaction to be updated by the callback
         frappe.get_doc({
