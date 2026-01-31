@@ -10,6 +10,8 @@ def before_tests():
     create_territories()
     create_supplier_groups()
     create_sales_persons()
+    create_test_company()
+    create_test_warehouse()
 
 def create_warehouse_types():
     if not frappe.db.exists("Warehouse Type", "Transit"):
@@ -61,4 +63,24 @@ def create_sales_persons():
             "sales_person_name": "All Sales Persons",
             "is_group": 1,
             "parent_sales_person": ""
+        }).insert(ignore_permissions=True)
+
+def create_test_company():
+    if not frappe.db.exists("Company", "_Test Company"):
+        frappe.get_doc({
+            "doctype": "Company",
+            "company_name": "_Test Company",
+            "abbr": "_TC",
+            "default_currency": "INR",
+            "country": "India"
+        }).insert(ignore_permissions=True)
+
+def create_test_warehouse():
+    if not frappe.db.exists("Warehouse", "_Test Warehouse - _TC"):
+        frappe.get_doc({
+            "doctype": "Warehouse",
+            "warehouse_name": "_Test Warehouse",
+            "company": "_Test Company",
+            "is_group": 0,
+            "parent_warehouse": ""
         }).insert(ignore_permissions=True)
