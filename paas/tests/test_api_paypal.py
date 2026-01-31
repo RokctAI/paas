@@ -1,11 +1,10 @@
 # Copyright (c) 2025 ROKCT Holdings
 # For license information, please see license.txt
 import frappe
-import unittest
-from unittest.mock import patch, Mock
+from frappe.tests.utils import FrappeTestCase
 from paas.api import initiate_paypal_payment, handle_paypal_callback
 
-class TestPayPalAPI(unittest.TestCase):
+class TestPayPalAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
         self.test_user = frappe.get_doc({
@@ -41,7 +40,7 @@ class TestPayPalAPI(unittest.TestCase):
         frappe.delete_doc("Order", self.test_order.name)
         frappe.db.commit()
 
-    @patch('paas.api.requests.post')
+    @patch('paas.api.payment.payment.requests.post')
     def test_initiate_paypal_payment(self, mock_post):
         # Mock the responses from PayPal API
         mock_auth_response = Mock()
@@ -63,8 +62,8 @@ class TestPayPalAPI(unittest.TestCase):
         # Verify a transaction was created
         self.assertTrue(frappe.db.exists("Transaction", {"transaction_id": "test_paypal_order_id"}))
 
-    @patch('paas.api.requests.get')
-    @patch('paas.api.requests.post')
+    @patch('paas.api.payment.payment.requests.get')
+    @patch('paas.api.payment.payment.requests.post')
     def test_handle_paypal_callback(self, mock_post, mock_get):
         # Create a dummy transaction to be updated by the callback
         frappe.get_doc({
