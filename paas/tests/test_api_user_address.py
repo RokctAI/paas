@@ -27,9 +27,6 @@ class TestUserAddressAPI(FrappeTestCase):
     def tearDown(self):
         # Log out
         frappe.set_user("Administrator")
-        # Clean up created documents
-        frappe.db.delete("User Address", {"user": self.test_user.name})
-        self.test_user.delete(ignore_permissions=True)
 
     def test_add_and_get_user_address(self):
         address_data = {
@@ -69,28 +66,36 @@ class TestUserAddressAPI(FrappeTestCase):
 
     def test_permission_on_user_address(self):
         # Create another user and an address for them
-        other_user = frappe.get_doc({
-            "doctype": "User", "email": "other_addr@example.com", "first_name": "Other"
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("User", "other_addr@example.com"):
+            other_user = frappe.get_doc({
+                "doctype": "User", "email": "other_addr@example.com", "first_name": "Other"
+            }).insert(ignore_permissions=True)
+        else:
+            other_user = frappe.get_doc("User", "other_addr@example.com")
 
-        # Switch to other user to create order
+        # Switch to other user to create address
         frappe.set_user(other_user.name)
-        other_address = add_user_address(address_data=json.dumps({"title": "Other's Home"}))
+        
+        # Check if address already exists to avoid DuplicateEntryError
+        if not frappe.db.exists("User Address", {"user": other_user.name, "title": "Other's Home"}):
+            other_address = add_user_address(address_data=json.dumps({"title": "Other's Home"}))
+        else:
+            other_address = frappe.get_all("User Address", filters={"user": other_user.name, "title": "Other's Home"})[0]
 
         # Switch back to test_user
         frappe.set_user(self.test_user.name)
 
         # test_user should not be able to get, update, or delete other_user's address
+        address_name = other_address.get("name") if isinstance(other_address, dict) else other_address.name
         with self.assertRaises(frappe.PermissionError):
-            get_user_address(name=other_address.get("name"))
+            get_user_address(name=address_name)
 
         with self.assertRaises(frappe.PermissionError):
-            update_user_address(name=other_address.get("name"), address_data=json.dumps({"title": "Hacked"}))
+            update_user_address(name=address_name, address_data=json.dumps({"title": "Hacked"}))
 
         with self.assertRaises(frappe.PermissionError):
-            delete_user_address(name=other_address.get("name"))
+            delete_user_address(name=address_name)
 
-        # Clean up other user
+        # Clean up other user session
         frappe.set_user("Administrator")
-        other_user.delete(ignore_permissions=True)
 
