@@ -13,6 +13,7 @@ def before_tests():
     create_test_company()
     create_test_warehouse()
     create_stock_entry_types()
+    create_fiscal_year()
     frappe.db.commit()
     print("DEBUG: Fixtures Created. Stock Entry Types:", frappe.db.get_all("Stock Entry Type", pluck="name"))
 
@@ -101,6 +102,16 @@ def create_stock_entry_types():
                 "purpose": purpose,
                 "is_standard": 1
             }).insert(ignore_permissions=True)
+
+def create_fiscal_year():
+    if not frappe.db.exists("Fiscal Year", "_Test Fiscal Year 2026"):
+        frappe.get_doc({
+            "doctype": "Fiscal Year",
+            "year": "_Test Fiscal Year 2026",
+            "year_start_date": "2020-01-01",
+            "year_end_date": "2030-12-31",
+            "companies": [{"company": "_Test Company"}]
+        }).insert(ignore_permissions=True)
 
 def create_customer_groups():
     if not frappe.db.exists("Customer Group", "All Customer Groups"):
