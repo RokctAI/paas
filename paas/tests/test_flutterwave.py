@@ -27,9 +27,10 @@ class TestFlutterwave(FrappeTestCase):
         self.flutterwave_settings.success_redirect_url = "https://test.com/success"
         self.flutterwave_settings.failure_redirect_url = "https://test.com/failure"
 
+    @patch('paas.api.payment.payment.frappe.db.commit')
     @patch('paas.api.payment.payment.frappe.get_doc')
     @patch('paas.api.payment.payment.requests.post')
-    def test_initiate_flutterwave_payment_success(self, mock_post, mock_get_doc):
+    def test_initiate_flutterwave_payment_success(self, mock_post, mock_get_doc, mock_commit):
         # Arrange
         mock_get_doc.side_effect = [self.order, self.flutterwave_settings, self.user]
         
@@ -46,7 +47,7 @@ class TestFlutterwave(FrappeTestCase):
         # Assert
         self.assertEqual(result, {"payment_url": "https://flutterwave.com/pay/test"})
         self.order.save.assert_called_once()
-        frappe.db.commit.assert_called_once()
+        mock_commit.assert_called_once()
         self.assertIn("TEST-ORDER-001", self.order.custom_payment_transaction_id)
 
 
@@ -60,9 +61,10 @@ class TestFlutterwave(FrappeTestCase):
         with self.assertRaises(frappe.ValidationError):
             initiate_flutterwave_payment(self.order.name)
 
+    @patch('paas.api.payment.payment.frappe.db.commit')
     @patch('paas.api.payment.payment.frappe.get_doc')
     @patch('paas.api.payment.payment.requests.get')
-    def test_flutterwave_callback_success(self, mock_get, mock_get_doc):
+    def test_flutterwave_callback_success(self, mock_get, mock_get_doc, mock_commit):
         # Arrange
         mock_get_doc.side_effect = [self.flutterwave_settings, self.order]
         
@@ -91,12 +93,13 @@ class TestFlutterwave(FrappeTestCase):
         self.assertEqual(self.order.payment_status, "Paid")
         self.assertEqual(self.order.custom_payment_transaction_id, "FLW-TXN-123")
         self.order.save.assert_called_once()
-        frappe.db.commit.assert_called_once()
+        mock_commit.assert_called_once()
         self.assertEqual(frappe.local.response["type"], "redirect")
         self.assertEqual(frappe.local.response["location"], self.flutterwave_settings.success_redirect_url)
 
+    @patch('paas.api.payment.payment.frappe.db.commit')
     @patch('paas.api.payment.payment.frappe.get_doc')
-    def test_flutterwave_callback_cancelled(self, mock_get_doc):
+    def test_flutterwave_callback_cancelled(self, mock_get_doc, mock_commit):
         # Arrange
         mock_get_doc.side_effect = [self.flutterwave_settings, self.order]
         
@@ -113,11 +116,9 @@ class TestFlutterwave(FrappeTestCase):
         # Assert
         self.assertEqual(self.order.payment_status, "Failed")
         self.order.save.assert_called_once()
-        frappe.db.commit.assert_called_once()
+        mock_commit.assert_called_once()
         self.assertEqual(frappe.local.response["type"], "redirect")
-        self.assertIn(self.flutterwave_settings.failure_redirect_url, frappe.local.response["location"])
+        self.assertEqual(frappe.local.response["location"], self.flutterwave_settings.failure_redirect_url)
         self.assertIn("reason=cancelled", frappe.local.response["location"])
 
-if __name__ == '__main__':
-    unittest.main()
 
