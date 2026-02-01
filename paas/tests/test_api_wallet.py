@@ -57,7 +57,7 @@ class TestWalletAPI(FrappeTestCase):
     def test_get_user_wallet(self):
         wallet = get_user_wallet()
         self.assertEqual(wallet.get("user"), self.test_user.name)
-        self.assertEqual(wallet.get("price"), 100.0)
+        self.assertEqual(wallet.get("balance"), 0.0)
 
     def test_get_wallet_history_pagination(self):
         # Create a second history record
