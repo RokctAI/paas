@@ -73,7 +73,7 @@ class TestPayFastAPI(FrappeTestCase):
         frappe.delete_doc("User", self.test_user.name, force=True)
         # Shop and Product linked to user might be auto-deleted or cascade, or we leave them for rollback
         # We'll rely on FrappeTestCase rollback for most, but user deletion is good practice if we create validation issues
-        pass
+        frappe.set_user("Administrator")
 
     def test_get_payfast_settings(self):
         # Test getting PayFast settings
