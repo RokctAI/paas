@@ -57,7 +57,7 @@ class TestOrderAPI(FrappeTestCase):
         self.test_currency = "USD"
 
     def tearDown(self):
-        pass
+        frappe.set_user("Administrator")
 
     def test_create_order_and_calculation(self):
         # Test creating a new order and that the calculation is correct
