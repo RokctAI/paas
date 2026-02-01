@@ -118,7 +118,7 @@ class TestFlutterwave(FrappeTestCase):
         self.order.save.assert_called_once()
         mock_commit.assert_called_once()
         self.assertEqual(frappe.local.response["type"], "redirect")
-        self.assertEqual(frappe.local.response["location"], self.flutterwave_settings.failure_redirect_url)
+        self.assertIn(self.flutterwave_settings.failure_redirect_url, frappe.local.response["location"])
         self.assertIn("reason=cancelled", frappe.local.response["location"])
 
 
