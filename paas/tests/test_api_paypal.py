@@ -18,12 +18,41 @@ class TestPayPalAPI(FrappeTestCase):
         else:
             self.test_user = frappe.get_doc("User", "test_paypal_user@example.com")
 
+        # Create Shop
+        if not frappe.db.exists("Shop", {"shop_name": "PayPal Shop"}):
+            self.shop = frappe.get_doc({
+                "doctype": "Shop",
+                "shop_name": "PayPal Shop",
+                "user": self.test_user.name,
+                "uuid": "paypal-shop-uuid",
+                "status": "approved"
+            }).insert(ignore_permissions=True)
+        else:
+            self.shop = frappe.get_doc("Shop", {"shop_name": "PayPal Shop"})
+
+        # Create Product
+        if not frappe.db.exists("Product", {"title": "PayPal Product"}):
+             self.product = frappe.get_doc({
+                "doctype": "Product",
+                "shop": self.shop.name,
+                "title": "PayPal Product",
+                "price": 100
+             }).insert(ignore_permissions=True)
+        else:
+             self.product = frappe.get_doc("Product", {"title": "PayPal Product"})
+
         # Create a test order
         self.test_order = frappe.get_doc({
             "doctype": "Order",
             "user": self.test_user.name,
+            "shop": self.shop.name,
             "total_price": 100,
             "currency": "USD",
+            "order_items": [{
+                "product": self.product.name,
+                "quantity": 1,
+                "price": 100
+            }]
         }).insert(ignore_permissions=True)
 
         # Create PayPal Payment Gateway
@@ -40,8 +69,9 @@ class TestPayPalAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
 
     def tearDown(self):
-        frappe.delete_doc("User", self.test_user.name, ignore_permissions=True)
-        frappe.delete_doc("Order", self.test_order.name, ignore_permissions=True)
+        frappe.delete_doc("User", self.test_user.name, ignore_permissions=True, force=True)
+        # Order and others cleaned up by rollback usually, but explicit user delete helps.
+        frappe.set_user("Administrator")
 
     @patch('paas.api.payment.payment.requests.post')
     def test_initiate_paypal_payment(self, mock_post):
