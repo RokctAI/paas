@@ -87,7 +87,8 @@ def list_orders(limit_start: int = 0, limit_page_length: int = 20):
         fields=["name", "shop", "total_price", "status", "creation"],
         limit_start=limit_start,
         limit_page_length=limit_page_length,
-        order_by="creation desc"
+        order_by="creation desc",
+        ignore_permissions=True
     )
     return orders
 
@@ -101,7 +102,13 @@ def get_order_details(order_id: str):
     if user == "Guest":
         frappe.throw("You must be logged in to view your orders.")
 
-    order = frappe.get_doc("Order", order_id)
+    # Bypass permission check for retrieval
+    original_user = frappe.session.user
+    frappe.set_user("Administrator")
+    try:
+        order = frappe.get_doc("Order", order_id)
+    finally:
+        frappe.set_user(original_user)
     if order.user != user:
         frappe.throw("You are not authorized to view this order.", frappe.PermissionError)
     return order.as_dict()
@@ -116,7 +123,13 @@ def update_order_status(order_id: str, status: str):
     if user == "Guest":
         frappe.throw("You must be logged in to update an order.")
 
-    order = frappe.get_doc("Order", order_id)
+    # Bypass permission check for retrieval
+    original_user = frappe.session.user
+    frappe.set_user("Administrator")
+    try:
+        order = frappe.get_doc("Order", order_id)
+    finally:
+        frappe.set_user(original_user)
 
     if order.user != user and "System Manager" not in frappe.get_roles(user):
         frappe.throw("You are not authorized to update this order.", frappe.PermissionError)
@@ -139,7 +152,13 @@ def add_order_review(order_id: str, rating: float, comment: str = None):
     if user == "Guest":
         frappe.throw("You must be logged in to leave a review.")
 
-    order = frappe.get_doc("Order", order_id)
+    # Bypass permission check for retrieval
+    original_user = frappe.session.user
+    frappe.set_user("Administrator")
+    try:
+        order = frappe.get_doc("Order", order_id)
+    finally:
+        frappe.set_user(original_user)
 
     if order.user != user:
         frappe.throw("You can only review your own orders.", frappe.PermissionError)
@@ -172,7 +191,13 @@ def cancel_order(order_id: str):
     if user == "Guest":
         frappe.throw("You must be logged in to cancel an order.")
 
-    order = frappe.get_doc("Order", order_id)
+    # Bypass permission check for retrieval
+    original_user = frappe.session.user
+    frappe.set_user("Administrator")
+    try:
+        order = frappe.get_doc("Order", order_id)
+    finally:
+        frappe.set_user(original_user)
 
     if order.user != user and "System Manager" not in frappe.get_roles(user):
         frappe.throw("You are not authorized to cancel this order.", frappe.PermissionError)
