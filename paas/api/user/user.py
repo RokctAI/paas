@@ -376,7 +376,8 @@ def get_user_order_refunds(page: int = 1, lang: str = "en"):
         fields=["name", "amount", "reason", "status", "creation", "modified"],
         limit_start=(page - 1) * 10,
         limit_page_length=10,
-        order_by="creation desc"
+        order_by="creation desc",
+        ignore_permissions=True
     )
     return refunds
 
@@ -431,7 +432,8 @@ def get_user_parcel_orders():
         "Parcel Order",
         filters={"user": user},
         fields=["name", "status", "total_price", "delivery_date"],
-        order_by="creation desc"
+        order_by="creation desc",
+        ignore_permissions=True
     )
 
 @frappe.whitelist()
@@ -704,7 +706,8 @@ def get_user_transactions(limit_start=0, limit_page_length=20):
         fields=["name", "user", "amount", "status", "payable_type", "payable_id", "creation"],
         order_by="creation desc",
         limit_start=limit_start,
-        limit_page_length=limit_page_length
+        limit_page_length=limit_page_length,
+        ignore_permissions=True
     )
 
 
