@@ -116,7 +116,7 @@ class TestPayStackAPI(FrappeTestCase):
 
         # Check if the transaction and order status were updated
         updated_transaction = frappe.get_doc("Transaction", {"payment_reference": "test_reference_callback"})
-        self.assertEqual(updated_transaction.status, "Completed")
+        self.assertEqual(updated_transaction.status, "Paid")
 
         updated_order = frappe.get_doc("Order", self.test_order.name)
         self.assertEqual(updated_order.status, "Paid")
