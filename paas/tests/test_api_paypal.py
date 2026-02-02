@@ -93,8 +93,7 @@ class TestPayPalAPI(FrappeTestCase):
         self.assertIn("redirect_url", response)
         self.assertIn("test_paypal_order_id", response["redirect_url"])
 
-        # Verify a transaction was created
-        self.assertTrue(frappe.db.exists("Transaction", {"transaction_id": "test_paypal_order_id"}))
+        self.assertTrue(frappe.db.exists("Transaction", {"payment_reference": "test_paypal_order_id"}))
 
     @patch('paas.api.payment.payment.requests.get')
     @patch('paas.api.payment.payment.requests.post')
@@ -102,9 +101,9 @@ class TestPayPalAPI(FrappeTestCase):
         # Create a dummy transaction to be updated by the callback
         frappe.get_doc({
             "doctype": "Transaction",
-            "reference_doctype": "Order",
-            "reference_name": self.test_order.name,
-            "transaction_id": "test_paypal_order_id_callback",
+            "payable_type": "Order",
+            "payable_id": self.test_order.name,
+            "payment_reference": "test_paypal_order_id_callback",
             "status": "Pending"
         }).insert(ignore_permissions=True)
 
@@ -122,7 +121,7 @@ class TestPayPalAPI(FrappeTestCase):
             handle_paypal_callback()
 
         # Check if the transaction and order status were updated
-        updated_transaction = frappe.get_doc("Transaction", {"transaction_id": "test_paypal_order_id_callback"})
+        updated_transaction = frappe.get_doc("Transaction", {"payment_reference": "test_paypal_order_id_callback"})
         self.assertEqual(updated_transaction.status, "Completed")
 
         updated_order = frappe.get_doc("Order", self.test_order.name)
