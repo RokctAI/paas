@@ -15,8 +15,10 @@ class TestProductExtras(FrappeTestCase):
         # Create a Shop
         self.shop = frappe.get_doc({
             "doctype": "Shop",
-            "name": "Pizza Shop",
-            "title": "Pizza Shop"
+            "shop_name": "Pizza Shop",
+            "title": "Pizza Shop",
+            "phone": "+14155552671",
+            "user": "Administrator"
         }).insert(ignore_permissions=True)
 
         # Create a Product
