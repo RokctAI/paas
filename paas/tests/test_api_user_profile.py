@@ -38,7 +38,7 @@ class TestUserProfileAPI(FrappeTestCase):
         self.assertEqual(profile.get("last_name"), "User")
         self.assertEqual(profile.get("email"), "test_user_profile@example.com")
         self.assertEqual(profile.get("phone"), "+14155552671")
-        self.assertEqual(profile.get("birth_date"), "1990-01-01")
+        self.assertEqual(str(profile.get("birth_date")), "1990-01-01")
         self.assertEqual(profile.get("gender"), "Male")
 
     def test_update_user_profile(self):
@@ -57,7 +57,7 @@ class TestUserProfileAPI(FrappeTestCase):
         self.assertEqual(updated_profile.get("first_name"), "Updated")
         self.assertEqual(updated_profile.get("last_name"), "Name")
         self.assertEqual(updated_profile.get("phone"), "+14155552672")
-        self.assertEqual(updated_profile.get("birth_date"), "1991-02-02")
+        self.assertEqual(str(updated_profile.get("birth_date")), "1991-02-02")
         self.assertEqual(updated_profile.get("gender"), "Female")
 
     def test_update_user_profile_unauthorized_fields(self):
