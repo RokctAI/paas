@@ -18,10 +18,18 @@ class TestRequestModelAPI(FrappeTestCase):
         }).insert(ignore_permissions=True)
         self.test_user.add_roles("System Manager")
 
+        # Create a test shop
+        self.shop = frappe.get_doc({
+            "doctype": "Shop",
+            "shop_name": "Test Request Shop",
+            "user": self.test_user.name
+        }).insert(ignore_permissions=True)
+
         # Create a test product to request changes for
         self.product = frappe.get_doc({
             "doctype": "Product",
-            "product_name": "Test Product"
+            "title": "Test Product",
+            "shop": self.shop.name
         }).insert(ignore_permissions=True)
 
         frappe.db.commit()
