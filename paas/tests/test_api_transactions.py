@@ -4,6 +4,7 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from paas.api import get_user_transactions
+import time
 
 class TestTransactionsAPI(FrappeTestCase):
     def setUp(self):
@@ -84,7 +85,8 @@ class TestTransactionsAPI(FrappeTestCase):
         frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
 
     def test_get_user_transactions_pagination(self):
-        # Create a second transaction
+        # Create a second transaction with a delay to ensure distinct creation time
+        time.sleep(1)
         if not frappe.db.exists("Transaction", {"user": self.test_user.name, "amount": 25.0}):
             frappe.get_doc({
                 "doctype": "Transaction",
