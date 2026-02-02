@@ -11,6 +11,9 @@ class TestCouponAPI(FrappeTestCase):
             self.shop = frappe.get_doc({
                 "doctype": "Shop",
                 "shop_name": "TestShopAPICoupon",
+                "user": "Administrator",
+                "phone": "+14155552671",
+                "uuid": "test-coupon-shop-uuid",
                 "owner": "Administrator"
             }).insert(ignore_permissions=True)
         else:
