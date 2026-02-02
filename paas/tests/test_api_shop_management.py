@@ -39,11 +39,18 @@ class TestShopManagementAPI(FrappeTestCase):
         # Log out
         frappe.set_user("Administrator")
         # Clean up the test users (shops will cascade or we can delete separately)
-        frappe.delete_doc("User", "shop_owner@example.com", force=True, ignore_permissions=True)
-        frappe.delete_doc("User", "other_owner@example.com", force=True, ignore_permissions=True)
+        try:
+            frappe.delete_doc("User", "shop_owner@example.com", force=True, ignore_permissions=True)
+        except Exception:
+            pass
+        try:
+            frappe.delete_doc("User", "other_owner@example.com", force=True, ignore_permissions=True)
+        except Exception:
+            pass
+        
         # Handle cases where shop names might have changed and weren't caught by cascade
-        # (Though User delete with force should handle it if Shop owner is the user)
         frappe.db.delete("Shop", {"user": ["in", ["shop_owner@example.com", "other_owner@example.com"]]})
+        frappe.db.commit()
 
     def test_get_user_shop(self):
         shop = get_user_shop()
