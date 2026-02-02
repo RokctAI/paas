@@ -29,7 +29,7 @@ class TestDeliveryPointAPI(FrappeTestCase):
         points = get_nearest_delivery_points(latitude=12.34, longitude=56.78)
         self.assertTrue(isinstance(points, list))
         self.assertTrue(len(points) > 0)
-        self.assertEqual(points[0].get("name"), "Test Delivery Point")
+        self.assertEqual(points[0].get("name"), self.delivery_point.name)
 
     def test_get_nearest_delivery_points_far_away(self):
         # Test with coordinates far from the test point
