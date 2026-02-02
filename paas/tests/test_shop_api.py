@@ -51,6 +51,7 @@ class TestShopAPI(FrappeTestCase):
                 "visibility": 1,
                 "delivery": 1,
                 "user": self.seller_user.name,
+                "phone": "+14155552671"
             })
         else:
             self.shop1 = frappe.get_doc("Shop", {"shop_name": "Test Shop 1"}).as_dict()
@@ -63,6 +64,7 @@ class TestShopAPI(FrappeTestCase):
                 "visibility": 1,
                 "pickup": 1,
                 "user": self.seller_user_2.name,
+                "phone": "+14155552671"
             })
         else:
             self.shop2 = frappe.get_doc("Shop", {"shop_name": "Test Shop 2"}).as_dict()
@@ -74,6 +76,7 @@ class TestShopAPI(FrappeTestCase):
                 "open": 1,
                 "visibility": 1,
                 "user": self.seller_user.name,
+                "phone": "+14155552671"
             })
         else:
             self.shop3_not_approved = frappe.get_doc("Shop", {"shop_name": "Test Shop 3 Not Approved"}).as_dict()
@@ -85,6 +88,7 @@ class TestShopAPI(FrappeTestCase):
                 "open": 1,
                 "visibility": 0,
                 "user": self.seller_user.name,
+                "phone": "+14155552671"
             })
         else:
             self.shop4_not_visible = frappe.get_doc("Shop", {"shop_name": "Test Shop 4 Not Visible"}).as_dict()
