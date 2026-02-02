@@ -43,15 +43,15 @@ class TestPhoneVerificationAPI(FrappeTestCase):
             check_phone(phone="")
 
     @patch("frappe.send_sms")
-    @patch("frappe.cache")
-    def test_send_verification_code(self, mock_cache, mock_send_sms):
+    @patch("frappe.cache.set_value")
+    def test_send_verification_code(self, mock_set_value, mock_send_sms):
         phone_number = "+11223344556"
         response = send_phone_verification_code(phone=phone_number)
 
         self.assertEqual(response["status"], "success")
 
         # Check that cache was called correctly
-        args, kwargs = mock_cache.set_value.call_args
+        args, kwargs = mock_set_value.call_args
         self.assertEqual(args[0], f"phone_otp:{phone_number}")
         self.assertTrue(args[1].isdigit())
         self.assertEqual(len(args[1]), 6)
@@ -64,12 +64,13 @@ class TestPhoneVerificationAPI(FrappeTestCase):
             message=f"Your verification code is: {otp}"
         )
 
-    @patch("frappe.cache")
-    def test_verify_code_correct(self, mock_cache):
+    @patch("frappe.cache.get_value")
+    @patch("frappe.cache.delete_value")
+    def test_verify_code_correct(self, mock_delete_value, mock_get_value):
         phone_number = self.test_user_phone
         correct_otp = "123456"
 
-        mock_cache.get_value.return_value = correct_otp
+        mock_get_value.return_value = correct_otp
 
         response = verify_phone_code(phone=phone_number, otp=correct_otp)
 
@@ -81,15 +82,15 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         self.assertIsNotNone(self.test_user.phone_verified_at)
 
         # Verify cache deletion
-        mock_cache.delete_value.assert_called_once_with(f"phone_otp:{phone_number}")
+        mock_delete_value.assert_called_once_with(f"phone_otp:{phone_number}")
 
-    @patch("frappe.cache")
-    def test_verify_code_incorrect(self, mock_cache):
+    @patch("frappe.cache.get_value")
+    def test_verify_code_incorrect(self, mock_get_value):
         phone_number = self.test_user_phone
         correct_otp = "123456"
         incorrect_otp = "654321"
 
-        mock_cache.get_value.return_value = correct_otp
+        mock_get_value.return_value = correct_otp
 
         response = verify_phone_code(phone=phone_number, otp=incorrect_otp)
 
@@ -103,9 +104,9 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         # Verify cache was not deleted
         mock_cache.delete_value.assert_not_called()
 
-    @patch("frappe.cache")
-    def test_verify_code_expired(self, mock_cache):
-        mock_cache.get_value.return_value = None
+    @patch("frappe.cache.get_value")
+    def test_verify_code_expired(self, mock_get_value):
+        mock_get_value.return_value = None
 
         response = verify_phone_code(phone=self.test_user_phone, otp="123456")
 
