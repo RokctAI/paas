@@ -26,7 +26,8 @@ class TestTransactionsAPI(FrappeTestCase):
                 "doctype": "Shop",
                 "shop_name": "Test Transaction Shop",
                 "user": self.test_user.name,
-                "uuid": "test_transaction_shop_uuid"
+                "uuid": "test_transaction_shop_uuid",
+                "phone": "+14155552671"
             }).insert(ignore_permissions=True)
         else:
             self.test_shop = frappe.get_doc("Shop", "Test Transaction Shop")
