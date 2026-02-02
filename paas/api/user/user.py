@@ -213,7 +213,7 @@ def register_user(email, password, first_name, last_name, phone=None):
         now=True
     )
     return {
-        "status": True,
+        "status": "success",
         "message": "User registered successfully. Please check your email to verify your account.",
         "data": {
             "user": {
@@ -269,17 +269,17 @@ def forgot_password_confirm(email, verify_code, password=None):
             user_name = frappe.db.get_value("User", {"phone": email}, "name")
             cached_otp = frappe.cache.get_value(f"password_reset_otp:{email}")
             if not cached_otp or cached_otp != verify_code:
-                return {"status": False, "message": "Invalid or expired verification code"}
+                return {"status": "error", "message": "Invalid or expired verification code"}
         else:
             user_name = frappe.db.get_value("User", {"email": email}, "name")
             if user_name:
                 user_doc = frappe.get_doc("User", user_name)
                 # Verify standard Frappe reset token
                 if user_doc.reset_password_key != verify_code:
-                    return {"status": False, "message": "Invalid or expired reset token"}
+                    return {"status": "error", "message": "Invalid or expired reset token"}
         
         if not user_name:
-            return {"status": False, "message": "User not found"}
+            return {"status": "error", "message": "User not found"}
             
         if password:
             user_doc = frappe.get_doc("User", user_name)
@@ -288,11 +288,11 @@ def forgot_password_confirm(email, verify_code, password=None):
             user_doc.save(ignore_permissions=True)
             if is_phone:
                 frappe.cache.delete_value(f"password_reset_otp:{email}")
-            return {"status": True, "message": "Password updated successfully"}
+            return {"status": "success", "message": "Password updated successfully"}
         
-        return {"status": True, "message": "Code verified"}
+        return {"status": "success", "message": "Code verified"}
     except Exception as e:
-        return {"status": False, "message": str(e)}
+        return {"status": "error", "message": str(e)}
 
 @frappe.whitelist(allow_guest=True)
 def login_with_google(email, display_name, id, avatar=None):
