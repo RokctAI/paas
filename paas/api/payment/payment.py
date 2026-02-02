@@ -245,7 +245,7 @@ def handle_payfast_callback():
 
     if data.get("payment_status") == "COMPLETE":
         transaction.status = "Completed"
-        order = frappe.get_doc("Order", transaction.reference_name)
+        order = frappe.get_doc("Order", transaction.payable_id)
         order.status = "Paid"
         order.save(ignore_permissions=True)
     elif data.get("payment_status") == "FAILED":
@@ -626,8 +626,8 @@ def process_direct_card_payment(order_id, card_number, card_holder, expiry_date,
     transaction = frappe.get_doc({
         "doctype": "Transaction",
         "user": user,
-        "reference_doctype": "Order",
-        "reference_docname": order_id,
+        "payable_type": "Order",
+        "payable_id": order_id,
         "amount": order.grand_total,
         "status": "Success"
     })
