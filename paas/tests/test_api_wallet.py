@@ -34,13 +34,13 @@ class TestWalletAPI(FrappeTestCase):
             self.wallet = frappe.get_doc("Wallet", {"user": self.test_user.name})
 
         # Create wallet history
-        if not frappe.db.exists("Wallet History", {"wallet": self.wallet.name, "type": "Topup"}):
+        if not frappe.db.exists("Wallet History", {"wallet": self.wallet.name, "transaction_type": "Topup"}):
             frappe.get_doc({
                 "doctype": "Wallet History",
                 "uuid": str(uuid.uuid4()),
                 "wallet": self.wallet.name,
-                "type": "Topup",
-                "price": 100.0,
+                "transaction_type": "Topup",
+                "amount": 100.0,
                 "status": "Paid"
             }).insert(ignore_permissions=True)
 
@@ -61,23 +61,23 @@ class TestWalletAPI(FrappeTestCase):
 
     def test_get_wallet_history_pagination(self):
         # Create a second history record
-        if not frappe.db.exists("Wallet History", {"wallet": self.wallet.name, "type": "Withdraw"}):
+        if not frappe.db.exists("Wallet History", {"wallet": self.wallet.name, "transaction_type": "Withdraw"}):
             frappe.get_doc({
                 "doctype": "Wallet History",
                 "uuid": str(uuid.uuid4()),
                 "wallet": self.wallet.name,
-                "type": "Withdraw",
-                "price": 50.0,
+                "transaction_type": "Withdraw",
+                "amount": 50.0,
                 "status": "Paid"
             }).insert(ignore_permissions=True)
 
         # Get the first page with a limit of 1
-        history = get_wallet_history(limit_page_length=1)
+        history = get_wallet_history(limit=1)
         self.assertEqual(len(history), 1)
-        self.assertEqual(history[0].get("type"), "Withdraw") # It's ordered by creation desc
+        self.assertEqual(history[0].get("transaction_type"), "Withdraw") # It's ordered by creation desc
 
         # Get the second page
-        history = get_wallet_history(limit_start=1, limit_page_length=1)
+        history = get_wallet_history(start=1, limit=1)
         self.assertEqual(len(history), 1)
-        self.assertEqual(history[0].get("type"), "Topup")
+        self.assertEqual(history[0].get("transaction_type"), "Topup")
 
