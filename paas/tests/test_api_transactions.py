@@ -87,14 +87,14 @@ class TestTransactionsAPI(FrappeTestCase):
 
     def test_get_user_transactions_pagination(self):
         # Create a second transaction with a delay to ensure distinct creation time
-        time.sleep(1)
-        if not frappe.db.exists("Transaction", {"user": self.test_user.name, "amount": 25.0}):
+        time.sleep(1.2)
+        if not frappe.db.exists("Transaction", {"user": self.test_user.name, "amount": 250.0}):
             frappe.get_doc({
                 "doctype": "Transaction",
                 "payable_type": "Order",
                 "payable_id": self.order.name,
                 "user": self.test_user.name,
-                "amount": 25.0,
+                "amount": 250.0,
                 "status": "paid",
                 "type": "model"
             }).insert(ignore_permissions=True)
@@ -102,7 +102,7 @@ class TestTransactionsAPI(FrappeTestCase):
         # Get the first page with a limit of 1
         transactions = get_user_transactions(limit=1)
         self.assertEqual(len(transactions), 1)
-        self.assertEqual(transactions[0].get("amount"), 25.0) # It's ordered by creation desc
+        self.assertEqual(transactions[0].get("amount"), 250.0) # Highest amount / newest
 
         # Get the second page
         transactions = get_user_transactions(start=1, limit=1)
