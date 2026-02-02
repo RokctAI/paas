@@ -60,6 +60,8 @@ class TestOrderAPI(FrappeTestCase):
 
     def tearDown(self):
         frappe.set_user("Administrator")
+        frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+        frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
 
     def test_create_order_and_calculation(self):
         # Test creating a new order and that the calculation is correct
