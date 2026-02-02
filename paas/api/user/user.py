@@ -374,8 +374,10 @@ def get_user_order_refunds(page: int = 1, lang: str = "en"):
         "Order Refund",
         filters={"user": user},
         fields=["name", "amount", "reason", "status", "creation", "modified"],
-        limit_start=(page - 1) * 10,
-        limit_page_length=10,
+        limit_start=None, # Deprecated
+        limit_page_length=None, # Deprecated
+        start=(page - 1) * 10,
+        limit=10,
         order_by="creation desc",
         ignore_permissions=True
     )
@@ -627,8 +629,8 @@ def get_wallet_history(limit_start=0, limit_page_length=20):
         filters={"wallet": wallet.name},
         fields=["name", "type", "price", "status", "created_at"],
         order_by="creation desc",
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        start=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -705,8 +707,8 @@ def get_user_transactions(limit_start=0, limit_page_length=20):
         filters={"user": user},
         fields=["name", "user", "amount", "status", "payable_type", "payable_id", "creation"],
         order_by="creation desc",
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        start=limit_start,
+        limit=limit_page_length,
         ignore_permissions=True
     )
 
@@ -782,8 +784,8 @@ def get_user_request_models(limit_start=0, limit_page_length=20):
         filters={"created_by_user": user},
         fields=["name", "model_type", "model", "status", "created_at"],
         order_by="creation desc",
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        start=limit_start,
+        limit=limit_page_length
     )
 
 @frappe.whitelist()
