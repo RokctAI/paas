@@ -22,7 +22,8 @@ class TestRequestModelAPI(FrappeTestCase):
         self.shop = frappe.get_doc({
             "doctype": "Shop",
             "shop_name": "Test Request Shop",
-            "user": self.test_user.name
+            "user": self.test_user.name,
+            "phone": "+14155552671"
         }).insert(ignore_permissions=True)
 
         # Create a test product to request changes for
