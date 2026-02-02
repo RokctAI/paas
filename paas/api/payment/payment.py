@@ -239,19 +239,19 @@ def handle_payfast_callback():
 
     if signature != data.get("signature"):
         frappe.log_error("PayFast callback signature mismatch", data)
-        transaction.status = "Error"
+        transaction.status = "Failed"
         transaction.save(ignore_permissions=True)
         return
 
     if data.get("payment_status") == "COMPLETE":
-        transaction.status = "Completed"
+        transaction.status = "Paid"
         order = frappe.get_doc("Order", transaction.payable_id)
         order.status = "Paid"
         order.save(ignore_permissions=True)
     elif data.get("payment_status") == "FAILED":
         transaction.status = "Failed"
     else:
-        transaction.status = "Cancelled"
+        transaction.status = "Canceled"
 
     transaction.save(ignore_permissions=True)
 
@@ -364,7 +364,7 @@ def handle_paypal_callback():
     paypal_order = order_response.json()
 
     if paypal_order.get("status") == "COMPLETED":
-        transaction.status = "Completed"
+        transaction.status = "Paid"
         order = frappe.get_doc("Order", transaction.payable_id)
         order.status = "Paid"
         order.save(ignore_permissions=True)
@@ -516,7 +516,7 @@ def handle_paystack_callback():
 
     if paystack_data["data"]["status"] == "success":
         transaction = frappe.get_doc("Transaction", {"payment_reference": reference})
-        transaction.status = "Completed"
+        transaction.status = "Paid"
         transaction.save(ignore_permissions=True)
 
         order = frappe.get_doc("Order", transaction.payable_id)
@@ -629,7 +629,7 @@ def process_direct_card_payment(order_id, card_number, card_holder, expiry_date,
         "payable_type": "Order",
         "payable_id": order_id,
         "amount": order.grand_total,
-        "status": "Success"
+        "status": "Paid"
     })
     transaction.insert(ignore_permissions=True)
 
