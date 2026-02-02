@@ -61,6 +61,12 @@ class TestBookingFeature(FrappeTestCase):
 
     def tearDown(self):
         frappe.set_user("Administrator")
+        frappe.delete_doc("User", self.user.name, force=True, ignore_permissions=True)
+        # Also clean up Shop and Shop Section if needed, but User delete might cascade if Owner. 
+        # If Shop remains, next run uses existing Shop.
+        # But reservations?
+        frappe.db.delete("User Booking", {"user": "test_booker@example.com"})
+        frappe.db.commit()
 
     def test_booking_flow(self):
         # 1. Create a Booking Slot (as Admin/Seller)
