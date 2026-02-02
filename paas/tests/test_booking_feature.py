@@ -76,7 +76,7 @@ class TestBookingFeature(FrappeTestCase):
         # 2. Create a Reservation (as User)
         frappe.set_user(self.user.name)
         start_date = add_days(now_datetime(), 1)
-        end_date = add_days(start_date, 0, 0, 1) # 1 hour later
+        end_date = frappe.utils.add_to_date(start_date, hours=1) # 1 hour later
         
         res_data = {
             "table": self.table.name,
