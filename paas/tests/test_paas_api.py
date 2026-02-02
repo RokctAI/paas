@@ -66,7 +66,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
 
     @patch("frappe.cache.get_value")
     @patch("frappe.cache.delete_value")
-        mock_delete_value, mock_get_value):
+    def test_verify_code_correct(self, mock_delete_value, mock_get_value):
         phone_number = self.test_user_phone
         correct_otp = "123456"
 
