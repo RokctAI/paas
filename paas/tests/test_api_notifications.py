@@ -26,6 +26,9 @@ class TestNotificationsAPI(FrappeTestCase):
                 "doctype": "Notification Log",
                 "subject": "Test Notification",
                 "for_user": self.test_user.name,
+                "user": self.test_user.name,
+                "notification_type": "Alert",
+                "message": "Test Message",
                 "document_type": "User",
                 "document_name": self.test_user.name
             }).insert(ignore_permissions=True)
