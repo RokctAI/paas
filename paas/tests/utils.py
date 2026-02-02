@@ -15,6 +15,7 @@ def before_tests():
     create_stock_entry_types()
     create_fiscal_year()
     create_gender()
+    create_roles()
     create_user_custom_fields()
     frappe.db.commit()
     frappe.clear_cache()
@@ -159,3 +160,15 @@ def create_user_custom_fields():
             "label": "Ringfenced Balance",
             "default": "0"
         }).insert(ignore_permissions=True)
+
+def create_roles():
+    """
+    Creates roles required by PaaS.
+    """
+    for role in ["PaaS User", "Seller", "user"]:
+        if not frappe.db.exists("Role", role):
+            frappe.get_doc({
+                "doctype": "Role",
+                "role_name": role,
+                "desk_access": 1
+            }).insert(ignore_permissions=True)
