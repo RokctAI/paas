@@ -693,7 +693,7 @@ def register_device_token(device_token: str, provider: str):
     return {"status": "success", "message": "Device token registered successfully."}
 
 @frappe.whitelist()
-def get_user_transactions(limit_start=0, limit_page_length=20):
+def get_user_transactions(start=0, limit=20):
     """
     Retrieve the list of transactions for the currently logged-in user.
     """
@@ -706,8 +706,8 @@ def get_user_transactions(limit_start=0, limit_page_length=20):
         filters={"user": user},
         fields=["name", "user", "amount", "status", "payable_type", "payable_id", "creation"],
         order_by="creation desc, name desc",
-        start=limit_start,
-        limit=limit_page_length,
+        start=start,
+        limit=limit,
         ignore_permissions=True
     )
 
