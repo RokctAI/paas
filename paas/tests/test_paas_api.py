@@ -66,11 +66,16 @@ class TestPhoneVerificationAPI(FrappeTestCase):
 
     @patch("frappe.cache.get_value")
     @patch("frappe.cache.delete_value")
-    def test_verify_code_correct(self, mock_delete_value, mock_get_value):
+        mock_delete_value, mock_get_value):
         phone_number = self.test_user_phone
         correct_otp = "123456"
 
-        mock_get_value.return_value = correct_otp
+        def get_value_side_effect(key, *args, **kwargs):
+            if isinstance(key, str) and key.startswith("phone_otp:"):
+                return correct_otp
+            return None
+
+        mock_get_value.side_effect = get_value_side_effect
 
         response = verify_phone_code(phone=phone_number, otp=correct_otp)
 
@@ -91,7 +96,12 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         correct_otp = "123456"
         incorrect_otp = "654321"
 
-        mock_get_value.return_value = correct_otp
+        def get_value_side_effect(key, *args, **kwargs):
+            if isinstance(key, str) and key.startswith("phone_otp:"):
+               return correct_otp
+            return None
+
+        mock_get_value.side_effect = get_value_side_effect
 
         response = verify_phone_code(phone=phone_number, otp=incorrect_otp)
 
