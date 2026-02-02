@@ -67,6 +67,7 @@ class TestOrderRefundsAPI(FrappeTestCase):
     def tearDown(self):
         # Log out
         frappe.set_user("Administrator")
+        frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
 
     def test_create_and_get_order_refund(self):
         refund = create_order_refund(order=self.order.name, cause="Item was damaged")
