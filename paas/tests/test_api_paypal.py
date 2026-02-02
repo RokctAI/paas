@@ -25,7 +25,8 @@ class TestPayPalAPI(FrappeTestCase):
                 "shop_name": "PayPal Shop",
                 "user": self.test_user.name,
                 "uuid": "paypal-shop-uuid",
-                "status": "approved"
+                "status": "approved",
+                "phone": "+14155552671"
             }).insert(ignore_permissions=True)
         else:
             self.shop = frappe.get_doc("Shop", {"shop_name": "PayPal Shop"})
