@@ -26,7 +26,8 @@ class TestShopManagementAPI(FrappeTestCase):
                 "doctype": "Shop",
                 "shop_name": "My Awesome Shop",
                 "user": self.test_user.name,
-                "uuid": "my_awesome_shop_uuid"
+                "uuid": "my_awesome_shop_uuid",
+                "phone": "+14155552671"
             }).insert(ignore_permissions=True)
         else:
             self.shop = frappe.get_doc("Shop", "My Awesome Shop")
@@ -47,12 +48,12 @@ class TestShopManagementAPI(FrappeTestCase):
     def test_update_user_shop(self):
         shop_data = {
             "title": "My Updated Shop",
-            "phone": "1234567890",
+            "phone": "+14155552671",
             "open": 0
         }
         updated_shop = update_user_shop(shop_data=json.dumps(shop_data))
         self.assertEqual(updated_shop.get("shop_name"), "My Updated Shop")
-        self.assertEqual(updated_shop.get("phone"), "1234567890")
+        self.assertEqual(updated_shop.get("phone"), "+14155552671")
         self.assertEqual(updated_shop.get("open"), 0)
 
     def test_update_other_user_shop_permission(self):
@@ -70,7 +71,8 @@ class TestShopManagementAPI(FrappeTestCase):
                 "doctype": "Shop", 
                 "shop_name": "Other Shop", 
                 "user": other_user.name,
-                "uuid": "other_shop_uuid"
+                "uuid": "other_shop_uuid",
+                "phone": "+14155552671"
             }).insert(ignore_permissions=True)
         else:
             other_shop = frappe.get_doc("Shop", "Other Shop")
