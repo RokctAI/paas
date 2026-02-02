@@ -9,30 +9,38 @@ import json
 class TestParcelOrderAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
-        self.test_user = frappe.get_doc({
-            "doctype": "User",
-            "email": "test_parcel_order@example.com",
-            "first_name": "Test",
-            "last_name": "Parcel",
-            "send_welcome_email": 0
-        }).insert(ignore_permissions=True)
-        self.test_user.add_roles("System Manager")
+        if not frappe.db.exists("User", "test_parcel_order@example.com"):
+            self.test_user = frappe.get_doc({
+                "doctype": "User",
+                "email": "test_parcel_order@example.com",
+                "first_name": "Test",
+                "last_name": "Parcel",
+                "send_welcome_email": 0
+            }).insert(ignore_permissions=True)
+            self.test_user.add_roles("System Manager")
+        else:
+            self.test_user = frappe.get_doc("User", "test_parcel_order@example.com")
 
         # Create a parcel order setting
-        self.parcel_setting = frappe.get_doc({
-            "doctype": "Parcel Order Setting",
-            "type": "Standard",
-            "price": 10
-        }).insert(ignore_permissions=True)
+        if not frappe.db.exists("Parcel Order Setting", "Standard"):
+            self.parcel_setting = frappe.get_doc({
+                "doctype": "Parcel Order Setting",
+                "name": "Standard",
+                "type": "Standard",
+                "price": 10
+            }).insert(ignore_permissions=True)
+        else:
+            self.parcel_setting = frappe.get_doc("Parcel Order Setting", "Standard")
 
         # Create a delivery point
-        self.delivery_point = frappe.get_doc({
-            "doctype": "Delivery Point",
-            "name": "Test Delivery Point",
-            "address": "123 Test Street"
-        }).insert(ignore_permissions=True)
-
-        frappe.db.commit()
+        if not frappe.db.exists("Delivery Point", "Test Delivery Point"):
+            self.delivery_point = frappe.get_doc({
+                "doctype": "Delivery Point",
+                "name": "Test Delivery Point",
+                "address": "123 Test Street"
+            }).insert(ignore_permissions=True)
+        else:
+            self.delivery_point = frappe.get_doc("Delivery Point", "Test Delivery Point")
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
@@ -42,10 +50,7 @@ class TestParcelOrderAPI(FrappeTestCase):
         frappe.set_user("Administrator")
         # Clean up created documents
         frappe.db.delete("Parcel Order", {"user": self.test_user.name})
-        self.parcel_setting.delete(ignore_permissions=True)
-        self.delivery_point.delete(ignore_permissions=True)
-        self.test_user.delete(ignore_permissions=True)
-        frappe.db.commit()
+        frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
 
     def test_create_parcel_order(self):
         order_data = {
