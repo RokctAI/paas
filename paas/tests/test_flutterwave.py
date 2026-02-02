@@ -8,6 +8,11 @@ from paas.api import initiate_flutterwave_payment, flutterwave_callback
 class TestFlutterwave(FrappeTestCase):
 
     def setUp(self):
+        # Save original state to restore in tearDown
+        self._original_session_user = frappe.session.user
+        self._original_request = getattr(frappe, "request", None)
+        self._original_response = getattr(frappe.local, "response", None)
+
         # Create a mock user
         self.user = MagicMock()
         self.user.name = "test@example.com"
@@ -26,6 +31,15 @@ class TestFlutterwave(FrappeTestCase):
         self.flutterwave_settings.get_password.return_value = "test_secret_key"
         self.flutterwave_settings.success_redirect_url = "https://test.com/success"
         self.flutterwave_settings.failure_redirect_url = "https://test.com/failure"
+
+    def tearDown(self):
+        # Restore original state
+        frappe.session.user = self._original_session_user
+        if hasattr(frappe, "request"):
+            frappe.request = self._original_request
+        if hasattr(frappe.local, "response"):
+            frappe.local.response = self._original_response
+        frappe.set_user("Administrator")
 
     @patch('paas.api.payment.payment.frappe.db.commit')
     @patch('paas.api.payment.payment.frappe.get_doc')
