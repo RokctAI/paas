@@ -44,6 +44,10 @@ class TestTransactionsAPI(FrappeTestCase):
         else:
             self.test_product = frappe.get_doc("Product", {"title": "Test Product", "shop": self.test_shop.name})
 
+        # Clean up any existing transactions for this user
+        frappe.db.delete("Transaction", {"user": self.test_user.name})
+        frappe.db.commit()
+
         # Create a test order to associate with a transaction
         if not frappe.db.exists("Order", {"user": self.test_user.name, "status": "New"}):
             self.order = frappe.get_doc({
@@ -83,6 +87,7 @@ class TestTransactionsAPI(FrappeTestCase):
         # Log out
         frappe.set_user("Administrator")
         frappe.db.delete("Transaction", {"user": self.test_user.name})
+        frappe.db.commit()
         frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
 
     def test_get_user_transactions_pagination(self):
