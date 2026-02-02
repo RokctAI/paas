@@ -218,7 +218,7 @@ def handle_payfast_callback():
         frappe.log_error("PayFast callback received without m_payment_id", data)
         return
 
-    transaction = frappe.get_doc("Transaction", transaction_id)
+    transaction = frappe.get_doc("Transaction", {"payment_reference": transaction_id})
 
     payfast_settings = frappe.get_doc("PaaS Payment Gateway", "PayFast")
     settings = {s.key: s.value for s in payfast_settings.settings}
@@ -332,7 +332,7 @@ def handle_paypal_callback():
         frappe.log_error("PayPal callback received without token", data)
         return
 
-    transaction = frappe.get_doc("Transaction", {"transaction_id": token})
+    transaction = frappe.get_doc("Transaction", {"payment_reference": token})
 
     paypal_settings_doc = frappe.get_doc("PaaS Payment Gateway", "PayPal")
     settings = {s.key: s.value for s in paypal_settings_doc.settings}
@@ -515,7 +515,7 @@ def handle_paystack_callback():
     paystack_data = response.json()
 
     if paystack_data["data"]["status"] == "success":
-        transaction = frappe.get_doc("Transaction", {"transaction_id": reference})
+        transaction = frappe.get_doc("Transaction", {"payment_reference": reference})
         transaction.status = "Completed"
         transaction.save(ignore_permissions=True)
 
@@ -523,7 +523,7 @@ def handle_paystack_callback():
         order.status = "Paid"
         order.save(ignore_permissions=True)
     else:
-        transaction = frappe.get_doc("Transaction", {"transaction_id": reference})
+        transaction = frappe.get_doc("Transaction", {"payment_reference": reference})
         transaction.status = "Failed"
         transaction.save(ignore_permissions=True)
 
