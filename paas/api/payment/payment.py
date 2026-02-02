@@ -438,9 +438,9 @@ def initiate_paypal_payment(order_id: str):
 
     frappe.get_doc({
         "doctype": "Transaction",
-        "reference_doctype": "Order",
-        "reference_name": order.name,
-        "transaction_id": paypal_order["id"],
+        "payable_type": "Order",
+        "payable_id": order.name,
+        "payment_reference": paypal_order["id"],
         "amount": order.total_price,
         "status": "Pending"
     }).insert(ignore_permissions=True)
@@ -482,9 +482,9 @@ def initiate_paystack_payment(order_id: str):
     # Create a new transaction
     frappe.get_doc({
         "doctype": "Transaction",
-        "reference_doctype": "Order",
-        "reference_name": order.name,
-        "transaction_id": paystack_data["data"]["reference"],
+        "payable_type": "Order",
+        "payable_id": order.name,
+        "payment_reference": paystack_data["data"]["reference"],
         "amount": order.total_price,
         "status": "Pending"
     }).insert(ignore_permissions=True)
