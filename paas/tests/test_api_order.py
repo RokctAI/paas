@@ -25,7 +25,8 @@ class TestOrderAPI(FrappeTestCase):
                 "shop_name": "Test Order Shop",
                 "user": self.test_user.name,
                 "uuid": "test_order_shop_uuid",
-                "tax": 10
+                "tax": 10,
+                "phone": "+14155552671"
             }).insert(ignore_permissions=True)
         else:
             self.test_shop = frappe.get_doc("Shop", "Test Order Shop")
