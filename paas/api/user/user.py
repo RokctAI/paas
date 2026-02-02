@@ -823,8 +823,8 @@ def get_user_tickets(limit_start=0, limit_page_length=20):
         filters={"created_by_user": user, "parent_ticket": None}, # Only get parent tickets
         fields=["name", "subject", "status", "creation"],
         order_by="creation desc",
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        start=limit_start,
+        limit=limit_page_length
     )
 
 @frappe.whitelist()
