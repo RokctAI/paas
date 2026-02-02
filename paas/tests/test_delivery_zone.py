@@ -19,6 +19,8 @@ class TestDeliveryZone(FrappeTestCase):
             "price": 10,
             "price_per_km": 2,
             "min_amount": 15,
+            "user": "Administrator",
+            "phone": "+14155552671",
             # Simple location at 0,0
             "location": json.dumps({
                 "type": "FeatureCollection",
