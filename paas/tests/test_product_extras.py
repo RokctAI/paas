@@ -17,6 +17,7 @@ class TestProductExtras(FrappeTestCase):
             "doctype": "Shop",
             "shop_name": "Pizza Shop",
             "title": "Pizza Shop",
+            "uuid": "pizza_shop_uuid",
             "phone": "+14155552671",
             "user": "Administrator"
         }).insert(ignore_permissions=True)
