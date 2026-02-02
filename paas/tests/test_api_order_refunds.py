@@ -26,7 +26,8 @@ class TestOrderRefundsAPI(FrappeTestCase):
                 "doctype": "Shop",
                 "shop_name": "Test Refund Shop",
                 "user": self.test_user.name,
-                "uuid": "test_refund_shop_uuid"
+                "uuid": "test_refund_shop_uuid",
+                "phone": "+14155552671"
             }).insert(ignore_permissions=True)
         else:
             self.test_shop = frappe.get_doc("Shop", "Test Refund Shop")
