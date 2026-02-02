@@ -37,13 +37,11 @@ def get_nearest_delivery_points(latitude, longitude, radius=20):
             longitude,
             img,
             (
-                6371 * acos(
-                    cos(radians(%(latitude)s))
-                    * cos(radians(latitude))
-                    * cos(radians(longitude) - radians(%(longitude)s))
-                    + sin(radians(%(latitude)s))
-                    * sin(radians(latitude))
-                )
+                6371 * 2 * ASIN(SQRT(
+                    POWER(SIN(RADIANS(%(latitude)s - latitude) / 2), 2) +
+                    COS(RADIANS(%(latitude)s)) * COS(RADIANS(latitude)) *
+                    POWER(SIN(RADIANS(%(longitude)s - longitude) / 2), 2)
+                ))
             ) AS distance
         FROM `tabDelivery Point`
         WHERE active = 1
