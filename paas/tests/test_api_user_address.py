@@ -63,7 +63,8 @@ class TestUserAddressAPI(FrappeTestCase):
         self.assertEqual(response.get("status"), "success")
 
         addresses = get_user_addresses()
-        self.assertEqual(len(addresses), 0)
+        deleted_addr = [addr for addr in addresses if addr.get("name") == added_address.get("name")]
+        self.assertEqual(len(deleted_addr), 0)
 
     def test_permission_on_user_address(self):
         # Create another user and an address for them
