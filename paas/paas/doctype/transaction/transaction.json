@@ -49,7 +49,7 @@
         },
         {
             "fieldname": "payable_id",
-            "fieldtype": "Int",
+            "fieldtype": "Data",
             "label": "Payable ID"
         },
         {
