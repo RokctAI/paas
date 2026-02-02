@@ -100,12 +100,12 @@ class TestTransactionsAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
 
         # Get the first page with a limit of 1
-        transactions = get_user_transactions(limit_page_length=1)
+        transactions = get_user_transactions(limit=1)
         self.assertEqual(len(transactions), 1)
         self.assertEqual(transactions[0].get("amount"), 25.0) # It's ordered by creation desc
 
         # Get the second page
-        transactions = get_user_transactions(limit_start=1, limit_page_length=1)
+        transactions = get_user_transactions(start=1, limit=1)
         self.assertEqual(len(transactions), 1)
         self.assertEqual(transactions[0].get("amount"), 50.0)
 
