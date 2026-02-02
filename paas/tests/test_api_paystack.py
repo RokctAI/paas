@@ -69,7 +69,9 @@ class TestPayStackAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
 
     def tearDown(self):
-        pass
+        frappe.set_user("Administrator")
+        frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+        frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
 
     @patch('paas.api.payment.payment.requests.post')
     def test_initiate_paystack_payment(self, mock_post):
