@@ -82,6 +82,7 @@ class TestTransactionsAPI(FrappeTestCase):
     def tearDown(self):
         # Log out
         frappe.set_user("Administrator")
+        frappe.db.delete("Transaction", {"user": self.test_user.name})
         frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
 
     def test_get_user_transactions_pagination(self):
