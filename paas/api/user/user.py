@@ -614,7 +614,7 @@ def get_user_wallet():
     return wallet.as_dict()
 
 @frappe.whitelist()
-def get_wallet_history(limit_start=0, limit_page_length=20):
+def get_wallet_history(start=0, limit=20):
     """
     Retrieves the wallet history for the currently logged-in user.
     """
@@ -626,10 +626,10 @@ def get_wallet_history(limit_start=0, limit_page_length=20):
     return frappe.get_all(
         "Wallet History",
         filters={"wallet": wallet.name},
-        fields=["name", "type", "price", "status", "created_at"],
+        fields=["name", "transaction_type", "amount", "status", "creation"],
         order_by="creation desc",
-        start=limit_start,
-        limit=limit_page_length
+        start=start,
+        limit=limit
     )
 
 
@@ -776,7 +776,7 @@ def update_user_shop(shop_data):
 
 
 @frappe.whitelist()
-def get_user_request_models(limit_start=0, limit_page_length=20):
+def get_user_request_models(start=0, limit=20):
     """
     Retrieves the list of request models for the currently logged-in user.
     """
@@ -789,8 +789,8 @@ def get_user_request_models(limit_start=0, limit_page_length=20):
         filters={"created_by_user": user},
         fields=["name", "model_type", "model", "status", "created_at"],
         order_by="creation desc",
-        start=limit_start,
-        limit=limit_page_length
+        start=start,
+        limit=limit
     )
 
 @frappe.whitelist()
@@ -1001,7 +1001,7 @@ def create_order_refund(order, cause):
 
 
 @frappe.whitelist()
-def get_user_notifications(limit_start=0, limit_page_length=20):
+def get_user_notifications(start=0, limit=20):
     """
     Retrieves the list of notifications for the currently logged-in user.
     """
@@ -1019,6 +1019,6 @@ def get_user_notifications(limit_start=0, limit_page_length=20):
         filters={"for_user": user},
         fields=["name", "subject", "document_type", "document_name", "creation"],
         order_by="creation desc",
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        start=start,
+        limit=limit
     )
