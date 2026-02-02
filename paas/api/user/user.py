@@ -751,6 +751,12 @@ def update_seller_shop(shop_data):
     # List of fields that a user is allowed to update
     updatable_fields = ["phone", "location", "open", "shop_name"]
 
+    # Handle name change (Rename Doc) BEFORE other updates
+    new_shop_name = shop_data.get("shop_name") or shop_data.get("title")
+    if new_shop_name and new_shop_name != shop.name:
+         new_name = frappe.rename_doc("Shop", shop.name, new_shop_name, ignore_permissions=True)
+         shop = frappe.get_doc("Shop", new_name)
+
     for key, value in shop_data.items():
         if key in updatable_fields:
             shop.set(key, value)
