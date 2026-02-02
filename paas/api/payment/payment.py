@@ -84,7 +84,7 @@ def initiate_flutterwave_payment(order_id: str):
             "tx_ref": tx_ref,
             "amount": order.grand_total,
             "currency": frappe.db.get_single_value("System Settings", "currency"),
-            "redirect_url": frappe.utils.get_url_to_method("paas.api.flutterwave_callback"),
+            "redirect_url": f"{frappe.utils.get_url()}/api/method/paas.api.flutterwave_callback",
             "customer": {
                 "email": customer.email,
                 "phonenumber": customer.phone,
