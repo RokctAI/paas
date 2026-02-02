@@ -27,7 +27,7 @@ class TestMembershipAPI(FrappeTestCase):
                 "title": "Gold Plan",
                 "price": 100.0,
                 "duration": 1,
-                "duration_unit": "Month"
+                "duration_unit": "Months"
             }).insert(ignore_permissions=True)
         else:
             self.membership_plan = frappe.get_doc("Membership", {"title": "Gold Plan"})
@@ -52,7 +52,7 @@ class TestMembershipAPI(FrappeTestCase):
         frappe.set_user("Administrator")
         self.user_membership.delete(ignore_permissions=True)
         self.membership_plan.delete(ignore_permissions=True)
-        self.test_user.delete(ignore_permissions=True)
+        frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
 
     def test_get_user_membership(self):
         membership = get_user_membership()
