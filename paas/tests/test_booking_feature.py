@@ -30,7 +30,8 @@ class TestBookingFeature(FrappeTestCase):
                 "doctype": "Shop",
                 "shop_name": "Test Shop",
                 "user": self.user.name,
-                "uuid": "test_booking_shop_uuid"
+                "uuid": "test_booking_shop_uuid",
+                "phone": "+14155552671"
             }).insert(ignore_permissions=True)
         else:
             self.shop = frappe.get_doc("Shop", "Test Shop")
