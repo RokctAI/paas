@@ -200,9 +200,8 @@ def register_user(email, password, first_name, last_name, phone=None):
     user.insert(ignore_permissions=True)
 
     # Send the verification email
-    verification_url = frappe.utils.get_url_to_method(
-        "rcore.tenant.api.verify_my_email", {"token": token}
-    )
+    site_url = frappe.utils.get_url()
+    verification_url = f"{site_url}/api/method/rcore.tenant.api.verify_my_email?token={token}"
     email_context = {
         "first_name": user.first_name,
         "verification_url": verification_url
@@ -706,7 +705,7 @@ def get_user_transactions(limit_start=0, limit_page_length=20):
         "Transaction",
         filters={"user": user},
         fields=["name", "user", "amount", "status", "payable_type", "payable_id", "creation"],
-        order_by="creation desc",
+        order_by="creation desc, name desc",
         start=limit_start,
         limit=limit_page_length,
         ignore_permissions=True
