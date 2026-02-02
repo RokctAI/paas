@@ -9,20 +9,19 @@ class TestPhoneVerificationAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
         self.test_user_phone = "+19876543210"
-        if not frappe.db.exists("User", "test_phone_user@example.com"):
-            self.test_user = frappe.get_doc({
-                "doctype": "User",
-                "email": "test_phone_user@example.com",
-                "first_name": "Test",
-                "last_name": "User",
-                "phone": self.test_user_phone,
-            }).insert(ignore_permissions=True)
-        else:
-            self.test_user = frappe.get_doc("User", "test_phone_user@example.com")
+        
+        # Cleanup potential duplicates to ensure API targets the correct user
+        frappe.db.delete("User", {"phone": self.test_user_phone})
+        if frappe.db.exists("User", "test_phone_user@example.com"):
+             frappe.delete_doc("User", "test_phone_user@example.com", force=True, ignore_permissions=True)
 
-        # Reset phone_verified_at for each test to ensure independence
-        self.test_user.phone_verified_at = None
-        self.test_user.save(ignore_permissions=True)
+        self.test_user = frappe.get_doc({
+            "doctype": "User",
+            "email": "test_phone_user@example.com",
+            "first_name": "Test",
+            "last_name": "User",
+            "phone": self.test_user_phone,
+        }).insert(ignore_permissions=True)
 
 
     def tearDown(self):
