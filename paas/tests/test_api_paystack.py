@@ -90,16 +90,16 @@ class TestPayStackAPI(FrappeTestCase):
         self.assertIn("test_url", response["redirect_url"])
 
         # Verify a transaction was created
-        self.assertTrue(frappe.db.exists("Transaction", {"transaction_id": "test_reference"}))
+        self.assertTrue(frappe.db.exists("Transaction", {"payment_reference": "test_reference"}))
 
     @patch('paas.api.payment.payment.requests.get')
     def test_handle_paystack_callback(self, mock_get):
         # Create a dummy transaction to be updated by the callback
         frappe.get_doc({
             "doctype": "Transaction",
-            "reference_doctype": "Order",
-            "reference_name": self.test_order.name,
-            "transaction_id": "test_reference_callback",
+            "payable_type": "Order",
+            "payable_id": self.test_order.name,
+            "payment_reference": "test_reference_callback",
             "status": "Pending"
         }).insert(ignore_permissions=True)
 
@@ -113,7 +113,7 @@ class TestPayStackAPI(FrappeTestCase):
             handle_paystack_callback()
 
         # Check if the transaction and order status were updated
-        updated_transaction = frappe.get_doc("Transaction", {"transaction_id": "test_reference_callback"})
+        updated_transaction = frappe.get_doc("Transaction", {"payment_reference": "test_reference_callback"})
         self.assertEqual(updated_transaction.status, "Completed")
 
         updated_order = frappe.get_doc("Order", self.test_order.name)
