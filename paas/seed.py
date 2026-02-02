@@ -280,10 +280,14 @@ class JSONSeeder:
 
     def seed_juvo(self):
         print("--- Seeding Juvo Data ---")
-        # 1. Users
+        # 1. Roles first so they exist for link validation
+        self.create_roles()
+
+        # 2. Users
         self.seed_users()
         self.seed_user_addresses()
         self.seed_user_memberships()
+        self.seed_roles() # This now handles assignment
         frappe.db.commit()
 
         # 2. Shops
@@ -301,18 +305,12 @@ class JSONSeeder:
 
         # 5. Settings & Others
         self.seed_settings()
-        self.seed_roles()
-        # self.seed_carts() # Removed as per user request (stale/unnecessary data)
-        frappe.db.commit()
-
-    def seed_roles(self):
-        print("Seeding Roles...")
+    def create_roles(self):
+        print("Creating Roles...")
         roles = self.load_json('roles.json')
-        role_map = {} # id -> name
         for r in roles:
             role_name = r.get('name')
             if not role_name: continue
-            role_map[r.get('id')] = role_name
             
             if not frappe.db.exists("Role", role_name):
                 frappe.get_doc({
@@ -320,6 +318,15 @@ class JSONSeeder:
                     "role_name": role_name,
                     "desk_access": 1
                 }).insert(ignore_permissions=True)
+
+    def seed_roles(self):
+        print("Assigning Roles...")
+        roles = self.load_json('roles.json')
+        role_map = {} # id -> name
+        for r in roles:
+            role_name = r.get('name')
+            if not role_name: continue
+            role_map[r.get('id')] = role_name
 
         # Assign roles to users
         model_has_roles = self.load_json('model_has_roles.json')
@@ -426,7 +433,7 @@ class JSONSeeder:
         self.seed_remaining()
 
         # Conditional Juvo seeds
-        if self.site_name == "juvo.tenant.rokct.ai" or "paas" in self.site_name:
+        if self.site_name == "juvo.tenant.rokct.ai" or "paas" in self.site_name or "test" in self.site_name:
             self.seed_juvo()
         else:
             print(f"Skipping Juvo-specific data for {self.site_name}")
