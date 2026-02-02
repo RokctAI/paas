@@ -42,8 +42,8 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         with self.assertRaises(frappe.ValidationError):
             check_phone(phone="")
 
-    @patch("paas.api.user.user.frappe.send_sms")
-    @patch("paas.api.user.user.frappe.cache")
+    @patch("frappe.send_sms")
+    @patch("frappe.cache")
     def test_send_verification_code(self, mock_cache, mock_send_sms):
         phone_number = "+11223344556"
         response = send_phone_verification_code(phone=phone_number)
@@ -176,7 +176,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         self.assertIn("USD", response_names)
         self.assertNotIn("KLG", response_names)
 
-    @patch("paas.api.user.user.frappe.sendmail")
+    @patch("frappe.sendmail")
     def test_register_user(self, mock_sendmail):
         # Arrange
         from paas.api import register_user
