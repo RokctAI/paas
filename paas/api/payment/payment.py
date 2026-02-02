@@ -365,7 +365,7 @@ def handle_paypal_callback():
 
     if paypal_order.get("status") == "COMPLETED":
         transaction.status = "Completed"
-        order = frappe.get_doc("Order", transaction.reference_name)
+        order = frappe.get_doc("Order", transaction.payable_id)
         order.status = "Paid"
         order.save(ignore_permissions=True)
         transaction.save(ignore_permissions=True)
@@ -519,7 +519,7 @@ def handle_paystack_callback():
         transaction.status = "Completed"
         transaction.save(ignore_permissions=True)
 
-        order = frappe.get_doc("Order", transaction.reference_name)
+        order = frappe.get_doc("Order", transaction.payable_id)
         order.status = "Paid"
         order.save(ignore_permissions=True)
     else:
