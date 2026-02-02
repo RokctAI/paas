@@ -86,6 +86,7 @@ class TestBookingFeature(FrappeTestCase):
         end_date = frappe.utils.add_to_date(start_date, hours=1) # 1 hour later
         
         res_data = {
+            "booking": slot.name,
             "table": self.table.name,
             "start_date": start_date,
             "end_date": end_date,
