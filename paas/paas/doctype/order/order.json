@@ -152,6 +152,11 @@
             "label": "Note"
         },
         {
+            "fieldname": "total_price",
+            "fieldtype": "Currency",
+            "label": "Total Price"
+        },
+        {
             "fieldname": "payment_status",
             "fieldtype": "Select",
             "label": "Payment Status",
