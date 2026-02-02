@@ -27,7 +27,10 @@ class TestUserAddressAPI(FrappeTestCase):
     def tearDown(self):
         # Log out
         frappe.set_user("Administrator")
-        frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+        try:
+            frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+        except Exception:
+            pass
 
     def test_add_and_get_user_address(self):
         address_data = {
@@ -100,4 +103,8 @@ class TestUserAddressAPI(FrappeTestCase):
 
         # Clean up other user session
         frappe.set_user("Administrator")
+        try:
+            frappe.delete_doc("User", "other_addr@example.com", force=True, ignore_permissions=True)
+        except Exception:
+            pass
 
