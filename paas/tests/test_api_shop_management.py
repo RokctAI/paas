@@ -47,6 +47,7 @@ class TestShopManagementAPI(FrappeTestCase):
 
     def test_update_user_shop(self):
         shop_data = {
+            "shop_name": "My Updated Shop",
             "title": "My Updated Shop",
             "phone": "+14155552671",
             "open": 0
