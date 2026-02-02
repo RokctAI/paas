@@ -15,7 +15,7 @@ class TestUserProfileAPI(FrappeTestCase):
                 "email": "test_user_profile@example.com",
                 "first_name": "Test",
                 "last_name": "User",
-                "phone": "1234567890",
+                "phone": "+14155552671",
                 "birth_date": "1990-01-01",
                 "gender": "Male",
                 "send_welcome_email": 0
@@ -30,13 +30,14 @@ class TestUserProfileAPI(FrappeTestCase):
     def tearDown(self):
         # Log out
         frappe.set_user("Administrator")
+        frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
 
     def test_get_user_profile(self):
         profile = get_user_profile()
         self.assertEqual(profile.get("first_name"), "Test")
         self.assertEqual(profile.get("last_name"), "User")
         self.assertEqual(profile.get("email"), "test_user_profile@example.com")
-        self.assertEqual(profile.get("phone"), "1234567890")
+        self.assertEqual(profile.get("phone"), "+14155552671")
         self.assertEqual(profile.get("birth_date"), "1990-01-01")
         self.assertEqual(profile.get("gender"), "Male")
 
@@ -44,7 +45,7 @@ class TestUserProfileAPI(FrappeTestCase):
         profile_data = {
             "first_name": "Updated",
             "last_name": "Name",
-            "phone": "0987654321",
+            "phone": "+14155552672",
             "birth_date": "1991-02-02",
             "gender": "Female"
         }
@@ -55,7 +56,7 @@ class TestUserProfileAPI(FrappeTestCase):
         updated_profile = get_user_profile()
         self.assertEqual(updated_profile.get("first_name"), "Updated")
         self.assertEqual(updated_profile.get("last_name"), "Name")
-        self.assertEqual(updated_profile.get("phone"), "0987654321")
+        self.assertEqual(updated_profile.get("phone"), "+14155552672")
         self.assertEqual(updated_profile.get("birth_date"), "1991-02-02")
         self.assertEqual(updated_profile.get("gender"), "Female")
 
