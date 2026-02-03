@@ -52,7 +52,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         with self.assertRaises(frappe.ValidationError):
             check_phone(phone="")
 
-    @patch("frappe.send_sms")
+    @patch("frappe.send_sms", create=True)
     @patch("frappe.cache.set_value")
     def test_send_verification_code(self, mock_set_value, mock_send_sms):
         phone_number = "+11223344556"
