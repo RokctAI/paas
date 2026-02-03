@@ -69,7 +69,8 @@ class TestParcelOrderAPI(FrappeTestCase):
             "destination_type": "delivery_point",
             "delivery_point_id": self.delivery_point.name,
             "items": [{"item_code": "Test Item", "quantity": 1}],
-            "total_price": 50.0
+            "total_price": 50.0,
+            "type": self.parcel_setting.name
         }
         order = create_parcel_order(order_data=json.dumps(order_data))
         self.assertEqual(order.get("delivery_point"), self.delivery_point.name)
@@ -118,7 +119,7 @@ class TestParcelOrderAPI(FrappeTestCase):
 
     def test_update_parcel_status(self):
         # Create a parcel order first
-        order_data = {"type": self.parcel_setting.name}
+        order_data = {"type": self.parcel_setting.name, "total_price": 50.0}
         created_order = create_parcel_order(order_data=json.dumps(order_data))
 
         # Update the status
