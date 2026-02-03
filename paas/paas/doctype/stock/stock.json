@@ -33,10 +33,24 @@
             "in_list_view": 1
         },
         {
+            "fieldname": "shop",
+            "fieldtype": "Link",
+            "label": "Shop",
+            "options": "Shop",
+            "reqd": 1,
+            "in_list_view": 1
+        },
+        {
             "fieldname": "sku",
             "fieldtype": "Data",
             "label": "SKU",
             "in_list_view": 1
+        },
+        {
+            "fieldname": "min_qty",
+            "fieldtype": "Int",
+            "label": "Low Stock Threshold",
+            "default": "5"
         },
         {
             "fieldname": "price",
