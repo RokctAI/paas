@@ -67,6 +67,10 @@ class TestParcelOrderAPI(FrappeTestCase):
         # Create ERPNext Item "Test Item" if it doesn't exist (Parcel Order links to Item, not Product currently?)
         # Or Parcel Order Item has a field 'item_code' linked to Item.
         
+        # Clean up any stale Test Item
+        if frappe.db.exists("Item", "Test Item"):
+            frappe.delete_doc("Item", "Test Item", force=True, ignore_permissions=True)
+
         # 0. Create Item Group "All Item Groups" if missing
         if not frappe.db.exists("Item Group", "All Item Groups"):
              frappe.get_doc({
@@ -84,19 +88,13 @@ class TestParcelOrderAPI(FrappeTestCase):
              }).insert(ignore_permissions=True)
 
         # 2. Create Item "Test Item"
-        if not frappe.db.exists("Item", "Test Item"):
-             self.item = frappe.get_doc({
-                "doctype": "Item",
-                "item_code": "Test Item",
-                "item_name": "Test Item",
-                "item_group": "All Item Groups",
-                "stock_uom": "Nos"
-             }).insert(ignore_permissions=True)
-        else:
-             self.item = frappe.get_doc("Item", "Test Item")
-
-        # Create UOM "Nos" if missing (Standard ERPNext data)
-        # (Already handled above in reordered code, cleaning up duplicates if any)
+        self.item = frappe.get_doc({
+            "doctype": "Item",
+            "item_code": "Test Item",
+            "item_name": "Test Item",
+            "item_group": "All Item Groups",
+            "stock_uom": "Nos"
+        }).insert(ignore_permissions=True)
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
@@ -114,7 +112,10 @@ class TestParcelOrderAPI(FrappeTestCase):
         if hasattr(self, "test_shop") and self.test_shop:
             frappe.db.delete("Product", {"shop": self.test_shop.name})
             frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
-             
+        
+        if hasattr(self, "item") and self.item:
+            frappe.delete_doc("Item", self.item.name, force=True, ignore_permissions=True)
+
         if frappe.db.exists("User", self.test_user.name):
             try:
                 frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
