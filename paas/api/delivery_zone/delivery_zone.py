@@ -85,16 +85,19 @@ def check_delivery_availability(lat, lng, shop_id=None):
 def is_point_in_polygon(lat, lng, polygon):
     """
     Ray-casting algorithm to check if point is in polygon.
-    Polygon is list of [lat, lng] arrays.
+    Polygon is list of [lng, lat] coordinates (GeoJSON standard).
+    lat: Y, lng: X
     """
     inside = False
     j = len(polygon) - 1
     for i in range(len(polygon)):
-        xi, yi = polygon[i][0], polygon[i][1]
-        xj, yj = polygon[j][0], polygon[j][1]
+        xi, yi = polygon[i][0], polygon[i][1] # xi=Lng, yi=Lat
+        xj, yj = polygon[j][0], polygon[j][1] # xj=Lng, yj=Lat
         
-        intersect = ((yi > lng) != (yj > lng)) and \
-            (lat < (xj - xi) * (lng - yi) / (yj - yi) + xi)
+        # Check intersection with ray along X-axis (Lng)
+        # We compare Y (Lat) coords
+        intersect = ((yi > lat) != (yj > lat)) and \
+            (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi)
         if intersect:
             inside = not inside
         j = i
