@@ -70,13 +70,22 @@ class TestPayPalAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
 
     def tearDown(self):
-        if frappe.db.exists("User", self.test_user.name):
+        frappe.set_user("Administrator")
+        if hasattr(self, "test_user") and self.test_user and frappe.db.exists("User", self.test_user.name):
             try:
                 frappe.delete_doc("User", self.test_user.name, ignore_permissions=True, force=True)
-            except frappe.exceptions.LinkExistsError:
-                frappe.db.set_value("User", self.test_user.name, "enabled", 0)
-        # Order and others cleaned up by rollback usually, but explicit user delete helps.
-        frappe.set_user("Administrator")
+            except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
+                try:
+                    frappe.db.set_value("User", self.test_user.name, "enabled", 0)
+                    frappe.db.commit()
+                except Exception:
+                    pass
+                    
+        if hasattr(self, "shop") and self.shop and frappe.db.exists("Shop", self.shop.name):
+            try:
+                frappe.delete_doc("Shop", self.shop.name, force=True, ignore_permissions=True)
+            except Exception:
+                pass
 
     @patch('paas.api.payment.payment.requests.post')
     def test_initiate_paypal_payment(self, mock_post):
