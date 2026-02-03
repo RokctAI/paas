@@ -43,6 +43,7 @@ class TestNotificationsAPI(FrappeTestCase):
             frappe.get_doc({
                 "doctype": "Notification Type",
                 "name": "Alert",
+                "type": "Alert"
             }).insert(ignore_permissions=True)
 
         # Create a notification log for the user
