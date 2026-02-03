@@ -50,11 +50,17 @@ class TestParcelOrderAPI(FrappeTestCase):
         frappe.set_user("Administrator")
         # Clean up created documents
         frappe.db.delete("Parcel Order", {"user": self.test_user.name})
+        if hasattr(self, "parcel_setting"):
+             frappe.db.delete("Parcel Order Setting", {"name": self.parcel_setting.name})
+        if hasattr(self, "delivery_point"):
+             frappe.db.delete("Delivery Point", {"name": self.delivery_point.name})
+             
         if frappe.db.exists("User", self.test_user.name):
             try:
                 frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
-            except frappe.exceptions.LinkExistsError:
+            except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
                 frappe.db.set_value("User", self.test_user.name, "enabled", 0)
+                frappe.db.commit()
 
     def test_create_parcel_order(self):
         order_data = {
