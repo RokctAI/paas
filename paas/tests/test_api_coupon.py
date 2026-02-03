@@ -67,28 +67,28 @@ class TestCouponAPI(FrappeTestCase):
         self.shop.delete(ignore_permissions=True)
 
     def test_check_valid_coupon(self):
-        result = check_coupon(coupon_code="VALID10", shop_id=self.shop.name)
+        result = check_coupon(code="VALID10", shop_id=self.shop.name)
         self.assertEqual(result.get("code"), "VALID10")
         self.assertEqual(result.get("amount"), 10)
 
     def test_check_invalid_coupon(self):
-        result = check_coupon(coupon_code="INVALID", shop_id=self.shop.name)
+        result = check_coupon(code="INVALID", shop_id=self.shop.name)
         self.assertEqual(result.get("status"), "error")
         self.assertEqual(result.get("message"), "Invalid Coupon")
 
     def test_check_expired_coupon(self):
-        result = check_coupon(coupon_code="EXPIRED", shop_id=self.shop.name)
+        result = check_coupon(code="EXPIRED", shop_id=self.shop.name)
         self.assertEqual(result.get("status"), "error")
         self.assertEqual(result.get("message"), "Coupon expired")
 
     def test_check_zero_quantity_coupon(self):
-        result = check_coupon(coupon_code="ZEROQ", shop_id=self.shop.name)
+        result = check_coupon(code="ZEROQ", shop_id=self.shop.name)
         self.assertEqual(result.get("status"), "error")
         self.assertEqual(result.get("message"), "Coupon has been fully used")
 
     def test_missing_parameters(self):
         with self.assertRaises(frappe.exceptions.ValidationError):
-            check_coupon(coupon_code="", shop_id=self.shop.name)
+            check_coupon(code="", shop_id=self.shop.name)
         with self.assertRaises(frappe.exceptions.ValidationError):
-            check_coupon(coupon_code="VALID10", shop_id="")
+            check_coupon(code="VALID10", shop_id="")
 
