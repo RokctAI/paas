@@ -111,6 +111,12 @@
             "default": 1
         },
         {
+            "fieldname": "track_stock",
+            "fieldtype": "Check",
+            "label": "Track Stock",
+            "default": "1"
+        },
+        {
             "fieldname": "max_qty",
             "fieldtype": "Int",
             "label": "Max Quantity"
