@@ -70,7 +70,11 @@ class TestPayStackAPI(FrappeTestCase):
 
     def tearDown(self):
         frappe.set_user("Administrator")
-        frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+        if frappe.db.exists("User", self.test_user.name):
+            try:
+                frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+            except frappe.exceptions.LinkExistsError:
+                frappe.db.set_value("User", self.test_user.name, "enabled", 0)
         frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
 
     @patch('paas.api.payment.payment.requests.post')
