@@ -65,6 +65,7 @@ class TestParcelOrderAPI(FrappeTestCase):
         self.assertEqual(order.get("total_price"), 100.0)
 
     def test_create_parcel_order_with_delivery_point(self):
+        order_data = {
             "destination_type": "delivery_point",
             "delivery_point_id": self.delivery_point.name,
             "items": [{"item_code": "Test Item", "quantity": 1}],
