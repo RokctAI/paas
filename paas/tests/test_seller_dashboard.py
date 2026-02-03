@@ -42,7 +42,11 @@ class TestSellerDashboard(FrappeTestCase):
         # Cleanup Shop
         frappe.delete_doc("Shop", self.shop.name, force=True, ignore_permissions=True)
         # Cleanup User
-        frappe.delete_doc("User", self.owner.name, force=True, ignore_permissions=True)
+        if frappe.db.exists("User", self.owner.name):
+            try:
+                frappe.delete_doc("User", self.owner.name, force=True, ignore_permissions=True)
+            except frappe.exceptions.LinkExistsError:
+                frappe.db.set_value("User", self.owner.name, "enabled", 0)
 
     def test_working_days(self):
         # Login as owner
