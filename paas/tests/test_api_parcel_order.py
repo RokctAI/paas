@@ -65,10 +65,10 @@ class TestParcelOrderAPI(FrappeTestCase):
         self.assertEqual(order.get("total_price"), 100.0)
 
     def test_create_parcel_order_with_delivery_point(self):
-        order_data = {
             "destination_type": "delivery_point",
             "delivery_point_id": self.delivery_point.name,
-            "items": [{"item_code": "Test Item", "quantity": 1}]
+            "items": [{"item_code": "Test Item", "quantity": 1}],
+            "total_price": 50.0
         }
         order = create_parcel_order(order_data=json.dumps(order_data))
         self.assertEqual(order.get("delivery_point"), self.delivery_point.name)
@@ -76,7 +76,7 @@ class TestParcelOrderAPI(FrappeTestCase):
 
     def test_get_parcel_orders(self):
         # Create a parcel order first
-        order_data = {"type": self.parcel_setting.name}
+        order_data = {"type": self.parcel_setting.name, "total_price": 50.0}
         create_parcel_order(order_data=json.dumps(order_data))
 
         orders = get_parcel_orders()
@@ -101,7 +101,7 @@ class TestParcelOrderAPI(FrappeTestCase):
 
         # Switch to other user to create order
         frappe.set_user(other_user.name)
-        order_data = {"type": self.parcel_setting.name}
+        order_data = {"type": self.parcel_setting.name, "total_price": 50.0}
         other_order = create_parcel_order(order_data=json.dumps(order_data))
 
         # Switch back to test_user
