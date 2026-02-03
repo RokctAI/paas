@@ -67,6 +67,7 @@ class TestProductExtras(FrappeTestCase):
             "sku": "PIZZA-L",
             "price": 120,
             "quantity": 50,
+            "shop": self.shop.name,
             "extras": [val_large.name]
         }
         stock = create_stock(stock_data)
