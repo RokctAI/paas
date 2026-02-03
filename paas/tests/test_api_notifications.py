@@ -35,14 +35,15 @@ class TestNotificationsAPI(FrappeTestCase):
         # PaaS seems to use 'notification_type'. Inspecting error: "Could not find Notification Type: Alert"
         # imply it is a Link.
         
-        # Create 'Alert' Notification Type
-        if not frappe.db.exists("Notification Type", "Alert"):
-            frappe.get_doc({
-                "doctype": "Notification Type",
-                "name": "Alert",
-                "type": "Alert"
-            }).insert(ignore_permissions=True)
-            frappe.db.commit()
+        # Create 'Alert' Notification Type if it doesn't exist
+        # We handle the case where Notification Type might not be a standard doctype in some envs
+        if frappe.db.exists("DocType", "Notification Type"):
+            if not frappe.db.exists("Notification Type", "Alert"):
+                frappe.get_doc({
+                    "doctype": "Notification Type",
+                    "name": "Alert",
+                    "type": "Alert"
+                }).insert(ignore_permissions=True)
 
         # Create a notification log for the user
         if not frappe.db.exists("Notification Log", {"subject": "Test Notification", "for_user": self.test_user.name}):
