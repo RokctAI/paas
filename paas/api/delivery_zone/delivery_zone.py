@@ -64,11 +64,11 @@ def check_delivery_availability(lat, lng, shop_id=None):
     available_shops = []
     
     for zone in zones:
-        if not zone.address:
+        if not zone.coordinates:
             continue
             
         try:
-            polygon = json.loads(zone.address)
+            polygon = json.loads(zone.coordinates)
             if is_point_in_polygon(lat, lng, polygon):
                 shop = frappe.get_doc("Shop", zone.shop)
                 price_info = calculate_delivery_price(lat, lng, shop)
