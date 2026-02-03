@@ -64,6 +64,17 @@ class TestParcelOrderAPI(FrappeTestCase):
                 "price": 50
             }).insert(ignore_permissions=True)
 
+        # Create ERPNext Item "Test Item" if it doesn't exist (Parcel Order links to Item, not Product currently?)
+        # Or Parcel Order Item has a field 'item_code' linked to Item.
+        if frappe.db.exists("DocType", "Item") and not frappe.db.exists("Item", "Test Item"):
+             frappe.get_doc({
+                "doctype": "Item",
+                "item_code": "Test Item",
+                "item_name": "Test Item",
+                "item_group": "All Item Groups",
+                "stock_uom": "Nos"
+             }).insert(ignore_permissions=True)
+
         # Log in as the test user
         frappe.set_user(self.test_user.name)
 
