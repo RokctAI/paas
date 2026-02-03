@@ -145,6 +145,27 @@ def update_order_status(order_id: str, status: str):
 
     order.status = status
     order.save(ignore_permissions=True)
+
+    # Substract stock when order is Accepted
+    if status == "Accepted":
+        shop = frappe.get_doc("Shop", order.shop)
+        warehouse = shop.warehouse or "Stores"
+        
+        stock_entry = frappe.get_doc({
+            "doctype": "Stock Entry",
+            "purpose": "Material Issue", # Issue to remove stock
+            "items": []
+        })
+        for item in order.order_items:
+            stock_entry.append("items", {
+                "item_code": item.product,
+                "qty": item.quantity,
+                "s_warehouse": warehouse,
+                "basic_rate": item.price
+            })
+        stock_entry.insert(ignore_permissions=True)
+        stock_entry.submit()
+
     return order.as_dict()
 
 
