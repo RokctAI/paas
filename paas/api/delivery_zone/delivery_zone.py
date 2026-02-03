@@ -59,7 +59,7 @@ def check_delivery_availability(lat, lng, shop_id=None):
     if shop_id:
         filters["shop"] = shop_id
         
-    zones = frappe.get_list("Delivery Zone", filters=filters, fields=["name", "shop", "address"])
+    zones = frappe.get_list("Delivery Zone", filters=filters, fields=["name", "shop", "address", "coordinates"])
     
     available_shops = []
     
