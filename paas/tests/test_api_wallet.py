@@ -51,8 +51,16 @@ class TestWalletAPI(FrappeTestCase):
         # Log out
         frappe.set_user("Administrator")
         frappe.db.delete("Wallet History", {"wallet": self.wallet.name})
-        self.wallet.delete(ignore_permissions=True)
-        self.test_user.delete(ignore_permissions=True)
+        try:
+            self.wallet.delete(ignore_permissions=True)
+        except Exception:
+            pass
+            
+        if frappe.db.exists("User", self.test_user.name):
+            try:
+                self.test_user.delete(ignore_permissions=True)
+            except frappe.exceptions.LinkExistsError:
+                frappe.db.set_value("User", self.test_user.name, "enabled", 0)
 
     def test_get_user_wallet(self):
         wallet = get_user_wallet()
