@@ -71,6 +71,16 @@ def create_parcel_order(order_data):
     # Create the parcel order document
     parcel_order = frappe.get_doc(new_parcel_doc)
 
+    # Handle Items Child Table
+    items = order_data.get("items")
+    if items and isinstance(items, list):
+        for item in items:
+            parcel_order.append("items", {
+                "item": item.get("item_code") or item.get("item"),
+                "quantity": item.get("quantity", 1),
+                "item_name": item.get("item_name")
+            })
+
     # Insert the document and return it
     parcel_order.insert(ignore_permissions=True)
     return parcel_order.as_dict()
