@@ -92,7 +92,7 @@ class TestTransactionsAPI(FrappeTestCase):
 
     def test_get_user_transactions_pagination(self):
         # Create a second transaction with a delay to ensure distinct creation time
-        time.sleep(1.2)
+        time.sleep(2)
         if not frappe.db.exists("Transaction", {"user": self.test_user.name, "amount": 250.0}):
             frappe.get_doc({
                 "doctype": "Transaction",
