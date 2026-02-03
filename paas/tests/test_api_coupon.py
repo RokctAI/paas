@@ -28,7 +28,8 @@ class TestCouponAPI(FrappeTestCase):
                 "type": "Percentage",
                 "amount": 10,
                 "discount_amount": 10,
-                "expired_at": "2099-12-31"
+                "expired_at": "2099-12-31",
+                "quantity": 10
             }).insert(ignore_permissions=True)
         else:
             self.valid_coupon = frappe.get_doc("Coupon", {"code": "VALID10", "shop": self.shop.name})
