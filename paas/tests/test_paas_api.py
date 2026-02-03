@@ -6,6 +6,17 @@ from unittest.mock import patch, MagicMock
 from paas.api import check_phone, send_phone_verification_code, verify_phone_code
 
 class TestPhoneVerificationAPI(FrappeTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        from frappe.custom.doctype.custom_field.custom_field import create_custom_field
+        create_custom_field("User", {
+            "fieldname": "phone_verified_at",
+            "fieldtype": "Datetime",
+            "label": "Phone Verified At",
+            "insert_after": "phone",
+            "read_only": 1
+        })
     def setUp(self):
         # Create a test user
         self.test_user_phone = "+19876543210"
