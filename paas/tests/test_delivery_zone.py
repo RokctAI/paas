@@ -41,11 +41,11 @@ class TestDeliveryZone(FrappeTestCase):
 
     def test_zone_check(self):
         # 1. Define a simple square polygon around 10,10 to 20,20
-        polygon = [
             [10, 10],
             [20, 10],
             [20, 20],
-            [10, 20]
+            [10, 20],
+            [10, 10]
         ]
         
         # 2. Create Delivery Zone
