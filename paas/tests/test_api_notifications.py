@@ -39,7 +39,8 @@ class TestNotificationsAPI(FrappeTestCase):
         if not frappe.db.exists("Notification Type", "Alert"):
             frappe.get_doc({
                 "doctype": "Notification Type",
-                "name": "Alert"
+                "name": "Alert",
+                "type": "Alert"
             }).insert(ignore_permissions=True)
 
         # Create a notification log for the user
