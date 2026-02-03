@@ -23,7 +23,8 @@ class TestRequestModelAPI(FrappeTestCase):
             "doctype": "Shop",
             "shop_name": "Test Request Shop",
             "user": self.test_user.name,
-            "phone": "+14155552671"
+            "phone": "+14155552671",
+            "uuid": frappe.generate_hash()
         }).insert(ignore_permissions=True)
 
         # Create a test product to request changes for
