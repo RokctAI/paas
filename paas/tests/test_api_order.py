@@ -63,9 +63,15 @@ class TestOrderAPI(FrappeTestCase):
         if frappe.db.exists("User", self.test_user.name):
             try:
                 frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
-            except frappe.exceptions.LinkExistsError:
+            except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
                 frappe.db.set_value("User", self.test_user.name, "enabled", 0)
-        frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
+                frappe.db.commit()
+        
+        if hasattr(self, "test_shop") and self.test_shop and frappe.db.exists("Shop", self.test_shop.name):
+            try:
+                frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
+            except Exception:
+                pass
 
     def test_create_order_and_calculation(self):
         # Test creating a new order and that the calculation is correct
