@@ -143,11 +143,12 @@ def update_order_status(order_id: str, status: str):
     if status not in valid_statuses:
         frappe.throw(f"Invalid status. Must be one of {', '.join(valid_statuses)}")
 
+    previous_status = order.status
     order.status = status
     order.save(ignore_permissions=True)
 
-    # Substract stock when order is Accepted
-    if status == "Accepted":
+    # Subtract stock when order is Accepted (and wasn't already)
+    if status == "Accepted" and previous_status != "Accepted":
         for item in order.order_items:
             # Check if product tracks stock
             product_doc = frappe.get_doc("Product", item.product)
@@ -168,6 +169,17 @@ def update_order_status(order_id: str, status: str):
                         "quantity": -item.quantity, # Allow negative logic if started from 0
                         "price": item.price # Init price
                     }).insert(ignore_permissions=True)
+
+    # Restore stock if order is Cancelled/Rejected from a status that deducted stock
+    if status in ["Cancelled", "Rejected"] and previous_status in ["Accepted", "Prepared", "Delivered"]: # Assuming these are downstream of Accepted
+        for item in order.order_items:
+            product_doc = frappe.get_doc("Product", item.product)
+            if product_doc.track_stock:
+                 stock_name = frappe.db.get_value("Stock", {"shop": order.shop, "product": item.product}, "name")
+                 if stock_name:
+                    stock_doc = frappe.get_doc("Stock", stock_name)
+                    stock_doc.quantity += item.quantity
+                    stock_doc.save(ignore_permissions=True)
 
     return order.as_dict()
 
@@ -235,17 +247,7 @@ def cancel_order(order_id: str):
         frappe.throw("You can only cancel orders that have not been accepted yet.")
 
     order.status = "Cancelled"
-
-    # Replenish stock directly
-    for item in order.order_items:
-        # Check if product tracks stock
-        product_doc = frappe.get_doc("Product", item.product)
-        if product_doc.track_stock:
-             stock_name = frappe.db.get_value("Stock", {"shop": order.shop, "product": item.product}, "name")
-             if stock_name:
-                stock_doc = frappe.get_doc("Stock", stock_name)
-                stock_doc.quantity += item.quantity
-                stock_doc.save(ignore_permissions=True)
+    # No stock restoration needed for "New" orders as stock wasn't deducted yet.
 
     order.save(ignore_permissions=True)
     return order.as_dict()
