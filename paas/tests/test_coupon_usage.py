@@ -23,7 +23,8 @@ class TestCouponUsage(FrappeTestCase):
                 "shop_name": "Test Shop for Coupon Usage",
                 "min_amount": 0,
                 "user": self.test_user.name,
-                "phone": "+14155552671"
+                "phone": "+14155552671",
+                "uuid": frappe.generate_hash()
             }).insert(ignore_permissions=True)
         else:
             self.test_shop = frappe.get_doc("Shop", "Test Shop for Coupon Usage")
