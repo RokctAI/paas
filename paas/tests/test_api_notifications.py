@@ -42,6 +42,7 @@ class TestNotificationsAPI(FrappeTestCase):
                 "name": "Alert",
                 "type": "Alert"
             }).insert(ignore_permissions=True)
+            frappe.db.commit()
 
         # Create a notification log for the user
         if not frappe.db.exists("Notification Log", {"subject": "Test Notification", "for_user": self.test_user.name}):
