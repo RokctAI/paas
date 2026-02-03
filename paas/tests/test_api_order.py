@@ -58,6 +58,14 @@ class TestOrderAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
         self.test_currency = "USD"
 
+        # Ensure 'Stores' Warehouse exists for Stock Entry
+        if not frappe.db.exists("Warehouse", "Stores"):
+            frappe.get_doc({
+                "doctype": "Warehouse",
+                "warehouse_name": "Stores",
+                "is_group": 0
+            }).insert(ignore_permissions=True)
+
     def tearDown(self):
         frappe.set_user("Administrator")
         if frappe.db.exists("User", self.test_user.name):
@@ -69,6 +77,8 @@ class TestOrderAPI(FrappeTestCase):
         
         if hasattr(self, "test_shop") and self.test_shop and frappe.db.exists("Shop", self.test_shop.name):
             try:
+                # Cleanup products for this shop first
+                frappe.db.delete("Product", {"shop": self.test_shop.name})
                 frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
             except Exception:
                 pass
