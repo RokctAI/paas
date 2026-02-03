@@ -61,7 +61,11 @@ class TestBookingFeature(FrappeTestCase):
 
     def tearDown(self):
         frappe.set_user("Administrator")
-        frappe.delete_doc("User", self.user.name, force=True, ignore_permissions=True)
+        if frappe.db.exists("User", self.user.name):
+            try:
+                frappe.delete_doc("User", self.user.name, force=True, ignore_permissions=True)
+            except frappe.exceptions.LinkExistsError:
+                frappe.db.set_value("User", self.user.name, "enabled", 0)
         # Also clean up Shop and Shop Section if needed, but User delete might cascade if Owner. 
         # If Shop remains, next run uses existing Shop.
         # But reservations?
