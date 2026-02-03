@@ -62,10 +62,18 @@ class TestCouponAPI(FrappeTestCase):
             self.zero_quantity_coupon = frappe.get_doc("Coupon", {"code": "ZEROQ", "shop": self.shop.name})
 
     def tearDown(self):
-        self.valid_coupon.delete(ignore_permissions=True)
-        self.expired_coupon.delete(ignore_permissions=True)
-        self.zero_quantity_coupon.delete(ignore_permissions=True)
-        self.shop.delete(ignore_permissions=True)
+        try:
+            self.valid_coupon.delete(ignore_permissions=True)
+            self.expired_coupon.delete(ignore_permissions=True)
+            self.zero_quantity_coupon.delete(ignore_permissions=True)
+        except Exception:
+            pass
+            
+        if hasattr(self, "shop") and self.shop:
+            try:
+                self.shop.delete(ignore_permissions=True)
+            except Exception:
+                pass
 
     def test_check_valid_coupon(self):
         result = check_coupon(code="VALID10", shop_id=self.shop.name)
