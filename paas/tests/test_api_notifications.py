@@ -20,6 +20,28 @@ class TestNotificationsAPI(FrappeTestCase):
             self.test_user = frappe.get_doc("User", "test_notifications@example.com")
         self.test_user.add_roles("System Manager")
 
+        # Create notification type if not exists (Usually standard, but Alert might be missing)
+        if not frappe.db.exists("Notification Type", "Alert"):
+             # Assuming 'Notification Type' is a doctype, or it's just a select/link options.
+             # The error was LinkValidationError, link to 'Notification Type'.
+             # Standard Frappe actually doesn't use 'Notification Type' link in Notification Log usually?
+             # 'type' is a Select in standard Notification Log.
+             # But here key is 'notification_type', likely custom or mapped.
+             pass 
+
+        # If 'notification_type' is a Link field to 'Notification Type' DocType:
+        # We need to construct it. But let's check if the DocType exists first.
+        # However, to be safe, standard Notification Log uses 'type' (Select).
+        # PaaS seems to use 'notification_type'. Inspecting error: "Could not find Notification Type: Alert"
+        # imply it is a Link.
+        
+        # Create 'Alert' Notification Type
+        if not frappe.db.exists("Notification Type", "Alert"):
+            frappe.get_doc({
+                "doctype": "Notification Type",
+                "name": "Alert"
+            }).insert(ignore_permissions=True)
+
         # Create a notification log for the user
         if not frappe.db.exists("Notification Log", {"subject": "Test Notification", "for_user": self.test_user.name}):
             frappe.get_doc({
