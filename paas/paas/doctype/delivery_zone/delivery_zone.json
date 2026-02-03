@@ -40,6 +40,19 @@
             "in_list_view": 1
         },
         {
+            "fieldname": "delivery_fee",
+            "fieldtype": "Currency",
+            "label": "Delivery Fee",
+            "default": "0.0"
+        },
+        {
+            "fieldname": "coordinates",
+            "fieldtype": "Code",
+            "label": "Coordinates (Polygon)",
+            "options": "JSON",
+            "description": "JSON array of coordinates [[lat, lng], ...]"
+        },
+        {
             "fieldname": "address",
             "fieldtype": "Code",
             "label": "Address (Polygon)",
