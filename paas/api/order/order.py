@@ -47,9 +47,6 @@ def create_order(order_data):
         "note": order_data.get("note"),
     })
 
-    # Calculate cashback
-    cashback_amount = frappe.call("paas.api.check_cashback", shop_id=order_data.get("shop"), amount=order.grand_total)
-    order.cashback_amount = cashback_amount.get("cashback_amount")
 
     for item in order_data.get("order_items", []):
         order.append("order_items", {
@@ -59,6 +56,14 @@ def create_order(order_data):
         })
 
     order.insert(ignore_permissions=True)
+    
+    # Calculate cashback
+    # We do this after insert so we might have access to db-generated fields if needed, 
+    # though grand_total might still need to be calculated explicitly if not done by controller.
+    # Assuming the controller calculates grand_total on save/insert.
+    if order.grand_total:
+         cashback_amount = frappe.call("paas.api.check_cashback", shop_id=order_data.get("shop"), amount=order.grand_total)
+         order.db_set("cashback_amount", cashback_amount.get("cashback_amount"))
 
     if order_data.get("coupon_code"):
         coupon = frappe.get_doc("Coupon", {"code": order_data.get("coupon_code")})
