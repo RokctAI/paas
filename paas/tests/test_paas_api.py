@@ -32,7 +32,10 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         # Cleanup potential duplicates to ensure API targets the correct user
         frappe.db.delete("User", {"phone": self.test_user_phone})
         if frappe.db.exists("User", "test_phone_user@example.com"):
-             frappe.delete_doc("User", "test_phone_user@example.com", force=True, ignore_permissions=True)
+             try:
+                 frappe.delete_doc("User", "test_phone_user@example.com", force=True, ignore_permissions=True)
+             except frappe.exceptions.LinkExistsError:
+                 frappe.db.set_value("User", "test_phone_user@example.com", "enabled", 0)
 
         self.test_user = frappe.get_doc({
             "doctype": "User",
