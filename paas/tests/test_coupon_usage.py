@@ -65,7 +65,11 @@ class TestCouponUsage(FrappeTestCase):
         self.test_currency = "USD"
 
     def tearDown(self):
-        frappe.delete_doc("User", self.test_user.name, ignore_permissions=True)
+        if frappe.db.exists("User", self.test_user.name):
+            try:
+                frappe.delete_doc("User", self.test_user.name, ignore_permissions=True)
+            except frappe.exceptions.LinkExistsError:
+                frappe.db.set_value("User", self.test_user.name, "enabled", 0)
         frappe.delete_doc("Shop", self.test_shop.name, ignore_permissions=True)
         frappe.delete_doc("Product", self.test_product.name, ignore_permissions=True)
         frappe.delete_doc("Coupon", self.test_coupon.name, ignore_permissions=True)
