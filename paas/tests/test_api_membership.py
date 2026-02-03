@@ -50,13 +50,23 @@ class TestMembershipAPI(FrappeTestCase):
     def tearDown(self):
         # Log out
         frappe.set_user("Administrator")
-        self.user_membership.delete(ignore_permissions=True)
-        self.membership_plan.delete(ignore_permissions=True)
-        if frappe.db.exists("User", self.test_user.name):
+        try:
+            if hasattr(self, "user_membership") and self.user_membership:
+                self.user_membership.delete(ignore_permissions=True)
+            if hasattr(self, "membership_plan") and self.membership_plan:
+                self.membership_plan.delete(ignore_permissions=True)
+        except Exception:
+            pass
+            
+        if hasattr(self, "test_user") and self.test_user and frappe.db.exists("User", self.test_user.name):
             try:
                 frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
-            except frappe.exceptions.LinkExistsError:
-                frappe.db.set_value("User", self.test_user.name, "enabled", 0)
+            except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
+                try:
+                    frappe.db.set_value("User", self.test_user.name, "enabled", 0)
+                    frappe.db.commit()
+                except Exception:
+                    pass
 
     def test_get_user_membership(self):
         membership = get_user_membership()
