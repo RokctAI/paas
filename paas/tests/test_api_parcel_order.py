@@ -87,11 +87,12 @@ class TestParcelOrderAPI(FrappeTestCase):
                 "must_be_whole_number": 1
              }).insert(ignore_permissions=True)
 
-        # 2. Create Item "Test Item"
+        # 2. Create Unique Item
+        self.item_code = f"Test Item {frappe.generate_hash(length=5)}"
         self.item = frappe.get_doc({
             "doctype": "Item",
-            "item_code": "Test Item",
-            "item_name": "Test Item",
+            "item_code": self.item_code,
+            "item_name": self.item_code,
             "item_group": "All Item Groups",
             "stock_uom": "Nos"
         }).insert(ignore_permissions=True)
