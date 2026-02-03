@@ -31,6 +31,10 @@ class TestFlutterwave(FrappeTestCase):
         self.flutterwave_settings.get_password.return_value = "test_secret_key"
         self.flutterwave_settings.success_redirect_url = "https://test.com/success"
         self.flutterwave_settings.failure_redirect_url = "https://test.com/failure"
+        
+        # Patch get_website_settings to return a dummy logo
+        self.patcher_settings = patch("frappe.get_website_settings", return_value="http://test.com/logo.png")
+        self.patcher_settings.start()
 
     def tearDown(self):
         # Restore original state
@@ -40,6 +44,7 @@ class TestFlutterwave(FrappeTestCase):
         if hasattr(frappe.local, "response"):
             frappe.local.response = self._original_response
         frappe.set_user("Administrator")
+        self.patcher_settings.stop()
 
     @patch('paas.api.payment.payment.frappe.db.commit')
     @patch('paas.api.payment.payment.frappe.get_doc')
