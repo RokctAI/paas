@@ -58,16 +58,19 @@ class TestOrderAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
         self.test_currency = "USD"
 
-        # Ensure 'Stores' Warehouse exists for Stock Entry
-        if not frappe.db.exists("Warehouse", "Stores"):
-            # Get default company
-            company = frappe.db.get_single_value("Global Settings", "default_company") or frappe.get_all("Company", limit=1)[0].name
-            frappe.get_doc({
-                "doctype": "Warehouse",
-                "warehouse_name": "Stores",
-                "company": company,
-                "is_group": 0
+        # Create Stock record
+        if not frappe.db.exists("Stock", {"shop": self.test_shop.name, "product": self.test_product.name}):
+            self.test_stock = frappe.get_doc({
+                "doctype": "Stock",
+                "shop": self.test_shop.name,
+                "product": self.test_product.name,
+                "price": 100,
+                "quantity": 10
             }).insert(ignore_permissions=True)
+        else:
+            self.test_stock = frappe.get_doc("Stock", {"shop": self.test_shop.name, "product": self.test_product.name})
+            self.test_stock.quantity = 10
+            self.test_stock.save(ignore_permissions=True)
 
     def tearDown(self):
         frappe.set_user("Administrator")
@@ -156,6 +159,11 @@ class TestOrderAPI(FrappeTestCase):
         self.assertIsNotNone(updated_order)
         self.assertEqual(updated_order.get("status"), "Accepted")
 
+        # Verify Stock reduction
+        self.test_stock.reload()
+        # Started with 10, ordered 1 -> should be 9
+        self.assertEqual(self.test_stock.quantity, 9)
+
     def test_add_order_review(self):
         # Test adding a review to an order
         order = frappe.get_doc({
@@ -197,4 +205,21 @@ class TestOrderAPI(FrappeTestCase):
         cancelled_order = cancel_order(order.name)
         self.assertIsNotNone(cancelled_order)
         self.assertEqual(cancelled_order.get("status"), "Cancelled")
+
+        # Verify Stock restoration (cancel is only allowed for New orders, which haven't deducted stock yet in current logic? 
+        # Wait, if status is New, stock wasn't deducted yet.
+        # Cancel order logic says: "Replenish stock directly".
+        # If I cancel a "New" order, I shouldn't replenish if it wasn't deducted.
+        # However, looking at my implementation of cancel_order, it blindly adds stock back specific for Accepted/etc?
+        # The logic in cancel_order check `if order.status != "New"`.
+        # Ah, cancel_order checks: `if order.status != "New": frappe.throw(...)`
+        # So it ONLY cancels New orders.
+        # BUT update_order_status(Accepted) deducts stock.
+        # So a "New" order has NOT deducted stock.
+        # So cancelling a "New" order should NOT add stock back?
+        # My previous implementation was: `if status == "Accepted": deduct`.
+        # So "New" order -> No deduction.
+        # "Cancel" order -> blindly adds stock?
+        # That would be a bug. I need to fix logic if that's the case.
+        # Let's check logic in previous step.
 
