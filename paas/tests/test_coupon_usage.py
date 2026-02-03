@@ -47,6 +47,8 @@ class TestCouponUsage(FrappeTestCase):
                 "code": "TEST10",
                 "type": "Percentage",
                 "discount_percentage": 10,
+                "discount_amount": 10,
+                "expired_at": "2030-01-01",
                 "shop": self.test_shop.name
             }).insert(ignore_permissions=True)
         else:
