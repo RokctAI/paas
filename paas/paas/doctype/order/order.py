@@ -24,12 +24,12 @@ class Order(Document):
 
         # Apply coupon
         if self.coupon_code:
-            coupon = frappe.db.get_value("Coupon", {"code": self.coupon_code}, ["discount_type", "discount"], as_dict=True)
+            coupon = frappe.db.get_value("Coupon", {"code": self.coupon_code}, ["discount_type", "discount_amount"], as_dict=True)
             if coupon:
                 if coupon.discount_type == "Percentage":
-                    coupon_discount = total_price * (coupon.discount / 100)
+                    coupon_discount = total_price * (coupon.discount_amount / 100)
                 else:
-                    coupon_discount = coupon.discount
+                    coupon_discount = coupon.discount_amount
                 total_discount += coupon_discount
 
         total_price -= total_discount
