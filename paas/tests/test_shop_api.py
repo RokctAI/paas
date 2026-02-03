@@ -99,6 +99,18 @@ class TestShopAPI(FrappeTestCase):
     def tearDown(self):
         # This method will be run after each test
         frappe.set_user("Administrator")
+        
+        # Delete Key Documents First (Children/Linked)
+        shops_to_delete = ["Test Shop 1", "Test Shop 2", "Test Shop 3 Not Approved", "Test Shop 4 Not Visible"]
+        for shop_name in shops_to_delete:
+            if frappe.db.exists("Shop", shop_name):
+                 frappe.delete_doc("Shop", shop_name, force=True, ignore_permissions=True)
+                 
+        # Delete Users
+        users_to_delete = ["test-seller@example.com", "test-seller-2@example.com", "non-seller@example.com"]
+        for user_email in users_to_delete:
+             if frappe.db.exists("User", user_email):
+                  frappe.delete_doc("User", user_email, force=True, ignore_permissions=True)
 
     def test_create_shop_unauthorized(self):
         """Test that a user without the Seller role cannot create a shop."""
