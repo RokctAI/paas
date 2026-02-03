@@ -68,24 +68,23 @@ class TestParcelOrderAPI(FrappeTestCase):
         # Or Parcel Order Item has a field 'item_code' linked to Item.
         
         # 0. Create Item Group "All Item Groups" if missing
-        if frappe.db.exists("DocType", "Item Group") and not frappe.db.exists("Item Group", "All Item Groups"):
+        if not frappe.db.exists("Item Group", "All Item Groups"):
              frappe.get_doc({
                 "doctype": "Item Group",
                 "item_group_name": "All Item Groups",
                 "is_group": 1
              }).insert(ignore_permissions=True)
 
-        # Create UOM "Nos" if missing (Standard ERPNext data)
-        # 1. Create UOM FIRST because Item needs it
-        if frappe.db.exists("DocType", "UOM") and not frappe.db.exists("UOM", "Nos"):
+        # 1. Create UOM "Nos" if missing
+        if not frappe.db.exists("UOM", "Nos"):
              frappe.get_doc({
                 "doctype": "UOM",
                 "uom_name": "Nos",
                 "must_be_whole_number": 1
              }).insert(ignore_permissions=True)
 
-        # 2. Create ERPNext Item "Test Item"
-        if frappe.db.exists("DocType", "Item") and not frappe.db.exists("Item", "Test Item"):
+        # 2. Create Item "Test Item"
+        if not frappe.db.exists("Item", "Test Item"):
              frappe.get_doc({
                 "doctype": "Item",
                 "item_code": "Test Item",
