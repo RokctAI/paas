@@ -38,26 +38,25 @@ class TestNotificationsAPI(FrappeTestCase):
         # Create 'Alert' Notification Type if it doesn't exist
         # We handle the case where Notification Type might not be a standard doctype in some envs
         # Warning: Verify if Notification Type exists as a DocType first
-        # Create 'Alert' Notification Type if it doesn't exist
-        if not frappe.db.exists("Notification Type", "Alert"):
-            frappe.get_doc({
-                "doctype": "Notification Type",
-                "name": "Alert",
-                "type": "Alert"
-            }).insert(ignore_permissions=True)
+        # Create Unique 'Alert' Notification Type
+        self.alert_type = f"Alert-{frappe.generate_hash(length=5)}"
+        frappe.get_doc({
+            "doctype": "Notification Type",
+            "name": self.alert_type,
+            "type": "Alert"
+        }).insert(ignore_permissions=True)
 
         # Create a notification log for the user
-        if not frappe.db.exists("Notification Log", {"subject": "Test Notification", "for_user": self.test_user.name}):
-            frappe.get_doc({
-                "doctype": "Notification Log",
-                "subject": "Test Notification",
-                "for_user": self.test_user.name,
-                "user": self.test_user.name,
-                "notification_type": "Alert",
-                "message": "Test Message",
-                "document_type": "User",
-                "document_name": self.test_user.name
-            }).insert(ignore_permissions=True)
+        # Note: Notification Log uses 'subject' as name sometimes, or auto-name.
+        # We rely on insert returning a doc.
+        self.notification_log = frappe.get_doc({
+            "doctype": "Notification Log",
+            "subject": f"Test Notification {frappe.generate_hash()}",
+            "for_user": self.test_user.name,
+            "type": "Alert",
+            "email_content": "Test Content",
+            "notification_type": self.alert_type  # Link to unique type
+        }).insert(ignore_permissions=True)
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
