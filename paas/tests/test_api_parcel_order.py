@@ -42,6 +42,28 @@ class TestParcelOrderAPI(FrappeTestCase):
         else:
             self.delivery_point = frappe.get_doc("Delivery Point", "Test Delivery Point")
 
+        # Create a test shop (required for Product)
+        if not frappe.db.exists("Shop", "Parcel Test Shop"):
+            self.test_shop = frappe.get_doc({
+                "doctype": "Shop",
+                "shop_name": "Parcel Test Shop",
+                "user": self.test_user.name,
+                "uuid": "parcel_test_shop_uuid",
+                "phone": "+14155552671"
+            }).insert(ignore_permissions=True)
+        else:
+            self.test_shop = frappe.get_doc("Shop", "Parcel Test Shop")
+
+        # Create a test product "Test Item"
+        if not frappe.db.exists("Product", "Test Item"):
+            self.test_product = frappe.get_doc({
+                "doctype": "Product",
+                "name": "Test Item",
+                "title": "Test Item",
+                "shop": self.test_shop.name,
+                "price": 50
+            }).insert(ignore_permissions=True)
+
         # Log in as the test user
         frappe.set_user(self.test_user.name)
 
@@ -54,6 +76,10 @@ class TestParcelOrderAPI(FrappeTestCase):
              frappe.db.delete("Parcel Order Setting", {"name": self.parcel_setting.name})
         if hasattr(self, "delivery_point"):
              frappe.db.delete("Delivery Point", {"name": self.delivery_point.name})
+        
+        if hasattr(self, "test_shop") and self.test_shop:
+            frappe.db.delete("Product", {"shop": self.test_shop.name})
+            frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
              
         if frappe.db.exists("User", self.test_user.name):
             try:
