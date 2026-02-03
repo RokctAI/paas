@@ -49,9 +49,11 @@ class TestDeliveryZone(FrappeTestCase):
         ]
         
         # 2. Create Delivery Zone
+        # Test validation for delivery zone creation
         zone_data = {
-            "shop": self.shop.name,
-            "address": json.dumps(polygon)
+            "shop": self.shop.name, # Changed from "Zone Shop" to self.shop.name to match existing test logic
+            "coordinates": json.dumps(polygon), # Mapped 'address' to 'coordinates' and kept original value type
+            "address": "Test Zone" # Added new 'address' field as per instruction's example
         }
         create_delivery_zone(zone_data)
 
