@@ -74,7 +74,7 @@ class TestTransactionsAPI(FrappeTestCase):
                 "payable_id": self.order.name,
                 "user": self.test_user.name,
                 "amount": 50.0,
-                "status": "paid",
+                "status": "Paid",
                 "type": "model"
             }).insert(ignore_permissions=True)
         else:
@@ -100,7 +100,7 @@ class TestTransactionsAPI(FrappeTestCase):
                 "payable_id": self.order.name,
                 "user": self.test_user.name,
                 "amount": 250.0,
-                "status": "paid",
+                "status": "Paid",
                 "type": "model"
             }).insert(ignore_permissions=True)
 
