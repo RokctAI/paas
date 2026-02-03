@@ -233,19 +233,21 @@ def cancel_order(order_id: str):
 
     order.status = "Cancelled"
 
+    # Get shop specific warehouse
+    shop = frappe.get_doc("Shop", order.shop)
+    warehouse = shop.warehouse or "Stores"
+
     # Replenish stock by creating a Stock Entry for stock reconciliation
     stock_entry = frappe.get_doc({
         "doctype": "Stock Entry",
-        "purpose": "Stock Reconciliation",
+        "purpose": "Material Receipt", # Receipt to add stock back
         "items": []
     })
     for item in order.order_items:
         stock_entry.append("items", {
             "item_code": item.product,
             "qty": item.quantity,
-            "s_warehouse": "Stores", # Or get from product/order
-            "t_warehouse": "Stores", # Or get from product/order
-            "diff_qty": item.quantity,
+            "t_warehouse": warehouse,
             "basic_rate": item.price
         })
     stock_entry.insert(ignore_permissions=True)
