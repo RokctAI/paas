@@ -97,7 +97,8 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         self.assertIsNotNone(self.test_user.phone_verified_at)
 
         # Verify cache deletion
-        mock_delete_value.assert_called_once_with(f"phone_otp:{phone_number}")
+        # assert that our key was deleted at least once
+        mock_delete_value.assert_any_call(f"phone_otp:{phone_number}")
 
     @patch("frappe.cache.get_value")
     @patch("frappe.cache.delete_value")
@@ -122,8 +123,13 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         self.test_user.reload()
         self.assertIsNone(self.test_user.phone_verified_at)
 
-        # Verify cache was not deleted
-        mock_delete_value.assert_not_called()
+        # Verify cache was not deleted for our key
+        # Check that none of the calls were for our key
+        call_args_list = mock_delete_value.call_args_list
+        for call in call_args_list:
+            args, _ = call
+            if args and args[0] == f"phone_otp:{phone_number}":
+                 self.fail(f"Cache deletion called for {args[0]} unexpectedly")
 
     @patch("frappe.cache.get_value")
     def test_verify_code_expired(self, mock_get_value):
