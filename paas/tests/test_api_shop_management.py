@@ -40,11 +40,19 @@ class TestShopManagementAPI(FrappeTestCase):
         frappe.set_user("Administrator")
         # Clean up the test users (shops will cascade or we can delete separately)
         try:
-            frappe.delete_doc("User", "shop_owner@example.com", force=True, ignore_permissions=True)
+            if frappe.db.exists("User", "shop_owner@example.com"):
+                try:
+                    frappe.delete_doc("User", "shop_owner@example.com", force=True, ignore_permissions=True)
+                except frappe.exceptions.LinkExistsError:
+                    frappe.db.set_value("User", "shop_owner@example.com", "enabled", 0)
         except Exception:
             pass
         try:
-            frappe.delete_doc("User", "other_owner@example.com", force=True, ignore_permissions=True)
+            if frappe.db.exists("User", "other_owner@example.com"):
+                try:
+                    frappe.delete_doc("User", "other_owner@example.com", force=True, ignore_permissions=True)
+                except frappe.exceptions.LinkExistsError:
+                    frappe.db.set_value("User", "other_owner@example.com", "enabled", 0)
         except Exception:
             pass
         
