@@ -29,10 +29,13 @@ class TestUserAddressAPI(FrappeTestCase):
         frappe.set_user("Administrator")
         # Cleanup addresses linked to the test user
         frappe.db.delete("User Address", {"user": self.test_user.name})
-        try:
-            frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
-        except Exception:
-            pass
+        if frappe.db.exists("User", self.test_user.name):
+            try:
+                frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+            except frappe.exceptions.LinkExistsError:
+                frappe.db.set_value("User", self.test_user.name, "enabled", 0)
+            except Exception:
+                pass
 
     def test_add_and_get_user_address(self):
         address_data = {
@@ -107,8 +110,11 @@ class TestUserAddressAPI(FrappeTestCase):
         frappe.set_user("Administrator")
         # Cleanup addresses linked to the other user
         frappe.db.delete("User Address", {"user": "other_addr@example.com"})
-        try:
-            frappe.delete_doc("User", "other_addr@example.com", force=True, ignore_permissions=True)
-        except Exception:
-            pass
+        if frappe.db.exists("User", "other_addr@example.com"):
+            try:
+                frappe.delete_doc("User", "other_addr@example.com", force=True, ignore_permissions=True)
+            except frappe.exceptions.LinkExistsError:
+                frappe.db.set_value("User", "other_addr@example.com", "enabled", 0)
+            except Exception:
+                pass
 
