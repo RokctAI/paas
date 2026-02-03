@@ -148,23 +148,26 @@ def update_order_status(order_id: str, status: str):
 
     # Substract stock when order is Accepted
     if status == "Accepted":
-        shop = frappe.get_doc("Shop", order.shop)
-        warehouse = shop.warehouse or "Stores"
-        
-        stock_entry = frappe.get_doc({
-            "doctype": "Stock Entry",
-            "purpose": "Material Issue", # Issue to remove stock
-            "items": []
-        })
         for item in order.order_items:
-            stock_entry.append("items", {
-                "item_code": item.product,
-                "qty": item.quantity,
-                "s_warehouse": warehouse,
-                "basic_rate": item.price
-            })
-        stock_entry.insert(ignore_permissions=True)
-        stock_entry.submit()
+            # Check if product tracks stock
+            product_doc = frappe.get_doc("Product", item.product)
+            if product_doc.track_stock:
+                # Find the Stock record for this shop and product
+                stock_name = frappe.db.get_value("Stock", {"shop": order.shop, "product": item.product}, "name")
+                if stock_name:
+                    stock_doc = frappe.get_doc("Stock", stock_name)
+                    stock_doc.quantity -= item.quantity
+                    stock_doc.save(ignore_permissions=True)
+                else:
+                    # Optional: Create stock record if missing? checking with user pref "stocks belong to sellers"
+                    # For now, let's log or create if not exists
+                     frappe.get_doc({
+                        "doctype": "Stock",
+                        "shop": order.shop,
+                        "product": item.product,
+                        "quantity": -item.quantity, # Allow negative logic if started from 0
+                        "price": item.price # Init price
+                    }).insert(ignore_permissions=True)
 
     return order.as_dict()
 
@@ -233,25 +236,16 @@ def cancel_order(order_id: str):
 
     order.status = "Cancelled"
 
-    # Get shop specific warehouse
-    shop = frappe.get_doc("Shop", order.shop)
-    warehouse = shop.warehouse or "Stores"
-
-    # Replenish stock by creating a Stock Entry for stock reconciliation
-    stock_entry = frappe.get_doc({
-        "doctype": "Stock Entry",
-        "purpose": "Material Receipt", # Receipt to add stock back
-        "items": []
-    })
+    # Replenish stock directly
     for item in order.order_items:
-        stock_entry.append("items", {
-            "item_code": item.product,
-            "qty": item.quantity,
-            "t_warehouse": warehouse,
-            "basic_rate": item.price
-        })
-    stock_entry.insert(ignore_permissions=True)
-    stock_entry.submit()
+        # Check if product tracks stock
+        product_doc = frappe.get_doc("Product", item.product)
+        if product_doc.track_stock:
+             stock_name = frappe.db.get_value("Stock", {"shop": order.shop, "product": item.product}, "name")
+             if stock_name:
+                stock_doc = frappe.get_doc("Stock", stock_name)
+                stock_doc.quantity += item.quantity
+                stock_doc.save(ignore_permissions=True)
 
     order.save(ignore_permissions=True)
     return order.as_dict()
