@@ -71,7 +71,11 @@ class TestPayFastAPI(FrappeTestCase):
 
     def tearDown(self):
         # Clean up the test data
-        frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+        if frappe.db.exists("User", self.test_user.name):
+            try:
+                frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+            except frappe.exceptions.LinkExistsError:
+                frappe.db.set_value("User", self.test_user.name, "enabled", 0)
         # Shop and Product linked to user might be auto-deleted or cascade, or we leave them for rollback
         # We'll rely on FrappeTestCase rollback for most, but user deletion is good practice if we create validation issues
         frappe.set_user("Administrator")
