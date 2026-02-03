@@ -27,6 +27,8 @@ class TestUserAddressAPI(FrappeTestCase):
     def tearDown(self):
         # Log out
         frappe.set_user("Administrator")
+        # Cleanup addresses linked to the test user
+        frappe.db.delete("User Address", {"user": self.test_user.name})
         try:
             frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
         except Exception:
@@ -103,6 +105,8 @@ class TestUserAddressAPI(FrappeTestCase):
 
         # Clean up other user session
         frappe.set_user("Administrator")
+        # Cleanup addresses linked to the other user
+        frappe.db.delete("User Address", {"user": "other_addr@example.com"})
         try:
             frappe.delete_doc("User", "other_addr@example.com", force=True, ignore_permissions=True)
         except Exception:
