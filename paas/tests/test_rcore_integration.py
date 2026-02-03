@@ -54,8 +54,12 @@ class TestRcoreIntegration(FrappeTestCase):
         loan_doc.name = "TEST-LOAN-DISB-001"
         
         # Import from rcore (cross-app call)
-        from rcore.rlending.wallet_integration import credit_wallet_on_disbursement
-        
+        try:
+            from rcore.rlending.wallet_integration import credit_wallet_on_disbursement
+        except ImportError:
+            self.skipTest("Rcore app not installed")
+            return
+
         credit_wallet_on_disbursement(loan_doc, "on_submit")
         
         # Verify wallet exists and balance is 5000 (Query by User now)
@@ -76,7 +80,11 @@ class TestRcoreIntegration(FrappeTestCase):
             "balance": 1000
         }).insert(ignore_permissions=True)
         
-        from rcore.rlending.wallet_integration import debit_wallet_on_repayment
+        try:
+            from rcore.rlending.wallet_integration import debit_wallet_on_repayment
+        except ImportError:
+            self.skipTest("Rcore app not installed")
+            return
         
         repayment_doc = MagicMock()
         repayment_doc.doctype = "Loan Repayment"
