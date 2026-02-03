@@ -73,9 +73,18 @@ class TestPayStackAPI(FrappeTestCase):
         if frappe.db.exists("User", self.test_user.name):
             try:
                 frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
-            except frappe.exceptions.LinkExistsError:
-                frappe.db.set_value("User", self.test_user.name, "enabled", 0)
-        frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
+            except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
+                try:
+                    frappe.db.set_value("User", self.test_user.name, "enabled", 0)
+                    frappe.db.commit()
+                except Exception:
+                    pass
+        
+        if hasattr(self, "test_shop") and self.test_shop and frappe.db.exists("Shop", self.test_shop.name):
+            try:
+                frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
+            except Exception:
+                pass
 
     @patch('paas.api.payment.payment.requests.post')
     def test_initiate_paystack_payment(self, mock_post):
