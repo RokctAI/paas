@@ -123,5 +123,5 @@ class TestParcelOrderAPI(FrappeTestCase):
         created_order = create_parcel_order(order_data=json.dumps(order_data))
 
         # Update the status
-        updated_order = update_parcel_status(parcel_order_id=created_order.get("name"), status="Processing")
-        self.assertEqual(updated_order.get("status"), "Processing")
+        updated_order = update_parcel_status(parcel_order_id=created_order.get("name"), status="Accepted")
+        self.assertEqual(updated_order.get("status"), "Accepted")
