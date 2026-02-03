@@ -44,6 +44,8 @@ class TestRequestModelAPI(FrappeTestCase):
         frappe.set_user("Administrator")
         frappe.db.delete("Request Model", {"created_by_user": self.test_user.name})
         self.product.delete(ignore_permissions=True)
+        # Shop must be deleted before User due to link
+        self.shop.delete(ignore_permissions=True)
         self.test_user.delete(ignore_permissions=True)
         frappe.db.commit()
 
