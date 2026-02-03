@@ -75,6 +75,14 @@ class TestParcelOrderAPI(FrappeTestCase):
                 "stock_uom": "Nos"
              }).insert(ignore_permissions=True)
 
+        # Create UOM "Nos" if missing (Standard ERPNext data)
+        if frappe.db.exists("DocType", "UOM") and not frappe.db.exists("UOM", "Nos"):
+             frappe.get_doc({
+                "doctype": "UOM",
+                "uom_name": "Nos",
+                "must_be_whole_number": 1
+             }).insert(ignore_permissions=True)
+
         # Log in as the test user
         frappe.set_user(self.test_user.name)
 
