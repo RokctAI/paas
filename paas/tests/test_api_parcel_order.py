@@ -96,6 +96,7 @@ class TestParcelOrderAPI(FrappeTestCase):
             "item_group": "All Item Groups",
             "stock_uom": "Nos"
         }).insert(ignore_permissions=True)
+        frappe.db.commit()
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
