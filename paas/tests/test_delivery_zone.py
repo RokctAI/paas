@@ -21,6 +21,7 @@ class TestDeliveryZone(FrappeTestCase):
             "min_amount": 15,
             "user": "Administrator",
             "phone": "+14155552671",
+            "uuid": frappe.generate_hash(),
             # Simple location at 0,0
             "location": json.dumps({
                 "type": "FeatureCollection",
