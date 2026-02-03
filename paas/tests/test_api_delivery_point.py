@@ -22,7 +22,10 @@ class TestDeliveryPointAPI(FrappeTestCase):
             self.delivery_point = frappe.get_doc("Delivery Point", "Test Delivery Point")
 
     def tearDown(self):
-        self.delivery_point.delete(ignore_permissions=True)
+        try:
+            self.delivery_point.delete(ignore_permissions=True)
+        except Exception:
+            pass
 
     def test_get_nearest_delivery_points(self):
         # Test with coordinates close to the test point
