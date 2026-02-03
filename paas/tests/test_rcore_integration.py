@@ -1,5 +1,6 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
+from unittest.mock import MagicMock
 
 class TestRcoreIntegration(FrappeTestCase):
     def setUp(self):
@@ -22,15 +23,17 @@ class TestRcoreIntegration(FrappeTestCase):
                 "customer_name": "Test Rcore Customer",
                 "customer_type": "Individual",
                 "customer_group": "All Customer Groups",
-                "territory": "All Territories",
-                "user": self.user.name  # Link to user
+                "territory": "All Territories"
             }).insert(ignore_permissions=True)
+            
+            # Manually set user if field exists, else ignore (mock scenario)
+            if self.customer.meta.has_field("user"):
+                self.customer.db_set("user", self.user.name)
         else:
             self.customer = frappe.get_doc("Customer", "Test Rcore Customer")
             # Ensure link exists
-            if not self.customer.user:
-                 self.customer.user = self.user.name
-                 self.customer.save(ignore_permissions=True)
+            if self.customer.meta.has_field("user") and not self.customer.user:
+                 self.customer.db_set("user", self.user.name)
 
     def tearDown(self):
         # Cleanup
@@ -41,13 +44,14 @@ class TestRcoreIntegration(FrappeTestCase):
 
     def test_loan_disbursement_wallet_integration(self):
         # 1. Create a Loan Disbursement mock doc
-        loan_doc = frappe.get_doc({
-            "doctype": "Loan Disbursement",
-            "applicant_type": "Customer",
-            "applicant": self.customer.name,
-            "disbursed_amount": 5000,
-            "name": "TEST-LOAN-DISB-001"
-        })
+        # 1. Create a Loan Disbursement mock doc
+        # We Mock this because Loan Disbursement might not exist in the test env
+        loan_doc = MagicMock()
+        loan_doc.doctype = "Loan Disbursement"
+        loan_doc.applicant_type = "Customer"
+        loan_doc.applicant = self.customer.name
+        loan_doc.disbursed_amount = 5000
+        loan_doc.name = "TEST-LOAN-DISB-001"
         
         # Import from rcore (cross-app call)
         from rcore.rlending.wallet_integration import credit_wallet_on_disbursement
@@ -74,13 +78,12 @@ class TestRcoreIntegration(FrappeTestCase):
         
         from rcore.rlending.wallet_integration import debit_wallet_on_repayment
         
-        repayment_doc = frappe.get_doc({
-            "doctype": "Loan Repayment",
-            "applicant_type": "Customer",
-            "applicant": self.customer.name,
-            "amount_paid": 200,
-            "name": "TEST-LOAN-REPAY-001"
-        })
+        repayment_doc = MagicMock()
+        repayment_doc.doctype = "Loan Repayment"
+        repayment_doc.applicant_type = "Customer"
+        repayment_doc.applicant = self.customer.name
+        repayment_doc.amount_paid = 200
+        repayment_doc.name = "TEST-LOAN-REPAY-001"
         
         debit_wallet_on_repayment(repayment_doc, "on_submit")
         
