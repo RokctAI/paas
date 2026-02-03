@@ -35,9 +35,18 @@ class TestInvitesAPI(FrappeTestCase):
 
     def tearDown(self):
         frappe.db.delete("Invitation")
-        self.shop.delete(ignore_permissions=True)
-        self.inviting_user.delete(ignore_permissions=True)
-        self.invited_user.delete(ignore_permissions=True)
+        if frappe.db.exists("Company", "Test Invite Shop"):
+            try:
+                self.shop.delete(ignore_permissions=True)
+            except frappe.exceptions.LinkExistsError:
+                pass
+        
+        for user_email in ["inviter@example.com", "invited@example.com"]:
+            if frappe.db.exists("User", user_email):
+                try:
+                    frappe.delete_doc("User", user_email, ignore_permissions=True)
+                except frappe.exceptions.LinkExistsError:
+                    frappe.db.set_value("User", user_email, "enabled", 0)
         frappe.set_user("Administrator")
 
     def test_create_and_get_invites(self):
