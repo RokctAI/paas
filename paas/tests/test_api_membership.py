@@ -52,7 +52,11 @@ class TestMembershipAPI(FrappeTestCase):
         frappe.set_user("Administrator")
         self.user_membership.delete(ignore_permissions=True)
         self.membership_plan.delete(ignore_permissions=True)
-        frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+        if frappe.db.exists("User", self.test_user.name):
+            try:
+                frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+            except frappe.exceptions.LinkExistsError:
+                frappe.db.set_value("User", self.test_user.name, "enabled", 0)
 
     def test_get_user_membership(self):
         membership = get_user_membership()
