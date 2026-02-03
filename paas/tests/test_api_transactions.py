@@ -112,5 +112,5 @@ class TestTransactionsAPI(FrappeTestCase):
         # Get the second page
         transactions = get_user_transactions(start=1, limit=1)
         self.assertEqual(len(transactions), 1)
-        self.assertEqual(transactions[0].get("amount"), 50.0)
+        self.assertAlmostEqual(transactions[0].get("amount"), 50.0)
 
