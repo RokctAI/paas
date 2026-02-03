@@ -38,6 +38,7 @@ class TestCouponAPI(FrappeTestCase):
                 "shop": self.shop.name,
                 "type": "Fixed",
                 "amount": 5,
+                "discount_amount": 5,
                 "expired_at": "2020-01-01 00:00:00"
             }).insert(ignore_permissions=True)
         else:
