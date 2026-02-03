@@ -40,16 +40,10 @@ class TestNotificationsAPI(FrappeTestCase):
         # Warning: Verify if Notification Type exists as a DocType first
         # Create 'Alert' Notification Type if it doesn't exist
         if not frappe.db.exists("Notification Type", "Alert"):
-            try:
-                frappe.get_doc({
-                    "doctype": "Notification Type",
-                    "name": "Alert",
-                    # "type": "Alert" # Not always standard
-                }).insert(ignore_permissions=True)
-            except frappe.DoesNotExistError:
-                pass # If Notification Type doctype is missing entirely (unlikely if we are testing Notification Log)
-            except frappe.DuplicateEntryError:
-                pass
+            frappe.get_doc({
+                "doctype": "Notification Type",
+                "name": "Alert",
+            }).insert(ignore_permissions=True)
 
         # Create a notification log for the user
         if not frappe.db.exists("Notification Log", {"subject": "Test Notification", "for_user": self.test_user.name}):
