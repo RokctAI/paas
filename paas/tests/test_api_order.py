@@ -206,20 +206,37 @@ class TestOrderAPI(FrappeTestCase):
         self.assertIsNotNone(cancelled_order)
         self.assertEqual(cancelled_order.get("status"), "Cancelled")
 
-        # Verify Stock restoration (cancel is only allowed for New orders, which haven't deducted stock yet in current logic? 
-        # Wait, if status is New, stock wasn't deducted yet.
-        # Cancel order logic says: "Replenish stock directly".
-        # If I cancel a "New" order, I shouldn't replenish if it wasn't deducted.
-        # However, looking at my implementation of cancel_order, it blindly adds stock back specific for Accepted/etc?
-        # The logic in cancel_order check `if order.status != "New"`.
-        # Ah, cancel_order checks: `if order.status != "New": frappe.throw(...)`
-        # So it ONLY cancels New orders.
-        # BUT update_order_status(Accepted) deducts stock.
-        # So a "New" order has NOT deducted stock.
-        # So cancelling a "New" order should NOT add stock back?
-        # My previous implementation was: `if status == "Accepted": deduct`.
-        # So "New" order -> No deduction.
-        # "Cancel" order -> blindly adds stock?
-        # That would be a bug. I need to fix logic if that's the case.
-        # Let's check logic in previous step.
+        # Verify Stock is UNCHANGED for New -> Cancelled
+        self.test_stock.reload()
+        self.assertEqual(self.test_stock.quantity, 10)
+
+    def test_cancel_accepted_order(self):
+        # Test cancelling an accepted order via status update
+        order = frappe.get_doc({
+            "doctype": "Order",
+            "user": self.test_user.name,
+            "shop": self.test_shop.name,
+            "status": "New",
+            "order_items": [
+                {
+                    "product": self.test_product.name,
+                    "quantity": 1,
+                    "price": 100
+                }
+            ]
+        }).insert(ignore_permissions=True)
+        
+        frappe.set_user(self.test_user.name) # Though update requires admin/shop owner usually tested as admin in tearDown but here set_user
+        # We need update_order_status to work.
+        
+        # 1. Accept Order -> Stock -1
+        update_order_status(order.name, "Accepted")
+        self.test_stock.reload()
+        self.assertEqual(self.test_stock.quantity, 9)
+
+        # 2. Cancel Order -> Stock +1
+        # update_order_status handles the transition
+        update_order_status(order.name, "Cancelled")
+        self.test_stock.reload()
+        self.assertEqual(self.test_stock.quantity, 10)
 
