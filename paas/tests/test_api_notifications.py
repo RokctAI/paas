@@ -62,7 +62,11 @@ class TestNotificationsAPI(FrappeTestCase):
         # Log out
         frappe.set_user("Administrator")
         frappe.db.delete("Notification Log", {"for_user": self.test_user.name})
-        self.test_user.delete(ignore_permissions=True)
+        if frappe.db.exists("User", self.test_user.name):
+            try:
+                self.test_user.delete(ignore_permissions=True)
+            except frappe.exceptions.LinkExistsError:
+                frappe.db.set_value("User", self.test_user.name, "enabled", 0)
 
     def test_get_user_notifications(self):
         notifications = get_user_notifications()
