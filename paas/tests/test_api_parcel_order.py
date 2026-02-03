@@ -125,6 +125,8 @@ class TestParcelOrderAPI(FrappeTestCase):
 
         # Clean up other user
         frappe.set_user("Administrator")
+        # 5. Cleanup other user
+        frappe.db.delete("Parcel Order", {"user": other_user.name})
         other_user.delete(ignore_permissions=True)
 
     def test_update_parcel_status(self):
