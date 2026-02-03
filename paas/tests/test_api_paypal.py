@@ -70,7 +70,11 @@ class TestPayPalAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
 
     def tearDown(self):
-        frappe.delete_doc("User", self.test_user.name, ignore_permissions=True, force=True)
+        if frappe.db.exists("User", self.test_user.name):
+            try:
+                frappe.delete_doc("User", self.test_user.name, ignore_permissions=True, force=True)
+            except frappe.exceptions.LinkExistsError:
+                frappe.db.set_value("User", self.test_user.name, "enabled", 0)
         # Order and others cleaned up by rollback usually, but explicit user delete helps.
         frappe.set_user("Administrator")
 
