@@ -219,6 +219,13 @@
             "label": "Enable COD? (Cash on Delivery)",
             "default": "1",
             "description": "If disabled, customers cannot choose Cash on Delivery for this shop."
+        },
+        {
+            "fieldname": "warehouse",
+            "fieldtype": "Link",
+            "label": "Warehouse",
+            "options": "Warehouse",
+            "description": "The warehouse associated with this shop for stock management."
         }
     ]
 }
