@@ -17,6 +17,14 @@ class TestPhoneVerificationAPI(FrappeTestCase):
             "insert_after": "phone",
             "read_only": 1
         })
+        create_custom_field("User", {
+            "fieldname": "email_verification_token",
+            "fieldtype": "Data",
+            "label": "Email Verification Token",
+            "insert_after": "phone_verified_at",
+            "read_only": 1,
+            "hidden": 1
+        })
     def setUp(self):
         # Create a test user
         self.test_user_phone = "+19876543210"
