@@ -70,7 +70,7 @@ class TestCouponAPI(FrappeTestCase):
     def test_check_valid_coupon(self):
         result = check_coupon(code="VALID10", shop_id=self.shop.name)
         self.assertEqual(result.get("code"), "VALID10")
-        self.assertEqual(result.get("amount"), 10)
+        self.assertEqual(result.get("discount_amount"), 10)
 
     def test_check_invalid_coupon(self):
         result = check_coupon(code="INVALID", shop_id=self.shop.name)
