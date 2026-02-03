@@ -60,9 +60,12 @@ class TestOrderAPI(FrappeTestCase):
 
         # Ensure 'Stores' Warehouse exists for Stock Entry
         if not frappe.db.exists("Warehouse", "Stores"):
+            # Get default company
+            company = frappe.db.get_single_value("Global Settings", "default_company") or frappe.get_all("Company", limit=1)[0].name
             frappe.get_doc({
                 "doctype": "Warehouse",
                 "warehouse_name": "Stores",
+                "company": company,
                 "is_group": 0
             }).insert(ignore_permissions=True)
 
