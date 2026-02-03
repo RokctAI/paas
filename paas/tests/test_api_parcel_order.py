@@ -85,13 +85,18 @@ class TestParcelOrderAPI(FrappeTestCase):
 
         # 2. Create Item "Test Item"
         if not frappe.db.exists("Item", "Test Item"):
-             frappe.get_doc({
+             self.item = frappe.get_doc({
                 "doctype": "Item",
                 "item_code": "Test Item",
                 "item_name": "Test Item",
                 "item_group": "All Item Groups",
                 "stock_uom": "Nos"
              }).insert(ignore_permissions=True)
+        else:
+             self.item = frappe.get_doc("Item", "Test Item")
+
+        # Create UOM "Nos" if missing (Standard ERPNext data)
+        # (Already handled above in reordered code, cleaning up duplicates if any)
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
@@ -133,7 +138,7 @@ class TestParcelOrderAPI(FrappeTestCase):
         order_data = {
             "destination_type": "delivery_point",
             "delivery_point_id": self.delivery_point.name,
-            "items": [{"item_code": "Test Item", "quantity": 1}],
+            "items": [{"item_code": self.item.name, "quantity": 1}],
             "total_price": 50.0,
             "type": self.parcel_setting.name
         }
