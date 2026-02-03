@@ -34,8 +34,9 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         if frappe.db.exists("User", "test_phone_user@example.com"):
              try:
                  frappe.delete_doc("User", "test_phone_user@example.com", force=True, ignore_permissions=True)
-             except frappe.exceptions.LinkExistsError:
+             except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
                  frappe.db.set_value("User", "test_phone_user@example.com", "enabled", 0)
+                 frappe.db.commit()
 
         self.test_user = frappe.get_doc({
             "doctype": "User",
@@ -222,9 +223,10 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         new_user_email = "new_user@example.com"
         if frappe.db.exists("User", new_user_email):
             try:
-                frappe.delete_doc("User", new_user_email, ignore_permissions=True)
-            except Exception:
-                pass
+                frappe.delete_doc("User", new_user_email, force=True, ignore_permissions=True)
+            except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
+                frappe.db.set_value("User", new_user_email, "enabled", 0)
+                frappe.db.commit()
 
         # Act
         response = register_user(
