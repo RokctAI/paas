@@ -9,20 +9,28 @@ from types import SimpleNamespace
 
 class TestRemoteConfig(unittest.TestCase):
     def setUp(self):
-        frappe.db.get_single_value.reset_mock()
-        frappe.db.get_value.reset_mock()
-        frappe.get_doc.reset_mock()
-
-        # Patch frappe.throw to raise Exception with the message
+        self.get_single_value_patch = patch('frappe.db.get_single_value')
+        self.get_value_patch = patch('frappe.db.get_value')
+        self.get_doc_patch = patch('frappe.get_doc')
+        # Patch frappe.local
+        self.local_patch = patch('frappe.local', MagicMock())
+        # Patch frappe.throw
         self.throw_patcher = patch('frappe.throw', side_effect=lambda msg, **kwargs: (_ for _ in ()).throw(Exception(msg)))
+
+        self.mock_get_single_value = self.get_single_value_patch.start()
+        self.mock_get_value = self.get_value_patch.start()
+        self.mock_get_doc = self.get_doc_patch.start()
+        self.mock_local = self.local_patch.start()
         self.mock_throw = self.throw_patcher.start()
 
-        # Ensure frappe.local is set up
-        if not hasattr(frappe, 'local'):
-            frappe.local = MagicMock()
-        frappe.local.site = "test_site"
+        # Setup mock local site
+        self.mock_local.site = "test_site"
 
     def tearDown(self):
+        self.get_single_value_patch.stop()
+        self.get_value_patch.stop()
+        self.get_doc_patch.stop()
+        self.local_patch.stop()
         self.throw_patcher.stop()
 
     @patch('paas.api.remote_config.get_subscription_details')
@@ -44,7 +52,7 @@ class TestRemoteConfig(unittest.TestCase):
                 if field == "enable_marketplace": return 1
                 if field == "default_shop": return "Shop1"
             return None
-        frappe.db.get_single_value.side_effect = get_single_value_side_effect
+        self.mock_get_single_value.side_effect = get_single_value_side_effect
 
         # Mock Remote Config names
         def get_value_side_effect(doctype, filters, fieldname):
@@ -52,9 +60,9 @@ class TestRemoteConfig(unittest.TestCase):
                 if filters.get("app_type") == "Common": return "RC-Common"
                 if filters.get("app_type") == "Customer": return "RC-Customer"
             return None
-        frappe.db.get_value.side_effect = get_value_side_effect
+        self.mock_get_value.side_effect = get_value_side_effect
 
-        # Mock Remote Config Docs using SimpleNamespace to avoid MagicMock auto-creation
+        # Mock Remote Config Docs
         def get_doc_side_effect(doctype, name):
             if name == "RC-Common":
                 return SimpleNamespace(
@@ -70,7 +78,7 @@ class TestRemoteConfig(unittest.TestCase):
                     country_code_iso="US"
                 )
             return None
-        frappe.get_doc.side_effect = get_doc_side_effect
+        self.mock_get_doc.side_effect = get_doc_side_effect
 
         config = get_remote_config(app_type="Customer")
 

@@ -8,47 +8,55 @@ from paas.branding import get_paas_branding, get_paas_brand_html
 
 class TestBranding(unittest.TestCase):
     def setUp(self):
-        # Reset mocks
-        frappe.db.get_value.reset_mock()
-        frappe.get_doc.reset_mock()
-        frappe.get_single.reset_mock()
-        # Ensure defaults mock is set up
-        if not hasattr(frappe, 'defaults'):
-            frappe.defaults = MagicMock()
-        frappe.defaults.get_user_default = MagicMock(return_value="Test Company")
+        # Patch frappe methods
+        self.get_value_patch = patch('frappe.db.get_value')
+        self.get_doc_patch = patch('frappe.get_doc')
+        self.get_single_patch = patch('frappe.get_single')
+        self.defaults_patch = patch('frappe.defaults.get_user_default', return_value="Test Company")
+
+        self.mock_get_value = self.get_value_patch.start()
+        self.mock_get_doc = self.get_doc_patch.start()
+        self.mock_get_single = self.get_single_patch.start()
+        self.mock_defaults = self.defaults_patch.start()
+
+    def tearDown(self):
+        self.get_value_patch.stop()
+        self.get_doc_patch.stop()
+        self.get_single_patch.stop()
+        self.defaults_patch.stop()
 
     def test_get_paas_branding_no_subscription(self):
         # Mock no subscription found
-        frappe.db.get_value.return_value = None
+        self.mock_get_value.return_value = None
 
         result = get_paas_branding()
         self.assertEqual(result, {'enabled': False})
 
     def test_get_paas_branding_no_paas_module(self):
         # Mock subscription found but no PaaS module
-        frappe.db.get_value.return_value = MagicMock(subscription_plan='Basic Plan')
+        self.mock_get_value.return_value = MagicMock(subscription_plan='Basic Plan')
 
         mock_plan = MagicMock()
         mock_plan.modules = [MagicMock(module_name='Other')]
-        frappe.get_doc.return_value = mock_plan
+        self.mock_get_doc.return_value = mock_plan
 
         result = get_paas_branding()
         self.assertEqual(result, {'enabled': False})
 
     def test_get_paas_branding_enabled_defaults(self):
         # Mock subscription with PaaS module
-        frappe.db.get_value.return_value = MagicMock(subscription_plan='Pro Plan')
+        self.mock_get_value.return_value = MagicMock(subscription_plan='Pro Plan')
 
         mock_plan = MagicMock()
         mock_plan.modules = [MagicMock(module_name='PaaS')]
-        frappe.get_doc.return_value = mock_plan
+        self.mock_get_doc.return_value = mock_plan
 
         # Mock Settings (empty/defaults)
         mock_settings = MagicMock()
         mock_settings.logo = None
         mock_settings.favicon = None
         mock_settings.project_title = None
-        frappe.get_single.return_value = mock_settings
+        self.mock_get_single.return_value = mock_settings
 
         result = get_paas_branding()
         self.assertEqual(result['enabled'], True)
@@ -57,18 +65,18 @@ class TestBranding(unittest.TestCase):
 
     def test_get_paas_branding_enabled_custom(self):
         # Mock subscription with PaaS module
-        frappe.db.get_value.return_value = MagicMock(subscription_plan='Pro Plan')
+        self.mock_get_value.return_value = MagicMock(subscription_plan='Pro Plan')
 
         mock_plan = MagicMock()
         mock_plan.modules = [MagicMock(module_name='PaaS')]
-        frappe.get_doc.return_value = mock_plan
+        self.mock_get_doc.return_value = mock_plan
 
         # Mock Settings with values
         mock_settings = MagicMock()
         mock_settings.logo = '/files/my_logo.png'
         mock_settings.favicon = '/files/my_favicon.ico'
         mock_settings.project_title = 'My App'
-        frappe.get_single.return_value = mock_settings
+        self.mock_get_single.return_value = mock_settings
 
         result = get_paas_branding()
         self.assertEqual(result['enabled'], True)

@@ -17,12 +17,8 @@ class TestUtils(unittest.TestCase):
     def test_get_subscription_details_core(self):
         # Force HAS_CORE to True and mock core_get_details
         with patch('paas.utils.HAS_CORE', True):
-            # We need to ensure core_get_details is mocked if it wasn't imported correctly
-            # But since we mocked rcore in setup, it should be a MagicMock
-            # However, utils.py imported it as `core_get_details`
-
-            # Since paas.utils is already imported, we patch the name in that module
-            with patch('paas.utils.core_get_details') as mock_core:
+            # Use create=True because core_get_details might not exist in paas.utils if import failed
+            with patch('paas.utils.core_get_details', create=True) as mock_core:
                 mock_core.return_value = {'status': 'Trialing'}
                 details = utils.get_subscription_details()
                 self.assertEqual(details['status'], 'Trialing')
@@ -44,7 +40,8 @@ class TestUtils(unittest.TestCase):
             mock_dec = MagicMock()
             mock_core_check = MagicMock(return_value=mock_dec)
 
-            with patch('paas.utils.core_check_feature', mock_core_check):
+            # Use create=True
+            with patch('paas.utils.core_check_feature', mock_core_check, create=True):
                 res = utils.check_subscription_feature("Feat")
                 self.assertEqual(res, mock_dec)
                 mock_core_check.assert_called_with("Feat")
