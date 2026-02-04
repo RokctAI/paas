@@ -110,12 +110,14 @@ class TestParcelOrderAPI(FrappeTestCase):
              # We create it for this specific shop
              unit_name = f"Kg-{self.shop_name}"
              if not frappe.db.exists("Shop Unit", unit_name):
-                 frappe.get_doc({
+                 shop_unit = frappe.get_doc({
                      "doctype": "Shop Unit",
                      "name": unit_name,
                      "unit_name": "Kg",
                      "shop": self.test_shop.name
                  }).insert(ignore_permissions=True)
+                 unit_name = shop_unit.name
+             frappe.db.commit()
              
              self.product_name = f"Test Product {frappe.generate_hash(length=5)}"
              self.product = frappe.get_doc({
