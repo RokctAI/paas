@@ -10,8 +10,8 @@ def get_brands(limit_start: int = 0, limit_page_length: int = 10):
     brands = frappe.get_list(
         "Brand",
         fields=["name", "uuid", "title", "slug", "active", "image", "shop"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name desc"
     )
     return brands
