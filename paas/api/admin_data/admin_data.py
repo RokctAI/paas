@@ -11,8 +11,8 @@ def get_all_units(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Shop Unit",
         fields=["name", "shop", "active"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -25,8 +25,8 @@ def get_all_tags(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Shop Tag",
         fields=["name", "shop"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 @frappe.whitelist()
@@ -38,8 +38,8 @@ def get_all_points(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Point",
         fields=["name", "user", "points", "reason"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -94,8 +94,8 @@ def get_all_translations(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Translation",
         fields=["name", "language", "source_text", "translated_text"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 @frappe.whitelist()
@@ -107,8 +107,8 @@ def get_all_referrals(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Referral",
         fields=["name", "referrer", "referred_user", "referral_code"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -148,8 +148,8 @@ def get_all_shop_tags(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Shop Tag",
         fields=["name", "shop"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 @frappe.whitelist()
@@ -161,8 +161,8 @@ def get_all_product_extra_groups(limit_start: int = 0, limit_page_length: int = 
     return frappe.get_list(
         "Product Extra Group",
         fields=["name", "shop"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -175,6 +175,6 @@ def get_all_product_extra_values(limit_start: int = 0, limit_page_length: int = 
     return frappe.get_list(
         "Product Extra Value",
         fields=["name", "product_extra_group", "value", "price"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
