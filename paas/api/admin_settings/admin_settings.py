@@ -11,8 +11,8 @@ def get_all_languages(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Language",
         fields=["name", "language_name", "enabled"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -40,8 +40,8 @@ def get_all_currencies(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Currency",
         fields=["name", "currency_name", "symbol", "enabled"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -91,8 +91,8 @@ def get_all_email_templates(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Email Template",
         fields=["name", "subject", "response"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -119,8 +119,8 @@ def get_email_subscriptions(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Email Subscription",
         fields=["name", "email"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
