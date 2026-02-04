@@ -105,16 +105,22 @@ class TestParcelOrderAPI(FrappeTestCase):
              frappe.db.commit()
 
              # 3. Create Unique Product (The 'item' field in Parcel Order Item links to Product)
+             
+             # Create Shop Unit "Kg" if missing
+             if not frappe.db.exists("Shop Unit", "Kg"):
+                 frappe.get_doc({
+                     "doctype": "Shop Unit",
+                     "name": "Kg", # Assuming name is the primary key or it has a simple name field
+                     "unit_name": "Kg" # Fallback if there's a specific field
+                 }).insert(ignore_permissions=True)
+             
              self.product_name = f"Test Product {frappe.generate_hash(length=5)}"
              self.product = frappe.get_doc({
                  "doctype": "Product",
                  "title": self.product_name,
                  "shop": self.test_shop.name,
                  "price": 10.0,
-                 "unit": "Kg", # Assuming 'Kg' exists or is text. If Link, use Nos from UOM? 
-                 # Checking product.json, 'unit' is a Link to 'Shop Unit'.
-                 # If 'Shop Unit' is needed, we might need to create it.
-                 # Let's hope 'Kg' or 'Nos' exists or we can skip it if not mandatory (not mandatory in JSON).
+                 "unit": "Kg", 
                  "active": 1,
                  "track_stock": 0
              }).insert(ignore_permissions=True)
