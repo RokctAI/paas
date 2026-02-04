@@ -13,8 +13,8 @@ def get_seller_bonuses(limit_start: int = 0, limit_page_length: int = 20):
         "Shop Bonus",
         filters={"shop": shop},
         fields=["name", "amount", "bonus_date", "reason"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="bonus_date desc"
     )
     return bonuses
