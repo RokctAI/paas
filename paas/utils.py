@@ -8,6 +8,8 @@ try:
     HAS_CORE = True
 except ImportError:
     HAS_CORE = False
+    core_check_feature = None
+    core_get_details = None
 
 def check_subscription_feature(feature_module):
     """
