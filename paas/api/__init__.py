@@ -643,8 +643,8 @@ def get_shop_filter(category_id: int = None, sub_category_id: int = None, page: 
         "Shop",
         filters=filters,
         fields=["name", "shop_name", "logo"],
-        limit_start=(page - 1) * 10,
-        limit_page_length=10,
+        limit_start = (page - 1) * 10
+        limit = 10,
     )
     return shops
 
@@ -694,7 +694,7 @@ def get_shops_recommend(page: int = 1, lang: str = "en"):
         filters={"recommended": 1},
         fields=["name", "shop_name", "logo"],
         limit_start=(page - 1) * 10,
-        limit_page_length=10,
+        limit=10,
     )
     return shops
 
@@ -707,7 +707,7 @@ def get_story(page: int = 1, lang: str = "en"):
         "Story",
         fields=["name", "shop", "image", "title", "product", "creation", "modified"],
         limit_start=(page - 1) * 10,
-        limit_page_length=10,
+        limit=10,
     )
     
     grouped = {}
@@ -824,7 +824,7 @@ def search_user(name: str, page: int = 1, lang: str = "en"):
         filters={"full_name": ["like", f"%{name}%"]},
         fields=["name", "full_name", "user_image"],
         limit_start=(page - 1) * 10,
-        limit_page_length=10,
+        limit=10,
     )
     return users
 
@@ -1019,8 +1019,8 @@ def get_notification_logs(limit_start: int = 0, limit_page_length: int = 20):
         "Notification Log",
         filters={"user": user},
         fields=["notification_type", "subject", "message", "read", "creation"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return logs
@@ -1160,8 +1160,8 @@ def get_banners(page: int = 1, limit_page_length: int = 10, lang: str = "en"):
     banners = frappe.get_list(
         "Banner",
         fields=["name", "title", "image", "url"],
-        limit_start=(page - 1) * limit_page_length,
-        limit_page_length=limit_page_length,
+        offset=(page - 1) * limit_page_length,
+        limit=limit_page_length,
     )
     return banners
 
@@ -1173,8 +1173,8 @@ def get_ads(page: int = 1, limit_page_length: int = 10, lang: str = "en"):
     ads = frappe.get_list(
         "Ad",
         fields=["name", "title", "image", "url"],
-        limit_start=(page - 1) * limit_page_length,
-        limit_page_length=limit_page_length,
+        offset=(page - 1) * limit_page_length,
+        limit=limit_page_length,
     )
     return ads
 
@@ -1253,8 +1253,8 @@ def get_banners(page: int = 1, limit_page_length: int = 10, lang: str = "en"):
     banners = frappe.get_list(
         "Banner",
         fields=["name", "title", "image", "url"],
-        limit_start=(page - 1) * limit_page_length,
-        limit_page_length=limit_page_length,
+        offset=(page - 1) * limit_page_length,
+        limit=limit_page_length,
     )
     return banners
 
@@ -1266,8 +1266,8 @@ def get_ads(page: int = 1, limit_page_length: int = 10, lang: str = "en"):
     ads = frappe.get_list(
         "Ad",
         fields=["name", "title", "image", "url"],
-        limit_start=(page - 1) * limit_page_length,
-        limit_page_length=limit_page_length,
+        offset=(page - 1) * limit_page_length,
+        limit=limit_page_length,
     )
     return ads
 
