@@ -19,8 +19,8 @@ def get_all_orders(limit_start: int = 0, limit_page_length: int = 20, status: st
         "Order",
         filters=filters,
         fields=["name", "user", "shop", "grand_total", "status", "creation"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return orders
@@ -43,8 +43,8 @@ def get_all_parcel_orders(limit_start: int = 0, limit_page_length: int = 20, sta
         "Parcel Order",
         filters=filters,
         fields=["name", "user", "total_price", "status", "delivery_date", "deliveryman"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return parcel_orders
@@ -91,8 +91,8 @@ def get_all_reviews(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Review",
         fields=["name", "user", "rating", "comment", "creation", "reviewable_type", "reviewable_id", "published"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
 
@@ -131,8 +131,8 @@ def get_all_tickets(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Ticket",
         fields=["name", "subject", "status", "creation", "user"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
 
@@ -161,8 +161,8 @@ def get_all_order_refunds(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Order Refund",
         fields=["name", "order", "status", "cause", "answer"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
 
@@ -196,8 +196,8 @@ def get_all_notifications(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Notification Log",
         fields=["name", "subject", "document_type", "document_name", "for_user", "creation"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
 
@@ -210,8 +210,8 @@ def get_all_bookings(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Booking",
         fields=["name", "user", "shop", "booking_date", "number_of_guests", "status"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="booking_date desc"
     )
 
@@ -266,8 +266,8 @@ def get_all_order_statuses(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Order Status",
         fields=["name", "status_name", "is_active", "sort_order"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="sort_order"
     )
 
@@ -280,7 +280,7 @@ def get_all_request_models(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Request Model",
         fields=["name", "model_type", "model", "status", "created_by_user", "created_at"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
