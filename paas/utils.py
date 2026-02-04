@@ -8,8 +8,21 @@ try:
     HAS_CORE = True
 except ImportError:
     HAS_CORE = False
-    core_check_feature = None
-    core_get_details = None
+
+    def core_check_feature(feature_module):
+        """Mock decorator that always allows the feature."""
+        def decorator(fn):
+            return fn
+        return decorator
+
+    def core_get_details():
+        """Mock returning default active subscription."""
+        return {
+            "status": "Active",
+            "plan": "Standalone",
+            "modules": ["all"], 
+            "subscription_cache_duration": 86400
+        }
 
 def check_subscription_feature(feature_module):
     """
