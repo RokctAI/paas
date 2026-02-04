@@ -87,16 +87,41 @@ class TestParcelOrderAPI(FrappeTestCase):
                 "must_be_whole_number": 1
              }).insert(ignore_permissions=True)
 
-        # 2. Create Unique Item
-        self.item_code = f"Test Item {frappe.generate_hash(length=5)}"
-        self.item = frappe.get_doc({
-            "doctype": "Item",
-            "item_code": self.item_code,
-            "item_name": self.item_code,
-            "item_group": "All Item Groups",
-            "stock_uom": "Nos"
-        }).insert(ignore_permissions=True)
-        frappe.db.commit()
+        # 2. Create Unique Shop
+        self.shop_name = f"Test Shop {frappe.generate_hash(length=5)}"
+        # Check if Shop doctype exists (it must)
+        if frappe.db.exists("DocType", "Shop"):
+             self.test_shop = frappe.get_doc({
+                 "doctype": "Shop",
+                 "shop_name": self.shop_name,
+                 "user": self.test_user.name,
+                 "status": "approved",
+                 "open": 1,
+                 "visibility": 1,
+                 "delivery": 1, 
+                 "phone": "+1234567890"
+             }).insert(ignore_permissions=True)
+             frappe.db.commit()
+
+             # 3. Create Unique Product (The 'item' field in Parcel Order Item links to Product)
+             self.product_name = f"Test Product {frappe.generate_hash(length=5)}"
+             self.product = frappe.get_doc({
+                 "doctype": "Product",
+                 "title": self.product_name,
+                 "shop": self.test_shop.name,
+                 "price": 10.0,
+                 "unit": "Kg", # Assuming 'Kg' exists or is text. If Link, use Nos from UOM? 
+                 # Checking product.json, 'unit' is a Link to 'Shop Unit'.
+                 # If 'Shop Unit' is needed, we might need to create it.
+                 # Let's hope 'Kg' or 'Nos' exists or we can skip it if not mandatory (not mandatory in JSON).
+                 "active": 1,
+                 "track_stock": 0
+             }).insert(ignore_permissions=True)
+             frappe.db.commit()
+             self.item_code = self.product.name
+        else:
+             # Fallback if Shop doesn't exist (unlikely in PaaS)
+             self.item_code = "Test Item"
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
@@ -111,12 +136,15 @@ class TestParcelOrderAPI(FrappeTestCase):
         if hasattr(self, "delivery_point"):
              frappe.db.delete("Delivery Point", {"name": self.delivery_point.name})
         
+        if hasattr(self, "product") and self.product:
+            frappe.delete_doc("Product", self.product.name, force=True, ignore_permissions=True)
+        
         if hasattr(self, "test_shop") and self.test_shop:
-            frappe.db.delete("Product", {"shop": self.test_shop.name})
             frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
         
-        if hasattr(self, "item") and self.item:
-            frappe.delete_doc("Item", self.item.name, force=True, ignore_permissions=True)
+        # Clean up Item if we created it previously (legacy cleanup)
+        if frappe.db.exists("Item", "Test Item"):
+             frappe.delete_doc("Item", "Test Item", force=True, ignore_permissions=True)
 
         if frappe.db.exists("User", self.test_user.name):
             try:
@@ -141,7 +169,7 @@ class TestParcelOrderAPI(FrappeTestCase):
         order_data = {
             "destination_type": "delivery_point",
             "delivery_point_id": self.delivery_point.name,
-            "items": [{"item_code": self.item.name, "quantity": 1}],
+            "items": [{"item_code": self.item_code, "quantity": 1}],
             "total_price": 50.0,
             "type": self.parcel_setting.name
         }
