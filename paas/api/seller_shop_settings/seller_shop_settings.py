@@ -101,7 +101,7 @@ def get_shop_users(limit_start: int = 0, limit_page_length: int = 20):
         filters={"shop": shop},
         fields=["user", "role"],
         limit_start=limit_start,
-        limit_page_length=limit_page_length
+        limit=limit_page_length
     )
     return shop_users
 
@@ -156,8 +156,8 @@ def get_seller_branches(limit_start: int = 0, limit_page_length: int = 20):
         "Branch",
         filters={"shop": shop},
         fields=["name", "branch_name", "address", "latitude", "longitude"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return branches
