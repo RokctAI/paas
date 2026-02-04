@@ -12,8 +12,8 @@ def get_ads(page: int = 1):
         "Banner",
         filters={"is_ad": 1, "is_active": 1},
         fields=["name", "title", "image", "link"],
-        limit_page_length=10,
-        limit_start=(page - 1) * 10,
+        limit=10,
+        offset=(page - 1) * 10,
     )
 
 @frappe.whitelist()
