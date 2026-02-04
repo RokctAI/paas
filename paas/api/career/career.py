@@ -15,8 +15,8 @@ def get_careers(limit_start: int = 0, limit_page_length: int = 20):
         "Career",
         filters={"is_active": 1},
         fields=["name", "title", "description", "location", "category"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
     formatted_careers = []
@@ -66,6 +66,6 @@ def get_admin_careers(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Career",
         fields=["name", "title", "location", "category", "is_active"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
