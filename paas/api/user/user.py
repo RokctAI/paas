@@ -1022,7 +1022,7 @@ def get_user_notifications(start=0, limit=20):
 
     return frappe.get_all(
         "Notification Log",
-        filters={"for_user": user},
+        filters={"user": user},
         fields=["name", "subject", "document_type", "document_name", "creation"],
         order_by="creation desc",
         start=start,
