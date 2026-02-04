@@ -35,8 +35,8 @@ def get_parcel_order_settings(limit_start: int = 0, limit_page_length: int = 20)
     return frappe.get_list(
         "Parcel Order Setting",
         fields=["*"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -90,8 +90,8 @@ def get_all_delivery_zones(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Delivery Zone",
         fields=["name", "shop"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 @frappe.whitelist()
@@ -103,8 +103,8 @@ def get_delivery_vehicle_types(limit_start: int = 0, limit_page_length: int = 20
     return frappe.get_list(
         "Delivery Vehicle Type",
         fields=["name"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -158,8 +158,8 @@ def get_all_delivery_man_delivery_zones(limit_start: int = 0, limit_page_length:
     return frappe.get_list(
         "Deliveryman Delivery Zone",
         fields=["name", "deliveryman", "delivery_zone"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 @frappe.whitelist()
@@ -171,8 +171,8 @@ def get_all_shop_working_days(limit_start: int = 0, limit_page_length: int = 20)
     return frappe.get_list(
         "Shop Working Day",
         fields=["name", "shop", "day_of_week", "opening_time", "closing_time", "is_closed"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -185,6 +185,6 @@ def get_all_shop_closed_days(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Shop Closed Day",
         fields=["name", "shop", "date"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
