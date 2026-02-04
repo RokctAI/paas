@@ -17,6 +17,7 @@ class TestBanner(FrappeTestCase):
             "doctype": "Banner",
             "title": "Test Banner",
             "is_ad": 1,
+            "image": "/files/test_banner.jpg",
             "is_active": 1,
             "likes": 0
         }).insert(ignore_permissions=True)
