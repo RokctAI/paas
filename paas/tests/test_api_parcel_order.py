@@ -106,12 +106,14 @@ class TestParcelOrderAPI(FrappeTestCase):
 
              # 3. Create Unique Product (The 'item' field in Parcel Order Item links to Product)
              
-             # Create Shop Unit "Kg" if missing
-             if not frappe.db.exists("Shop Unit", "Kg"):
+             # Create Shop Unit "Kg" if missing (Shop Unit is Shop-specific)
+             # We create it for this specific shop
+             if not frappe.db.exists("Shop Unit", {"unit_name": "Kg", "shop": self.test_shop.name}):
                  frappe.get_doc({
                      "doctype": "Shop Unit",
-                     "name": "Kg", # Assuming name is the primary key or it has a simple name field
-                     "unit_name": "Kg" # Fallback if there's a specific field
+                     "name": f"Kg-{self.shop_name}", # Unique name to avoid collisions if name is manual
+                     "unit_name": "Kg",
+                     "shop": self.test_shop.name
                  }).insert(ignore_permissions=True)
              
              self.product_name = f"Test Product {frappe.generate_hash(length=5)}"
