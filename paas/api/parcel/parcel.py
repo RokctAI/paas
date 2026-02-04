@@ -99,7 +99,7 @@ def get_parcel_orders(limit=20, offset=0):
         "Parcel Order",
         filters={"user": user},
         fields=["name", "status", "delivery_date", "total_price", "address_to", "delivery_point", "order"],
-        limit_page_length=limit,
+        limit=limit,
         offset=offset,
         order_by="modified desc"
     )
