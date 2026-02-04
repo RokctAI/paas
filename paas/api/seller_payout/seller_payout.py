@@ -13,8 +13,8 @@ def get_seller_payouts(limit_start: int = 0, limit_page_length: int = 20):
         "Seller Payout",
         filters={"shop": shop},
         fields=["name", "amount", "payout_date", "status"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="payout_date desc"
     )
     return payouts
