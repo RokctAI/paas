@@ -15,8 +15,8 @@ def get_seller_coupons(limit_start: int = 0, limit_page_length: int = 20):
         "Coupon",
         filters={"shop": shop},
         fields=["name", "code", "quantity", "expired_at"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return coupons
@@ -93,8 +93,8 @@ def get_seller_discounts(limit_start: int = 0, limit_page_length: int = 20):
         "Pricing Rule",
         filters={"shop": shop},
         fields=["name", "title", "apply_on", "valid_from", "valid_upto", "discount_percentage"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return discounts
@@ -171,8 +171,8 @@ def get_seller_banners(limit_start: int = 0, limit_page_length: int = 20):
         "Banner",
         filters={"shop": shop},
         fields=["name", "title", "image", "link", "is_active"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return banners
@@ -259,8 +259,8 @@ def get_seller_shop_ads_packages(limit_start: int = 0, limit_page_length: int = 
         "Shop Ads Package",
         filters={"shop": shop},
         fields=["name", "ads_package", "start_date", "end_date"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="end_date desc"
     )
     return shop_ads_packages
