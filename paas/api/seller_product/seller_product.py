@@ -15,8 +15,8 @@ def get_seller_products(limit_start: int = 0, limit_page_length: int = 20):
         "Product",
         filters={"shop": shop},
         fields=["name", "title", "description", "image", "price", "active", "status", "category", "unit"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return products
@@ -102,8 +102,8 @@ def get_seller_categories(limit_start: int = 0, limit_page_length: int = 20):
         "Category",
         filters={"shop": shop},
         fields=["name", "uuid", "type", "image", "active", "status"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name desc"
     )
     return categories
@@ -197,8 +197,8 @@ def get_seller_brands(limit_start: int = 0, limit_page_length: int = 20):
         "Brand",
         filters={"shop": shop},
         fields=["name", "uuid", "title", "slug", "active", "image"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name desc"
     )
     return brands
@@ -292,8 +292,8 @@ def get_seller_extra_groups(limit_start: int = 0, limit_page_length: int = 20):
         "Product Extra Group",
         filters={"shop": shop},
         fields=["name"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return extra_groups
@@ -367,8 +367,8 @@ def get_seller_extra_values(group_name, limit_start: int = 0, limit_page_length:
         "Product Extra Value",
         filters={"product_extra_group": group_name},
         fields=["name", "value", "price"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return extra_values
@@ -449,8 +449,8 @@ def get_seller_units(limit_start: int = 0, limit_page_length: int = 20):
         "Shop Unit",
         filters={"shop": shop},
         fields=["name", "active"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return units
@@ -527,8 +527,8 @@ def get_seller_tags(limit_start: int = 0, limit_page_length: int = 20):
         "Shop Tag",
         filters={"shop": shop},
         fields=["name"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return tags
