@@ -1,3 +1,6 @@
+# Copyright (c) 2025 ROKCT INTELLIGENCE (PTY) LTD
+# For license information, please see license.txt
+
 import unittest
 from unittest.mock import MagicMock, patch
 import paas.utils as utils
