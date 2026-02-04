@@ -14,8 +14,8 @@ def get_seller_request_models(limit_start: int = 0, limit_page_length: int = 20)
         "Request Model",
         filters={"created_by_user": user},
         fields=["name", "model_type", "model", "status", "created_at"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return request_models
@@ -39,7 +39,7 @@ def get_seller_customer_addresses(limit_start: int = 0, limit_page_length: int =
         "User Address",
         filters={"user": ["in", customer_ids]},
         fields=["name", "user", "title", "address", "location", "active"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
     return addresses
