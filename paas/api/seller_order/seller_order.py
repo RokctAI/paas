@@ -20,8 +20,8 @@ def get_seller_orders(limit_start: int = 0, limit_page_length: int = 20, status:
         "Order",
         filters=filters,
         fields=["name", "user", "grand_total", "status", "creation"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return orders
@@ -81,8 +81,8 @@ def get_seller_order_refunds(limit_start: int = 0, limit_page_length: int = 20):
         "Order Refund",
         filters={"order": ["in", orders]},
         fields=["name", "order", "status", "cause", "answer"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return refunds
@@ -130,8 +130,8 @@ def get_seller_reviews(limit_start: int = 0, limit_page_length: int = 20):
         "Review",
         filters={"reviewable_id": ["in", products], "reviewable_type": "Item"},
         fields=["name", "user", "rating", "comment", "creation", "reviewable_id"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return reviews
