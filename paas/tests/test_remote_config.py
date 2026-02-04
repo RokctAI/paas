@@ -9,9 +9,14 @@ from types import SimpleNamespace
 
 class TestRemoteConfig(unittest.TestCase):
     def setUp(self):
-        frappe.db.get_single_value.reset_mock()
-        frappe.db.get_value.reset_mock()
-        frappe.get_doc.reset_mock()
+        # Patching database and doc methods
+        self.db_get_single_value_patcher = patch('frappe.db.get_single_value')
+        self.db_get_value_patcher = patch('frappe.db.get_value')
+        self.get_doc_patcher = patch('frappe.get_doc')
+
+        self.mock_db_get_single_value = self.db_get_single_value_patcher.start()
+        self.mock_db_get_value = self.db_get_value_patcher.start()
+        self.mock_get_doc = self.get_doc_patcher.start()
 
         # Patch frappe.throw to raise Exception with the message
         self.throw_patcher = patch('frappe.throw', side_effect=lambda msg, **kwargs: (_ for _ in ()).throw(Exception(msg)))
@@ -24,6 +29,9 @@ class TestRemoteConfig(unittest.TestCase):
 
     def tearDown(self):
         self.throw_patcher.stop()
+        self.db_get_single_value_patcher.stop()
+        self.db_get_value_patcher.stop()
+        self.get_doc_patcher.stop()
 
     @patch('paas.api.remote_config.get_subscription_details')
     def test_get_remote_config_inactive_subscription(self, mock_get_sub):
