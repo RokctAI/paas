@@ -100,7 +100,7 @@ class TestParcelOrderAPI(FrappeTestCase):
                  "open": 1,
                  "visibility": 1,
                  "delivery": 1, 
-                 "phone": "+1234567890"
+                 "phone": "+919999999999"
              }).insert(ignore_permissions=True)
              frappe.db.commit()
 
