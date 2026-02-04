@@ -14,8 +14,8 @@ def get_seller_delivery_zones(limit_start: int = 0, limit_page_length: int = 20)
         "Delivery Zone",
         filters={"shop": shop},
         fields=["name"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return delivery_zones
