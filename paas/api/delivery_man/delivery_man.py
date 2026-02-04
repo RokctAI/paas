@@ -14,8 +14,8 @@ def get_deliveryman_orders(limit_start: int = 0, limit_page_length: int = 20):
         "Order",
         filters={"deliveryman": user},
         fields=["name", "shop", "total_price", "status", "creation"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return orders
@@ -34,8 +34,8 @@ def get_deliveryman_parcel_orders(limit_start: int = 0, limit_page_length: int =
         "Parcel Order",
         filters={"deliveryman": user},
         fields=["name", "status", "total_price", "delivery_date"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return orders
@@ -160,8 +160,8 @@ def get_payment_to_partners(limit_start: int = 0, limit_page_length: int = 20):
         "Payout",
         filters={"deliveryman": user},
         fields=["name", "amount", "payment_date", "status"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="payment_date desc"
     )
     return payouts
