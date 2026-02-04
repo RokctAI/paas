@@ -30,8 +30,8 @@ def get_blogs(type=None, limit=10, start=0):
         filters=filters, 
         fields=["name", "title", "short_description", "img", "published_at", "author", "type"],
         order_by="published_at desc",
-        start=start,
-        page_length=limit
+        offset=start,
+        limit=limit,
     )
 
 @frappe.whitelist(allow_guest=True)
