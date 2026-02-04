@@ -74,5 +74,5 @@ class TestNotificationsAPI(FrappeTestCase):
         notifications = get_user_notifications()
         self.assertTrue(isinstance(notifications, list))
         self.assertEqual(len(notifications), 1)
-        self.assertEqual(notifications[0].get("subject"), "Test Notification")
+        self.assertEqual(notifications[0].get("subject"), self.notification_log.subject)
 
