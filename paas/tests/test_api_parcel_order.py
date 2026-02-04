@@ -108,10 +108,11 @@ class TestParcelOrderAPI(FrappeTestCase):
              
              # Create Shop Unit "Kg" if missing (Shop Unit is Shop-specific)
              # We create it for this specific shop
-             if not frappe.db.exists("Shop Unit", {"unit_name": "Kg", "shop": self.test_shop.name}):
+             unit_name = f"Kg-{self.shop_name}"
+             if not frappe.db.exists("Shop Unit", unit_name):
                  frappe.get_doc({
                      "doctype": "Shop Unit",
-                     "name": f"Kg-{self.shop_name}", # Unique name to avoid collisions if name is manual
+                     "name": unit_name,
                      "unit_name": "Kg",
                      "shop": self.test_shop.name
                  }).insert(ignore_permissions=True)
@@ -122,7 +123,7 @@ class TestParcelOrderAPI(FrappeTestCase):
                  "title": self.product_name,
                  "shop": self.test_shop.name,
                  "price": 10.0,
-                 "unit": "Kg", 
+                 "unit": unit_name, 
                  "active": 1,
                  "track_stock": 0
              }).insert(ignore_permissions=True)
