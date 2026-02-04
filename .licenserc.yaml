@@ -1,0 +1,16 @@
+header:
+  license:
+    spdx-id: MIT
+    content: |
+      Copyright (c) 2025 ROKCT INTELLIGENCE (PTY) LTD
+paths:
+  - '**/*.py'
+  - '**/*.js'
+  - '**/*.ts'
+  - '**/*.dart'
+paths-ignore:
+  - '**/*.json'
+  - '**/*.md'
+  - '**/*.yml'
+  - '**/dist/**'
+  - '**/node_modules/**'
