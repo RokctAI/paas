@@ -70,8 +70,8 @@ def get_admin_blogs(page: int = 1, limit: int = 10, lang: str = "en"):
     return frappe.get_list("Blog",
         fields=["name", "title", "short_description", "img", "published_at", "author", "type", "active"],
         order_by="creation desc",
-        limit_start=(page - 1) * limit,
-        limit_page_length=limit
+        offset=(page - 1) * limit,
+        limit=limit
     )
 
 
