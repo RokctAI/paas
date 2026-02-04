@@ -8,14 +8,24 @@ from paas.branding import get_paas_branding, get_paas_brand_html
 
 class TestBranding(unittest.TestCase):
     def setUp(self):
-        # Reset mocks
-        frappe.db.get_value.reset_mock()
-        frappe.get_doc.reset_mock()
-        frappe.get_single.reset_mock()
+        # Patching methods
+        self.db_get_value_patcher = patch('frappe.db.get_value')
+        self.get_doc_patcher = patch('frappe.get_doc')
+        self.get_single_patcher = patch('frappe.get_single')
+
+        self.mock_db_get_value = self.db_get_value_patcher.start()
+        self.mock_get_doc = self.get_doc_patcher.start()
+        self.mock_get_single = self.get_single_patcher.start()
+
         # Ensure defaults mock is set up
         if not hasattr(frappe, 'defaults'):
             frappe.defaults = MagicMock()
         frappe.defaults.get_user_default = MagicMock(return_value="Test Company")
+
+    def tearDown(self):
+        self.db_get_value_patcher.stop()
+        self.get_doc_patcher.stop()
+        self.get_single_patcher.stop()
 
     def test_get_paas_branding_no_subscription(self):
         # Mock no subscription found
