@@ -285,8 +285,8 @@ def get_product_reviews(uuid: str, limit_start: int = 0, limit_page_length: int 
             "reviewable_id": product_name,
             "published": 1
         },
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return reviews
@@ -313,8 +313,8 @@ def get_products_by_brand(brand_id: str, limit_start: int = 0, limit_page_length
         "Item",
         fields=["name", "item_name", "description", "image", "standard_rate"],
         filters={"brand": brand_id},
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return products
@@ -331,8 +331,8 @@ def products_search(search: str, limit_start: int = 0, limit_page_length: int = 
         filters=[
             ["Item", "item_name", "like", f"%{search}%"],
         ],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return products
@@ -351,8 +351,8 @@ def get_products_by_category(uuid: str, limit_start: int = 0, limit_page_length:
         "Item",
         fields=["name", "item_name", "description", "image", "standard_rate"],
         filters={"item_group": category_name},
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return products
@@ -367,8 +367,8 @@ def get_products_by_shop(shop_id: str, limit_start: int = 0, limit_page_length: 
         "Item",
         fields=["name", "item_name", "description", "image", "standard_rate"],
         filters={"shop": shop_id},
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return products
@@ -435,8 +435,8 @@ def get_product_history(limit_start: int = 0, limit_page_length: int = 20):
         },
         fields=["docname"],
         order_by="creation desc",
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         distinct=True
     )
 
