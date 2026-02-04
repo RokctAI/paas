@@ -142,8 +142,8 @@ def get_all_wallet_histories(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Wallet History",
         fields=["name", "wallet", "type", "price", "status", "created_at"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
 
@@ -157,8 +157,8 @@ def get_all_transactions(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Transaction",
         fields=["name", "transaction_date", "reference_doctype", "reference_name", "debit", "credit", "currency"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
 
@@ -172,8 +172,8 @@ def get_all_seller_payouts(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Seller Payout",
         fields=["name", "shop", "amount", "payout_date", "status"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="payout_date desc"
     )
 
@@ -187,7 +187,7 @@ def get_all_shop_bonuses(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Shop Bonus",
         fields=["name", "shop", "amount", "bonus_date", "reason"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="bonus_date desc"
     )
