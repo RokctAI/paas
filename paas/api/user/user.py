@@ -628,7 +628,7 @@ def get_wallet_history(start=0, limit=20):
         filters={"wallet": wallet.name},
         fields=["name", "transaction_type", "amount", "status", "creation"],
         order_by="creation desc",
-        start=start,
+        offset=start,
         limit=limit
     )
 
@@ -706,7 +706,7 @@ def get_user_transactions(start=0, limit=20):
         filters={"user": user},
         fields=["name", "user", "amount", "status", "payable_type", "payable_id", "creation"],
         order_by="creation desc, name desc",
-        start=start,
+        offset=start,
         limit=limit,
         ignore_permissions=True
     )
@@ -795,7 +795,7 @@ def get_user_request_models(start=0, limit=20):
         filters={"created_by_user": user},
         fields=["name", "model_type", "model", "status", "created_at"],
         order_by="creation desc",
-        start=start,
+        offset=start,
         limit=limit
     )
 
@@ -834,7 +834,7 @@ def get_user_tickets(limit_start=0, limit_page_length=20):
         filters={"created_by_user": user, "parent_ticket": None}, # Only get parent tickets
         fields=["name", "subject", "status", "creation"],
         order_by="creation desc",
-        start=limit_start,
+        offset=limit_start,
         limit=limit_page_length
     )
 
@@ -975,8 +975,8 @@ def get_user_order_refunds(page=1):
         "Order Refund",
         filters={"user": user},
         fields=["name", "order", "cause", "status"],
-        limit_start=(int(page) - 1) * 10,
-        limit_page_length=10,
+        offset=(int(page) - 1) * 10,
+        limit=10,
         order_by="creation desc"
     )
     return refunds
@@ -1025,6 +1025,6 @@ def get_user_notifications(start=0, limit=20):
         filters={"user": user},
         fields=["name", "subject", "document_type", "document_name", "creation"],
         order_by="creation desc",
-        start=start,
+        offset=start,
         limit=limit
     )
