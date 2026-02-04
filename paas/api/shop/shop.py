@@ -65,8 +65,8 @@ def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str =
             "open", "visibility", "verify", "service_fee", "percentage", "enable_cod",
             "shop_type", "is_ecommerce"
         ],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by=f"{order_by} {order}"
     )
 
@@ -190,8 +190,8 @@ def search_shops(search: str, category_id: int = None, limit_start: int = 0, lim
             "open", "visibility", "verify", "service_fee", "percentage", "enable_cod",
             "shop_type", "is_ecommerce"
         ],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="shop_name"
     )
 
