@@ -28,8 +28,8 @@ def get_categories(limit_start: int = 0, limit_page_length: int = 10, order_by: 
         "Category",
         fields=fields,
         filters=filters,
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by=f"{order_by} {order}"
     )
 
