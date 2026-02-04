@@ -90,8 +90,8 @@ def list_orders(limit_start: int = 0, limit_page_length: int = 20):
         "Order",
         filters={"user": user},
         fields=["name", "shop", "total_price", "status", "creation"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc",
         ignore_permissions=True
     )
