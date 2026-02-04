@@ -22,8 +22,8 @@ def get_seller_transactions(limit_start=0, limit_page_length=20):
         "Transaction",
         filters={"reference_name": ["in", orders]},
         fields=["name", "transaction_date", "reference_doctype", "reference_name", "debit", "credit", "currency"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return transactions
@@ -53,8 +53,8 @@ def get_seller_shop_payments(limit_start: int = 0, limit_page_length: int = 20):
             "credit": [">", 0]
         },
         fields=["name", "transaction_date", "reference_doctype", "reference_name", "credit", "currency"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return payments
@@ -71,8 +71,8 @@ def get_seller_payment_to_partners(limit_start: int = 0, limit_page_length: int 
         "Payout",
         filters={"shop": shop},
         fields=["name", "deliveryman", "amount", "payment_date", "status"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="payment_date desc"
     )
     return payouts
