@@ -14,8 +14,8 @@ def get_seller_stories(limit_start: int = 0, limit_page_length: int = 20):
         "Story",
         filters={"shop": shop},
         fields=["name", "title", "image", "expires_at"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return stories
