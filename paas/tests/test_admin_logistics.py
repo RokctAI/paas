@@ -21,8 +21,8 @@ class TestAdminLogistics(FrappeTestCase):
 
     def test_deliveryman_settings(self):
         get_deliveryman_global_settings()
-        update_deliveryman_global_settings({"max_orders": 5})
-        self.assertEqual(frappe.db.get_single_value("DeliveryMan Settings", "max_orders"), 5)
+        update_deliveryman_global_settings({"default_commission_rate": 5})
+        self.assertEqual(frappe.db.get_single_value("DeliveryMan Settings", "default_commission_rate"), 5)
 
     def test_parcel_order_settings(self):
         # Create
