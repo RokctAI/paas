@@ -37,7 +37,7 @@ def get_admin_pages(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Web Page",
         fields=["name", "title", "route", "published"],
-        limit_start=limit_start,
+        offset=limit_start,
         limit=limit_page_length
     )
 
