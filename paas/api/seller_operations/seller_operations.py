@@ -15,8 +15,8 @@ def get_seller_kitchens(limit_start: int = 0, limit_page_length: int = 20):
         "Kitchen",
         filters={"shop": shop},
         fields=["name", "active"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return kitchens
@@ -103,7 +103,7 @@ def get_seller_inventory_items(limit_start: int = 0, limit_page_length: int = 20
         filters={"item_code": ["in", items]},
         fields=["item_code", "warehouse", "actual_qty"],
         limit_start=limit_start,
-        limit_page_length=limit_page_length
+        limit=limit_page_length
     )
     return inventory_items
 
@@ -153,8 +153,8 @@ def get_seller_menus(limit_start: int = 0, limit_page_length: int = 20):
         "Menu",
         filters={"shop": shop},
         fields=["name"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return menus
@@ -246,8 +246,8 @@ def get_seller_receipts(limit_start: int = 0, limit_page_length: int = 20):
         "Receipt",
         filters={"shop": shop},
         fields=["name", "title"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return receipts
@@ -324,8 +324,8 @@ def get_seller_combos(limit_start: int = 0, limit_page_length: int = 20):
         "Combo",
         filters={"shop": shop},
         fields=["name", "price"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="name"
     )
     return combos
