@@ -14,8 +14,8 @@ def get_seller_shop_galleries(limit_start: int = 0, limit_page_length: int = 20)
         "Shop Gallery",
         filters={"shop": shop},
         fields=["name", "image"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
+        offset=limit_start,
+        limit=limit_page_length,
         order_by="creation desc"
     )
     return galleries
