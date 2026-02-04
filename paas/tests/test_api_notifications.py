@@ -51,9 +51,9 @@ class TestNotificationsAPI(FrappeTestCase):
         self.notification_log = frappe.get_doc({
             "doctype": "Notification Log",
             "subject": f"Test Notification {frappe.generate_hash()}",
-            "for_user": self.test_user.name,
+            "user": self.test_user.name, # Was for_user
             "type": "Alert",
-            "email_content": "Test Content",
+            "message": "Test Content", # Was email_content
             "notification_type": self.alert_type_doc.name
         }).insert(ignore_permissions=True)
 
