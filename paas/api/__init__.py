@@ -643,8 +643,8 @@ def get_shop_filter(category_id: int = None, sub_category_id: int = None, page: 
         "Shop",
         filters=filters,
         fields=["name", "shop_name", "logo"],
-        limit_start = (page - 1) * 10
-        limit = 10,
+        offset=(page - 1) * 10,
+        limit=10,
     )
     return shops
 
@@ -693,7 +693,7 @@ def get_shops_recommend(page: int = 1, lang: str = "en"):
         "Shop",
         filters={"recommended": 1},
         fields=["name", "shop_name", "logo"],
-        limit_start=(page - 1) * 10,
+        offset=(page - 1) * 10,
         limit=10,
     )
     return shops
