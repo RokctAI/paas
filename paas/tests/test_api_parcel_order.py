@@ -94,6 +94,7 @@ class TestParcelOrderAPI(FrappeTestCase):
              self.test_shop = frappe.get_doc({
                  "doctype": "Shop",
                  "shop_name": self.shop_name,
+                 "uuid": frappe.generate_hash(length=10), # Add mandatory UUID
                  "user": self.test_user.name,
                  "status": "approved",
                  "open": 1,
