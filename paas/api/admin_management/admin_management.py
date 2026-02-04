@@ -11,8 +11,8 @@ def get_all_shops(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Shop",
         fields=["name", "shop_name", "user", "shop_type", "is_ecommerce"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 @frappe.whitelist()
@@ -24,8 +24,8 @@ def get_all_roles(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Role",
         fields=["name", "role_name"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -80,6 +80,6 @@ def get_all_users(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "User",
         fields=["name", "full_name", "email", "enabled"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
