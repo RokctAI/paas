@@ -11,8 +11,8 @@ def get_admin_stories(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "Story",
         fields=["name", "title", "shop", "expires_at"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 @frappe.whitelist()
@@ -25,8 +25,8 @@ def get_admin_banners(limit_start: int = 0, limit_page_length: int = 20):
         "Banner",
         filters={"shop": None},
         fields=["name", "title", "image", "link", "is_active"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -83,8 +83,8 @@ def get_admin_faqs(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "FAQ",
         fields=["name", "question", "faq_category", "is_active"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
@@ -139,8 +139,8 @@ def get_admin_faq_categories(limit_start: int = 0, limit_page_length: int = 20):
     return frappe.get_list(
         "FAQ Category",
         fields=["name", "category_name"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
 
 
