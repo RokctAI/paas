@@ -20,8 +20,8 @@ def get_seller_delivery_man_delivery_zones(limit_start: int = 0, limit_page_leng
         "Deliveryman Delivery Zone",
         filters={"deliveryman": ["in", deliverymen]},
         fields=["name", "deliveryman", "delivery_zone"],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length
+        offset=limit_start,
+        limit=limit_page_length
     )
     return delivery_zones
 
