@@ -29,23 +29,26 @@ def get_nearest_delivery_points(latitude, longitude, radius=20):
         frappe.throw("Invalid coordinates or radius.")
 
     # Haversine formula to calculate distance, using parameterized queries to prevent SQL injection
+    # Subquery used to ensure 'distance' alias works in WHERE/ORDER BY for both MariaDB and Postgres
     query = """
-        SELECT
-            name,
-            address,
-            latitude,
-            longitude,
-            img,
-            (
-                6371 * 2 * ASIN(SQRT(
-                    POWER(SIN(RADIANS(%(latitude)s - latitude) / 2), 2) +
-                    COS(RADIANS(%(latitude)s)) * COS(RADIANS(latitude)) *
-                    POWER(SIN(RADIANS(%(longitude)s - longitude) / 2), 2)
-                ))
-            ) AS distance
-        FROM `tabDelivery Point`
-        WHERE active = 1
-        HAVING distance < %(radius)s
+        SELECT * FROM (
+            SELECT
+                name,
+                address,
+                latitude,
+                longitude,
+                img,
+                (
+                    6371 * 2 * ASIN(SQRT(
+                        POWER(SIN(RADIANS(%(latitude)s - latitude) / 2), 2) +
+                        COS(RADIANS(%(latitude)s)) * COS(RADIANS(latitude)) *
+                        POWER(SIN(RADIANS(%(longitude)s - longitude) / 2), 2)
+                    ))
+                ) AS distance
+            FROM `tabDelivery Point`
+            WHERE active = 1
+        ) sub
+        WHERE distance < %(radius)s
         ORDER BY distance
         LIMIT 20
     """
