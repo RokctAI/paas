@@ -48,4 +48,5 @@ jobs:
       mariadb-version: ${{ inputs.mariadb-version || '10.6' }}
       postgres-version: ${{ inputs.postgres-version || '15' }}
       db-type: ${{ inputs.db-type || 'postgres' }}
+      install-erpnext: true
     secrets: inherit
