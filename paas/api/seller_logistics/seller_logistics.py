@@ -9,9 +9,13 @@ def get_seller_delivery_man_delivery_zones(limit_start: int = 0, limit_page_leng
     user = frappe.session.user
     shop = _get_seller_shop(user)
 
-    deliverymen = frappe.db.sql_list("""
-        SELECT DISTINCT deliveryman FROM `tabOrder` WHERE shop = %(shop)s AND deliveryman IS NOT NULL
-    """, {"shop": shop})
+    t_order = frappe.qb.DocType("Order")
+    deliverymen = (
+        frappe.qb.from_(t_order)
+        .select(frappe.qb.fn.Distinct(t_order.deliveryman))
+        .where(t_order.shop == shop)
+        .where(t_order.deliveryman.isnotnull())
+    ).run(pluck=True)
 
     if not deliverymen:
         return []
