@@ -16,3 +16,24 @@ def _get_seller_shop(user_id):
         frappe.throw("User is not linked to any shop.", frappe.PermissionError)
 
     return shop
+
+def api_response(data=None, message=None, status_code=200):
+    """
+    Standard API response wrapper.
+    Returns:
+        {
+            "data": data,
+            "message": message,
+            "status_code": status_code
+        }
+    """
+    response = {}
+    if data is not None:
+        response["data"] = data
+    if message:
+        response["message"] = message
+    
+    # Frappe automatically wraps 'api/method' returns in 'message', 
+    # so this essentially creates {"message": {"data": ..., "message": ...}}
+    # which the Flutter app's interceptor will handle.
+    return response
