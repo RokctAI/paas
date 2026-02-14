@@ -1,5 +1,6 @@
 import frappe
 import json
+from paas.api.utils import api_response
 
 @frappe.whitelist(allow_guest=True)
 def get_products(
@@ -141,7 +142,7 @@ def get_products(
         p['discount'] = discounts_map.get(p.name)
         p['reviews'] = reviews_map.get(p.name, {"avg_rating": 0, "reviews_count": 0})
 
-    return products
+    return api_response(data=products)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -161,14 +162,15 @@ def most_sold_products(limit_start: int = 0, limit_page_length: int = 20):
     item_codes = [d.item_code for d in most_sold_items]
 
     if not item_codes:
-        return []
+        return api_response(data=[])
 
-    return frappe.get_list(
+    items = frappe.get_list(
         "Item",
         fields=["name", "item_name", "description", "image", "standard_rate"],
         filters={"name": ("in", item_codes)},
         order_by="name"
     )
+    return api_response(data=items)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -202,20 +204,21 @@ def get_discounted_products(limit_start: int = 0, limit_page_length: int = 20):
             item_codes.update(items_in_brand)
 
     if not item_codes:
-        return []
+        return api_response(data=[])
 
     # Paginate on the final list of item codes
     paginated_item_codes = list(item_codes)[limit_start : limit_start + limit_page_length]
 
     if not paginated_item_codes:
-        return []
+        return api_response(data=[])
 
-    return frappe.get_list(
+    items = frappe.get_list(
         "Item",
         fields=["name", "item_name", "description", "image", "standard_rate"],
         filters={"name": ("in", paginated_item_codes)},
         order_by="name"
     )
+    return api_response(data=items)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -224,14 +227,15 @@ def get_products_by_ids(ids: list):
     Retrieves a list of products by their IDs.
     """
     if not ids:
-        return []
+        return api_response(data=[])
 
-    return frappe.get_list(
+    items = frappe.get_list(
         "Item",
         fields=["name", "item_name", "description", "image", "standard_rate"],
         filters={"name": ("in", ids)},
         order_by="name"
     )
+    return api_response(data=items)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -240,7 +244,7 @@ def get_product_by_uuid(uuid: str):
     Retrieves a single product by its UUID.
     """
     product = frappe.get_doc("Item", {"uuid": uuid})
-    return product.as_dict()
+    return api_response(data=product.as_dict())
 
 
 @frappe.whitelist(allow_guest=True)
@@ -249,7 +253,7 @@ def get_product_by_slug(slug: str):
     Retrieves a single product by its slug.
     """
     product = frappe.get_doc("Item", {"route": slug})
-    return product.as_dict()
+    return api_response(data=product.as_dict())
 
 
 @frappe.whitelist(allow_guest=True)
@@ -263,7 +267,7 @@ def read_product_file(uuid: str):
 
     try:
         file = frappe.get_doc("File", {"file_url": product.image})
-        return file.get_content()
+        return api_response(data=file.get_content())
     except frappe.DoesNotExistError:
         frappe.throw("File not found.")
 
@@ -289,7 +293,7 @@ def get_product_reviews(uuid: str, limit_start: int = 0, limit_page_length: int 
         limit=limit_page_length,
         order_by="creation desc"
     )
-    return reviews
+    return api_response(data=reviews)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -301,7 +305,7 @@ def order_products_calculate(products: list):
     for product in products:
         item = frappe.get_doc("Item", product.get("product_id"))
         total_price += item.standard_rate * product.get("quantity", 1)
-    return {"total_price": total_price}
+    return api_response(data={"total_price": total_price})
 
 
 @frappe.whitelist(allow_guest=True)
@@ -317,7 +321,7 @@ def get_products_by_brand(brand_id: str, limit_start: int = 0, limit_page_length
         limit=limit_page_length,
         order_by="name"
     )
-    return products
+    return api_response(data=products)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -335,7 +339,7 @@ def products_search(search: str, limit_start: int = 0, limit_page_length: int = 
         limit=limit_page_length,
         order_by="name"
     )
-    return products
+    return api_response(data=products)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -355,7 +359,7 @@ def get_products_by_category(uuid: str, limit_start: int = 0, limit_page_length:
         limit=limit_page_length,
         order_by="name"
     )
-    return products
+    return api_response(data=products)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -371,7 +375,7 @@ def get_products_by_shop(shop_id: str, limit_start: int = 0, limit_page_length: 
         limit=limit_page_length,
         order_by="name"
     )
-    return products
+    return api_response(data=products)
 
 
 @frappe.whitelist()
@@ -414,7 +418,7 @@ def add_product_review(uuid: str, rating: float, comment: str = None):
         "published": 1
     })
     review.insert(ignore_permissions=True)
-    return review.as_dict()
+    return api_response(data=review.as_dict(), message="Review added successfully")
 
 
 @frappe.whitelist()
@@ -443,7 +447,7 @@ def get_product_history(limit_start: int = 0, limit_page_length: int = 20):
     item_names = [d.docname for d in viewed_item_names]
 
     if not item_names:
-        return []
+        return api_response(data=[])
 
     # Fetch the actual product details for the viewed items
     products = frappe.get_list(
@@ -452,4 +456,4 @@ def get_product_history(limit_start: int = 0, limit_page_length: int = 20):
         filters={"name": ("in", item_names)},
     )
 
-    return products
+    return api_response(data=products)
