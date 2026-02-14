@@ -19,9 +19,9 @@ class TestBlog(FrappeTestCase):
             "published_at": now_datetime()
         }
         blog = create_blog(data)
-        self.assertEqual(blog.title, "Welcome to PaaS")
+        self.assertEqual(blog["data"]["title"], "Welcome to PaaS")
 
         # 2. Get Blogs
         blogs = get_blogs(type="blog")
-        self.assertTrue(len(blogs) > 0)
-        self.assertEqual(blogs[0].title, "Welcome to PaaS")
+        self.assertTrue(len(blogs["data"]) > 0)
+        self.assertEqual(blogs["data"][0]["title"], "Welcome to PaaS")
