@@ -186,11 +186,12 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         response = get_languages()
 
         # Assert
-        self.assertIsInstance(response, list)
-        self.assertTrue(len(response) > 0)
+        # Assert
+        self.assertIsInstance(response.get("data"), list)
+        self.assertTrue(len(response.get("data")) > 0)
 
         # Create a list of names from the response for easier checking
-        response_names = [lang['name'] for lang in response]
+        response_names = [lang['name'] for lang in response.get("data")]
         self.assertIn("en", response_names)
         self.assertNotIn("tlh", response_names)
 
@@ -207,11 +208,12 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         response = get_currencies()
 
         # Assert
-        self.assertIsInstance(response, list)
-        self.assertTrue(len(response) > 0)
+        # Assert
+        self.assertIsInstance(response.get("data"), list)
+        self.assertTrue(len(response.get("data")) > 0)
 
         # Create a list of names from the response for easier checking
-        response_names = [c['name'] for c in response]
+        response_names = [c['name'] for c in response.get("data")]
         self.assertIn("USD", response_names)
         self.assertNotIn("KLG", response_names)
 
