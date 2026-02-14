@@ -40,21 +40,24 @@ def get_translations_paginate(search=None, group=None, locale=None, perPage=10, 
     current_page = cint(page)
     start = (current_page - 1) * per_page
 
-    params = {}
-    conditions = []
+    t_translation = frappe.qb.DocType("PaaS Translation")
+    
+    # Base query for filtering
+    base_query = frappe.qb.from_(t_translation)
+    
     if group:
-        conditions.append("`group` = %(group)s")
-        params['group'] = group
+        base_query = base_query.where(t_translation.group == group)
     if locale:
-        conditions.append("`locale` = %(locale)s")
-        params['locale'] = locale
+        base_query = base_query.where(t_translation.locale == locale)
     if search:
-        conditions.append("(`key` LIKE %(search)s OR `value` LIKE %(search)s)")
-        params['search'] = f"%{search}%"
+        base_query = base_query.where(
+            (t_translation.key.like(f"%{search}%")) | 
+            (t_translation.value.like(f"%{search}%"))
+        )
 
-    cond_str = "WHERE " + " AND ".join(conditions) if conditions else ""
-
-    total_keys = frappe.db.sql(f"SELECT COUNT(DISTINCT `key`) FROM `tabPaaS Translation` {cond_str}", params)[0][0]
+    # Count total distinct keys
+    count_query = base_query.select(frappe.qb.fn.Count(frappe.qb.fn.Distinct(t_translation.key)))
+    total_keys = count_query.run()[0][0]
 
     if total_keys == 0:
          return _api_success({
@@ -63,37 +66,31 @@ def get_translations_paginate(search=None, group=None, locale=None, perPage=10, 
             "translations": {}
         })
 
-    paginated_keys = frappe.db.sql(f"""
-        SELECT DISTINCT `key`
-        FROM `tabPaaS Translation`
-        {cond_str}
-        ORDER BY `key` ASC
-        LIMIT %(limit)s OFFSET %(offset)s
-    """, {**params, "limit": per_page, "offset": start}, as_dict=True)
+    # Get paginated distinct keys
+    keys_query = base_query.select(frappe.qb.fn.Distinct(t_translation.key))
+    keys_query = keys_query.orderby(t_translation.key, order=frappe.qb.asc).limit(per_page).offset(start)
+    paginated_keys = keys_query.run(as_dict=True)
 
     keys_list = [r.key for r in paginated_keys]
 
-    detail_filters = {"key": ["in", keys_list]}
-    if group: detail_filters["group"] = group
-    if locale: detail_filters["locale"] = locale
+    # Get details for the fetched keys
+    details_query = frappe.qb.from_(t_translation).select(
+        t_translation.name, t_translation.group, t_translation.key, 
+        t_translation.locale, t_translation.value, t_translation.status
+    ).where(t_translation.key.isin(keys_list))
 
     if search:
-        details_query = f"""
-            SELECT name, `group`, `key`, `locale`, `value`, `status`
-            FROM `tabPaaS Translation`
-            WHERE `key` IN %(keys)s
-            AND (`key` LIKE %(search)s OR `value` LIKE %(search)s)
-        """
-        if group: details_query += " AND `group` = %(group)s"
-        if locale: details_query += " AND `locale` = %(locale)s"
-        details_query += " ORDER BY `key` ASC"
-
-        details = frappe.db.sql(details_query, {**params, "keys": keys_list}, as_dict=True)
-    else:
-        details = frappe.get_all("PaaS Translation",
-                                 filters=detail_filters,
-                                 fields=["name", "group", "key", "locale", "value", "status"],
-                                 order_by="key asc")
+        details_query = details_query.where(
+            (t_translation.key.like(f"%{search}%")) | 
+            (t_translation.value.like(f"%{search}%"))
+        )
+    if group:
+        details_query = details_query.where(t_translation.group == group)
+    if locale:
+        details_query = details_query.where(t_translation.locale == locale)
+        
+    details_query = details_query.orderby(t_translation.key, order=frappe.qb.asc)
+    details = details_query.run(as_dict=True)
 
     grouped = {}
     for t in details:
