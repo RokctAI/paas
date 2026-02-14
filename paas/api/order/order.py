@@ -1,6 +1,7 @@
 import frappe
 import json
 from frappe.model.document import Document
+from paas.api.utils import api_response
 
 @frappe.whitelist(allow_guest=True)
 def create_order(order_data):
@@ -73,9 +74,9 @@ def create_order(order_data):
             "user": order.user,
             "order": order.name
         }).insert(ignore_permissions=True)
-
-    return order.as_dict()
-
+ 
+    return api_response(data=order.as_dict(), message="Order created successfully.")
+ 
 
 @frappe.whitelist()
 def list_orders(limit_start: int = 0, limit_page_length: int = 20):
@@ -95,7 +96,7 @@ def list_orders(limit_start: int = 0, limit_page_length: int = 20):
         order_by="creation desc",
         ignore_permissions=True
     )
-    return orders
+    return api_response(data=orders)
 
 
 @frappe.whitelist()
@@ -116,7 +117,7 @@ def get_order_details(order_id: str):
         frappe.set_user(original_user)
     if order.user != user:
         frappe.throw("You are not authorized to view this order.", frappe.PermissionError)
-    return order.as_dict()
+    return api_response(data=order.as_dict())
 
 
 @frappe.whitelist()
@@ -181,7 +182,7 @@ def update_order_status(order_id: str, status: str):
                     stock_doc.quantity += item.quantity
                     stock_doc.save(ignore_permissions=True)
 
-    return order.as_dict()
+    return api_response(data=order.as_dict(), message="Order status updated successfully.")
 
 
 @frappe.whitelist()
@@ -220,7 +221,7 @@ def add_order_review(order_id: str, rating: float, comment: str = None):
         "published": 1
     })
     review.insert(ignore_permissions=True)
-    return review.as_dict()
+    return api_response(data=review.as_dict(), message="Review added successfully.")
 
 
 @frappe.whitelist()
@@ -250,7 +251,7 @@ def cancel_order(order_id: str):
     # No stock restoration needed for "New" orders as stock wasn't deducted yet.
 
     order.save(ignore_permissions=True)
-    return order.as_dict()
+    return api_response(data=order.as_dict(), message="Order cancelled successfully.")
 
 @frappe.whitelist(allow_guest=True)
 def get_order_statuses():
@@ -273,7 +274,7 @@ def get_order_statuses():
             "sort": status.sort_order,
         })
 
-    return formatted_statuses
+    return api_response(data=formatted_statuses)
 
 
 @frappe.whitelist()
@@ -364,7 +365,7 @@ def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type
     order_total = (product_total - discount) + delivery_fee + shop_tax + service_fee - coupon_price + float(tips)
 
     # Return in the format expected by GetCalculateModel
-    return {
+    return api_response(data={
         "total_tax": product_tax,
         "price": product_total,
         "total_shop_tax": shop_tax,
@@ -374,4 +375,4 @@ def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type
         "service_fee": service_fee,
         "tips": float(tips),
         "coupon_price": coupon_price,
-    }
+    })
