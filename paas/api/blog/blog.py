@@ -1,6 +1,7 @@
 import frappe
 import json
 from frappe.utils import now_datetime
+from paas.api.utils import api_response
 
 @frappe.whitelist()
 def create_blog(data):
@@ -15,7 +16,7 @@ def create_blog(data):
         **data
     })
     doc.insert()
-    return doc.as_dict()
+    return api_response(data=doc.as_dict(), message="Blog created successfully.")
 
 @frappe.whitelist(allow_guest=True)
 def get_blogs(type=None, limit=10, start=0):
@@ -26,20 +27,21 @@ def get_blogs(type=None, limit=10, start=0):
     if type:
         filters["type"] = type
         
-    return frappe.get_list("Blog", 
+    runs = frappe.get_list("Blog", 
         filters=filters, 
         fields=["name", "title", "short_description", "img", "published_at", "author", "type"],
         order_by="published_at desc",
         offset=start,
         limit=limit,
     )
+    return api_response(data=runs)
 
 @frappe.whitelist(allow_guest=True)
 def get_blog_details(name):
     """
     Retrieves full details of a Blog post.
     """
-    return frappe.get_doc("Blog", name).as_dict()
+    return api_response(data=frappe.get_doc("Blog", name).as_dict())
 
 @frappe.whitelist()
 def update_blog(name, data):
@@ -52,7 +54,7 @@ def update_blog(name, data):
     doc = frappe.get_doc("Blog", name)
     doc.update(data)
     doc.save()
-    return doc.as_dict()
+    return api_response(data=doc.as_dict(), message="Blog updated successfully.")
 
 @frappe.whitelist()
 def delete_blog(name):
@@ -60,19 +62,20 @@ def delete_blog(name):
     Deletes a Blog post.
     """
     frappe.delete_doc("Blog", name)
-    return {"status": "success"}
+    return api_response(message="Blog deleted successfully.")
 
 @frappe.whitelist()
 def get_admin_blogs(page: int = 1, limit: int = 10, lang: str = "en"):
     """
     Retrieves all Blogs for Admin (including inactive).
     """
-    return frappe.get_list("Blog",
+    blogs = frappe.get_list("Blog",
         fields=["name", "title", "short_description", "img", "published_at", "author", "type", "active"],
         order_by="creation desc",
         offset=(page - 1) * limit,
         limit=limit
     )
+    return api_response(data=blogs)
 
 
 # --- Admin Aliases ---
