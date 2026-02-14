@@ -23,6 +23,22 @@ class TestProductAPI(FrappeTestCase):
             self.shop = frappe.get_doc("Shop", "Product Test Shop")
 
         # Create a Product (Item)
+        # Ensure UOM 'Unit' exists
+        if not frappe.db.exists("UOM", "Unit"):
+            frappe.get_doc({
+                "doctype": "UOM",
+                "uom_name": "Unit",
+                "enabled": 1
+            }).insert(ignore_permissions=True)
+
+        # Ensure UOM 'Unit' exists
+        if not frappe.db.exists("UOM", "Unit"):
+            frappe.get_doc({
+                "doctype": "UOM",
+                "uom_name": "Unit",
+                "enabled": 1
+            }).insert(ignore_permissions=True)
+
         if not frappe.db.exists("Item", "Test Product 1"):
             self.product = frappe.get_doc({
                 "doctype": "Item",
