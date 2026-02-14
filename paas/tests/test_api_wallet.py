@@ -64,8 +64,8 @@ class TestWalletAPI(FrappeTestCase):
 
     def test_get_user_wallet(self):
         wallet = get_user_wallet()
-        self.assertEqual(wallet.get("user"), self.test_user.name)
-        self.assertEqual(wallet.get("balance"), 0.0)
+        self.assertEqual(wallet["data"].get("user"), self.test_user.name)
+        self.assertEqual(wallet["data"].get("balance"), 0.0)
 
     def test_get_wallet_history_pagination(self):
         # Create a second history record
@@ -81,11 +81,11 @@ class TestWalletAPI(FrappeTestCase):
 
         # Get the first page with a limit of 1
         history = get_wallet_history(limit=1)
-        self.assertEqual(len(history), 1)
-        self.assertEqual(history[0].get("transaction_type"), "Withdraw") # It's ordered by creation desc
+        self.assertEqual(len(history["data"]), 1)
+        self.assertEqual(history["data"][0].get("transaction_type"), "Withdraw") # It's ordered by creation desc
 
         # Get the second page
         history = get_wallet_history(start=1, limit=1)
-        self.assertEqual(len(history), 1)
-        self.assertEqual(history[0].get("transaction_type"), "Topup")
+        self.assertEqual(len(history["data"]), 1)
+        self.assertEqual(history["data"][0].get("transaction_type"), "Topup")
 
