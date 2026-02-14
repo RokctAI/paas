@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 import uuid
+from paas.api.utils import api_response
 
 @frappe.whitelist()
 def create_shop(shop_data):
@@ -32,7 +33,7 @@ def create_shop(shop_data):
         })
         shop.insert(ignore_permissions=True)
         frappe.db.commit()
-        return shop.as_dict()
+        return api_response(data=shop.as_dict(), message="Shop created successfully")
     except Exception as e:
         frappe.db.rollback()
         frappe.log_error(frappe.get_traceback(), "Shop Creation Failed")
@@ -43,6 +44,7 @@ def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str =
     """
     Retrieves a list of shops with pagination and filters.
     """
+
     filters = {
         "status": "approved",
         "visibility": 1,
@@ -112,7 +114,7 @@ def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str =
             }
         })
 
-    return formatted_shops
+    return api_response(data=formatted_shops)
 
 @frappe.whitelist(allow_guest=True)
 def get_shop_details(uuid: str):
@@ -133,7 +135,7 @@ def get_shop_details(uuid: str):
     is_cod = is_global_cod_enabled and (shop.enable_cod if shop.enable_cod is not None else 1)
 
     # Replicating the structure of the legacy ShopResource
-    return {
+    return api_response(data={
         'id': shop.name,
         'uuid': shop.uuid,
         'slug': shop.slug,
@@ -163,7 +165,7 @@ def get_shop_details(uuid: str):
             'title': shop.name,
             'address': shop.address
         }
-    }
+    })
 
 @frappe.whitelist(allow_guest=True)
 def search_shops(search: str, category_id: int = None, limit_start: int = 0, limit_page_length: int = 20):
@@ -236,11 +238,12 @@ def search_shops(search: str, category_id: int = None, limit_start: int = 0, lim
             }
         })
 
-    return formatted_shops
+    return api_response(data=formatted_shops)
 
 @frappe.whitelist(allow_guest=True)
 def get_shop_types():
     """
     Retrieves all available Shop Types.
     """
-    return frappe.get_all("Shop Type", fields=["name", "title", "description", "icon"], order_by="title asc")
+    types = frappe.get_all("Shop Type", fields=["name", "title", "description", "icon"], order_by="title asc")
+    return api_response(data=types)
