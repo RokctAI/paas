@@ -31,13 +31,44 @@ class TestProductAPI(FrappeTestCase):
                 "enabled": 1
             }).insert(ignore_permissions=True)
 
-        # Ensure UOM 'Unit' exists
-        if not frappe.db.exists("UOM", "Unit"):
-            frappe.get_doc({
-                "doctype": "UOM",
-                "uom_name": "Unit",
-                "enabled": 1
-            }).insert(ignore_permissions=True)
+        # Ensure Custom Fields exist (since they seem missing found in test env)
+        from frappe.custom.doctype.custom_field.custom_field import create_custom_field
+        
+        if not frappe.db.has_column("Item", "uuid"):
+            create_custom_field("Item", {
+                "fieldname": "uuid",
+                "label": "UUID",
+                "fieldtype": "Data",
+                "unique": 1
+            })
+            
+        if not frappe.db.has_column("Item", "is_visible_in_website"):
+            create_custom_field("Item", {
+                "fieldname": "is_visible_in_website",
+                "label": "Is Visible In Website", 
+                "fieldtype": "Check",
+                "default": 1
+            })
+
+        if not frappe.db.has_column("Item", "status"):
+            create_custom_field("Item", {
+                "fieldname": "status",
+                "label": "Status", 
+                "fieldtype": "Select",
+                "options": "Published\nDraft",
+                "default": "Published"
+            })
+
+        if not frappe.db.has_column("Item", "approval_status"):
+            create_custom_field("Item", {
+                "fieldname": "approval_status",
+                "label": "Approval Status", 
+                "fieldtype": "Select",
+                "options": "Approved\nPending",
+                "default": "Approved"
+            })
+            
+        frappe.clear_cache(doctype="Item")
 
         if not frappe.db.exists("Item", "Test Product 1"):
             self.product = frappe.get_doc({
@@ -50,7 +81,11 @@ class TestProductAPI(FrappeTestCase):
                 "description": "A test product",
                 "is_stock_item": 1,
                 "opening_stock": 10,
-                "stock_uom": "Unit"
+                "stock_uom": "Unit",
+                "uuid": frappe.generate_hash(),
+                "is_visible_in_website": 1,
+                "status": "Published",
+                "approval_status": "Approved"
             }).insert(ignore_permissions=True)
         else:
             self.product = frappe.get_doc("Item", "Test Product 1")
