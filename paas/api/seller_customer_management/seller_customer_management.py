@@ -28,9 +28,12 @@ def get_seller_customer_addresses(limit_start: int = 0, limit_page_length: int =
     user = frappe.session.user
     shop = _get_seller_shop(user)
 
-    customer_ids = frappe.db.sql_list("""
-        SELECT DISTINCT user FROM `tabOrder` WHERE shop = %(shop)s
-    """, {"shop": shop})
+    t_order = frappe.qb.DocType("Order")
+    customer_ids = (
+        frappe.qb.from_(t_order)
+        .select(frappe.qb.fn.Distinct(t_order.user))
+        .where(t_order.shop == shop)
+    ).run(pluck=True)
 
     if not customer_ids:
         return []
