@@ -157,9 +157,9 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         response = api_status()
 
         # Assert
-        self.assertEqual(response["status"], "ok")
-        self.assertIn("version", response)
-        self.assertIn("user", response)
+        self.assertEqual(response.get("data").get("status"), "ok")
+        self.assertIn("version", response.get("data"))
+        self.assertIn("user", response.get("data"))
 
     @patch("frappe.core.doctype.user.user.reset_password")
     def test_forgot_password(self, mock_reset_password):
