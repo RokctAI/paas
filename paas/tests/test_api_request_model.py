@@ -74,6 +74,6 @@ class TestRequestModelAPI(FrappeTestCase):
         self.assertEqual(request.get("created_by_user"), self.test_user.name)
 
         requests = get_user_request_models()
-        self.assertEqual(len(requests), 1)
-        self.assertEqual(requests[0].get("model"), self.product.name)
+        self.assertEqual(len(requests["data"]), 1)
+        self.assertEqual(requests["data"][0].get("model"), self.product.name)
 
