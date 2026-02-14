@@ -233,20 +233,29 @@ def search_global_shops(query):
     Searches for Shops matching the query (Name or Category or Description).
     """
     # 1. SQL Search (Simple/Fuzzy)
-    shops = frappe.db.sql(f"""
-        SELECT name, uuid, description, logo_img, back_img
-        FROM `tabShop`
-        WHERE status='Approved' 
-        AND (shop_type != 'Ecommerce' AND is_ecommerce = 0)
-        AND (
-            name LIKE %s OR 
-            description LIKE %s OR
-            uuid IN (
-                SELECT parent FROM `tabShop Category` WHERE name LIKE %s
-            )
+    # 1. SQL Search (Simple/Fuzzy)
+    t_shop = frappe.qb.DocType("Shop")
+    t_shop_category = frappe.qb.DocType("Shop Category")
+    
+    # Subquery for category matching
+    subquery = (
+        frappe.qb.from_(t_shop_category)
+        .select(t_shop_category.parent)
+        .where(t_shop_category.name.like(f"%{query}%"))
+    )
+    
+    shops = (
+        frappe.qb.from_(t_shop)
+        .select(t_shop.name, t_shop.uuid, t_shop.description, t_shop.logo_img, t_shop.back_img)
+        .where(t_shop.status == 'Approved')
+        .where((t_shop.shop_type != 'Ecommerce') & (t_shop.is_ecommerce == 0))
+        .where(
+            (t_shop.name.like(f"%{query}%")) | 
+            (t_shop.description.like(f"%{query}%")) |
+            (t_shop.uuid.isin(subquery))
         )
-        LIMIT 5
-    """, (f"%{query}%", f"%{query}%", f"%{query}%"), as_dict=True)
+        .limit(5)
+    ).run(as_dict=True)
     
     return shops
 
