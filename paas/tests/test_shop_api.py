@@ -44,7 +44,7 @@ class TestShopAPI(FrappeTestCase):
 
         # Create some mock shops
         if not frappe.db.exists("Shop", {"shop_name": "Test Shop 1"}):
-            self.shop1 = create_shop({
+            response = create_shop({
                 "shop_name": "Test Shop 1",
                 "status": "approved",
                 "open": 1,
@@ -53,11 +53,12 @@ class TestShopAPI(FrappeTestCase):
                 "user": self.seller_user.name,
                 "phone": "+14155552671"
             })
+            self.shop1 = response
         else:
-            self.shop1 = frappe.get_doc("Shop", {"shop_name": "Test Shop 1"}).as_dict()
+            self.shop1 = {"data": frappe.get_doc("Shop", {"shop_name": "Test Shop 1"}).as_dict()}
 
         if not frappe.db.exists("Shop", {"shop_name": "Test Shop 2"}):
-            self.shop2 = create_shop({
+            response = create_shop({
                 "shop_name": "Test Shop 2",
                 "status": "approved",
                 "open": 1,
@@ -66,11 +67,12 @@ class TestShopAPI(FrappeTestCase):
                 "user": self.seller_user_2.name,
                 "phone": "+14155552671"
             })
+            self.shop2 = response
         else:
-            self.shop2 = frappe.get_doc("Shop", {"shop_name": "Test Shop 2"}).as_dict()
+            self.shop2 = {"data": frappe.get_doc("Shop", {"shop_name": "Test Shop 2"}).as_dict()}
 
         if not frappe.db.exists("Shop", {"shop_name": "Test Shop 3 Not Approved"}):
-            self.shop3_not_approved = create_shop({
+            response = create_shop({
                 "shop_name": "Test Shop 3 Not Approved",
                 "status": "new",
                 "open": 1,
@@ -78,11 +80,12 @@ class TestShopAPI(FrappeTestCase):
                 "user": self.seller_user.name,
                 "phone": "+14155552671"
             })
+            self.shop3_not_approved = response
         else:
-            self.shop3_not_approved = frappe.get_doc("Shop", {"shop_name": "Test Shop 3 Not Approved"}).as_dict()
+            self.shop3_not_approved = {"data": frappe.get_doc("Shop", {"shop_name": "Test Shop 3 Not Approved"}).as_dict()}
 
         if not frappe.db.exists("Shop", {"shop_name": "Test Shop 4 Not Visible"}):
-            self.shop4_not_visible = create_shop({
+            response = create_shop({
                 "shop_name": "Test Shop 4 Not Visible",
                 "status": "approved",
                 "open": 1,
@@ -90,8 +93,9 @@ class TestShopAPI(FrappeTestCase):
                 "user": self.seller_user.name,
                 "phone": "+14155552671"
             })
+            self.shop4_not_visible = response
         else:
-            self.shop4_not_visible = frappe.get_doc("Shop", {"shop_name": "Test Shop 4 Not Visible"}).as_dict()
+            self.shop4_not_visible = {"data": frappe.get_doc("Shop", {"shop_name": "Test Shop 4 Not Visible"}).as_dict()}
 
         # Switch back to administrator
         frappe.set_user("Administrator")
@@ -131,13 +135,24 @@ class TestShopAPI(FrappeTestCase):
 
     def test_create_shop_success(self):
         """Test successful shop creation."""
-        self.assertIn('uuid', self.shop1)
-        self.assertIn('slug', self.shop1)
-        self.assertEqual(self.shop1['slug'], 'test-shop-1')
+        response = self.shop1
+        # If create_shop was wrapped, it returns a dict with 'data' key or similar structure
+        # ensuring we handle both direct dict (from legacy calls in setup) vs actual API response if testing the function directly
+        # But here self.shop1 is result of create_shop call in setUp.
+        # Let's adjust access based on the wrapper.
+        
+        # NOTE: In setUp, create_shop returns the api_response dict.
+        # So self.shop1 is {"data": {...}, "message": ...}
+        
+        shop_data = self.shop1.get("data")
+        self.assertIn('uuid', shop_data)
+        self.assertIn('slug', shop_data)
+        self.assertEqual(shop_data['slug'], 'test-shop-1')
 
     def test_get_shops_no_filters(self):
         """Test fetching shops without any filters."""
-        shops = get_shops(limit_page_length=20)
+        response = get_shops(limit_page_length=20)
+        shops = response.get("data")
 
         # Should only return approved, open, and visible shops
         self.assertEqual(len(shops), 2)
@@ -150,22 +165,28 @@ class TestShopAPI(FrappeTestCase):
     def test_get_shops_pagination(self):
         """Test pagination for get_shops."""
         # Get the first page with one item
-        shops_page1 = get_shops(limit_start=0, limit_page_length=1, order_by="shop_name", order="asc")
+        response1 = get_shops(limit_start=0, limit_page_length=1, order_by="shop_name", order="asc")
+        shops_page1 = response1.get("data")
         self.assertEqual(len(shops_page1), 1)
         self.assertEqual(shops_page1[0]['id'], 'Test Shop 1')
 
         # Get the second page with one item
-        shops_page2 = get_shops(limit_start=1, limit_page_length=1, order_by="shop_name", order="asc")
+        response2 = get_shops(limit_start=1, limit_page_length=1, order_by="shop_name", order="asc")
+        shops_page2 = response2.get("data")
         self.assertEqual(len(shops_page2), 1)
         self.assertEqual(shops_page2[0]['id'], 'Test Shop 2')
 
     def test_get_shop_details_success(self):
         """Test fetching details for a single, valid shop."""
-        shop_details = get_shop_details(uuid=self.shop1['uuid'])
+        # self.shop1 is the response dict, we need the UUID from its data
+        uuid = self.shop1.get("data")['uuid']
+        response = get_shop_details(uuid=uuid)
+        shop_details = response.get("data")
+        
         self.assertIsNotNone(shop_details)
-        self.assertEqual(shop_details['id'], self.shop1['shop_name'])
-        self.assertEqual(shop_details['uuid'], self.shop1['uuid'])
-        self.assertEqual(shop_details['translation']['title'], self.shop1['shop_name'])
+        self.assertEqual(shop_details['id'], self.shop1.get("data")['shop_name'])
+        self.assertEqual(shop_details['uuid'], uuid)
+        self.assertEqual(shop_details['translation']['title'], self.shop1.get("data")['shop_name'])
 
     def test_get_shop_details_not_found(self):
         """Test fetching details for a non-existent shop."""
@@ -174,25 +195,29 @@ class TestShopAPI(FrappeTestCase):
 
     def test_get_shops_with_delivery_filter(self):
         """Test fetching shops with delivery=True filter."""
-        shops = get_shops(delivery=True)
+        response = get_shops(delivery=True)
+        shops = response.get("data")
         self.assertEqual(len(shops), 1)
         self.assertEqual(shops[0]['id'], "Test Shop 1")
 
     def test_get_shops_with_takeaway_filter(self):
         """Test fetching shops with takeaway=True filter."""
-        shops = get_shops(takeaway=True)
+        response = get_shops(takeaway=True)
+        shops = response.get("data")
         self.assertEqual(len(shops), 1)
         self.assertEqual(shops[0]['id'], "Test Shop 2")
 
     def test_get_shops_ordering(self):
         """Test ordering of shops."""
         # Test ordering by name descending
-        shops_desc = get_shops(order_by="shop_name", order="desc")
+        response_desc = get_shops(order_by="shop_name", order="desc")
+        shops_desc = response_desc.get("data")
         self.assertEqual(shops_desc[0]['id'], "Test Shop 2")
         self.assertEqual(shops_desc[1]['id'], "Test Shop 1")
 
         # Test ordering by name ascending
-        shops_asc = get_shops(order_by="shop_name", order="asc")
+        response_asc = get_shops(order_by="shop_name", order="asc")
+        shops_asc = response_asc.get("data")
         self.assertEqual(shops_asc[0]['id'], "Test Shop 1")
         self.assertEqual(shops_asc[1]['id'], "Test Shop 2")
 
