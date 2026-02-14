@@ -13,7 +13,13 @@ def get_admin_statistics():
     total_users = frappe.db.count("User")
     total_shops = frappe.db.count("Company")
     total_orders = frappe.db.count("Order")
-    total_sales = frappe.db.sql("SELECT SUM(grand_total) FROM `tabOrder` WHERE status = 'Delivered'")[0][0] or 0
+    
+    t_order = frappe.qb.DocType("Order")
+    total_sales = (
+        frappe.qb.from_(t_order)
+        .select(frappe.qb.fn.Sum(t_order.grand_total))
+        .where(t_order.status == 'Delivered')
+    ).run()[0][0] or 0
     
     in_progress_orders = frappe.db.count("Order", {"status": ["in", ["Pending", "Processing", "Ready", "On the way"]]})
     cancelled_orders = frappe.db.count("Order", {"status": "Cancelled"})
@@ -24,39 +30,46 @@ def get_admin_statistics():
     # Charts Data (Last 30 Days)
     from frappe.utils import add_days, getdate, nowdate
     
+    # helper for date grouping compatible with most dbs
+    # using frappe.qb.fn.Date for Date extraction
+    
+    cutoff_date = add_days(nowdate(), -30)
+
     # Orders per Day
-    orders_chart = frappe.db.sql("""
-        SELECT DATE(creation) as date, COUNT(*) as count 
-        FROM `tabOrder` 
-        WHERE creation > %s 
-        GROUP BY DATE(creation) 
-        ORDER BY DATE(creation) ASC
-    """, (add_days(nowdate(), -30),), as_dict=True)
+    orders_chart = (
+        frappe.qb.from_(t_order)
+        .select(frappe.qb.fn.Date(t_order.creation).as_("date"), frappe.qb.fn.Count('*').as_("count"))
+        .where(t_order.creation > cutoff_date)
+        .groupby(frappe.qb.fn.Date(t_order.creation))
+        .orderby(frappe.qb.fn.Date(t_order.creation), order=frappe.qb.asc)
+    ).run(as_dict=True)
 
     # New Users per Day
-    users_chart = frappe.db.sql("""
-        SELECT DATE(creation) as date, COUNT(*) as count 
-        FROM `tabUser` 
-        WHERE creation > %s 
-        GROUP BY DATE(creation) 
-        ORDER BY DATE(creation) ASC
-    """, (add_days(nowdate(), -30),), as_dict=True)
+    t_user = frappe.qb.DocType("User")
+    users_chart = (
+        frappe.qb.from_(t_user)
+        .select(frappe.qb.fn.Date(t_user.creation).as_("date"), frappe.qb.fn.Count('*').as_("count"))
+        .where(t_user.creation > cutoff_date)
+        .groupby(frappe.qb.fn.Date(t_user.creation))
+        .orderby(frappe.qb.fn.Date(t_user.creation), order=frappe.qb.asc)
+    ).run(as_dict=True)
 
     # New Shops per Day
-    shops_chart = frappe.db.sql("""
-        SELECT DATE(creation) as date, COUNT(*) as count 
-        FROM `tabCompany` 
-        WHERE creation > %s 
-        GROUP BY DATE(creation) 
-        ORDER BY DATE(creation) ASC
-    """, (add_days(nowdate(), -30),), as_dict=True)
+    t_company = frappe.qb.DocType("Company")
+    shops_chart = (
+        frappe.qb.from_(t_company)
+        .select(frappe.qb.fn.Date(t_company.creation).as_("date"), frappe.qb.fn.Count('*').as_("count"))
+        .where(t_company.creation > cutoff_date)
+        .groupby(frappe.qb.fn.Date(t_company.creation))
+        .orderby(frappe.qb.fn.Date(t_company.creation), order=frappe.qb.asc)
+    ).run(as_dict=True)
 
     # Order Status Breakdown
-    status_chart = frappe.db.sql("""
-        SELECT status, COUNT(*) as count 
-        FROM `tabOrder` 
-        GROUP BY status
-    """, as_dict=True)
+    status_chart = (
+        frappe.qb.from_(t_order)
+        .select(t_order.status, frappe.qb.fn.Count('*').as_("count"))
+        .groupby(t_order.status)
+    ).run(as_dict=True)
 
     return {
         "cards": {
