@@ -191,10 +191,11 @@ def most_sold_products(limit_start: int = 0, limit_page_length: int = 20):
     """
     Retrieves a list of most sold products.
     """
+    from frappe.query_builder.functions import Sum
     t_sales_item = frappe.qb.DocType("Sales Invoice Item")
     most_sold_items = (
         frappe.qb.from_(t_sales_item)
-        .select(t_sales_item.item_code, frappe.qb.fn.Sum(t_sales_item.qty).as_("total_qty"))
+        .select(t_sales_item.item_code, Sum(t_sales_item.qty).as_("total_qty"))
         .groupby(t_sales_item.item_code)
         .orderby("total_qty", order=frappe.qb.desc)
         .limit(limit_page_length)
