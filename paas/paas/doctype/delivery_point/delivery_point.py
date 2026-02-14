@@ -33,13 +33,14 @@ def get_nearest_delivery_points(latitude, longitude, radius=20):
     # Haversine formula using frappe.qb functions
     
     # We can use CustomFunction for the math parts
-    radians = frappe.qb.functions.Function("RADIANS")
-    sin = frappe.qb.functions.Function("SIN")
-    cos = frappe.qb.functions.Function("COS")
-    acos = frappe.qb.functions.Function("ACOS")
-    sqrt = frappe.qb.functions.Function("SQRT")
-    power = frappe.qb.functions.Function("POWER")
-    asin = frappe.qb.functions.Function("ASIN")
+    from frappe.query_builder.functions import CustomFunction
+    radians = CustomFunction("RADIANS", ["x"])
+    sin = CustomFunction("SIN", ["x"])
+    cos = CustomFunction("COS", ["x"])
+    acos = CustomFunction("ACOS", ["x"])
+    sqrt = CustomFunction("SQRT", ["x"])
+    power = CustomFunction("POWER", ["x", "y"])
+    asin = CustomFunction("ASIN", ["x"])
 
     # The formula: 
     # 6371 * 2 * ASIN(SQRT(POWER(SIN(RADIANS(lat2 - lat1) / 2), 2) + COS(RADIANS(lat1)) * COS(RADIANS(lat2)) * POWER(SIN(RADIANS(lon2 - lon1) / 2), 2)))
