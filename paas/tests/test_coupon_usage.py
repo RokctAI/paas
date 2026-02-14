@@ -106,7 +106,7 @@ class TestCouponUsage(FrappeTestCase):
 
         order_dict = create_order(json.dumps(order_data))
         self.assertIsNotNone(order_dict)
-        order_name = order_dict.get("name")
+        order_name = order_dict["data"].get("name")
 
         # Check if Coupon Usage was created
         coupon_usage_exists = frappe.db.exists("Coupon Usage", {
