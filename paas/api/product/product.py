@@ -43,66 +43,91 @@ def get_products(
         params["search"] = f"%{search}%"
 
     # --- Joins and Ordering Logic ---
-    joins = ""
-    order_by_clause = "ORDER BY t_item.creation DESC"  # Default order
+    t_item = frappe.qb.DocType("Item")
+    query = (
+        frappe.qb.from_(t_item)
+        .select(
+            t_item.name,
+            t_item.item_name,
+            t_item.description,
+            t_item.image,
+            t_item.standard_rate,
+            t_item.creation
+        )
+        .where(t_item.disabled == 0)
+        .where(t_item.has_variants == 0)
+        # Assuming is_visible_in_website is the correct field for frontend visibility
+        .where(t_item.is_visible_in_website == 1)
+        .where(t_item.status == 'Published')
+        .where(t_item.approval_status == 'Approved')
+    )
+
+    if category_id:
+        query = query.where(t_item.item_group == category_id)
+
+    if brand_id:
+        query = query.where(t_item.brand == brand_id)
+
+    if shop_id:
+        query = query.where(t_item.shop == shop_id)
+
+    if search:
+        query = query.where(t_item.item_name.like(f"%{search}%"))
 
     # Rating filter and sorting
     if rating or order_by in ["high_rating", "low_rating"]:
-        joins += """
-            LEFT JOIN (
-                SELECT parent, AVG(rating) as avg_rating
-                FROM `tabReview`
-                WHERE parenttype = 'Item'
-                GROUP BY parent
-            ) AS t_reviews ON t_reviews.parent = t_item.name
-        """
+        t_review = frappe.qb.DocType("Review")
+        # Subquery for average rating
+        subquery = (
+            frappe.qb.from_(t_review)
+            .select(t_review.parent, frappe.qb.fn.Avg(t_review.rating).as_("avg_rating"))
+            .where(t_review.parenttype == 'Item')
+            .groupby(t_review.parent)
+        ).as_("t_reviews")
+        
+        query = query.left_join(subquery).on(subquery.parent == t_item.name)
+
         if rating:
             try:
                 min_rating, max_rating = map(float, rating.split(','))
-                conditions.append("t_reviews.avg_rating BETWEEN %(min_rating)s AND %(max_rating)s")
-                params["min_rating"] = min_rating
-                params["max_rating"] = max_rating
+                query = query.where(subquery.avg_rating >= min_rating).where(subquery.avg_rating <= max_rating)
             except (ValueError, IndexError):
                 pass  # Ignore invalid rating format
 
-        if order_by in ["high_rating", "low_rating"]:
-            sort_dir = "DESC" if order_by == "high_rating" else "ASC"
-            # Ensure items with no reviews are last when sorting
-            order_by_clause = f"ORDER BY t_reviews.avg_rating IS NULL, t_reviews.avg_rating {sort_dir}"
+        if order_by == "high_rating":
+            query = query.orderby(subquery.avg_rating, order=frappe.qb.desc).orderby(subquery.avg_rating.isnull())
+        elif order_by == "low_rating":
+            query = query.orderby(subquery.avg_rating, order=frappe.qb.asc).orderby(subquery.avg_rating.isnull())
 
     # Sales-based sorting
     elif order_by in ["best_sale", "low_sale"]:
-        joins += """
-            LEFT JOIN (
-                SELECT item_code, SUM(qty) as total_qty
-                FROM `tabSales Invoice Item`
-                GROUP BY item_code
-            ) AS t_sales ON t_sales.item_code = t_item.name
-        """
-        sort_dir = "DESC" if order_by == "best_sale" else "ASC"
-        order_by_clause = f"ORDER BY t_sales.total_qty IS NULL, t_sales.total_qty {sort_dir}"
+        t_sales_item = frappe.qb.DocType("Sales Invoice Item")
+        # Subquery for sales quantity
+        subquery = (
+            frappe.qb.from_(t_sales_item)
+            .select(t_sales_item.item_code, frappe.qb.fn.Sum(t_sales_item.qty).as_("total_qty"))
+            .groupby(t_sales_item.item_code)
+        ).as_("t_sales")
+
+        query = query.left_join(subquery).on(subquery.item_code == t_item.name)
+
+        if order_by == "best_sale":
+            query = query.orderby(subquery.total_qty, order=frappe.qb.desc).orderby(subquery.total_qty.isnull())
+        elif order_by == "low_sale":
+            query = query.orderby(subquery.total_qty, order=frappe.qb.asc).orderby(subquery.total_qty.isnull())
 
     elif order_by == "new":
-        order_by_clause = "ORDER BY t_item.creation DESC"
+        query = query.orderby(t_item.creation, order=frappe.qb.desc)
     elif order_by == "old":
-        order_by_clause = "ORDER BY t_item.creation ASC"
+         query = query.orderby(t_item.creation, order=frappe.qb.asc)
+    else:
+        # Default order
+        query = query.orderby(t_item.creation, order=frappe.qb.desc)
 
-    # --- Build and Execute Query ---
-    where_clause = " AND ".join(conditions)
-    params.update({"limit_page_length": limit_page_length, "limit_start": limit_start})
+    # Pagination
+    query = query.limit(limit_page_length).offset(limit_start)
 
-    query = f"""
-        SELECT
-            t_item.name, t_item.item_name, t_item.description, t_item.image,
-            t_item.standard_rate
-        FROM `tabItem` AS t_item
-        {joins}
-        WHERE {where_clause}
-        {order_by_clause}
-        LIMIT %(limit_page_length)s OFFSET %(limit_start)s
-    """
-
-    products = frappe.db.sql(query, params, as_dict=True)
+    products = query.run(as_dict=True)
 
     if not products:
         return []
@@ -128,12 +153,17 @@ def get_products(
     discounts_map = {rule['item_code']: rule for rule in pricing_rules}
 
     # Get review averages and counts
-    reviews_data = frappe.db.sql(f"""
-        SELECT `parent`, AVG(`rating`) as avg_rating, COUNT(*) as reviews_count
-        FROM `tabReview`
-        WHERE `parenttype` = 'Item' AND `parent` IN %(product_names)s
-        GROUP BY `parent`
-    """, {"product_names": product_names}, as_dict=True)
+    # Using frappe.qb for reviews aggregation as well
+    t_review = frappe.qb.DocType("Review")
+    reviews_query = (
+        frappe.qb.from_(t_review)
+        .select(t_review.parent, frappe.qb.fn.Avg(t_review.rating).as_("avg_rating"), frappe.qb.fn.Count('*').as_("reviews_count"))
+        .where(t_review.parenttype == 'Item')
+        .where(t_review.parent.isin(product_names))
+        .groupby(t_review.parent)
+    )
+    reviews_data = reviews_query.run(as_dict=True)
+ 
     reviews_map = {r['parent']: r for r in reviews_data}
 
     # --- Assemble Final Response ---
@@ -150,14 +180,15 @@ def most_sold_products(limit_start: int = 0, limit_page_length: int = 20):
     """
     Retrieves a list of most sold products.
     """
-    most_sold_items = frappe.db.sql("""
-        SELECT item_code, SUM(qty) as total_qty
-        FROM `tabSales Invoice Item`
-        GROUP BY item_code
-        ORDER BY total_qty DESC
-        LIMIT %(limit_page_length)s
-        OFFSET %(limit_start)s
-    """, {"limit_start": limit_start, "limit_page_length": limit_page_length}, as_dict=True)
+    t_sales_item = frappe.qb.DocType("Sales Invoice Item")
+    most_sold_items = (
+        frappe.qb.from_(t_sales_item)
+        .select(t_sales_item.item_code, frappe.qb.fn.Sum(t_sales_item.qty).as_("total_qty"))
+        .groupby(t_sales_item.item_code)
+        .orderby("total_qty", order=frappe.qb.desc)
+        .limit(limit_page_length)
+        .offset(limit_start)
+    ).run(as_dict=True)
 
     item_codes = [d.item_code for d in most_sold_items]
 
