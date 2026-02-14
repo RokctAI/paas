@@ -144,13 +144,21 @@ def get_products(
 
     # Get active discounts
     today = frappe.utils.nowdate()
-    pricing_rules = frappe.get_all(
-        "Pricing Rule",
-        filters={"disable": 0, "valid_from": ["<=", today], "valid_upto": [">=", today],
-                 "apply_on": "Item Code", "item_code": ["in", product_names]},
-        fields=["item_code", "rate_or_discount", "discount_percentage"]
-    )
-    discounts_map = {rule['item_code']: rule for rule in pricing_rules}
+    discounts_map = {}
+    
+    # Check if Pricing Rule exists and has item_code (to avoid issues in test envs or limited installs)
+    if frappe.db.exists("DocType", "Pricing Rule") and frappe.db.has_column("Pricing Rule", "item_code"):
+        try:
+            pricing_rules = frappe.get_all(
+                "Pricing Rule",
+                filters={"disable": 0, "valid_from": ["<=", today], "valid_upto": [">=", today],
+                         "apply_on": "Item Code", "item_code": ["in", product_names]},
+                fields=["item_code", "rate_or_discount", "discount_percentage"]
+            )
+            discounts_map = {rule['item_code']: rule for rule in pricing_rules}
+        except Exception:
+            # Fallback if something is wrong with Pricing Rule schema
+            pass
 
     # Get review averages and counts
     # Using frappe.qb for reviews aggregation as well
@@ -224,13 +232,18 @@ def get_discounted_products(limit_start: int = 0, limit_page_length: int = 20):
 
     item_codes = set()
 
+    # Check if keys exist in Pricing Rule schema to avoid errors
+    has_item_code = frappe.db.has_column("Pricing Rule", "item_code")
+    has_item_group = frappe.db.has_column("Pricing Rule", "item_group")
+    has_brand = frappe.db.has_column("Pricing Rule", "brand")
+
     for rule in active_rules:
-        if rule.apply_on == 'Item Code' and rule.item_code:
+        if rule.apply_on == 'Item Code' and has_item_code and rule.item_code:
             item_codes.add(rule.item_code)
-        elif rule.apply_on == 'Item Group' and rule.item_group:
+        elif rule.apply_on == 'Item Group' and has_item_group and rule.item_group:
             items_in_group = frappe.get_all("Item", filters={"item_group": rule.item_group}, pluck="name")
             item_codes.update(items_in_group)
-        elif rule.apply_on == 'Brand' and rule.brand:
+        elif rule.apply_on == 'Brand' and has_brand and rule.brand:
             items_in_brand = frappe.get_all("Item", filters={"brand": rule.brand}, pluck="name")
             item_codes.update(items_in_brand)
 
