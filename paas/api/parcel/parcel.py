@@ -1,5 +1,6 @@
 import frappe
 import json
+from paas.api.utils import api_response
 
 @frappe.whitelist()
 def create_parcel_order(order_data):
@@ -83,7 +84,7 @@ def create_parcel_order(order_data):
 
     # Insert the document and return it
     parcel_order.insert(ignore_permissions=True)
-    return parcel_order.as_dict()
+    return api_response(data=parcel_order.as_dict(), message="Parcel Order Created")
 
 
 @frappe.whitelist()
@@ -104,7 +105,7 @@ def get_parcel_orders(limit=20, offset=0):
         order_by="modified desc"
     )
 
-    return parcel_orders
+    return api_response(data=parcel_orders)
 
 
 @frappe.whitelist()
@@ -120,7 +121,7 @@ def get_user_parcel_order(name):
         parcel_order = frappe.get_doc("Parcel Order", name)
         if parcel_order.user != user:
             frappe.throw("You are not authorized to view this parcel order.", frappe.PermissionError)
-        return parcel_order.as_dict()
+        return api_response(data=parcel_order.as_dict())
     except frappe.DoesNotExistError:
         frappe.throw(f"Parcel Order {name} not found.", frappe.DoesNotExistError)
 
@@ -177,7 +178,7 @@ def update_parcel_status(parcel_order_id, status):
         parcel_order.status = status
         parcel_order.save(ignore_permissions=True)
 
-        return parcel_order.as_dict()
+        return api_response(data=parcel_order.as_dict(), message="Status Updated")
     except frappe.DoesNotExistError:
         frappe.throw(f"Parcel Order {parcel_order_id} not found.", frappe.DoesNotExistError)
     except Exception as e:
