@@ -1,4 +1,5 @@
 import frappe
+from paas.api.utils import api_response
 
 @frappe.whitelist()
 def get_weather(location: str):
@@ -40,7 +41,7 @@ def get_weather(location: str):
         # Cache the successful response for 10 minutes on the tenant site
         frappe.cache.set_value(cache_key, response, expires_in_sec=600)
 
-        return response
+        return api_response(data=response)
 
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "Weather Proxy API Error")
@@ -51,11 +52,11 @@ def api_status():
     """
     Returns a simple status of the API.
     """
-    return {
+    return api_response(data={
         "status": "ok",
         "version": frappe.get_attr("frappe.__version__"),
         "user": frappe.session.user
-    }
+    })
 
 
 @frappe.whitelist(allow_guest=True)
@@ -63,11 +64,12 @@ def get_languages():
     """
     Returns a list of all enabled languages.
     """
-    return frappe.get_all(
+    langs = frappe.get_all(
         "Language",
         filters={"enabled": 1},
         fields=["name", "language_name"]
     )
+    return api_response(data=langs)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -75,11 +77,12 @@ def get_currencies():
     """
     Returns a list of all enabled currencies.
     """
-    return frappe.get_all(
+    currencies = frappe.get_all(
         "Currency",
         filters={"enabled": 1},
         fields=["name", "currency_name", "symbol"]
     )
+    return api_response(data=currencies)
 
 @frappe.whitelist()
 def trigger_system_update():
@@ -96,4 +99,4 @@ def trigger_system_update():
     # Enqueue the migration task
     frappe.enqueue("frappe.migrate.migrate", queue="long")
     
-    return {"status": "success", "message": "System migration started in background."}
+    return api_response(message="System migration started in background.")
