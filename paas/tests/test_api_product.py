@@ -33,7 +33,8 @@ class TestProductAPI(FrappeTestCase):
                 "standard_rate": 100,
                 "description": "A test product",
                 "is_stock_item": 1,
-                "opening_stock": 10
+                "opening_stock": 10,
+                "stock_uom": "Unit"
             }).insert(ignore_permissions=True)
         else:
             self.product = frappe.get_doc("Item", "Test Product 1")
