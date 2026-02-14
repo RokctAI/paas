@@ -77,10 +77,11 @@ def get_products(
     # Rating filter and sorting
     if rating or order_by in ["high_rating", "low_rating"]:
         t_review = frappe.qb.DocType("Review")
+        from frappe.query_builder.functions import Avg, Count, Sum
         # Subquery for average rating
         subquery = (
             frappe.qb.from_(t_review)
-            .select(t_review.parent, frappe.qb.fn.Avg(t_review.rating).as_("avg_rating"))
+            .select(t_review.parent, Avg(t_review.rating).as_("avg_rating"))
             .where(t_review.parenttype == 'Item')
             .groupby(t_review.parent)
         ).as_("t_reviews")
@@ -102,10 +103,11 @@ def get_products(
     # Sales-based sorting
     elif order_by in ["best_sale", "low_sale"]:
         t_sales_item = frappe.qb.DocType("Sales Invoice Item")
+        from frappe.query_builder.functions import Sum
         # Subquery for sales quantity
         subquery = (
             frappe.qb.from_(t_sales_item)
-            .select(t_sales_item.item_code, frappe.qb.fn.Sum(t_sales_item.qty).as_("total_qty"))
+            .select(t_sales_item.item_code, Sum(t_sales_item.qty).as_("total_qty"))
             .groupby(t_sales_item.item_code)
         ).as_("t_sales")
 
@@ -162,10 +164,11 @@ def get_products(
 
     # Get review averages and counts
     # Using frappe.qb for reviews aggregation as well
+    from frappe.query_builder.functions import Avg, Count, Sum
     t_review = frappe.qb.DocType("Review")
     reviews_query = (
         frappe.qb.from_(t_review)
-        .select(t_review.parent, frappe.qb.fn.Avg(t_review.rating).as_("avg_rating"), frappe.qb.fn.Count('*').as_("reviews_count"))
+        .select(t_review.parent, Avg(t_review.rating).as_("avg_rating"), Count('*').as_("reviews_count"))
         .where(t_review.parenttype == 'Item')
         .where(t_review.parent.isin(product_names))
         .groupby(t_review.parent)
