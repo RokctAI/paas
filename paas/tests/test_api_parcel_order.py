@@ -173,7 +173,8 @@ class TestParcelOrderAPI(FrappeTestCase):
             "address_from": {"city": "City A"},
             "address_to": {"city": "City B"},
         }
-        order = create_parcel_order(order_data=json.dumps(order_data))
+        res = create_parcel_order(order_data=json.dumps(order_data))
+        order = res.get("data")
         self.assertEqual(order.get("user"), self.test_user.name)
         self.assertEqual(order.get("total_price"), 100.0)
 
@@ -185,7 +186,8 @@ class TestParcelOrderAPI(FrappeTestCase):
             "total_price": 50.0,
             "type": self.parcel_setting.name
         }
-        order = create_parcel_order(order_data=json.dumps(order_data))
+        res = create_parcel_order(order_data=json.dumps(order_data))
+        order = res.get("data")
         self.assertEqual(order.get("delivery_point"), self.delivery_point.name)
         self.assertEqual(len(order.get("items")), 1)
 
@@ -194,7 +196,8 @@ class TestParcelOrderAPI(FrappeTestCase):
         order_data = {"type": self.parcel_setting.name, "total_price": 50.0}
         create_parcel_order(order_data=json.dumps(order_data))
 
-        orders = get_parcel_orders()
+        res = get_parcel_orders()
+        orders = res.get("data")
         self.assertTrue(isinstance(orders, list))
         self.assertEqual(len(orders), 1)
         self.assertEqual(orders[0].get("status"), "New")
@@ -202,9 +205,11 @@ class TestParcelOrderAPI(FrappeTestCase):
     def test_get_user_parcel_order(self):
         # Create a parcel order first
         order_data = {"type": self.parcel_setting.name, "total_price": 123.45}
-        created_order = create_parcel_order(order_data=json.dumps(order_data))
+        create_res = create_parcel_order(order_data=json.dumps(order_data))
+        created_order = create_res.get("data")
 
-        order = get_user_parcel_order(name=created_order.get("name"))
+        res = get_user_parcel_order(name=created_order.get("name"))
+        order = res.get("data")
         self.assertEqual(order.get("name"), created_order.get("name"))
         self.assertEqual(order.get("total_price"), 123.45)
 
@@ -217,7 +222,8 @@ class TestParcelOrderAPI(FrappeTestCase):
         # Switch to other user to create order
         frappe.set_user(other_user.name)
         order_data = {"type": self.parcel_setting.name, "total_price": 50.0}
-        other_order = create_parcel_order(order_data=json.dumps(order_data))
+        other_res = create_parcel_order(order_data=json.dumps(order_data))
+        other_order = other_res.get("data")
 
         # Switch back to test_user
         frappe.set_user(self.test_user.name)
@@ -235,8 +241,10 @@ class TestParcelOrderAPI(FrappeTestCase):
     def test_update_parcel_status(self):
         # Create a parcel order first
         order_data = {"type": self.parcel_setting.name, "total_price": 50.0}
-        created_order = create_parcel_order(order_data=json.dumps(order_data))
+        create_res = create_parcel_order(order_data=json.dumps(order_data))
+        created_order = create_res.get("data")
 
         # Update the status
-        updated_order = update_parcel_status(parcel_order_id=created_order.get("name"), status="Accepted")
+        res = update_parcel_status(parcel_order_id=created_order.get("name"), status="Accepted")
+        updated_order = res.get("data")
         self.assertEqual(updated_order.get("status"), "Accepted")
