@@ -107,18 +107,22 @@ def get_deliveryman_statistics():
     )
 
     # Total earnings from regular orders
-    total_order_earnings = frappe.db.sql("""
-        SELECT SUM(delivery_fee)
-        FROM `tabOrder`
-        WHERE deliveryman = %(user)s AND status = 'Delivered'
-    """, {"user": user})[0][0] or 0
+    t_order = frappe.qb.DocType("Order")
+    total_order_earnings = (
+        frappe.qb.from_(t_order)
+        .select(frappe.qb.fn.Sum(t_order.delivery_fee))
+        .where(t_order.deliveryman == user)
+        .where(t_order.status == 'Delivered')
+    ).run()[0][0] or 0
 
     # Total earnings from parcel orders
-    total_parcel_earnings = frappe.db.sql("""
-        SELECT SUM(delivery_fee)
-        FROM `tabParcel Order`
-        WHERE deliveryman = %(user)s AND status = 'Delivered'
-    """, {"user": user})[0][0] or 0
+    t_parcel_order = frappe.qb.DocType("Parcel Order")
+    total_parcel_earnings = (
+        frappe.qb.from_(t_parcel_order)
+        .select(frappe.qb.fn.Sum(t_parcel_order.delivery_fee))
+        .where(t_parcel_order.deliveryman == user)
+        .where(t_parcel_order.status == 'Delivered')
+    ).run()[0][0] or 0
 
     total_earnings = total_order_earnings + total_parcel_earnings
 
