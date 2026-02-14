@@ -63,8 +63,8 @@ class TestShopManagementAPI(FrappeTestCase):
     def test_get_user_shop(self):
         shop = get_user_shop()
         self.assertIsNotNone(shop)
-        self.assertEqual(shop.get("name"), self.shop.name)
-        self.assertEqual(shop.get("shop_name"), "My Awesome Shop")
+        self.assertEqual(shop["data"].get("name"), self.shop.name)
+        self.assertEqual(shop["data"].get("shop_name"), "My Awesome Shop")
 
     def test_update_user_shop(self):
         shop_data = {
@@ -73,10 +73,10 @@ class TestShopManagementAPI(FrappeTestCase):
             "phone": "+14155552671",
             "open": 0
         }
-        updated_shop = update_user_shop(shop_data=json.dumps(shop_data))
-        self.assertEqual(updated_shop.get("shop_name"), "My Updated Shop")
-        self.assertEqual(updated_shop.get("phone"), "+14155552671")
-        self.assertEqual(updated_shop.get("open"), 0)
+        updated_shop = update_user_shop(name=self.shop.name, shop_data=shop_data)
+        self.assertEqual(updated_shop["data"].get("shop_name"), "My Updated Shop")
+        self.assertEqual(updated_shop["data"].get("phone"), "+14155552671")
+        self.assertEqual(updated_shop["data"].get("open"), 0)
 
     def test_update_other_user_shop_permission(self):
         # Create another user and shop
