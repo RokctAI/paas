@@ -16,6 +16,7 @@ class TestProductAPI(FrappeTestCase):
                 "open": 1,
                 "visibility": 1,
                 "user": "Administrator",
+                "uuid": frappe.generate_hash(),
                 "phone": "+14155552671"
             }).insert(ignore_permissions=True)
         else:
