@@ -52,13 +52,13 @@ class TestPhoneVerificationAPI(FrappeTestCase):
 
     def test_check_phone_exists(self):
         response = check_phone(phone=self.test_user_phone)
-        self.assertEqual(response["status"], "error")
-        self.assertEqual(response["message"], "Phone number already exists.")
+        self.assertEqual(response.get("data").get("status"), "error")
+        self.assertEqual(response.get("message"), "Phone number already exists.")
 
     def test_check_phone_not_exists(self):
         response = check_phone(phone="+10123456789")
-        self.assertEqual(response["status"], "success")
-        self.assertEqual(response["message"], "Phone number is available.")
+        self.assertEqual(response.get("data").get("status"), "success")
+        self.assertEqual(response.get("message"), "Phone number is available.")
 
     def test_check_phone_missing_param(self):
         with self.assertRaises(frappe.ValidationError):
@@ -70,7 +70,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         phone_number = "+11223344556"
         response = send_phone_verification_code(phone=phone_number)
 
-        self.assertEqual(response["status"], "success")
+        self.assertEqual(response.get("message"), "Verification code sent successfully.")
 
         # Check that cache was called correctly
         args, kwargs = mock_set_value.call_args
@@ -101,8 +101,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
 
         response = verify_phone_code(phone=phone_number, otp=correct_otp)
 
-        self.assertEqual(response["status"], "success")
-        self.assertEqual(response["message"], "Phone number verified successfully.")
+        self.assertEqual(response.get("message"), "Phone number verified successfully.")
 
         # Verify user's phone_verified_at is set
         self.test_user.reload()
@@ -121,15 +120,15 @@ class TestPhoneVerificationAPI(FrappeTestCase):
 
         def get_value_side_effect(key, *args, **kwargs):
             if isinstance(key, str) and key.startswith("phone_otp:"):
-               return correct_otp
+                return correct_otp
             return None
 
         mock_get_value.side_effect = get_value_side_effect
 
         response = verify_phone_code(phone=phone_number, otp=incorrect_otp)
 
-        self.assertEqual(response["status"], "error")
-        self.assertEqual(response["message"], "Invalid verification code.")
+        self.assertEqual(response.get("status_code"), 400)
+        self.assertEqual(response.get("message"), "Invalid verification code.")
 
         # Verify user's phone_verified_at is NOT set
         self.test_user.reload()
@@ -149,8 +148,8 @@ class TestPhoneVerificationAPI(FrappeTestCase):
 
         response = verify_phone_code(phone=self.test_user_phone, otp="123456")
 
-        self.assertEqual(response["status"], "error")
-        self.assertEqual(response["message"], "OTP expired or was not sent. Please request a new one.")
+        self.assertEqual(response.get("status_code"), 400)
+        self.assertEqual(response.get("message"), "OTP expired or was not sent. Please request a new one.")
 
     def test_api_status(self):
         # Act
@@ -171,7 +170,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         response = forgot_password(user=self.test_user.email)
 
         # Assert
-        self.assertEqual(response["status"], "success")
+        self.assertIn("password reset code/link has been sent", response.get("message"))
         mock_reset_password.assert_called_once_with(user=self.test_user.email)
 
     def test_get_languages(self):
@@ -237,7 +236,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         )
 
         # Assert
-        self.assertEqual(response["status"], "success")
+        self.assertIn("User registered successfully", response.get("message"))
         self.assertTrue(frappe.db.exists("User", new_user_email))
         new_user = frappe.get_doc("User", new_user_email)
         self.assertIsNotNone(new_user.email_verification_token)
