@@ -108,7 +108,7 @@ class TestOrderAPI(FrappeTestCase):
         order_dict = create_order(json.dumps(order_data))
         self.assertIsNotNone(order_dict)
 
-        order = frappe.get_doc("Order", order_dict.get("name"))
+        order = frappe.get_doc("Order", order_dict["data"].get("name"))
         # 2 * 100 = 200 (subtotal)
         # + 10% tax = 220
         # + 10 service fee = 230
@@ -119,7 +119,7 @@ class TestOrderAPI(FrappeTestCase):
         frappe.set_user(self.test_user.name)
         orders = list_orders()
         self.assertIsNotNone(orders)
-        self.assertIsInstance(orders, list)
+        self.assertIsInstance(orders["data"], list)
 
     def test_get_order_details(self):
         # Test getting the details of a specific order
@@ -138,7 +138,7 @@ class TestOrderAPI(FrappeTestCase):
         frappe.set_user(self.test_user.name)
         order_details = get_order_details(order.name)
         self.assertIsNotNone(order_details)
-        self.assertEqual(order_details.get("name"), order.name)
+        self.assertEqual(order_details["data"].get("name"), order.name)
 
     def test_update_order_status(self):
         # Test updating the status of an order
@@ -157,7 +157,7 @@ class TestOrderAPI(FrappeTestCase):
         frappe.set_user(self.test_user.name)
         updated_order = update_order_status(order.name, "Accepted")
         self.assertIsNotNone(updated_order)
-        self.assertEqual(updated_order.get("status"), "Accepted")
+        self.assertEqual(updated_order["data"].get("status"), "Accepted")
 
         # Verify Stock reduction
         self.test_stock.reload()
@@ -183,8 +183,8 @@ class TestOrderAPI(FrappeTestCase):
         frappe.set_user(self.test_user.name)
         review = add_order_review(order.name, 5, "Great service!")
         self.assertIsNotNone(review)
-        self.assertEqual(review.get("rating"), 5)
-        self.assertEqual(review.get("comment"), "Great service!")
+        self.assertEqual(review["data"].get("rating"), 5)
+        self.assertEqual(review["data"].get("comment"), "Great service!")
 
     def test_cancel_order(self):
         # Test cancelling an order
@@ -204,7 +204,7 @@ class TestOrderAPI(FrappeTestCase):
         frappe.set_user(self.test_user.name)
         cancelled_order = cancel_order(order.name)
         self.assertIsNotNone(cancelled_order)
-        self.assertEqual(cancelled_order.get("status"), "Cancelled")
+        self.assertEqual(cancelled_order["data"].get("status"), "Cancelled")
 
         # Verify Stock is UNCHANGED for New -> Cancelled
         self.test_stock.reload()
