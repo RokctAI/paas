@@ -28,37 +28,41 @@ def get_nearest_delivery_points(latitude, longitude, radius=20):
     except ValueError:
         frappe.throw("Invalid coordinates or radius.")
 
-    # Haversine formula to calculate distance, using parameterized queries to prevent SQL injection
-    # Subquery used to ensure 'distance' alias works in WHERE/ORDER BY for both MariaDB and Postgres
-    query = """
-        SELECT * FROM (
-            SELECT
-                name,
-                address,
-                latitude,
-                longitude,
-                img,
-                (
-                    6371 * 2 * ASIN(SQRT(
-                        POWER(SIN(RADIANS(%(latitude)s - latitude) / 2), 2) +
-                        COS(RADIANS(%(latitude)s)) * COS(RADIANS(latitude)) *
-                        POWER(SIN(RADIANS(%(longitude)s - longitude) / 2), 2)
-                    ))
-                ) AS distance
-            FROM `tabDelivery Point`
-            WHERE active = 1
-        ) sub
-        WHERE distance < %(radius)s
-        ORDER BY distance
-        LIMIT 20
-    """
+    t_dp = frappe.qb.DocType("Delivery Point")
+    
+    # Haversine formula using frappe.qb functions
+    
+    # We can use CustomFunction for the math parts
+    radians = frappe.qb.functions.Function("RADIANS")
+    sin = frappe.qb.functions.Function("SIN")
+    cos = frappe.qb.functions.Function("COS")
+    acos = frappe.qb.functions.Function("ACOS")
+    sqrt = frappe.qb.functions.Function("SQRT")
+    power = frappe.qb.functions.Function("POWER")
+    asin = frappe.qb.functions.Function("ASIN")
 
-    values = {
-        "latitude": latitude,
-        "longitude": longitude,
-        "radius": radius
-    }
-
-    delivery_points = frappe.db.sql(query, values, as_dict=True)
+    # The formula: 
+    # 6371 * 2 * ASIN(SQRT(POWER(SIN(RADIANS(lat2 - lat1) / 2), 2) + COS(RADIANS(lat1)) * COS(RADIANS(lat2)) * POWER(SIN(RADIANS(lon2 - lon1) / 2), 2)))
+    
+    d_lat = radians(t_dp.latitude - latitude)
+    d_lon = radians(t_dp.longitude - longitude)
+    
+    a = power(sin(d_lat / 2), 2) + cos(radians(latitude)) * cos(radians(t_dp.latitude)) * power(sin(d_lon / 2), 2)
+    c = 2 * asin(sqrt(a))
+    distance = 6371 * c
+    
+    query = (
+        frappe.qb.from_(t_dp)
+        .select(
+            t_dp.name, t_dp.address, t_dp.latitude, t_dp.longitude, t_dp.img,
+            distance.as_("distance")
+        )
+        .where(t_dp.active == 1)
+        .where(distance < radius)
+        .orderby(distance)
+        .limit(20)
+    )
+    
+    delivery_points = query.run(as_dict=True)
 
     return delivery_points
