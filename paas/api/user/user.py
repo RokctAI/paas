@@ -5,14 +5,15 @@ import uuid
 import csv
 import io
 from paas.utils import check_subscription_feature
+from paas.api.utils import api_response
 
 @frappe.whitelist()
 def logout():
     """
     Log out the current user.
     """
-    frappe.logout()
-    return {"status": "success", "message": "User successfully logout"}
+    frappe.local.login_manager.logout()
+    return api_response(message="User successfully logout")
 
 
 @frappe.whitelist(allow_guest=True)
@@ -26,7 +27,7 @@ def login(usr, pwd):
         login_manager.authenticate(user=usr, pwd=pwd)
         login_manager.post_login()
     except frappe.AuthenticationError:
-        return {"status": False, "message": "Invalid credentials"}
+        return api_response(message="Invalid credentials", status_code=401)
     
     user = frappe.get_doc("User", frappe.session.user)
     
@@ -67,10 +68,9 @@ def login(usr, pwd):
     except Exception:
         pass
 
-    return {
-        "status": True,
-        "message": "Logged In",
-        "data": {
+    return api_response(
+        message="Logged In",
+        data={
             "access_token": token,
             "token_type": "Bearer",
             "user": {
@@ -86,7 +86,7 @@ def login(usr, pwd):
                 "home_page": user.get_home_page()
             }
         }
-    }
+    )
 
 
 @frappe.whitelist()
@@ -99,9 +99,9 @@ def check_phone(phone: str):
         frappe.throw("Phone number is a required parameter.")
 
     if frappe.db.exists("User", {"phone": phone}):
-        return {"status": "error", "message": "Phone number already exists."}
+        return api_response(message="Phone number already exists.", data={"status": "error"})
     else:
-        return {"status": "success", "message": "Phone number is available."}
+        return api_response(message="Phone number is available.", data={"status": "success"})
 
 
 @frappe.whitelist()
@@ -131,7 +131,7 @@ def send_phone_verification_code(phone: str):
         frappe.log_error(f"Failed to send OTP SMS to {phone}: {e}", "SMS Sending Error")
         frappe.throw("Failed to send verification code. Please try again later.")
 
-    return {"status": "success", "message": "Verification code sent successfully."}
+    return api_response(message="Verification code sent successfully.")
 
 
 @frappe.whitelist()
@@ -149,10 +149,10 @@ def verify_phone_code(phone: str, otp: str):
     cached_otp = frappe.cache.get_value(cache_key)
 
     if not cached_otp:
-        return {"status": "error", "message": "OTP expired or was not sent. Please request a new one."}
+        return api_response(message="OTP expired or was not sent. Please request a new one.", status_code=400)
 
     if otp != cached_otp:
-        return {"status": "error", "message": "Invalid verification code."}
+        return api_response(message="Invalid verification code.", status_code=400)
 
     # OTP is correct, find user and mark as verified
     try:
@@ -160,7 +160,7 @@ def verify_phone_code(phone: str, otp: str):
         user.phone_verified_at = frappe.utils.now_datetime()
         user.save(ignore_permissions=True)
     except frappe.DoesNotExistError:
-        return {"status": "error", "message": "User with this phone number not found."}
+        return api_response(message="User with this phone number not found.", status_code=404)
     except Exception as e:
         frappe.log_error(f"Failed to update phone_verified_at for user with phone {phone}: {e}", "Phone Verification Error")
         frappe.throw("An error occurred while verifying your phone number. Please try again.")
@@ -168,7 +168,7 @@ def verify_phone_code(phone: str, otp: str):
     # Clear the OTP from cache
     frappe.cache.delete_value(cache_key)
 
-    return {"status": "success", "message": "Phone number verified successfully."}
+    return api_response(message="Phone number verified successfully.")
 
 
 @frappe.whitelist(allow_guest=True)
@@ -177,7 +177,7 @@ def register_user(email, password, first_name, last_name, phone=None):
     Register a new user and send a verification email.
     """
     if frappe.db.exists("User", email):
-        return {"status": "error", "message": "Email address already registered."}
+        return api_response(message="Email address already registered.", status_code=409)
 
     # Create the new user
     user = frappe.get_doc({
@@ -212,10 +212,9 @@ def register_user(email, password, first_name, last_name, phone=None):
         args=email_context,
         now=True
     )
-    return {
-        "status": "success",
-        "message": "User registered successfully. Please check your email to verify your account.",
-        "data": {
+    return api_response(
+        message="User registered successfully. Please check your email to verify your account.",
+        data={
             "user": {
                 "email": user.email,
                 "firstname": user.first_name,
@@ -225,7 +224,7 @@ def register_user(email, password, first_name, last_name, phone=None):
                 "active": 1
             }
         }
-    }
+    )
 
 
 @frappe.whitelist(allow_guest=True)
@@ -250,10 +249,10 @@ def forgot_password(user: str):
             # Frappe's standard email flow
             frappe.core.doctype.user.user.reset_password(user=user)
             
-        return {"status": "success", "message": "If a user with this email/phone exists, a password reset code/link has been sent."}
+        return api_response(message="If a user with this email/phone exists, a password reset code/link has been sent.")
     except Exception:
         # For security, always return success
-        return {"status": "success", "message": "If a user with this email/phone exists, a password reset code/link has been sent."}
+        return api_response(message="If a user with this email/phone exists, a password reset code/link has been sent.")
 
 @frappe.whitelist(allow_guest=True)
 def forgot_password_confirm(email, verify_code, password=None):
@@ -269,17 +268,17 @@ def forgot_password_confirm(email, verify_code, password=None):
             user_name = frappe.db.get_value("User", {"phone": email}, "name")
             cached_otp = frappe.cache.get_value(f"password_reset_otp:{email}")
             if not cached_otp or cached_otp != verify_code:
-                return {"status": "error", "message": "Invalid or expired verification code"}
+                return api_response(message="Invalid or expired verification code", status_code=400)
         else:
             user_name = frappe.db.get_value("User", {"email": email}, "name")
             if user_name:
                 user_doc = frappe.get_doc("User", user_name)
                 # Verify standard Frappe reset token
                 if user_doc.reset_password_key != verify_code:
-                    return {"status": "error", "message": "Invalid or expired reset token"}
+                    return api_response(message="Invalid or expired reset token", status_code=400)
         
         if not user_name:
-            return {"status": "error", "message": "User not found"}
+            return api_response(message="User not found", status_code=404)
             
         if password:
             user_doc = frappe.get_doc("User", user_name)
@@ -288,11 +287,11 @@ def forgot_password_confirm(email, verify_code, password=None):
             user_doc.save(ignore_permissions=True)
             if is_phone:
                 frappe.cache.delete_value(f"password_reset_otp:{email}")
-            return {"status": "success", "message": "Password updated successfully"}
+            return api_response(message="Password updated successfully")
         
-        return {"status": "success", "message": "Code verified"}
+        return api_response(message="Code verified")
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        return api_response(message=str(e), status_code=500)
 
 @frappe.whitelist(allow_guest=True)
 def login_with_google(email, display_name, id, avatar=None):
@@ -300,7 +299,7 @@ def login_with_google(email, display_name, id, avatar=None):
     Social login endpoint. Links accounts by email or creates new ones.
     """
     if not email:
-        return {"status": False, "message": "Email is required"}
+        return api_response(message="Email is required", status_code=400)
 
     user_name = frappe.db.get_value("User", {"email": email}, "name")
     
@@ -340,10 +339,9 @@ def login_with_google(email, display_name, id, avatar=None):
 
     token = f"{user.api_key}:{api_secret}"
     
-    return {
-        "status": True,
-        "message": "Logged In via Google",
-        "data": {
+    return api_response(
+        message="Logged In via Google",
+        data={
             "access_token": token,
             "token_type": "Bearer",
             "user": {
@@ -357,7 +355,7 @@ def login_with_google(email, display_name, id, avatar=None):
                 "img": user.user_image
             }
         }
-    }
+    )
 
 @frappe.whitelist()
 def search_user(name: str, page: int = 1, lang: str = "en"):
@@ -611,7 +609,7 @@ def get_user_wallet():
         frappe.throw("You must be logged in to view your wallet.", frappe.AuthenticationError)
 
     wallet = frappe.get_doc("Wallet", {"user": user})
-    return wallet.as_dict()
+    return api_response(data=wallet.as_dict())
 
 @frappe.whitelist()
 def get_wallet_history(start=0, limit=20):
@@ -623,7 +621,7 @@ def get_wallet_history(start=0, limit=20):
         frappe.throw("You must be logged in to view your wallet history.", frappe.AuthenticationError)
 
     wallet = frappe.get_doc("Wallet", {"user": user})
-    return frappe.get_all(
+    history = frappe.get_all(
         "Wallet History",
         filters={"wallet": wallet.name},
         fields=["name", "transaction_type", "amount", "status", "creation"],
@@ -631,6 +629,7 @@ def get_wallet_history(start=0, limit=20):
         offset=start,
         limit=limit
     )
+    return api_response(data=history)
 
 
 @frappe.whitelist()
@@ -682,7 +681,7 @@ def register_device_token(device_token: str, provider: str):
         frappe.throw("Device token and provider are required.")
 
     if frappe.db.exists("Device Token", {"device_token": device_token}):
-        return {"status": "success", "message": "Device token already registered."}
+        return api_response(message="Device token already registered.")
 
     frappe.get_doc({
         "doctype": "Device Token",
@@ -690,7 +689,7 @@ def register_device_token(device_token: str, provider: str):
         "device_token": device_token,
         "provider": provider
     }).insert(ignore_permissions=True)
-    return {"status": "success", "message": "Device token registered successfully."}
+    return api_response(message="Device token registered successfully.")
 
 @frappe.whitelist()
 def get_user_transactions(start=0, limit=20):
@@ -701,7 +700,7 @@ def get_user_transactions(start=0, limit=20):
     if user == "Guest":
         frappe.throw("You must be logged in to view your transactions.", frappe.AuthenticationError)
 
-    return frappe.get_all(
+    transactions = frappe.get_all(
         "Transaction",
         filters={"user": user},
         fields=["name", "user", "amount", "status", "payable_type", "payable_id", "creation"],
@@ -710,6 +709,7 @@ def get_user_transactions(start=0, limit=20):
         limit=limit,
         ignore_permissions=True
     )
+    return api_response(data=transactions)
 
 
 @frappe.whitelist()
@@ -724,10 +724,10 @@ def get_user_shop():
     try:
         shop_name = frappe.db.get_value("Shop", {"user": user}, "name")
         if not shop_name:
-            return None
-        return frappe.get_doc("Shop", shop_name).as_dict()
+            return api_response(data=None)
+        return api_response(data=frappe.get_doc("Shop", shop_name).as_dict())
     except frappe.DoesNotExistError:
-        return None
+        return api_response(data=None)
 
 @frappe.whitelist()
 def update_seller_shop(shop_data):
@@ -771,7 +771,7 @@ def update_seller_shop(shop_data):
         shop.shop_name = shop_data.get("title")
 
     shop.save(ignore_permissions=True)
-    return shop.as_dict()
+    return api_response(data=shop.as_dict())
 
 @frappe.whitelist()
 def update_user_shop(shop_data):
@@ -790,7 +790,7 @@ def get_user_request_models(start=0, limit=20):
     if user == "Guest":
         frappe.throw("You must be logged in to view your request models.", frappe.AuthenticationError)
 
-    return frappe.get_all(
+    models = frappe.get_all(
         "Request Model",
         filters={"created_by_user": user},
         fields=["name", "model_type", "model", "status", "created_at"],
@@ -798,6 +798,7 @@ def get_user_request_models(start=0, limit=20):
         offset=start,
         limit=limit
     )
+    return api_response(data=models)
 
 @frappe.whitelist()
 def create_request_model(model_type, model_id, data):
