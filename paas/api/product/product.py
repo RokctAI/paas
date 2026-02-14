@@ -81,12 +81,12 @@ def get_products(
         # Subquery for average rating
         subquery = (
             frappe.qb.from_(t_review)
-            .select(t_review.parent, Avg(t_review.rating).as_("avg_rating"))
-            .where(t_review.parenttype == 'Item')
-            .groupby(t_review.parent)
+            .select(t_review.reviewable_id, Avg(t_review.rating).as_("avg_rating"))
+            .where(t_review.reviewable_type == 'Item')
+            .groupby(t_review.reviewable_id)
         ).as_("t_reviews")
         
-        query = query.left_join(subquery).on(subquery.parent == t_item.name)
+        query = query.left_join(subquery).on(subquery.reviewable_id == t_item.name)
 
         if rating:
             try:
@@ -168,14 +168,14 @@ def get_products(
     t_review = frappe.qb.DocType("Review")
     reviews_query = (
         frappe.qb.from_(t_review)
-        .select(t_review.parent, Avg(t_review.rating).as_("avg_rating"), Count('*').as_("reviews_count"))
-        .where(t_review.parenttype == 'Item')
-        .where(t_review.parent.isin(product_names))
-        .groupby(t_review.parent)
+        .select(t_review.reviewable_id, Avg(t_review.rating).as_("avg_rating"), Count('*').as_("reviews_count"))
+        .where(t_review.reviewable_type == 'Item')
+        .where(t_review.reviewable_id.isin(product_names))
+        .groupby(t_review.reviewable_id)
     )
     reviews_data = reviews_query.run(as_dict=True)
  
-    reviews_map = {r['parent']: r for r in reviews_data}
+    reviews_map = {r['reviewable_id']: r for r in reviews_data}
 
     # --- Assemble Final Response ---
     for p in products:
