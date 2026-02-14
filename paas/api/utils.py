@@ -32,6 +32,8 @@ def api_response(data=None, message=None, status_code=200):
         response["data"] = data
     if message:
         response["message"] = message
+    if status_code:
+        response["status_code"] = status_code
     
     # Frappe automatically wraps 'api/method' returns in 'message', 
     # so this essentially creates {"message": {"data": ..., "message": ...}}
