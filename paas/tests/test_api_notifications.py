@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api import get_user_notifications
+from paas.api.notification.notification import get_user_notifications
 
 class TestNotificationsAPI(FrappeTestCase):
     def setUp(self):
