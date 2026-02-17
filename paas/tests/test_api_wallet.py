@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api import get_user_wallet, get_wallet_history
+from paas.api.user.user import get_user_wallet, get_wallet_history
 import uuid
 
 class TestWalletAPI(FrappeTestCase):
