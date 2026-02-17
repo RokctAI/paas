@@ -109,7 +109,6 @@ def get_global_settings():
     """
     settings_data = []
     
-    # 1. Fetch from 'Settings' (Single DocType)
     try:
         settings = frappe.get_single("Settings")
         
@@ -142,7 +141,8 @@ def get_global_settings():
              
         # Add distance unit (mock)
         settings_data.append({"key": "distance_unit", "value": "km"})
-        
+
+    except Exception as e:
         frappe.log_error(f"Error fetching global settings: {e}")
         
     return api_response(data=settings_data)
