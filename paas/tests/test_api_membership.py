@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api import get_user_membership, get_user_membership_history
+from paas.api.user.user import get_user_membership, get_user_membership_history
 
 class TestMembershipAPI(FrappeTestCase):
     def setUp(self):
