@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api import create_invite, get_user_invites, update_invite_status
+from paas.api.user.user import create_invite, get_user_invites, update_invite_status
 
 class TestInvitesAPI(FrappeTestCase):
     def setUp(self):
