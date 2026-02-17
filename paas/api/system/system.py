@@ -100,3 +100,50 @@ def trigger_system_update():
     frappe.enqueue("frappe.migrate.migrate", queue="long")
     
     return api_response(message="System migration started in background.")
+
+@frappe.whitelist(allow_guest=True)
+def get_global_settings():
+    """
+    Retrieves global settings formatted as a key-value list for the frontend.
+    Aggregates data from 'Settings' and 'Global Settings'.
+    """
+    settings_data = []
+    
+    # 1. Fetch from 'Settings' (Single DocType)
+    try:
+        settings = frappe.get_single("Settings")
+        
+        # Map specific fields that the frontend likely needs
+        # Based on analysis of Flutter app usage, it generally expects keys like:
+        # 'app_name', 'default_tax', 'default_currency', etc.
+        # mapping schema fields to generic keys
+        
+        if settings.project_title:
+            settings_data.append({"key": "app_name", "value": settings.project_title})
+            
+        if settings.service_fee:
+            settings_data.append({"key": "default_tax", "value": str(settings.service_fee)})
+            
+        if settings.deliveryman_order_acceptance_time:
+             settings_data.append({"key": "deliveryman_order_acceptance_time", "value": str(settings.deliveryman_order_acceptance_time)})
+             
+        # Add map key if available in Global Settings
+        global_settings = frappe.get_single("Global Settings")
+        if global_settings.google_maps_api_key:
+            settings_data.append({"key": "google_maps_key", "value": global_settings.google_maps_api_key})
+            
+        # Add default language (mock or fetch)
+        settings_data.append({"key": "default_language", "value": "en"})
+        
+        # Add default currency
+        currency = frappe.db.get_value("Currency", {"enabled": 1}, "name")
+        if currency:
+             settings_data.append({"key": "default_currency", "value": currency})
+             
+        # Add distance unit (mock)
+        settings_data.append({"key": "distance_unit", "value": "km"})
+        
+    except Exception as e:
+        frappe.log_error(f"Error fetching global settings: {e}")
+        
+    return api_response(data=settings_data)
