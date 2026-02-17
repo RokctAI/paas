@@ -544,7 +544,7 @@ def get_product_by_uuid(uuid):
             "img": product.image,
             "price": product.standard_rate,
             "unit": product.stock_uom,
-            "shop_id": product.shop, 
+            "shop_id": product.get("shop"), 
             "category_id": product.item_group,
              "galleries": [],
              "stocks": [],
