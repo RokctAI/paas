@@ -181,6 +181,29 @@ def update_password(password, password_confirmation):
 
 
 @frappe.whitelist()
+def delete_account():
+    """
+    Deletes the currently logged-in user's account.
+    If deletion fails due to linked documents, the account is deactivated instead.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+        frappe.throw("You must be logged in to delete your account.", frappe.AuthenticationError)
+
+    try:
+        # Attempt to delete the User document
+        frappe.delete_doc("User", user, ignore_permissions=True)
+        # Logout the session
+        frappe.local.login_manager.logout()
+        return api_response(message="Account deleted successfully.")
+    except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError):
+        # Fallback: Deactivate the user if linked documents exist
+        frappe.db.set_value("User", user, "enabled", 0)
+        frappe.local.login_manager.logout()
+        return api_response(message="Account deactivated successfully.")
+
+
+@frappe.whitelist()
 @check_subscription_feature("phone_verification")
 def check_phone(phone: str):
     """
