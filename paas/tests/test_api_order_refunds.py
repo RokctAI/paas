@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api import create_order_refund, get_user_order_refunds
+from paas.api.user.user import create_order_refund, get_user_order_refunds
 
 class TestOrderRefundsAPI(FrappeTestCase):
     def setUp(self):
