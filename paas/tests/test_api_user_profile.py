@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api import get_user_profile, update_user_profile
+from paas.api.user.user import get_user_profile, update_user_profile
 import json
 
 class TestUserProfileAPI(FrappeTestCase):
