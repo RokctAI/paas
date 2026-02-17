@@ -3,7 +3,7 @@
 import frappe
 import json
 from frappe.tests.utils import FrappeTestCase
-from paas.api import create_order
+from paas.api.order.order import create_order
 
 class TestCouponUsage(FrappeTestCase):
     def setUp(self):
