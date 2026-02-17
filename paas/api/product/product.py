@@ -609,16 +609,27 @@ def add_product_review(product_uuid, rating, comment=None, images=None):
     return api_response(data=None)
 
 @frappe.whitelist()
-def get_suggest_price(item_code: str, currency: str = "ZAR"):
+def get_suggest_price(lang: str = "en", currency: str = "ZAR"):
     """
-    Suggests a price for a product based on market data.
+    Retrieves a suggested price range.
     """
-    return {"suggested_price": 100.0}
+    import datetime
+    return {
+        "timestamp": datetime.datetime.now().isoformat(),
+        "status": True,
+        "message": "Suggested price retrieved",
+        "data": {
+            "min": 10.0,
+            "max": 1000.0,
+            "currency": currency
+        }
+    }
 
 @frappe.whitelist()
-def get_product_calculations(item_code: str, quantity: int):
+def get_product_calculations(stock_id: str, quantity: int, lang: str = "en"):
     """
-    Calculates product price totals.
+    Calculates the price for a single product.
     """
-    # Placeholder
-    return {"total": 0.0}
+    item = frappe.get_doc("Product", stock_id)
+    total_price = item.price * quantity
+    return {"total_price": total_price}
