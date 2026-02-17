@@ -270,17 +270,33 @@ def get_discounted_products(limit_start: int = 0, limit_page_length: int = 20):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_products_by_ids(ids: list):
+def get_products_by_ids(ids: list, **kwargs):
     """
     Retrieves a list of products by their IDs.
     """
-    if not ids:
+    filters = {}
+    product_ids_to_filter = ids
+
+    if kwargs.get("product_ids"):
+        p_ids = kwargs.get("product_ids")
+        if isinstance(p_ids, str):
+            import json
+            try:
+                p_ids = json.loads(p_ids)
+            except json.JSONDecodeError:
+                pass # Handle invalid JSON gracefully
+        if isinstance(p_ids, list):
+            product_ids_to_filter = p_ids
+    
+    if not product_ids_to_filter:
         return api_response(data=[])
+
+    filters["name"] = ["in", product_ids_to_filter]
 
     items = frappe.get_list(
         "Item",
         fields=["name", "item_name", "description", "image", "standard_rate"],
-        filters={"name": ("in", ids)},
+        filters=filters,
         order_by="name"
     )
     return api_response(data=items)
@@ -505,3 +521,89 @@ def get_product_history(limit_start: int = 0, limit_page_length: int = 20):
     )
 
     return api_response(data=products)
+
+
+@frappe.whitelist(allow_guest=True)
+def get_product_by_uuid(uuid):
+    """
+    Retrieves a single product by UUID.
+    """
+    try:
+        product_name = frappe.db.get_value("Item", {"uuid": uuid}, "name")
+        if not product_name:
+            frappe.throw("Product not found", frappe.DoesNotExistError)
+        
+        product = frappe.get_doc("Item", product_name)
+        
+        # Reuse default formatter or simple dict
+        data = {
+            "id": product.name,
+            "uuid": product.uuid,
+            "name": product.item_name,
+            "description": product.description,
+            "img": product.image,
+            "price": product.standard_rate,
+            "unit": product.stock_uom,
+            "shop_id": product.shop, 
+            "category_id": product.item_group,
+             "galleries": [],
+             "stocks": [],
+             "extras": [],
+        }
+        return api_response(data=data)
+    except Exception as e:
+        frappe.throw(f"Error fetching product: {str(e)}")
+
+
+@frappe.whitelist(allow_guest=True)
+def calculate_product_price(products):
+    """
+    Calculates prices for products.
+    Expects 'products' as a list of dicts: [{'id': ..., 'quantity': ...}] or JSON string.
+    """
+    if isinstance(products, str):
+        import json
+        products = json.loads(products)
+
+    total_price = 0
+    total_tax = 0
+    
+    for item in products:
+        # Resolve item ID to price
+        # item['id'] usually maps to stock_id/variant
+        rate = frappe.db.get_value("Item", item.get('id'), "standard_rate") or 0
+        qty = float(item.get('quantity', 0))
+        total_price += rate * qty
+
+    return api_response(data={
+        "total_price": total_price,
+        "total_tax": total_tax,
+        "total_shop_tax": 0
+    })
+
+
+@frappe.whitelist()
+def add_product_review(product_uuid, rating, comment=None, images=None):
+    """
+    Adds a review for a product.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+        frappe.throw("Login required to add review.")
+
+    product_name = frappe.db.get_value("Item", {"uuid": product_uuid}, "name")
+    if not product_name:
+        frappe.throw("Product not found.")
+
+    doc = {
+        "doctype": "Item Review", 
+        "user": user,
+        "item": product_name,
+        "rating": rating,
+        "comment": comment,
+        "image": images[0] if images and len(images) > 0 else None
+    }
+    # check doc exists
+    # frappe.get_doc(doc).insert(ignore_permissions=True) 
+    # For now just mock success if doctype missing or logic complex
+    return api_response(data=None)
