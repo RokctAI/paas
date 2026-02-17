@@ -81,7 +81,7 @@ class TestUserAddressAPI(FrappeTestCase):
         self.assertEqual(response.get("status"), "success")
 
         response = get_user_addresses()
-        addresses = response.get("data") or []
+        addresses = response
         deleted_addr = [addr for addr in addresses if addr.get("name") == added_address.get("name")]
         self.assertEqual(len(deleted_addr), 0)
 
