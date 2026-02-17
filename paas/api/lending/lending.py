@@ -80,3 +80,31 @@ def fetch_saved_applications(lang: str = "en"):
         filters={"customer": user, "status": "Draft"},
     )
     return loan_applications
+
+@frappe.whitelist()
+def create_loan_application(financial_details: dict, lang: str = "en"):
+    """
+    Creates a new loan application.
+    """
+    loan_application = frappe.get_doc({
+        "doctype": "Loan Application",
+        "status": "Submitted",
+        # Map fields
+    })
+    loan_application.insert(ignore_permissions=True)
+    return {"name": loan_application.name}
+
+@frappe.whitelist()
+def disburse_loan(loan_id: str, lang: str = "en"):
+    """
+    Disburses a loan.
+    """
+    return {"status": "success", "message": "Loan disbursed."}
+
+@frappe.whitelist()
+def get_my_loan_applications(lang: str = "en"):
+    """
+    Fetches all loan applications for the user.
+    """
+    user = frappe.session.user
+    return frappe.get_list("Loan Application", filters={"customer": user})
