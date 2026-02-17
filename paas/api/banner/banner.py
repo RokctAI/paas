@@ -4,6 +4,26 @@
 import frappe
 
 @frappe.whitelist()
+def get_banners(page: int = 1, limit_page_length: int = 10):
+    """
+    Fetches a paginated list of banners.
+    """
+    return frappe.get_all(
+        "Banner",
+        fields=["name", "title", "image", "url"],
+        limit=limit_page_length,
+        offset=(page - 1) * limit_page_length,
+        order_by="creation desc"
+    )
+
+@frappe.whitelist()
+def get_banner(id: str):
+    """
+    Fetches a single banner.
+    """
+    return frappe.get_doc("Banner", id)
+
+@frappe.whitelist()
 def get_ads(page: int = 1):
     """
     Fetches a paginated list of banners that are marked as ads.
