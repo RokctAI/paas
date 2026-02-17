@@ -79,3 +79,90 @@ def get_default_sms_payload():
     }
 
     return json.dumps(payload)
+
+@frappe.whitelist()
+def get_notification_settings():
+    """
+    Retrieves notification settings for the current user.
+    Returns a list of notification types with their active status.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+        frappe.throw("You must be logged in to view notification settings.", frappe.AuthenticationError)
+        
+    # Get all notification types
+    # Assuming 'Notification Type' doctype exists from confirmed check
+    # If it doesn't exist in some envs, we handle gracefully
+    try:
+        types = frappe.get_all("Notification Type", fields=["name", "type", "payload"])
+    except Exception:
+        return api_response(data=[])
+        
+    # Get user preferences
+    prefs = frappe.get_all(
+        "User Notification Preference",
+        filters={"user": user},
+        fields=["name", "notification_type", "active"]
+    )
+    
+    prefs_map = {p.notification_type: p for p in prefs}
+    
+    result = []
+    for t in types:
+        # Default to active if no preference set
+        is_active = True
+        pref_id = None
+        
+        if t.name in prefs_map:
+            is_active = bool(prefs_map[t.name].active)
+            pref_id = prefs_map[t.name].name
+            
+        result.append({
+            "id": 0, # Flutter expects int, send 0 or valid int if available (Doctype doesn't have int id by default)
+            "type": t.type or t.name, # Use 'type' field or fallback to name
+            "active": is_active,
+            "created_at": None,
+            "updated_at": None,
+            "payload": [] # Mock payload list
+        })
+        
+    return api_response(data={"data": result}) # Wrap in data.data as per Flutter model
+
+@frappe.whitelist()
+def update_notification_settings(type: str, active: int):
+    """
+    Updates the notification setting for a specific type.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+         frappe.throw("You must be logged in to update notification settings.", frappe.AuthenticationError)
+         
+    # Check if preference exists
+    # We match by 'notification_type' which is the Link to Notification Type
+    # But input 'type' might be the string 'Order Update' etc from the 'type' field of Notification Type doctype
+    # We need to resolve it to the Notification Type name
+    
+    nt_name = frappe.db.get_value("Notification Type", {"type": type}, "name")
+    if not nt_name:
+        # fallback if type passed IS the name
+        if frappe.db.exists("Notification Type", type):
+            nt_name = type
+        else:
+             frappe.throw(f"Invalid notification type: {type}")
+             
+    # Find existing preference
+    pref_name = frappe.db.get_value("User Notification Preference", {"user": user, "notification_type": nt_name}, "name")
+    
+    if pref_name:
+        doc = frappe.get_doc("User Notification Preference", pref_name)
+        doc.active = 1 if active else 0
+        doc.save(ignore_permissions=True)
+    else:
+        doc = frappe.get_doc({
+            "doctype": "User Notification Preference",
+            "user": user,
+            "notification_type": nt_name,
+            "active": 1 if active else 0
+        }).insert(ignore_permissions=True)
+        
+    return api_response(message="Notification settings updated successfully.")
