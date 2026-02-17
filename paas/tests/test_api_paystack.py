@@ -3,7 +3,7 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from unittest.mock import patch, Mock
-from paas.api import initiate_paystack_payment, handle_paystack_callback
+from paas.api.payment.payment import initiate_paystack_payment, handle_paystack_callback
 
 class TestPayStackAPI(FrappeTestCase):
     def setUp(self):
