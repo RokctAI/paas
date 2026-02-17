@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api import add_user_address, get_user_addresses, get_user_address, update_user_address, delete_user_address
+from paas.api.user.user import add_user_address, get_user_addresses, get_user_address, update_user_address, delete_user_address
 import json
 
 class TestUserAddressAPI(FrappeTestCase):
