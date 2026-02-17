@@ -3,7 +3,7 @@
 import json
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api import get_payfast_settings, save_payfast_card, get_saved_payfast_cards, delete_payfast_card, handle_payfast_callback, process_payfast_token_payment
+from paas.api.payment.payment import get_payfast_settings, save_payfast_card, get_saved_payfast_cards, delete_payfast_card, handle_payfast_callback, process_payfast_token_payment
 
 class TestPayFastAPI(FrappeTestCase):
     def setUp(self):
