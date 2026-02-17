@@ -335,3 +335,11 @@ def check_cashback(shop_id: str, amount: float, lang: str = "en"):
         return {"cashback_amount": cashback_amount}
 
     return {"cashback_amount": 0}
+
+@frappe.whitelist()
+def get_shops_recommend(latitude: float, longitude: float, lang: str = "en"):
+    """
+    Returns recommended shops based on location and rating.
+    """
+    # Placeholder logic
+    return get_nearby_shops(latitude, longitude, lang)
