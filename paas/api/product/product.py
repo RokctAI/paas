@@ -609,7 +609,7 @@ def add_product_review(product_uuid, rating, comment=None, images=None):
     return api_response(data=None)
 
 @frappe.whitelist()
-def get_suggest_price(lang: str = "en", currency: str = "ZAR"):
+def get_suggest_price(item_code: str = None, lang: str = "en", currency: str = "ZAR"):
     """
     Retrieves a suggested price range.
     """
@@ -626,10 +626,12 @@ def get_suggest_price(lang: str = "en", currency: str = "ZAR"):
     }
 
 @frappe.whitelist()
-def get_product_calculations(stock_id: str, quantity: int, lang: str = "en"):
+def get_product_calculations(item_code: str, quantity: int, lang: str = "en"):
     """
     Calculates the price for a single product.
     """
-    item = frappe.get_doc("Product", stock_id)
-    total_price = item.price * quantity
+    item = frappe.get_doc("Item", item_code)
+    # Using standard_rate as per other functions in this file
+    price = item.standard_rate or 0.0
+    total_price = price * quantity
     return {"total_price": total_price}
