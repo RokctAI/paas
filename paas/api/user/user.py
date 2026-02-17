@@ -90,6 +90,97 @@ def login(usr, pwd):
 
 
 @frappe.whitelist()
+def get_profile():
+    """
+    Get the current user's profile details.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+        frappe.throw("You must be logged in to view your profile.", frappe.AuthenticationError)
+
+    user_doc = frappe.get_doc("User", user)
+    
+    # Fetch shop details if available
+    shop = None
+    shop_name = frappe.db.get_value("Shop", {"user": user}, "name")
+    if shop_name:
+        try:
+            shop_doc = frappe.get_doc("Shop", shop_name)
+            shop = {
+                "id": shop_doc.name,
+                "uuid": shop_doc.uuid,
+                "name": shop_doc.shop_name,
+                "logo": shop_doc.logo,
+                "cover_photo": shop_doc.cover_photo,
+                "active": shop_doc.open,
+                "status": shop_doc.status
+            }
+        except Exception:
+            pass
+
+    return api_response(data={
+        "id": user_doc.name,
+        "email": user_doc.email,
+        "firstname": user_doc.first_name,
+        "lastname": user_doc.last_name,
+        "phone": user_doc.phone,
+        "role": "user",
+        "active": 1,
+        "img": user_doc.user_image,
+        "shop": shop,
+        # "wallet": ... # TODO: Add Wallet logic
+    })
+
+
+@frappe.whitelist()
+def update_profile(firstname=None, lastname=None, email=None, phone=None, images=None):
+    """
+    Update the current user's profile.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+        frappe.throw("You must be logged in to update your profile.", frappe.AuthenticationError)
+
+    user_doc = frappe.get_doc("User", user)
+
+    if firstname:
+        user_doc.first_name = firstname
+    if lastname:
+        user_doc.last_name = lastname
+    if phone:
+        user_doc.phone = phone
+    
+    # Handle Image Upload (expects list or single string URL)
+    if images:
+        if isinstance(images, list) and len(images) > 0:
+            user_doc.user_image = images[0]
+        elif isinstance(images, str):
+            user_doc.user_image = images
+
+    user_doc.save(ignore_permissions=True)
+    return get_profile()
+
+
+@frappe.whitelist()
+def update_password(password, password_confirmation):
+    """
+    Update the current user's password.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+        frappe.throw("You must be logged in to update your password.", frappe.AuthenticationError)
+
+    if password != password_confirmation:
+        frappe.throw("Password confirmation does not match.")
+
+    user_doc = frappe.get_doc("User", user)
+    user_doc.new_password = password
+    user_doc.save(ignore_permissions=True)
+
+    return api_response(message="Password updated successfully")
+
+
+@frappe.whitelist()
 @check_subscription_feature("phone_verification")
 def check_phone(phone: str):
     """
