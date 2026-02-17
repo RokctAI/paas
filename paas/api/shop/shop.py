@@ -250,14 +250,55 @@ def get_shop_types():
 
 
 @frappe.whitelist(allow_guest=True)
-def get_nearby_shops(clientLocation=None):
+def get_nearby_shops(latitude: float, longitude: float, radius_km: float = 10, lang: str = "en"):
     """
-    Retrieves shops near the provided location.
-    clientLocation: "lat,long" string.
+    Retrieves a list of shops within a given radius.
     """
-    # For now, return all shops or reuse get_shops logic.
-    # TODO: Implement geospatial search
-    return get_shops()
+    if latitude is None or longitude is None:
+         return get_shops()
+
+    from math import radians, sin, cos, sqrt, atan2
+
+    def haversine(lat1, lon1, lat2, lon2):
+        R = 6371  # Radius of Earth in kilometers
+
+        dLat = radians(lat2 - lat1)
+        dLon = radians(lon2 - lon1)
+        lat1 = radians(lat1)
+        lat2 = radians(lat2)
+
+        a = sin(dLat / 2)**2 + cos(lat1) * cos(lat2) * sin(dLon / 2)**2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        return R * c
+
+    shops = frappe.get_all("Shop", fields=["name", "latitude", "longitude", "is_ecommerce"])
+    nearby_shops = []
+    
+    # helper to get shop details efficiently? 
+    # For now we get IDs and then re-fetch full details or just return what's needed?
+    # The original returned shop objects. `get_shops` formats them nicely.
+    # Let's get the IDs that match and then call `get_shops` with a filter or manually format.
+    # The original implementation returned the raw shop objects from the loop, 
+    # but `get_shops` returns api_response(data=formatted).
+    # The original __init__.py `get_nearby_shops` returned a LIST of shop objects (dicts).
+    
+    nearby_shop_ids = []
+    for shop in shops:
+        if shop.is_ecommerce:
+             nearby_shop_ids.append(shop.name)
+             continue
+
+        if shop.latitude and shop.longitude:
+            try:
+                distance = haversine(float(latitude), float(longitude), float(shop.latitude), float(shop.longitude))
+                if distance <= float(radius_km):
+                    nearby_shop_ids.append(shop.name)
+            except:
+                continue
+
+    # Now use generic get_shops_by_ids to return formatted data
+    return get_shops_by_ids(shop_ids=nearby_shop_ids)
 
 
 @frappe.whitelist(allow_guest=True)
