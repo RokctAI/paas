@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api import check_coupon
+from paas.api.coupon.coupon import check_coupon
 
 class TestCouponAPI(FrappeTestCase):
     def setUp(self):
