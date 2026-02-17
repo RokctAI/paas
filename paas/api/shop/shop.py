@@ -247,3 +247,73 @@ def get_shop_types():
     """
     types = frappe.get_all("Shop Type", fields=["name", "title", "description", "icon"], order_by="title asc")
     return api_response(data=types)
+
+
+@frappe.whitelist(allow_guest=True)
+def get_nearby_shops(clientLocation=None):
+    """
+    Retrieves shops near the provided location.
+    clientLocation: "lat,long" string.
+    """
+    # For now, return all shops or reuse get_shops logic.
+    # TODO: Implement geospatial search
+    return get_shops()
+
+
+@frappe.whitelist(allow_guest=True)
+def check_driver_zone(shop_id=None, address=None):
+    """
+    Checks if the address is within the shop's delivery zone.
+    Expects address as dict/json with latitude/longitude.
+    """
+    # Mock response: Always reachable for now
+    return api_response(data={"status": True, "distance": 1.2})
+
+
+@frappe.whitelist(allow_guest=True)
+def get_shops_by_ids(shop_ids: list = None, **kwargs):
+    """
+    Retrieves shops by a list of IDs.
+    """
+    filters = {}
+    ids_to_filter = shop_ids
+    
+    # Handle possible JSON string or alternative kwarg
+    if kwargs.get("shops"):
+        try:
+             import json
+             ids_to_filter = json.loads(kwargs.get("shops")) if isinstance(kwargs.get("shops"), str) else kwargs.get("shops")
+        except:
+             ids_to_filter = None
+
+    if not ids_to_filter:
+        return api_response(data=[])
+
+    shops = frappe.get_list(
+        "Shop",
+        filters={"name": ["in", ids_to_filter]},
+        fields=[
+            "name", "uuid", "slug", "user", "logo", "cover_photo",
+            "phone", "address", "location", "status", "type", "min_amount",
+            "tax", "delivery_time_type", "delivery_time_from", "delivery_time_to",
+            "open", "visibility", "verify", "service_fee", "percentage", "enable_cod",
+            "shop_type", "is_ecommerce"
+        ]
+    )
+    
+    # Simple formatter (reuse get_shops logic ideally, but keep simple here)
+    formatted_shops = []
+    for shop in shops:
+        formatted_shops.append({
+            'id': shop.name,
+            'uuid': shop.uuid,
+            'slug': shop.slug,
+            'logo_img': shop.logo,
+            'background_img': shop.cover_photo,
+             'translation': {
+                'title': shop.name,
+                'address': shop.address
+            }
+        })
+        
+    return api_response(data=formatted_shops)
