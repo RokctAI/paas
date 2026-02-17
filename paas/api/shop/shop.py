@@ -382,5 +382,50 @@ def get_shops_recommend(latitude: float, longitude: float, lang: str = "en"):
     """
     Returns recommended shops based on location and rating.
     """
-    # Placeholder logic
-    return get_nearby_shops(latitude, longitude, lang)
+@frappe.whitelist(allow_guest=True)
+def get_nearest_delivery_points(latitude: float, longitude: float, radius_km: float = 50):
+    """
+    Retrieves a list of active Delivery Points within a given radius.
+    """
+    if latitude is None or longitude is None:
+        frappe.throw("Latitude and Longitude are required.", frappe.ValidationError)
+
+    try:
+        lat = float(latitude)
+        lon = float(longitude)
+    except ValueError:
+        frappe.throw("Invalid Latitude or Longitude format.", frappe.ValidationError)
+
+    from math import radians, sin, cos, sqrt, atan2
+
+    def haversine(lat1, lon1, lat2, lon2):
+        R = 6371  # Radius of Earth in kilometers
+        dLat = radians(lat2 - lat1)
+        dLon = radians(lon2 - lon1)
+        lat1 = radians(lat1)
+        lat2 = radians(lat2)
+        a = sin(dLat / 2)**2 + cos(lat1) * cos(lat2) * sin(dLon / 2)**2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        return R * c
+
+    # Fetch all active delivery points
+    points = frappe.get_all("Delivery Point", 
+                            filters={"active": 1}, 
+                            fields=["name", "latitude", "longitude", "address", "price", "active"])
+    
+    nearby_points = []
+    for point in points:
+        if point.latitude and point.longitude:
+            try:
+                dist = haversine(lat, lon, float(point.latitude), float(point.longitude))
+                if dist <= float(radius_km):
+                    # Add distance to the point object for sorting/info
+                    point["distance_km"] = round(dist, 2)
+                    nearby_points.append(point)
+            except (ValueError, TypeError):
+                continue
+
+    # Sort by distance
+    nearby_points.sort(key=lambda x: x["distance_km"])
+
+    return nearby_points
