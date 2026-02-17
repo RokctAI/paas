@@ -160,3 +160,99 @@ def calculate_cart_totals(cart_name: str):
 
     cart.total_price = total_price
     cart.save(ignore_permissions=True)
+
+@frappe.whitelist()
+def create_cart(cart: dict, lang: str = "en"):
+    """
+    Creates a new cart.
+    """
+    cart_doc = frappe.get_doc({
+        "doctype": "Cart",
+        "user": frappe.session.user,
+        "shop": cart.get("shop_id"),
+    })
+    for item in cart.get("items", []):
+        cart_doc.append("items", {
+            "item": item.get("item_code"),
+            "quantity": item.get("quantity"),
+        })
+    cart_doc.insert(ignore_permissions=True)
+    return cart_doc.as_dict()
+
+@frappe.whitelist()
+def insert_cart(cart: dict, lang: str = "en"):
+    """
+    Inserts items into an existing cart.
+    """
+    cart_doc = frappe.get_doc("Cart", cart.get("cart_id"))
+    for item in cart.get("items", []):
+        cart_doc.append("items", {
+            "item": item.get("item_code"),
+            "quantity": item.get("quantity"),
+        })
+    cart_doc.save(ignore_permissions=True)
+    return cart_doc.as_dict()
+
+@frappe.whitelist()
+def insert_cart_with_group(cart: dict, lang: str = "en"):
+    """
+    Inserts items into an existing group cart.
+    """
+    cart_doc = frappe.get_doc("Cart", cart.get("cart_id"))
+    for item in cart.get("items", []):
+        cart_doc.append("items", {
+            "item": item.get("item_code"),
+            "quantity": item.get("quantity"),
+        })
+    cart_doc.save(ignore_permissions=True)
+    return cart_doc.as_dict()
+
+@frappe.whitelist()
+def create_and_cart(cart: dict, lang: str = "en"):
+    """
+    Creates a new cart and adds items to it.
+    """
+    return create_cart(cart, lang)
+
+@frappe.whitelist()
+def get_cart_in_group(cart_id: str, shop_id: str, cart_uuid: str, lang: str = "en"):
+    """
+    Retrieves a group cart.
+    """
+    return frappe.get_doc("Cart", cart_id)
+
+@frappe.whitelist()
+def delete_cart(cart_id: int, lang: str = "en"):
+    """
+    Deletes a cart.
+    """
+    frappe.delete_doc("Cart", cart_id, ignore_permissions=True)
+    return {"status": "success"}
+
+@frappe.whitelist()
+def change_status(user_uuid: str, cart_id: str, lang: str = "en"):
+    """
+    Changes the status of a user in a group cart.
+    """
+    # This is a placeholder for the actual implementation.
+    return {"status": "success"}
+
+@frappe.whitelist()
+def delete_user(cart_id: int, user_id: str, lang: str = "en"):
+    """
+    Deletes a user from a group cart.
+    """
+    cart_doc = frappe.get_doc("Cart", cart_id)
+    cart_doc.remove("group_order_users", {"user": user_id})
+    cart_doc.save(ignore_permissions=True)
+    return cart_doc.as_dict()
+
+@frappe.whitelist()
+def start_group_order(cart_id: int, lang: str = "en"):
+    """
+    Starts a group order.
+    """
+    cart_doc = frappe.get_doc("Cart", cart_id)
+    cart_doc.is_group_order = 1
+    cart_doc.save(ignore_permissions=True)
+    return cart_doc.as_dict()
