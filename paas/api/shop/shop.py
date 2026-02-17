@@ -317,3 +317,21 @@ def get_shops_by_ids(shop_ids: list = None, **kwargs):
         })
         
     return api_response(data=formatted_shops)
+
+@frappe.whitelist()
+def check_cashback(shop_id: str, amount: float, lang: str = "en"):
+    """
+    Checks the cashback for a given shop and amount based on defined rules.
+    """
+    cashback_rule = frappe.db.get_value(
+        "Cashback Rule",
+        filters={"shop": shop_id, "min_amount": ["<=", amount]},
+        fieldname=["percentage"],
+        order_by="min_amount desc",
+    )
+
+    if cashback_rule:
+        cashback_amount = (amount * cashback_rule) / 100
+        return {"cashback_amount": cashback_amount}
+
+    return {"cashback_amount": 0}
