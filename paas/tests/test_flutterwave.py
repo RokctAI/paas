@@ -3,7 +3,7 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from unittest.mock import patch, MagicMock
-from paas.api import initiate_flutterwave_payment, flutterwave_callback
+from paas.api.payment.payment import initiate_flutterwave_payment, flutterwave_callback
 
 class TestFlutterwave(FrappeTestCase):
 
