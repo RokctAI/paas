@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api.shop.shop import get_user_shop, update_user_shop
+from paas.api.user.user import get_user_shop, update_user_shop
 import json
 
 class TestShopManagementAPI(FrappeTestCase):
