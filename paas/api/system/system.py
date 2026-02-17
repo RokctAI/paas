@@ -143,7 +143,20 @@ def get_global_settings():
         # Add distance unit (mock)
         settings_data.append({"key": "distance_unit", "value": "km"})
         
-    except Exception as e:
         frappe.log_error(f"Error fetching global settings: {e}")
         
     return api_response(data=settings_data)
+
+@frappe.whitelist(allow_guest=True)
+def get_policy(lang: str = "en"):
+    """
+    Returns the privacy policy.
+    """
+    return {"content": "Privacy Policy content..."}
+
+@frappe.whitelist(allow_guest=True)
+def get_terms(lang: str = "en"):
+    """
+    Returns the terms and conditions.
+    """
+    return {"content": "Terms and Conditions content..."}
