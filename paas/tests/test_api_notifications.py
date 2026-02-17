@@ -76,3 +76,38 @@ class TestNotificationsAPI(FrappeTestCase):
         self.assertEqual(len(notifications), 1)
         self.assertEqual(notifications[0].get("subject"), self.notification_log.subject)
 
+    def test_get_notification_settings(self):
+        from paas.api.notification.notification import get_notification_settings
+        
+        response = get_notification_settings()
+        data = response.get("data")
+        # Structure is {data: [...]}
+        settings_list = data.get("data")
+        
+        print(settings_list)
+        self.assertTrue(isinstance(settings_list, list))
+        # Should contain at least our Alert type
+        self.assertTrue(any(s.get("type") == "Alert" for s in settings_list))
+        
+    def test_update_notification_settings(self):
+        from paas.api.notification.notification import update_notification_settings, get_notification_settings
+        
+        # Turn it off
+        response = update_notification_settings(type="Alert", active=0)
+        self.assertEqual(response.get("message"), "Notification settings updated successfully.")
+        
+        # Verify it's off
+        response = get_notification_settings()
+        settings_list = response.get("data").get("data")
+        alert_setting = next(s for s in settings_list if s.get("type") == "Alert")
+        self.assertFalse(alert_setting.get("active"))
+        
+        # Turn it back on
+        update_notification_settings(type="Alert", active=1)
+        
+        # Verify it's on
+        response = get_notification_settings()
+        settings_list = response.get("data").get("data")
+        alert_setting = next(s for s in settings_list if s.get("type") == "Alert")
+        self.assertTrue(alert_setting.get("active"))
+
