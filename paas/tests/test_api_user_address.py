@@ -46,36 +46,36 @@ class TestUserAddressAPI(FrappeTestCase):
             "location": {"lat": 1, "lng": 2}
         }
         response = add_user_address(address_data=json.dumps(address_data))
-        added_address = response.get("data") if response.get("data") else response
+        added_address = response
         
         self.assertEqual(added_address.get("title"), "Home")
         self.assertEqual(added_address.get("user"), self.test_user.name)
 
         # Test get single address
         response = get_user_address(name=added_address.get("name"))
-        retrieved_address = response.get("data") if response.get("data") else response
+        retrieved_address = response
         self.assertEqual(retrieved_address.get("title"), "Home")
 
         # Test get all addresses
         response = get_user_addresses()
-        addresses = response.get("data") if response.get("data") else response
+        addresses = response
         self.assertEqual(len(addresses), 1)
         self.assertEqual(addresses[0].get("title"), "Home")
 
     def test_update_user_address(self):
         address_data = {"title": "Work"}
         response = add_user_address(address_data=json.dumps({"title": "Initial"}))
-        added_address = response.get("data")
+        added_address = response
         
         update_data = {"title": "Updated Work"}
         response = update_user_address(name=added_address.get("name"), address_data=json.dumps(update_data))
-        updated_address = response.get("data")
+        updated_address = response
         
         self.assertEqual(updated_address.get("title"), "Updated Work")
 
     def test_delete_user_address(self):
         response = add_user_address(address_data=json.dumps({"title": "To be deleted"}))
-        added_address = response.get("data")
+        added_address = response
 
         response = delete_user_address(name=added_address.get("name"))
         self.assertEqual(response.get("status"), "success")
