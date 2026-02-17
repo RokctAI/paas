@@ -247,12 +247,13 @@ def delete_user(cart_id: int, user_id: str, lang: str = "en"):
     cart_doc.save(ignore_permissions=True)
     return cart_doc.as_dict()
 
-@frappe.whitelist()
-def start_group_order(cart_id: int, lang: str = "en"):
-    """
-    Starts a group order.
-    """
-    cart_doc = frappe.get_doc("Cart", cart_id)
-    cart_doc.is_group_order = 1
     cart_doc.save(ignore_permissions=True)
     return cart_doc.as_dict()
+
+@frappe.whitelist()
+def join_order(cart_id: str, user_name: str, lang: str = "en"):
+    """
+    Allows a user to join a group order.
+    """
+    # Placeholder logic
+    return {"status": "success", "message": "Joined order."}
