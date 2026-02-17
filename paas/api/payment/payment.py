@@ -791,11 +791,25 @@ def process_token_payment(order_id, token):
     if order.user != user:
         frappe.throw("You can only pay for your own orders.", frappe.PermissionError)
 
-        currency=frappe.db.get_single_value("System Settings", "currency") or "ZAR",
-        description=f"Payment for Order {order_id}",
+    currency = frappe.db.get_single_value("System Settings", "currency") or "ZAR"
+    description = f"Payment for Order {order_id}"
+
+    # Call the internal helper to process the charge
+    result = _charge_card_token(
+        token=token,
+        amount=order.grand_total,
+        currency=currency,
+        description=description,
         user=user
     )
-    return {"status": "success", "message": "Payment successful."}
+    
+    # If successful, update order status
+    if result.get("status") == "success":
+        order.payment_status = "Paid"
+        order.save(ignore_permissions=True)
+        frappe.db.commit()
+
+    return result
 
 @frappe.whitelist()
 def tip_process(order_id: str, tip_amount: float):
