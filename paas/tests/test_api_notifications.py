@@ -59,6 +59,9 @@ class TestNotificationsAPI(FrappeTestCase):
         
         frappe.db.commit()
 
+        # Clean up any existing notifications for this user to ensure test isolation
+        frappe.db.delete("Notification Log", {"for_user": self.test_user.name})
+
         # Create a notification log for the user
         self.notification_log = frappe.get_doc({
             "doctype": "Notification Log",
