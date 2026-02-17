@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api import get_user_transactions
+from paas.api.user.user import get_user_transactions
 import time
 
 class TestTransactionsAPI(FrappeTestCase):
