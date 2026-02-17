@@ -73,6 +73,26 @@ class TestUserProfileAPI(FrappeTestCase):
 
         # Verify that the unauthorized fields were not changed
         updated_profile = get_user_profile()
+        # Verify that the unauthorized fields were not changed
+        updated_profile = get_user_profile()
         self.assertEqual(updated_profile.get("email"), "test_user_profile@example.com")
         self.assertTrue("Administrator" not in frappe.get_roles(self.test_user.name))
 
+    def test_delete_account(self):
+        from paas.api.user.user import delete_account
+        
+        # Ensure we are logged in
+        frappe.set_user(self.test_user.name)
+        
+        response = delete_account()
+        
+        # Check success message
+        self.assertIn(response.get("message"), ["Account deleted successfully.", "Account deactivated successfully."])
+        
+        # Verify user is gone OR disabled
+        if not frappe.db.exists("User", self.test_user.name):
+            # Deleted
+            pass
+        else:
+            # Check disabled
+            self.assertEqual(frappe.db.get_value("User", self.test_user.name, "enabled"), 0)
