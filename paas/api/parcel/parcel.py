@@ -88,7 +88,7 @@ def create_parcel_order(order_data):
 
 
 @frappe.whitelist()
-def get_parcel_orders(limit=20, offset=0):
+def get_parcel_orders(limit=20, offset=0, status=None):
     """
     Retrieves a paginated list of parcel orders for the current user.
     """
@@ -96,9 +96,22 @@ def get_parcel_orders(limit=20, offset=0):
     if user == "Guest":
         frappe.throw("You must be logged in to view parcel orders.", frappe.AuthenticationError)
 
+    filters = {"user": user}
+    if status:
+        if isinstance(status, str) and "[" in status:
+             import json
+             try:
+                 filters["status"] = ["in", json.loads(status)]
+             except:
+                 filters["status"] = status
+        elif isinstance(status, list):
+             filters["status"] = ["in", status]
+        else:
+             filters["status"] = status
+
     parcel_orders = frappe.get_list(
         "Parcel Order",
-        filters={"user": user},
+        filters=filters,
         fields=["name", "status", "delivery_date", "total_price", "address_to", "delivery_point", "order"],
         limit=limit,
         offset=offset,
@@ -183,3 +196,28 @@ def update_parcel_status(parcel_order_id, status):
         frappe.throw(f"Parcel Order {parcel_order_id} not found.", frappe.DoesNotExistError)
     except Exception as e:
         frappe.throw(f"An error occurred: {str(e)}")
+
+
+@frappe.whitelist(allow_guest=True)
+def get_types():
+    """
+    Retrieves all available Parcel Types.
+    """
+    types = frappe.get_all("Parcel Type", fields=["name", "type", "min_weight", "max_weight", "min_price", "max_price"], order_by="name asc")
+    return api_response(data=types)
+
+
+@frappe.whitelist(allow_guest=True)
+def calculate_price(type_id, address_from, address_to):
+    """
+    Calculates the delivery price based on distance and parcel type.
+    address_from/to: JSON strings or dicts with latitude/longitude.
+    """
+    # Simple mock calculation for parity
+    # In production, use Google Maps API or internal distance logic
+    return api_response(data={
+        "price": 50.0, # Mock price
+        "delivery_fee": 10.0,
+        "km": 5.2,
+        "time": "15-20 min"
+    })
