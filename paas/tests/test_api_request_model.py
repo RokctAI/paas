@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api import create_request_model, get_user_request_models
+from paas.api.user.user import create_request_model, get_user_request_models
 import json
 
 class TestRequestModelAPI(FrappeTestCase):
