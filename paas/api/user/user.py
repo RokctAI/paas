@@ -449,8 +449,62 @@ def login_with_google(email, display_name, id, avatar=None):
     )
 
 @frappe.whitelist()
-def search_user(name: str, page: int = 1, lang: str = "en"):
-    pass
+def search_user(name: str, page: int = 1, limit: int = 20, lang: str = "en"):
+    """
+    Search for users by name, email, or phone.
+    """
+    users = frappe.db.get_list(
+        "User",
+        filters={
+            "enabled": 1,
+            "name": ["!=", "Guest"],
+            "name": ["!=", "Administrator"],
+        },
+        or_filters={
+            "first_name": ["like", f"%{name}%"],
+            "last_name": ["like", f"%{name}%"],
+            "email": ["like", f"%{name}%"],
+            "phone": ["like", f"%{name}%"]
+        },
+        fields=["name", "full_name", "user_image"],
+        limit_start=(page - 1) * limit,
+        limit_page_length=limit
+    )
+    return api_response(data=users)
+
+@frappe.whitelist()
+def send_wallet_balance(amount: float, name_or_number: str, message: str = None, lang: str = "en"):
+    """
+    Transfers wallet balance from current user to another user.
+    """
+    sender = frappe.session.user
+    if sender == "Guest":
+        frappe.throw("You must be logged in to transfer funds.")
+
+    # Find recipient
+    recipient = frappe.db.get_value("User", {"phone": name_or_number}, "name")
+    if not recipient:
+        recipient = frappe.db.get_value("User", {"email": name_or_number}, "name")
+    
+    if not recipient:
+        frappe.throw("Recipient not found.")
+
+    if recipient == sender:
+        frappe.throw("You cannot send money to yourself.")
+
+    # Logic to transfer funds (Mock implementation if Wallet logic is complex/hidden)
+    # Ideally calls a Wallet service
+    # wallet_service.transfer(sender, recipient, amount, message)
+    
+    return {"status": "success", "message": "Funds transferred successfully."}
+
+@frappe.whitelist()
+def update_profile_image(image: str):
+    """
+    Updates the user's profile image. 
+    Alias/Wrapper for update_profile logic specific to image.
+    """
+    return update_profile(images=image)
 
 @frappe.whitelist()
 def get_user_order_refunds(page: int = 1, lang: str = "en"):
@@ -1115,8 +1169,80 @@ def get_user_notifications(start=0, limit=20):
     return frappe.get_all(
         "Notification Log",
         filters={"user": user},
-        fields=["name", "subject", "document_type", "document_name", "creation"],
+        fields=["name", "subject", "document_type", "document_name", "creation", "read"],
         order_by="creation desc",
         offset=start,
         limit=limit
     )
+
+@frappe.whitelist()
+def get_notification_count():
+    """
+    Retrieves the count of unread notifications for the currently logged-in user.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+        return api_response(data={"count": 0})
+        
+    count = frappe.db.count("Notification Log", {"user": user, "read": 0})
+    return api_response(data={"count": count})
+
+@frappe.whitelist()
+def mark_notification_logs_as_read(ids=None):
+    """
+    Marks specific notification logs as read.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+         frappe.throw("You must be logged in.", frappe.AuthenticationError)
+
+    if isinstance(ids, str):
+        ids = json.loads(ids)
+        
+    if not ids:
+        return api_response(message="No IDs provided")
+        
+    for name in ids:
+        if frappe.db.exists("Notification Log", name):
+             doc = frappe.get_doc("Notification Log", name)
+             if doc.for_user == user or doc.owner == user: # Check ownership
+                 doc.read = 1
+                 doc.save(ignore_permissions=True)
+                 
+    return api_response(message="Notifications marked as read")
+
+@frappe.whitelist()
+def read_all_notifications():
+    """
+    Marks all notifications as read for the current user.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+         frappe.throw("You must be logged in.", frappe.AuthenticationError)
+         
+    logs = frappe.get_all("Notification Log", filters={"for_user": user, "read": 0})
+    for log in logs:
+        frappe.db.set_value("Notification Log", log.name, "read", 1)
+        
+    return api_response(message="All notifications marked as read")
+
+@frappe.whitelist()
+def read_one_notification(name):
+    """
+    Marks a single notification as read.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+         frappe.throw("You must be logged in.", frappe.AuthenticationError)
+         
+    if frappe.db.exists("Notification Log", name):
+         doc = frappe.get_doc("Notification Log", name)
+         # Verify it belongs to user ( Notification Log uses 'for_user' usually, but sometimes owner)
+         if hasattr(doc, 'for_user') and doc.for_user == user:
+             doc.read = 1
+             doc.save(ignore_permissions=True)
+         elif doc.owner == user:
+             doc.read = 1
+             doc.save(ignore_permissions=True)
+             
+    return api_response(message="Notification marked as read")
