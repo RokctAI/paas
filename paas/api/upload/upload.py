@@ -1,5 +1,6 @@
 import frappe
 from frappe.utils.file_manager import save_file
+from paas.api.utils import api_response
 
 @frappe.whitelist()
 def upload_file(file, filename=None, is_private=0):
@@ -145,3 +146,4 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
     # (unless 'image' field exists and is empty? Logic implies just attachment for now)
     
     return {"file_urls": file_urls}
+
