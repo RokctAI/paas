@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api import create_ticket, get_user_tickets, get_user_ticket, reply_to_ticket
+from paas.api.user.user import create_ticket, get_user_tickets, get_user_ticket, reply_to_ticket
 import uuid
 
 class TestTicketsAPI(FrappeTestCase):
