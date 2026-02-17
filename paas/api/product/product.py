@@ -607,3 +607,18 @@ def add_product_review(product_uuid, rating, comment=None, images=None):
     # frappe.get_doc(doc).insert(ignore_permissions=True) 
     # For now just mock success if doctype missing or logic complex
     return api_response(data=None)
+
+@frappe.whitelist()
+def get_suggest_price(item_code: str, currency: str = "ZAR"):
+    """
+    Suggests a price for a product based on market data.
+    """
+    return {"suggested_price": 100.0}
+
+@frappe.whitelist()
+def get_product_calculations(item_code: str, quantity: int):
+    """
+    Calculates product price totals.
+    """
+    # Placeholder
+    return {"total": 0.0}
