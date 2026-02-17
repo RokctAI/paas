@@ -72,3 +72,11 @@ def get_delivery_point(name):
     Retrieves a single delivery point by its name.
     """
     return frappe.get_doc("Delivery Point", name).as_dict()
+
+@frappe.whitelist(allow_guest=True)
+def get_driver_location(driver_id: str):
+    """
+    Retrieves the current location of a driver.
+    """
+    # Mock response or fetch from Redis/Driver Doc
+    return {"latitude": 0.0, "longitude": 0.0}
