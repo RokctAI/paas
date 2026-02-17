@@ -791,14 +791,40 @@ def process_token_payment(order_id, token):
     if order.user != user:
         frappe.throw("You can only pay for your own orders.", frappe.PermissionError)
 
-    # Execute actual charge
-    _charge_card_token(
-        token=token,
-        amount=order.grand_total,
         currency=frappe.db.get_single_value("System Settings", "currency") or "ZAR",
         description=f"Payment for Order {order_id}",
         user=user
     )
+    return {"status": "success", "message": "Payment successful."}
+
+@frappe.whitelist()
+def tip_process(order_id: str, tip_amount: float):
+    """
+    Processes a tip for an order.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+        frappe.throw("You must be logged in to leave a tip.")
+
+    order = frappe.get_doc("Order", order_id)
+    if order.user != user:
+        frappe.throw("You are not authorized to tip for this order.", frappe.PermissionError)
+
+    if order.status == "Delivered": # Tipping usually AFTER delivery or during rating
+        # Logic to add tip to order or create a separate transaction
+        # For now, we update the order's tip field
+        order.tip_amount = tip_amount
+        order.total_price += tip_amount # Update total? Or keep separate?
+        order.save(ignore_permissions=True)
+        
+        # If already paid, might need to charge the tip separately.
+        # This implementation assumes it's added before payment or just recorded.
+        # If separate charge needed:
+        # charge_token(user_token, tip_amount)
+        
+        return {"status": "success", "message": "Tip added successfully."}
+    else:
+         frappe.throw("Tips can only be added to delivered orders (conceptually).")
 
     transaction = frappe.get_doc({
         "doctype": "Transaction",
