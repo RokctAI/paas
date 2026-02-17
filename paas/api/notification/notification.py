@@ -166,4 +166,93 @@ def update_notification_settings(type: str, active: int):
             "active": 1 if active else 0
         }).insert(ignore_permissions=True)
         
+        
     return api_response(message="Notification settings updated successfully.")
+
+@frappe.whitelist()
+def get_user_notifications(start=0, limit=20):
+    """
+    Retrieves the list of notifications for the currently logged-in user.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+        frappe.throw("You must be logged in to view your notifications.", frappe.AuthenticationError)
+
+    return frappe.get_all(
+        "Notification Log",
+        filters={"user": user},
+        fields=["name", "subject", "document_type", "document_name", "creation", "read"],
+        order_by="creation desc",
+        offset=start,
+        limit=limit
+    )
+
+@frappe.whitelist()
+def get_notification_count():
+    """
+    Retrieves the count of unread notifications for the currently logged-in user.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+        return api_response(data={"count": 0})
+        
+    count = frappe.db.count("Notification Log", {"user": user, "read": 0})
+    return api_response(data={"count": count})
+
+@frappe.whitelist()
+def mark_notification_logs_as_read(ids=None):
+    """
+    Marks specific notification logs as read.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+         frappe.throw("You must be logged in.", frappe.AuthenticationError)
+
+    if isinstance(ids, str):
+        ids = json.loads(ids)
+        
+    if not ids:
+        return api_response(message="No IDs provided")
+        
+    for name in ids:
+        if frappe.db.exists("Notification Log", name):
+             doc = frappe.get_doc("Notification Log", name)
+             # Check ownership/for_user
+             if (hasattr(doc, 'for_user') and doc.for_user == user) or doc.owner == user:
+                 doc.read = 1
+                 doc.save(ignore_permissions=True)
+                 
+    return api_response(message="Notifications marked as read")
+
+@frappe.whitelist()
+def read_all_notifications():
+    """
+    Marks all notifications as read for the current user.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+         frappe.throw("You must be logged in.", frappe.AuthenticationError)
+         
+    logs = frappe.get_all("Notification Log", filters={"for_user": user, "read": 0})
+    # Also check owner if for_user is not used? Standard Frappe uses for_user
+    for log in logs:
+        frappe.db.set_value("Notification Log", log.name, "read", 1)
+        
+    return api_response(message="All notifications marked as read")
+
+@frappe.whitelist()
+def read_one_notification(name):
+    """
+    Marks a single notification as read.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+         frappe.throw("You must be logged in.", frappe.AuthenticationError)
+         
+    if frappe.db.exists("Notification Log", name):
+         doc = frappe.get_doc("Notification Log", name)
+         if (hasattr(doc, 'for_user') and doc.for_user == user) or doc.owner == user:
+             doc.read = 1
+             doc.save(ignore_permissions=True)
+             
+    return api_response(message="Notification marked as read")
