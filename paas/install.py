@@ -18,9 +18,23 @@ def after_install():
     """
     setup_gin_indexes()
     setup_vector_extension()
+    setup_geospatial_extensions()
     setup_product_vector_column()
     run_seeders()
     check_and_fetch_sources()
+
+def setup_geospatial_extensions():
+    """
+    Enables cube and earthdistance extensions for geospatial queries.
+    """
+    try:
+        frappe.db.sql("CREATE EXTENSION IF NOT EXISTS cube")
+        frappe.db.sql("CREATE EXTENSION IF NOT EXISTS earthdistance")
+        return True
+    except Exception as e:
+        frappe.db.rollback()
+        print(f"⚠️ Failed to enable geospatial extensions: {e}")
+        return False
 
 def setup_vector_extension():
     """
