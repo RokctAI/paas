@@ -72,7 +72,12 @@ def get_products(
         query = query.where(t_item.shop == shop_id)
 
     if search:
-        query = query.where(t_item.item_name.like(f"%{search}%"))
+        from frappe.query_builder.functions import Function
+        to_tsvector = Function("to_tsvector")
+        plainto_tsquery = Function("plainto_tsquery")
+        query = query.where(
+            to_tsvector("english", t_item.item_name).matches(plainto_tsquery("english", search))
+        )
 
     # Rating filter and sorting
     if rating or order_by in ["high_rating", "low_rating"]:
@@ -393,16 +398,20 @@ def products_search(search: str, limit_start: int = 0, limit_page_length: int = 
     """
     Searches for products by a search term.
     """
-    products = frappe.get_list(
-        "Item",
-        fields=["name", "item_name", "description", "image", "standard_rate"],
-        filters=[
-            ["Item", "item_name", "like", f"%{search}%"],
-        ],
-        offset=limit_start,
-        limit=limit_page_length,
-        order_by="name"
+    t_item = frappe.qb.DocType("Item")
+    query = (
+        frappe.qb.from_(t_item)
+        .select(t_item.name, t_item.item_name, t_item.description, t_item.image, t_item.standard_rate)
     )
+
+    from frappe.query_builder.functions import Function
+    to_tsvector = Function("to_tsvector")
+    plainto_tsquery = Function("plainto_tsquery")
+    query = query.where(
+        to_tsvector("english", t_item.item_name).matches(plainto_tsquery("english", search))
+    )
+
+    products = query.limit(limit_page_length).offset(limit_start).orderby(t_item.name).run(as_dict=True)
     return api_response(data=products)
 
 
