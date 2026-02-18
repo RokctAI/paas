@@ -38,9 +38,8 @@
   },
   {
    "fieldname": "data",
-   "fieldtype": "Code",
-   "label": "Data",
-   "options": "JSON"
+   "fieldtype": "JSON",
+   "label": "Data"
   },
   {
    "fieldname": "created_by_user",
