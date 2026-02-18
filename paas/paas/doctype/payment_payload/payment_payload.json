@@ -26,9 +26,8 @@
     "fields": [
         {
             "fieldname": "payload",
-            "fieldtype": "Code",
-            "label": "Payload",
-            "options": "JSON"
+            "fieldtype": "JSON",
+            "label": "Payload"
         }
     ]
 }
