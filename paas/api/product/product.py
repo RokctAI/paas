@@ -73,17 +73,23 @@ def get_products(
 
     if search:
         from frappe.query_builder.functions import Function
-        from pypika.terms import Criterion
+        from pypika.terms import Term
         
+        class MatchTerm(Term):
+            def __init__(self, left, right, alias=None):
+                super().__init__(alias)
+                self.left = left
+                self.right = right
+            
+            def get_sql(self, **kwargs):
+                return f"{self.left.get_sql(**kwargs)} @@ {self.right.get_sql(**kwargs)}"
+
         # Instantiate functions
         ts_vector = Function("to_tsvector", "english", t_item.item_name)
         ts_query = Function("plainto_tsquery", "english", search)
         
-        # pypika/frappe.qb doesn't have a native 'matches' or '@@' operator method on Function
-        # We can construct a Criterion manually: term1 operator term2
-        # Postgres FTS uses the @@ operator
-        
-        query = query.where(Criterion(ts_vector, "@@", ts_query))
+        # Use custom term for @@ operator
+        query = query.where(MatchTerm(ts_vector, ts_query))
 
     # Rating filter and sorting
     if rating or order_by in ["high_rating", "low_rating"]:
