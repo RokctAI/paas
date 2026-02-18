@@ -60,7 +60,7 @@ class TestNotificationsAPI(FrappeTestCase):
         frappe.db.commit()
 
         # Clean up any existing notifications for this user to ensure test isolation
-        frappe.db.delete("Notification Log", {"for_user": self.test_user.name})
+        frappe.db.delete("Notification Log", {"user": self.test_user.name})
 
         # Create a notification log for the user
         self.notification_log = frappe.get_doc({
@@ -78,7 +78,7 @@ class TestNotificationsAPI(FrappeTestCase):
     def tearDown(self):
         # Log out
         frappe.set_user("Administrator")
-        frappe.db.delete("Notification Log", {"for_user": self.test_user.name})
+        frappe.db.delete("Notification Log", {"user": self.test_user.name})
         if frappe.db.exists("User", self.test_user.name):
             try:
                 self.test_user.delete(ignore_permissions=True)
