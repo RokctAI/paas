@@ -301,8 +301,54 @@ def check_driver_zone(shop_id=None, address=None):
     Checks if the address is within the shop's delivery zone.
     Expects address as dict/json with latitude/longitude.
     """
-    # Mock response: Always reachable for now
-    return api_response(data={"status": True, "distance": 1.2})
+@frappe.whitelist()
+def get_shops_recommend(latitude: float, longitude: float, lang: str = "en"):
+    """
+    Returns recommended shops based on location and rating.
+    Currently aliases to get_nearby_shops as we lack a rating field.
+    """
+    return get_nearby_shops(latitude, longitude, radius_km=20, lang=lang)
+
+@frappe.whitelist(allow_guest=True)
+def check_driver_zone(shop_id=None, address=None):
+    """
+    Checks if the address is within the shop's delivery zone.
+    Expects address as dict/json with latitude/longitude.
+    """
+    import json
+    if isinstance(address, str):
+        try:
+            address = json.loads(address)
+        except ValueError:
+            frappe.throw("Invalid address format", frappe.ValidationError)
+
+    if not address or not address.get("latitude") or not address.get("longitude"):
+        frappe.throw("Address must contain latitude and longitude", frappe.ValidationError)
+
+    user_lat = float(address.get("latitude"))
+    user_lon = float(address.get("longitude"))
+
+    # Get Shop Location
+    shop = frappe.db.get_value("Shop", shop_id, ["latitude", "longitude"], as_dict=True)
+    if not shop or not shop.latitude or not shop.longitude:
+         return api_response(data={"status": False, "message": "Shop location not found"})
+
+    shop_lat = float(shop.latitude)
+    shop_lon = float(shop.longitude)
+
+    # Calculate distance using earthdistance
+    query = """
+        SELECT (earth_distance(ll_to_earth(%s, %s), ll_to_earth(%s, %s)) / 1000) as distance_km
+    """
+    distance_km = frappe.db.sql(query, (user_lat, user_lon, shop_lat, shop_lon))[0][0]
+
+    # Default Max Radius: 50km (Can be made configurable in Shop settings later)
+    max_radius_km = 50.0 
+    
+    return api_response(data={
+        "status": distance_km <= max_radius_km,
+        "distance": round(distance_km, 2)
+    })
 
 
 @frappe.whitelist(allow_guest=True)
@@ -371,11 +417,10 @@ def check_cashback(shop_id: str, amount: float, lang: str = "en"):
 
     return {"cashback_amount": 0}
 
-@frappe.whitelist()
-def get_shops_recommend(latitude: float, longitude: float, lang: str = "en"):
     """
     Returns recommended shops based on location and rating.
     """
+    pass
 @frappe.whitelist(allow_guest=True)
 def get_nearest_delivery_points(latitude: float, longitude: float, radius_km: float = 50):
     """
