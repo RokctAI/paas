@@ -736,3 +736,12 @@ website_route_rules = [
     {"from_route": "/.well-known/assetlinks.json", "to_route": "paas.api.app_links.get_assetlinks"},
     {"from_route": "/.well-known/apple-app-site-association", "to_route": "paas.api.app_links.get_apple_app_site_association"},
 ]
+
+# Document Events
+# ---------------
+doc_events = {
+    "Item": {
+        "on_update": "paas.paas.doctype.product.product.auto_vectorize_product",
+        "after_insert": "paas.paas.doctype.product.product.auto_vectorize_product",
+    }
+}
