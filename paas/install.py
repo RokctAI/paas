@@ -17,8 +17,35 @@ def after_install():
     Wrapper to run all post-installation tasks.
     """
     setup_gin_indexes()
+    setup_product_vector_column()
     run_seeders()
     check_and_fetch_sources()
+
+def setup_product_vector_column():
+    """
+    Adds a vector(384) column to the Product table for semantic search.
+    """
+    try:
+        exists = frappe.db.sql("""
+            SELECT 1 
+            FROM information_schema.columns 
+            WHERE table_name='tabItem' AND column_name='embedding'
+        """)
+        
+        if not exists:
+            print("🛍️ Adding 'embedding' vector column to Product (Item)...")
+            # 384 is the dimension for all-MiniLM-L6-v2
+            frappe.db.sql("ALTER TABLE \"tabItem\" ADD COLUMN embedding vector(384)")
+            
+            # Add an HNSW index for fast approximate nearest neighbor search
+            print("🛍️ Creating HNSW index for Product embeddings...")
+            frappe.db.sql("""
+                CREATE INDEX ON \"tabItem\" USING hnsw (embedding vector_l2_ops)
+            """)
+            
+    except Exception as e:
+        frappe.log_error(f"Failed to setup Product vector column: {e}")
+        print(f"⚠️ Failed to setup vector column: {e}")
 
 def setup_gin_indexes():
     """
