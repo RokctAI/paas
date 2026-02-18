@@ -120,8 +120,7 @@ class TestProductAPI(FrappeTestCase):
         self.assertEqual(test_prod['standard_rate'], 100.0)
 
     def test_products_search(self):
-        """Test FTS search (Requires Postgres)."""
-        # Create a unique product for search
+        # Create dummy items
         if not frappe.db.exists("Item", "Searchable Product"):
             frappe.get_doc({
                 "doctype": "Item",
@@ -130,7 +129,9 @@ class TestProductAPI(FrappeTestCase):
                 "item_group": "All Item Groups",
                 "shop": self.shop.name,
                 "standard_rate": 200,
-                "is_stock_item": 1,
+                "stock_uom": "Nos", # Fixed: Mandatory field
+                "is_stock_item": 0,
+                "description": "A very specific searchable description.",
                 "status": "Published",
                 "approval_status": "Approved"
             }).insert(ignore_permissions=True)
