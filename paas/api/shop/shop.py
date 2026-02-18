@@ -295,12 +295,7 @@ def get_nearby_shops(latitude: float, longitude: float, radius_km: float = 10, l
     return get_shops_by_ids(shop_ids=nearby_shop_ids)
 
 
-@frappe.whitelist(allow_guest=True)
-def check_driver_zone(shop_id=None, address=None):
-    """
-    Checks if the address is within the shop's delivery zone.
-    Expects address as dict/json with latitude/longitude.
-    """
+
 @frappe.whitelist()
 def get_shops_recommend(latitude: float, longitude: float, lang: str = "en"):
     """
@@ -426,17 +421,6 @@ def get_nearest_delivery_points(latitude: float, longitude: float, radius_km: fl
     if latitude is None or longitude is None:
         frappe.throw("Latitude and Longitude are required.", frappe.ValidationError)
 
-    try:
-        lat = float(latitude)
-        lon = float(longitude)
-    except ValueError:
-        frappe.throw("Invalid Latitude or Longitude format.", frappe.ValidationError)
-
-    from math import radians, sin, cos, sqrt, atan2
-
-    # Still using fallback Python implementation for mixed DB support? 
-    # No, we mandated Postgres 15. Let's use SQL for performance.
-    
     try:
         lat = float(latitude)
         lon = float(longitude)
