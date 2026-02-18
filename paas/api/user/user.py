@@ -478,23 +478,28 @@ def search_user(name: str, page: int = 1, limit: int = 20, lang: str = "en"):
     """
     Search for users by name, email, or phone.
     """
-    users = frappe.db.get_list(
-        "User",
-        filters={
-            "enabled": 1,
-            "name": ["!=", "Guest"],
-            "name": ["!=", "Administrator"],
-        },
-        or_filters={
-            "first_name": ["like", f"%{name}%"],
-            "last_name": ["like", f"%{name}%"],
-            "email": ["like", f"%{name}%"],
-            "phone": ["like", f"%{name}%"]
-        },
-        fields=["name", "full_name", "user_image"],
-        limit_start=(page - 1) * limit,
-        limit_page_length=limit
+    t_user = frappe.qb.DocType("User")
+    query = (
+        frappe.qb.from_(t_user)
+        .select(t_user.name, t_user.full_name, t_user.user_image)
+        .where(t_user.enabled == 1)
+        .where(t_user.name != "Guest")
+        .where(t_user.name != "Administrator")
     )
+
+    from frappe.query_builder.functions import Function
+    to_tsvector = Function("to_tsvector")
+    plainto_tsquery = Function("plainto_tsquery")
+    tsq = plainto_tsquery("english", name)
+    
+    query = query.where(
+        (to_tsvector("english", t_user.first_name).matches(tsq)) |
+        (to_tsvector("english", t_user.last_name).matches(tsq)) |
+        (to_tsvector("english", t_user.email).matches(tsq)) |
+        (to_tsvector("english", t_user.phone).matches(tsq))
+    )
+
+    users = query.limit(limit).offset((page - 1) * limit).run(as_dict=True)
     return api_response(data=users)
 
 @frappe.whitelist()
@@ -983,7 +988,7 @@ def create_request_model(model_type, model_id, data):
         "doctype": "Request Model",
         "model_type": model_type,
         "model": model_id,
-        "data": json.dumps(data),
+        "data": data,
         "created_by_user": user,
         "status": "Pending"
     })
