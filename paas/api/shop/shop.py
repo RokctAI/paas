@@ -259,45 +259,37 @@ def get_nearby_shops(latitude: float, longitude: float, radius_km: float = 10, l
     if latitude is None or longitude is None:
          return get_shops()
 
-    from math import radians, sin, cos, sqrt, atan2
+    if latitude is None or longitude is None:
+         return get_shops()
 
-    def haversine(lat1, lon1, lat2, lon2):
-        R = 6371  # Radius of Earth in kilometers
+    try:
+        lat = float(latitude)
+        lon = float(longitude)
+        radius = float(radius_km) * 1000  # Convert km to meters for earth_distance
+    except (ValueError, TypeError):
+        return get_shops()
 
-        dLat = radians(lat2 - lat1)
-        dLon = radians(lon2 - lon1)
-        lat1 = radians(lat1)
-        lat2 = radians(lat2)
-
-        a = sin(dLat / 2)**2 + cos(lat1) * cos(lat2) * sin(dLon / 2)**2
-        c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        return R * c
-
-    shops = frappe.get_all("Shop", fields=["name", "latitude", "longitude", "is_ecommerce"])
-    nearby_shops = []
+    # Use PostgreSQL earthdistance extension (requires cube + earthdistance)
+    # We use earth_box for index scan + earth_distance for precise filtering
+    # Note: earth_distance returns meters
+    query = """
+        SELECT name
+        FROM "tabShop"
+        WHERE 
+            latitude IS NOT NULL AND longitude IS NOT NULL
+            AND earth_box(ll_to_earth(%s, %s), %s) @> ll_to_earth(latitude, longitude)
+            AND earth_distance(ll_to_earth(%s, %s), ll_to_earth(latitude, longitude)) < %s
+    """
     
-    # helper to get shop details efficiently? 
-    # For now we get IDs and then re-fetch full details or just return what's needed?
-    # The original returned shop objects. `get_shops` formats them nicely.
-    # Let's get the IDs that match and then call `get_shops` with a filter or manually format.
-    # The original implementation returned the raw shop objects from the loop, 
-    # but `get_shops` returns api_response(data=formatted).
-    # The original __init__.py `get_nearby_shops` returned a LIST of shop objects (dicts).
-    
-    nearby_shop_ids = []
-    for shop in shops:
-        if shop.is_ecommerce:
-             nearby_shop_ids.append(shop.name)
-             continue
+    nearby_shops_data = frappe.db.sql(query, (lat, lon, radius, lat, lon, radius), as_dict=True)
+    nearby_shop_ids = [s.name for s in nearby_shops_data]
 
-        if shop.latitude and shop.longitude:
-            try:
-                distance = haversine(float(latitude), float(longitude), float(shop.latitude), float(shop.longitude))
-                if distance <= float(radius_km):
-                    nearby_shop_ids.append(shop.name)
-            except:
-                continue
+    # Include Ecommerce shops (global reach)
+    ecommerce_shops = frappe.get_all("Shop", filters={"is_ecommerce": 1}, pluck="name")
+    nearby_shop_ids.extend(ecommerce_shops)
+
+    # Unique IDs
+    nearby_shop_ids = list(set(nearby_shop_ids))
 
     # Now use generic get_shops_by_ids to return formatted data
     return get_shops_by_ids(shop_ids=nearby_shop_ids)
@@ -400,34 +392,33 @@ def get_nearest_delivery_points(latitude: float, longitude: float, radius_km: fl
 
     from math import radians, sin, cos, sqrt, atan2
 
-    def haversine(lat1, lon1, lat2, lon2):
-        R = 6371  # Radius of Earth in kilometers
-        dLat = radians(lat2 - lat1)
-        dLon = radians(lon2 - lon1)
-        lat1 = radians(lat1)
-        lat2 = radians(lat2)
-        a = sin(dLat / 2)**2 + cos(lat1) * cos(lat2) * sin(dLon / 2)**2
-        c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        return R * c
-
-    # Fetch all active delivery points
-    points = frappe.get_all("Delivery Point", 
-                            filters={"active": 1}, 
-                            fields=["name", "latitude", "longitude", "address", "price", "active"])
+    # Still using fallback Python implementation for mixed DB support? 
+    # No, we mandated Postgres 15. Let's use SQL for performance.
     
-    nearby_points = []
-    for point in points:
-        if point.latitude and point.longitude:
-            try:
-                dist = haversine(lat, lon, float(point.latitude), float(point.longitude))
-                if dist <= float(radius_km):
-                    # Add distance to the point object for sorting/info
-                    point["distance_km"] = round(dist, 2)
-                    nearby_points.append(point)
-            except (ValueError, TypeError):
-                continue
+    try:
+        lat = float(latitude)
+        lon = float(longitude)
+        radius = float(radius_km) * 1000 # meters
+    except ValueError:
+        frappe.throw("Invalid Latitude or Longitude format.", frappe.ValidationError)
 
-    # Sort by distance
-    nearby_points.sort(key=lambda x: x["distance_km"])
+    # Calculate distance in SQL: earth_distance(ll_to_earth(lat, lon), ll_to_earth(db_lat, db_lon))
+    # We select fields matchng the original response
+    query = """
+        SELECT 
+            name, latitude, longitude, address, price, active,
+            (earth_distance(ll_to_earth(%s, %s), ll_to_earth(latitude, longitude)) / 1000) as distance_km
+        FROM "tabDelivery Point"
+        WHERE 
+            active = 1
+            AND latitude IS NOT NULL AND longitude IS NOT NULL
+            AND earth_box(ll_to_earth(%s, %s), %s) @> ll_to_earth(latitude, longitude)
+            AND earth_distance(ll_to_earth(%s, %s), ll_to_earth(latitude, longitude)) < %s
+        ORDER BY distance_km ASC
+    """
+    
+    nearby_points = frappe.db.sql(query, (lat, lon, lat, lon, radius, lat, lon, radius), as_dict=True)
 
+    # Format explicitly if needed (frappe.db.sql returns dicts/values)
+    # The original returned list of dicts.
     return nearby_points
