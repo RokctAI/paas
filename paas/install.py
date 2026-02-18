@@ -80,7 +80,9 @@ def setup_gin_indexes():
     
     # WhatsApp GIN Indexes
     create_gin_index("tabWhatsApp Session", "cart_items")
-    create_gin_index("tabWhatsApp Session", "metadata") # if exists, often useful
+    # Check if metadata column exists before indexing
+    if frappe.db.has_column("tabWhatsApp Session", "metadata"):
+        create_gin_index("tabWhatsApp Session", "metadata")
 
     # FTS Indexes
     create_fts_index("tabItem", "item_name")
