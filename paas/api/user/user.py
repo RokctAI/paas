@@ -194,12 +194,14 @@ def delete_account():
         # Attempt to delete the User document
         frappe.delete_doc("User", user, ignore_permissions=True)
         # Logout the session
-        frappe.local.login_manager.logout()
+        if hasattr(frappe.local, "login_manager"):
+            frappe.local.login_manager.logout()
         return api_response(message="Account deleted successfully.")
     except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError):
         # Fallback: Deactivate the user if linked documents exist
         frappe.db.set_value("User", user, "enabled", 0)
-        frappe.local.login_manager.logout()
+        if hasattr(frappe.local, "login_manager"):
+            frappe.local.login_manager.logout()
         return api_response(message="Account deactivated successfully.")
 
 
