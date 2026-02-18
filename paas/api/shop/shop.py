@@ -172,30 +172,32 @@ def search_shops(search: str, category_id: int = None, limit_start: int = 0, lim
     """
     Searches for shops by name, optionally filtered by category.
     """
-    filters = [
-        ["Shop", "shop_name", "like", f"%{search}%"],
-        ["Shop", "open", "=", 1],
-        ["Shop", "status", "=", "approved"],
-        ["Shop", "visibility", "=", 1]
-    ]
+    t_shop = frappe.qb.DocType("Shop")
+    query = (
+        frappe.qb.from_(t_shop)
+        .select(
+            t_shop.name, t_shop.uuid, t_shop.slug, t_shop.user, t_shop.logo, t_shop.cover_photo,
+            t_shop.phone, t_shop.address, t_shop.location, t_shop.status, t_shop.type, t_shop.min_amount,
+            t_shop.tax, t_shop.delivery_time_type, t_shop.delivery_time_from, t_shop.delivery_time_to,
+            t_shop.open, t_shop.visibility, t_shop.verify, t_shop.service_fee, t_shop.percentage, t_shop.enable_cod,
+            t_shop.shop_type, t_shop.is_ecommerce
+        )
+        .where(t_shop.open == 1)
+        .where(t_shop.status == "approved")
+        .where(t_shop.visibility == 1)
+    )
 
     if category_id:
-        filters.append(["Shop", "category", "=", category_id])
+        query = query.where(t_shop.category == category_id)
 
-    shops = frappe.get_list(
-        "Shop",
-        filters=filters,
-        fields=[
-            "name", "uuid", "slug", "user", "logo", "cover_photo",
-            "phone", "address", "location", "status", "type", "min_amount",
-            "tax", "delivery_time_type", "delivery_time_from", "delivery_time_to",
-            "open", "visibility", "verify", "service_fee", "percentage", "enable_cod",
-            "shop_type", "is_ecommerce"
-        ],
-        offset=limit_start,
-        limit=limit_page_length,
-        order_by="shop_name"
+    from frappe.query_builder.functions import Function
+    to_tsvector = Function("to_tsvector")
+    plainto_tsquery = Function("plainto_tsquery")
+    query = query.where(
+        to_tsvector("english", t_shop.shop_name).matches(plainto_tsquery("english", search))
     )
+
+    shops = query.limit(limit_page_length).offset(limit_start).orderby(t_shop.shop_name).run(as_dict=True)
 
     # Global COD Check
     cash_gateway = frappe.db.get_value("PaaS Payment Gateway", {"gateway_controller": "Cash", "enabled": 1})
