@@ -16,8 +16,58 @@ def after_install():
     """
     Wrapper to run all post-installation tasks.
     """
+    setup_gin_indexes()
     run_seeders()
     check_and_fetch_sources()
+
+def setup_gin_indexes():
+    """
+    Creates GIN indexes for JSONB fields and FTS columns in PostgreSQL.
+    Intended for fresh installs.
+    """
+    # JSONB GIN Indexes
+    create_gin_index("tabRemote Config", "poi_data")
+    create_gin_index("tabRemote Config", "quick_sale_no_user_stock_ids")
+    create_gin_index("tabRemote Config", "mega_char_maintenance_durations")
+    create_gin_index("tabRemote Config", "softener_maintenance_durations")
+    create_gin_index("tabRemote Config", "maintenance_types")
+    create_gin_index("tabRemote Config", "filter_types")
+    
+    create_gin_index("tabRequest Model", "data")
+    create_gin_index("tabPayment Payload", "payload")
+    
+    # WhatsApp GIN Indexes
+    create_gin_index("tabWhatsApp Session", "cart_items")
+    create_gin_index("tabWhatsApp Session", "metadata") # if exists, often useful
+
+    # FTS Indexes
+    create_fts_index("tabItem", "item_name")
+    create_fts_index("tabShop", "shop_name")
+    create_fts_index("tabCategory", "keywords")
+    
+    create_fts_index("tabUser", "first_name")
+    create_fts_index("tabUser", "last_name")
+    create_fts_index("tabUser", "email")
+    create_fts_index("tabUser", "phone")
+
+def create_gin_index(table, column):
+    try:
+        index_name = f"{table.lower().replace('tab', '')}_{column}_gin_idx"
+        # Check if index exists
+        chk = frappe.db.sql(f"SELECT 1 FROM pg_indexes WHERE indexname = '{index_name}'", pluck=True)
+        if not chk:
+            frappe.db.sql(f"CREATE INDEX {index_name} ON \"{table}\" USING GIN ({column})")
+    except Exception as e:
+        frappe.log_error(f"Failed to create GIN index {index_name}: {str(e)}")
+
+def create_fts_index(table, column):
+    try:
+        index_name = f"{table.lower().replace('tab', '')}_{column}_fts_idx"
+        chk = frappe.db.sql(f"SELECT 1 FROM pg_indexes WHERE indexname = '{index_name}'", pluck=True)
+        if not chk:
+            frappe.db.sql(f"CREATE INDEX {index_name} ON \"{table}\" USING GIN (to_tsvector('english', {column}))")
+    except Exception as e:
+        frappe.log_error(f"Failed to create FTS index {index_name}: {str(e)}")
 
 def run_seeders():
     """
