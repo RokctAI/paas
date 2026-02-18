@@ -109,9 +109,6 @@ class TestProductAPI(FrappeTestCase):
         products = response.get("data")
         
         self.assertIsInstance(products, list)
-        # We should find our test product in the list if filters allow
-        # get_products filters by default?
-        # It filters by Item Group "All Item Groups" usually or requires correct visibility
         
         product_names = [p['name'] for p in products]
         self.assertIn("Test Product 1", product_names)
@@ -121,6 +118,26 @@ class TestProductAPI(FrappeTestCase):
         self.assertIn("item_name", test_prod)
         self.assertIn("standard_rate", test_prod)
         self.assertEqual(test_prod['standard_rate'], 100.0)
+
+    def test_products_search(self):
+        """Test FTS search (Requires Postgres)."""
+        # Create a unique product for search
+        if not frappe.db.exists("Item", "Searchable Product"):
+            frappe.get_doc({
+                "doctype": "Item",
+                "item_code": "Searchable Product",
+                "item_name": "Searchable Product",
+                "item_group": "All Item Groups",
+                "shop": self.shop.name,
+                "standard_rate": 200,
+                "is_stock_item": 1,
+                "status": "Published",
+                "approval_status": "Approved"
+            }).insert(ignore_permissions=True)
+            
+        response = get_products(search="Searchable")
+        products = response.get("data")
+        self.assertTrue(any(p['item_name'] == "Searchable Product" for p in products))
 
     def test_get_product_by_uuid(self):
         """Test fetching a single product by UUID."""
