@@ -80,9 +80,13 @@ def setup_gin_indexes():
     
     # WhatsApp GIN Indexes
     create_gin_index("tabWhatsApp Session", "cart_items")
-    # Check if metadata column exists before indexing
-    if frappe.db.has_column("tabWhatsApp Session", "metadata"):
-        create_gin_index("tabWhatsApp Session", "metadata")
+    # Check if metadata column exists before indexing (handle missing table gracefully)
+    try:
+        if frappe.db.has_column("tabWhatsApp Session", "metadata"):
+            create_gin_index("tabWhatsApp Session", "metadata")
+    except Exception:
+        # Table might not exist yet or other DB error - ignore
+        pass
 
     # FTS Indexes
     create_fts_index("tabItem", "item_name")
