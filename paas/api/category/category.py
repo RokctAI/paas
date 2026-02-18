@@ -70,16 +70,20 @@ def search_categories(search: str, limit_start: int = 0, limit_page_length: int 
     """
     Searches for categories by a search term.
     """
-    categories = frappe.get_list(
-        "Category",
-        fields=["name", "uuid", "type", "image", "active", "status", "shop"],
-        filters=[
-            ["Category", "keywords", "like", f"%{search}%"],
-        ],
-        limit_start=limit_start,
-        limit_page_length=limit_page_length,
-        order_by="name desc"
+    t_category = frappe.qb.DocType("Category")
+    query = (
+        frappe.qb.from_(t_category)
+        .select(t_category.name, t_category.uuid, t_category.type, t_category.image, t_category.active, t_category.status, t_category.shop)
     )
+
+    from frappe.query_builder.functions import Function
+    to_tsvector = Function("to_tsvector")
+    plainto_tsquery = Function("plainto_tsquery")
+    query = query.where(
+        to_tsvector("english", t_category.keywords).matches(plainto_tsquery("english", search))
+    )
+
+    categories = query.limit(limit_page_length).offset(limit_start).orderby(t_category.name, order=frappe.qb.desc).run(as_dict=True)
 
     return categories
 
