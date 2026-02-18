@@ -1,136 +1,111 @@
-
 import frappe
 import os
-import numpy as np
-from sentence_transformers import SentenceTransformer, util
+import json
+import math
 
-# Global cache for the model
-_MODEL = None
-_PRODUCT_EMBEDDINGS_CACHE = {}  # {shop_id: {'ids': [], 'embeddings': Tensor, 'metadata': []}}
+# Global cache for intent embeddings (In-Memory)
+_INTENT_EMBEDDINGS = None
 
-def get_model():
+def get_brain_embedding(text):
     """
-    Lazy loads the MiniLM model from the local path defined in setup_ai.py
+    Wrapper to safely call Brain's embedding service.
+    Returns None if Brain is not installed.
     """
-    global _MODEL
-    if _MODEL is None:
-        # Try to find the local model path from site config or default
-        model_path = frappe.conf.get("ai_model_path") or "/opt/rokct_models"
-        minilm_path = os.path.join(model_path, "minilm")
-        
-        try:
-            if os.path.exists(minilm_path):
-                print(f"🧠 Loading local AI model from {minilm_path}...")
-                _MODEL = SentenceTransformer(minilm_path)
-            else:
-                print(f"⚠️ Local model not found at {minilm_path}. Downloading from Hub...")
-                # Fallback to downloading/caching from Hub
-                _MODEL = SentenceTransformer('all-MiniLM-L6-v2')
-            print("✅ AI Model Loaded.")
-        except Exception as e:
-            frappe.log_error(f"Failed to load AI Model: {e}")
-            return None
-    return _MODEL
-
-def index_factory(shop_id):
-    """
-    Fetches products for a shop and creates embeddings.
-    Returns the cache entry.
-    """
-    # Check cache first
-    if shop_id in _PRODUCT_EMBEDDINGS_CACHE:
-        return _PRODUCT_EMBEDDINGS_CACHE[shop_id]
-        
-    model = get_model()
-    if not model:
+    if "brain" not in frappe.get_installed_apps():
         return None
         
-    # Fetch active products for the shop
-    products = frappe.get_all("Product", 
-                             filters={"shop_id": shop_id, "active": 1},
-                             fields=["name", "title", "description", "uuid"])
-    
-    if not products:
+    try:
+        from brain.services.llm_service import embed_text
+        return embed_text(text)
+    except ImportError:
         return None
-        
-    # Prepare texts to embed (Title + Description)
-    texts = [f"{p['title']} {p.get('description') or ''}" for p in products]
-    
-    # Compute embeddings
-    print(f"🧠 Indexing {len(texts)} products for shop {shop_id}...")
-    embeddings = model.encode(texts, convert_to_tensor=True)
-    
-    # Store in cache
-    cache_entry = {
-        'ids': [p['name'] for p in products], # DocNames
-        'uuids': [p['uuid'] for p in products],
-        'titles': [p['title'] for p in products],
-        'embeddings': embeddings
-    }
-    _PRODUCT_EMBEDDINGS_CACHE[shop_id] = cache_entry
-    return cache_entry
+    except Exception as e:
+        print(f"⚠️ Brain Service Error: {e}")
+        return None
 
 def semantic_search(query, shop_id, top_k=3):
     """
-    Performs semantic search for the query within the shop's products.
+    Performs semantic search for the query within the shop's products using pgvector.
+    Using Centralized Brain Service for embeddings.
     """
-    model = get_model()
-    if not model:
+    # 1. Get embedding for query 
+    query_vector = get_brain_embedding(query)
+    if not query_vector:
         return []
 
-    # Ensure index exists
-    index = index_factory(shop_id)
-    if not index:
-        return []
+    # 2. SQL Search with Vector Distance
+    try:
+        # We use <=> operator for Cosine Distance (lower is better). 
+        # Note: pgvector expects the vector as a string representation in SQL unless passed as list param
+        # frappe.db.sql with %s handles lists for some drivers, but explicit string var is safer for vector type
         
-    # Embed query
-    query_embedding = model.encode(query, convert_to_tensor=True)
-    
-    # helper for cosine similarity
-    # util.cos_sim returns [[score1, score2...]]
-    scores = util.cos_sim(query_embedding, index['embeddings'])[0]
-    
-    # Get top k results
-    # torch.topk returns (values, indices)
-    top_results = list(zip(scores.tolist(), range(len(scores))))
-    
-    # Sort by score descending
-    top_results.sort(key=lambda x: x[0], reverse=True)
-    top_results = top_results[:top_k]
-    
-    results = []
-    for score, idx in top_results:
-        if score < 0.3: # Threshold
-            continue
+        # Determine if we need to format the vector as string
+        vector_str = str(query_vector)
+        
+        results = frappe.db.sql(f"""
+            SELECT 
+                name, uuid, item_name as title, description,
+                (embedding <=> %s) as distance
+            FROM "tabItem"
+            WHERE 
+                shop = %s 
+                AND disabled = 0 
+                AND embedding IS NOT NULL
+            ORDER BY distance ASC
+            LIMIT %s
+        """, (vector_str, shop_id, top_k), as_dict=True)
+        
+        final_results = []
+        for r in results:
+            # Convert distance to similarity score
+            # Cosine Distance = 1 - Cosine Similarity
+            similarity = 1 - float(r['distance'])
             
-        results.append({
-            'name': index['ids'][idx],
-            'uuid': index['uuids'][idx],
-            'title': index['titles'][idx],
-            'score': score
-        })
+            if similarity < 0.3: # Threshold
+                continue
+                
+            final_results.append({
+                'name': r['name'],
+                'uuid': r['uuid'],
+                'title': r['title'],
+                'score': similarity
+            })
+            
+        return final_results
         
-    return results
+    except Exception as e:
+        frappe.log_error(f"PaaS Vector Search Failed: {e}")
+        return []
 
 # --- NLP & Intent Logic ---
 
-# --- NLP & Intent Logic ---
+def cosine_similarity(v1, v2):
+    """
+    Manual Cosine Similarity implementation.
+    v1, v2: List[float]
+    """
+    if not v1 or not v2: return 0.0
+    
+    dot_product = sum(a*b for a, b in zip(v1, v2))
+    norm_v1 = math.sqrt(sum(a*a for a in v1))
+    norm_v2 = math.sqrt(sum(b*b for b in v2))
+    
+    if norm_v1 == 0 or norm_v2 == 0:
+        return 0.0
+        
+    return dot_product / (norm_v1 * norm_v2)
 
 def load_intents_from_config():
     """
     Loads intents from rokct/ai_config/customer_intents.json
     """
-    import json
-    
     try:
-        # Robust way: Get path relative to the 'rokct' app module
+        # Robust way: Get path relative to the 'brain' app module (where config lives)
         path = frappe.get_app_path("brain", "ai_config", "customer_intents.json")
     except Exception as e:
-        print(f"⚠️ Could not resolve app path for 'rokct': {e}")
         return get_fallback_intents()
         
     if not os.path.exists(path):
-        print(f"⚠️ Intent Config not found at {path}. Using fallbacks.")
         return get_fallback_intents()
         
     try:
@@ -156,23 +131,28 @@ def get_fallback_intents():
         "misc_greeting": ["hi", "hello", "menu"]
     }
 
-# Cache for intent embeddings
-_INTENT_EMBEDDINGS = None
-
 def get_intent_embeddings():
     global _INTENT_EMBEDDINGS
     if _INTENT_EMBEDDINGS:
         return _INTENT_EMBEDDINGS
         
-    model = get_model()
-    if not model: return None
-    
     prototypes = load_intents_from_config()
     
     _INTENT_EMBEDDINGS = {}
-    print("🧠 Indexing Intent Prototypes from Config...")
+    print("🧠 Indexing Intent Prototypes via Brain Service...")
+    
     for intent, sentences in prototypes.items():
-        _INTENT_EMBEDDINGS[intent] = model.encode(sentences, convert_to_tensor=True)
+        try:
+            # Batch embedding via Brain Service
+            vectors = get_brain_embedding(sentences)
+            if vectors and isinstance(vectors, list):
+                _INTENT_EMBEDDINGS[intent] = vectors
+            else:
+                # Fallback empty
+                _INTENT_EMBEDDINGS[intent] = []
+        except Exception as e:
+            print(f"⚠️ Failed to embed intent '{intent}': {e}")
+            _INTENT_EMBEDDINGS[intent] = []
         
     return _INTENT_EMBEDDINGS
 
@@ -181,21 +161,27 @@ def classify_intent(text):
     Classifies text into one of the INTENT_PROTOTYPES keys.
     Returns (intent, score).
     """
-    model = get_model()
     intent_map = get_intent_embeddings()
-    if not model or not intent_map:
+    if not intent_map:
         return "unknown", 0.0
         
     # Embed query
-    query_emb = model.encode(text, convert_to_tensor=True)
+    query_emb = get_brain_embedding(text)
+    if not query_emb:
+        return "unknown", 0.0
     
     best_intent = "unknown"
     best_score = 0.0
     
     for intent, prototypes in intent_map.items():
         # Compute similarity with all prototypes for this intent
-        scores = util.cos_sim(query_emb, prototypes)[0]
-        max_score = float(scores.max()) # Best match among the prototypes
+        # prototypes is a List[List[float]]
+        max_score = 0.0
+        
+        for p_vec in prototypes:
+            score = cosine_similarity(query_emb, p_vec)
+            if score > max_score:
+                max_score = score
         
         if max_score > best_score:
             best_score = max_score
@@ -232,7 +218,6 @@ def search_global_shops(query):
     """
     Searches for Shops matching the query (Name or Category or Description).
     """
-    # 1. SQL Search (Simple/Fuzzy)
     # 1. SQL Search (Simple/Fuzzy)
     t_shop = frappe.qb.DocType("Shop")
     t_shop_category = frappe.qb.DocType("Shop Category")
