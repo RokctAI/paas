@@ -17,24 +17,38 @@ def after_install():
     Wrapper to run all post-installation tasks.
     """
     setup_gin_indexes()
+    setup_vector_extension()
     setup_product_vector_column()
     run_seeders()
     check_and_fetch_sources()
+
+def setup_vector_extension():
+    """
+    Enables the pgvector extension if not already enabled.
+    """
+    try:
+        frappe.db.sql("CREATE EXTENSION IF NOT EXISTS vector")
+        return True
+    except Exception as e:
+        frappe.db.rollback()
+        print(f"⚠️ Failed to enable pgvector: {e}")
+        return False
 
 def setup_product_vector_column():
     """
     Adds a vector(384) column to the Product table for semantic search.
     """
+    if not setup_vector_extension():
+         print("⚠️ Skipping Product vector column creation due to missing extension.")
+         return
+
     try:
-        exists = frappe.db.sql("""
-            SELECT 1 
-            FROM information_schema.columns 
-            WHERE table_name='tabItem' AND column_name='embedding'
-        """)
-        
-        if not exists:
+        # Check if column exists using standard API
+        if not frappe.db.has_column("Item", "embedding"):
             print("🛍️ Adding 'embedding' vector column to Product (Item)...")
-            # 384 is the dimension for all-MiniLM-L6-v2
+            
+            # Note: DDL statements (ALTER TABLE, CREATE INDEX) require raw SQL.
+            # frappe.qb is primarily for Data Manipulation (SELECT, INSERT, UPDATE).
             frappe.db.sql("ALTER TABLE \"tabItem\" ADD COLUMN embedding vector(384)")
             
             # Add an HNSW index for fast approximate nearest neighbor search
@@ -44,6 +58,7 @@ def setup_product_vector_column():
             """)
             
     except Exception as e:
+        frappe.db.rollback()
         frappe.log_error(f"Failed to setup Product vector column: {e}")
         print(f"⚠️ Failed to setup vector column: {e}")
 
@@ -86,9 +101,13 @@ def create_gin_index(table, column):
         # Check if index exists
         chk = frappe.db.sql(f"SELECT 1 FROM pg_indexes WHERE indexname = '{index_name}'", pluck=True)
         if not chk:
-            frappe.db.sql(f"CREATE INDEX {index_name} ON \"{table}\" USING GIN ({column})")
+            # Try catch GIN index creation
+            # If column is json (text), cast to jsonb for indexing support
+            frappe.db.sql(f"CREATE INDEX {index_name} ON \"{table}\" USING GIN (({column}::jsonb))")
     except Exception as e:
-        frappe.log_error(f"Failed to create GIN index {index_name}: {str(e)}")
+        frappe.db.rollback()
+        # Log purely as warning, don't crash install
+        print(f"⚠️ Failed to create GIN index {index_name}: {str(e)}")
 
 def create_fts_index(table, column):
     try:
@@ -99,7 +118,8 @@ def create_fts_index(table, column):
         if not chk:
             frappe.db.sql(f"CREATE INDEX {index_name} ON \"{table}\" USING GIN (to_tsvector('english', {column}))")
     except Exception as e:
-        frappe.log_error(f"Failed to create FTS index {index_name}: {str(e)}")
+        frappe.db.rollback()
+        print(f"⚠️ Failed to create FTS index {index_name}: {str(e)}")
 
 def run_seeders():
     """
