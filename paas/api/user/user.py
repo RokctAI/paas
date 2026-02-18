@@ -128,7 +128,7 @@ def get_profile():
         "active": 1,
         "img": user_doc.user_image,
         "shop": shop,
-        # "wallet": ... # TODO: Add Wallet logic
+        "wallet": frappe.db.get_value("Wallet", {"user": user_doc.name}, "balance") or 0.0
     })
 
 
