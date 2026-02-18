@@ -52,7 +52,10 @@ def setup_gin_indexes():
 
 def create_gin_index(table, column):
     try:
-        index_name = f"{table.lower().replace('tab', '')}_{column}_gin_idx"
+        # Sanitize table name for index (remove 'tab', replace spaces with underscores)
+        clean_table = table.lower().replace('tab', '').replace(' ', '_')
+        index_name = f"{clean_table}_{column}_gin_idx"
+        
         # Check if index exists
         chk = frappe.db.sql(f"SELECT 1 FROM pg_indexes WHERE indexname = '{index_name}'", pluck=True)
         if not chk:
@@ -62,7 +65,9 @@ def create_gin_index(table, column):
 
 def create_fts_index(table, column):
     try:
-        index_name = f"{table.lower().replace('tab', '')}_{column}_fts_idx"
+        clean_table = table.lower().replace('tab', '').replace(' ', '_')
+        index_name = f"{clean_table}_{column}_fts_idx"
+        
         chk = frappe.db.sql(f"SELECT 1 FROM pg_indexes WHERE indexname = '{index_name}'", pluck=True)
         if not chk:
             frappe.db.sql(f"CREATE INDEX {index_name} ON \"{table}\" USING GIN (to_tsvector('english', {column}))")
