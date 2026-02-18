@@ -321,9 +321,8 @@
   },
   {
    "fieldname": "quick_sale_no_user_stock_ids",
-   "fieldtype": "Code",
-   "label": "Quick Sale No User Stock IDs",
-   "options": "JSON"
+   "fieldtype": "JSON",
+   "label": "Quick Sale No User Stock IDs"
   },
   {
    "fieldname": "quick_sale_default_quantity",
@@ -382,27 +381,23 @@
   },
   {
    "fieldname": "mega_char_maintenance_durations",
-   "fieldtype": "Code",
-   "label": "Mega Char Maintenance Durations",
-   "options": "JSON"
+   "fieldtype": "JSON",
+   "label": "Mega Char Maintenance Durations"
   },
   {
    "fieldname": "softener_maintenance_durations",
-   "fieldtype": "Code",
-   "label": "Softener Maintenance Durations",
-   "options": "JSON"
+   "fieldtype": "JSON",
+   "label": "Softener Maintenance Durations"
   },
   {
    "fieldname": "maintenance_types",
-   "fieldtype": "Code",
-   "label": "Maintenance Types",
-   "options": "JSON"
+   "fieldtype": "JSON",
+   "label": "Maintenance Types"
   },
   {
    "fieldname": "filter_types",
-   "fieldtype": "Code",
-   "label": "Filter Types",
-   "options": "JSON"
+   "fieldtype": "JSON",
+   "label": "Filter Types"
   },
   {
    "fieldname": "section_break_manager",
@@ -421,9 +416,8 @@
   },
   {
    "fieldname": "poi_data",
-   "fieldtype": "Code",
-   "label": "POI Data (JSON)",
-   "options": "JSON"
+   "fieldtype": "JSON",
+   "label": "POI Data (JSON)"
   }
  ],
  "index_web_pages_for_search": 1,
