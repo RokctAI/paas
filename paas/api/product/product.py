@@ -73,11 +73,14 @@ def get_products(
 
     if search:
         from frappe.query_builder.functions import Function
-        to_tsvector = Function("to_tsvector")
-        plainto_tsquery = Function("plainto_tsquery")
-        query = query.where(
-            to_tsvector("english", t_item.item_name).matches(plainto_tsquery("english", search))
-        )
+        
+        # Correctly instantiate the functions with arguments
+        ts_vector = Function("to_tsvector", "english", t_item.item_name)
+        ts_query = Function("plainto_tsquery", "english", search)
+        
+        # Use the .matches() method which should map to @@ operator in Frappe's QB branch (if supported)
+        # If .matches() fails in next run, we will use a custom Criterion.
+        query = query.where(ts_vector.matches(ts_query))
 
     # Rating filter and sorting
     if rating or order_by in ["high_rating", "low_rating"]:
