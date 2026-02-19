@@ -33,3 +33,7 @@ sites/*/task-logs/
 # Logs
 *.log
 logs/
+
+# Private Modules
+paas/whatsapp/
+
