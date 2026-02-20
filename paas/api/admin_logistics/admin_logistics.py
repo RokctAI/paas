@@ -2,6 +2,7 @@ import frappe
 import json
 from ..utils import _require_admin
 
+
 @frappe.whitelist()
 def get_deliveryman_global_settings():
     """
@@ -81,6 +82,7 @@ def delete_parcel_order_setting(setting_name):
     frappe.delete_doc("Parcel Order Setting", setting_name, ignore_permissions=True)
     return {"status": "success", "message": "Parcel order setting deleted successfully."}
 
+
 @frappe.whitelist()
 def get_all_delivery_zones(limit_start: int = 0, limit_page_length: int = 20):
     """
@@ -93,6 +95,7 @@ def get_all_delivery_zones(limit_start: int = 0, limit_page_length: int = 20):
         offset=limit_start,
         limit=limit_page_length
     )
+
 
 @frappe.whitelist()
 def get_delivery_vehicle_types(limit_start: int = 0, limit_page_length: int = 20):
@@ -149,6 +152,7 @@ def delete_delivery_vehicle_type(type_name):
     frappe.delete_doc("Delivery Vehicle Type", type_name, ignore_permissions=True)
     return {"status": "success", "message": "Delivery vehicle type deleted successfully."}
 
+
 @frappe.whitelist()
 def get_all_delivery_man_delivery_zones(limit_start: int = 0, limit_page_length: int = 20):
     """
@@ -161,6 +165,7 @@ def get_all_delivery_man_delivery_zones(limit_start: int = 0, limit_page_length:
         offset=limit_start,
         limit=limit_page_length
     )
+
 
 @frappe.whitelist()
 def get_all_shop_working_days(limit_start: int = 0, limit_page_length: int = 20):
