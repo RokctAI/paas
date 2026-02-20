@@ -2,6 +2,7 @@ import frappe
 import json
 from ..utils import _require_admin
 
+
 @frappe.whitelist()
 def get_all_languages(limit_start: int = 0, limit_page_length: int = 20):
     """
@@ -59,6 +60,7 @@ def update_currency(currency_name, currency_data):
     currency.save(ignore_permissions=True)
     return currency.as_dict()
 
+
 @frappe.whitelist()
 def get_email_settings():
     """
@@ -81,6 +83,7 @@ def update_email_settings(settings_data):
     settings.update(settings_data)
     settings.save(ignore_permissions=True)
     return settings.as_dict()
+
 
 @frappe.whitelist()
 def get_all_email_templates(limit_start: int = 0, limit_page_length: int = 20):
@@ -109,6 +112,7 @@ def update_email_template(template_name, template_data):
     template.update(template_data)
     template.save(ignore_permissions=True)
     return template.as_dict()
+
 
 @frappe.whitelist()
 def get_email_subscriptions(limit_start: int = 0, limit_page_length: int = 20):
@@ -150,6 +154,7 @@ def delete_email_subscription(subscription_name):
     frappe.delete_doc("Email Subscription", subscription_name, ignore_permissions=True)
     return {"status": "success", "message": "Email subscription deleted successfully."}
 
+
 @frappe.whitelist()
 def get_general_settings():
     """
@@ -157,6 +162,7 @@ def get_general_settings():
     """
     _require_admin()
     return frappe.get_single("Settings").as_dict()
+
 
 @frappe.whitelist()
 def update_general_settings(settings_data):
@@ -172,6 +178,7 @@ def update_general_settings(settings_data):
     settings.save(ignore_permissions=True)
     return settings.as_dict()
 
+
 @frappe.whitelist()
 def get_app_settings():
     """
@@ -179,6 +186,7 @@ def get_app_settings():
     """
     _require_admin()
     return frappe.get_single("App Settings").as_dict()
+
 
 @frappe.whitelist()
 def update_app_settings(settings_data):
@@ -193,4 +201,3 @@ def update_app_settings(settings_data):
     settings.update(settings_data)
     settings.save(ignore_permissions=True)
     return settings.as_dict()
-
