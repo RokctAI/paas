@@ -2,6 +2,7 @@ import frappe
 import json
 from ..utils import _require_admin
 
+
 @frappe.whitelist()
 def get_admin_stories(limit_start: int = 0, limit_page_length: int = 20):
     """
@@ -14,6 +15,7 @@ def get_admin_stories(limit_start: int = 0, limit_page_length: int = 20):
         offset=limit_start,
         limit=limit_page_length
     )
+
 
 @frappe.whitelist()
 def get_admin_banners(limit_start: int = 0, limit_page_length: int = 20):
