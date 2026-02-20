@@ -2,6 +2,7 @@ import frappe
 import json
 from ..utils import _require_admin
 
+
 @frappe.whitelist()
 def get_all_units(limit_start: int = 0, limit_page_length: int = 20):
     """
@@ -28,6 +29,7 @@ def get_all_tags(limit_start: int = 0, limit_page_length: int = 20):
         offset=limit_start,
         limit=limit_page_length
     )
+
 
 @frappe.whitelist()
 def get_all_points(limit_start: int = 0, limit_page_length: int = 20):
@@ -98,6 +100,7 @@ def get_all_translations(limit_start: int = 0, limit_page_length: int = 20):
         limit=limit_page_length
     )
 
+
 @frappe.whitelist()
 def get_all_referrals(limit_start: int = 0, limit_page_length: int = 20):
     """
@@ -151,6 +154,7 @@ def get_all_shop_tags(limit_start: int = 0, limit_page_length: int = 20):
         offset=limit_start,
         limit=limit_page_length
     )
+
 
 @frappe.whitelist()
 def get_all_product_extra_groups(limit_start: int = 0, limit_page_length: int = 20):
