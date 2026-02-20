@@ -1,5 +1,6 @@
 import frappe
 
+
 @frappe.whitelist(allow_guest=True)
 def get_assetlinks():
 	frappe.response["type"] = "json"
@@ -25,6 +26,7 @@ def get_assetlinks():
 	except Exception:
 		frappe.log_error("Error generating assetlinks.json")
 		return []
+
 
 @frappe.whitelist(allow_guest=True)
 def get_apple_app_site_association():
