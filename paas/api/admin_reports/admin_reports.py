@@ -2,6 +2,7 @@ import frappe
 import json
 from ..utils import _require_admin
 
+
 @frappe.whitelist()
 def get_admin_statistics():
     """
@@ -13,14 +14,14 @@ def get_admin_statistics():
     total_users = frappe.db.count("User")
     total_shops = frappe.db.count("Company")
     total_orders = frappe.db.count("Order")
-    
+
     t_order = frappe.qb.DocType("Order")
     total_sales = (
         frappe.qb.from_(t_order)
         .select(frappe.qb.fn.Sum(t_order.grand_total))
         .where(t_order.status == 'Delivered')
     ).run()[0][0] or 0
-    
+
     in_progress_orders = frappe.db.count("Order", {"status": ["in", ["Pending", "Processing", "Ready", "On the way"]]})
     cancelled_orders = frappe.db.count("Order", {"status": "Cancelled"})
     delivered_orders = frappe.db.count("Order", {"status": "Delivered"})
@@ -28,11 +29,11 @@ def get_admin_statistics():
     total_reviews = frappe.db.count("Review")
 
     # Charts Data (Last 30 Days)
-    from frappe.utils import add_days, getdate, nowdate
-    
+    from frappe.utils import add_days, nowdate
+
     # helper for date grouping compatible with most dbs
     # using frappe.qb.fn.Date for Date extraction
-    
+
     cutoff_date = add_days(nowdate(), -30)
 
     # Orders per Day
@@ -91,6 +92,7 @@ def get_admin_statistics():
         }
     }
 
+
 @frappe.whitelist()
 def get_multi_company_sales_report(from_date: str, to_date: str, company: str = None):
     """
@@ -125,6 +127,7 @@ def get_multi_company_sales_report(from_date: str, to_date: str, company: str = 
 
     return sales_report
 
+
 @frappe.whitelist()
 def get_admin_report(doctype: str, fields: str, filters: str = None, limit_start: int = 0, limit_page_length: int = 20):
     """
@@ -145,6 +148,7 @@ def get_admin_report(doctype: str, fields: str, filters: str = None, limit_start
         limit_start=limit_start,
         limit_page_length=limit_page_length
     )
+
 
 @frappe.whitelist()
 def get_all_wallet_histories(limit_start: int = 0, limit_page_length: int = 20):
