@@ -2,6 +2,7 @@ import frappe
 import json
 from ..utils import _require_admin
 
+
 @frappe.whitelist()
 def get_all_orders(limit_start: int = 0, limit_page_length: int = 20, status: str = None, from_date: str = None, to_date: str = None):
     """
@@ -201,6 +202,7 @@ def get_all_notifications(limit_start: int = 0, limit_page_length: int = 20):
         order_by="creation desc"
     )
 
+
 @frappe.whitelist()
 def get_all_bookings(limit_start: int = 0, limit_page_length: int = 20):
     """
@@ -257,6 +259,7 @@ def delete_booking(booking_name):
     frappe.delete_doc("Booking", booking_name, ignore_permissions=True)
     return {"status": "success", "message": "Booking deleted successfully."}
 
+
 @frappe.whitelist()
 def get_all_order_statuses(limit_start: int = 0, limit_page_length: int = 20):
     """
@@ -270,6 +273,7 @@ def get_all_order_statuses(limit_start: int = 0, limit_page_length: int = 20):
         limit=limit_page_length,
         order_by="sort_order"
     )
+
 
 @frappe.whitelist()
 def get_all_request_models(limit_start: int = 0, limit_page_length: int = 20):
