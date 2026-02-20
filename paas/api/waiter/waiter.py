@@ -1,5 +1,6 @@
 import frappe
 
+
 @frappe.whitelist()
 def get_waiter_orders(limit_start: int = 0, limit_page_length: int = 20):
     """

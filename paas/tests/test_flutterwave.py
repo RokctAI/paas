@@ -5,6 +5,7 @@ from frappe.tests.utils import FrappeTestCase
 from unittest.mock import patch, MagicMock
 from paas.api.payment.payment import initiate_flutterwave_payment, flutterwave_callback
 
+
 class TestFlutterwave(FrappeTestCase):
 
     def setUp(self):
@@ -31,7 +32,7 @@ class TestFlutterwave(FrappeTestCase):
         self.flutterwave_settings.get_password.return_value = "test_secret_key"
         self.flutterwave_settings.success_redirect_url = "https://test.com/success"
         self.flutterwave_settings.failure_redirect_url = "https://test.com/failure"
-        
+
         # Patch get_website_settings to return a dummy logo
         self.patcher_settings = patch("frappe.get_website_settings", return_value="http://test.com/logo.png")
         self.patcher_settings.start()
@@ -52,7 +53,7 @@ class TestFlutterwave(FrappeTestCase):
     def test_initiate_flutterwave_payment_success(self, mock_post, mock_get_doc, mock_commit):
         # Arrange
         mock_get_doc.side_effect = [self.order, self.flutterwave_settings, self.user]
-        
+
         mock_response = MagicMock()
         mock_response.json.return_value = {
             "status": "success",
@@ -68,7 +69,6 @@ class TestFlutterwave(FrappeTestCase):
         self.order.save.assert_called_once()
         mock_commit.assert_called_once()
         self.assertIn("TEST-ORDER-001", self.order.custom_payment_transaction_id)
-
 
     @patch('paas.api.payment.payment.frappe.get_doc')
     def test_initiate_flutterwave_payment_already_paid(self, mock_get_doc):
@@ -86,7 +86,7 @@ class TestFlutterwave(FrappeTestCase):
     def test_flutterwave_callback_success(self, mock_get, mock_get_doc, mock_commit):
         # Arrange
         mock_get_doc.side_effect = [self.flutterwave_settings, self.order]
-        
+
         mock_verification_response = MagicMock()
         mock_verification_response.json.return_value = {
             "status": "success",
@@ -96,7 +96,7 @@ class TestFlutterwave(FrappeTestCase):
             }
         }
         mock_get.return_value = mock_verification_response
-        
+
         frappe.request = MagicMock()
         frappe.request.args = {
             "status": "successful",
@@ -121,7 +121,7 @@ class TestFlutterwave(FrappeTestCase):
     def test_flutterwave_callback_cancelled(self, mock_get_doc, mock_commit):
         # Arrange
         mock_get_doc.side_effect = [self.flutterwave_settings, self.order]
-        
+
         frappe.request = MagicMock()
         frappe.request.args = {
             "status": "cancelled",
@@ -139,5 +139,3 @@ class TestFlutterwave(FrappeTestCase):
         self.assertEqual(frappe.local.response["type"], "redirect")
         self.assertIn(self.flutterwave_settings.failure_redirect_url, frappe.local.response["location"])
         self.assertIn("reason=cancelled", frappe.local.response["location"])
-
-

@@ -5,6 +5,7 @@ from frappe.tests.utils import FrappeTestCase
 from unittest.mock import patch, Mock
 from paas.api.payment.payment import initiate_paystack_payment, handle_paystack_callback
 
+
 class TestPayStackAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
@@ -79,7 +80,7 @@ class TestPayStackAPI(FrappeTestCase):
                     frappe.db.commit()
                 except Exception:
                     pass
-        
+
         if hasattr(self, "test_shop") and self.test_shop and frappe.db.exists("Shop", self.test_shop.name):
             try:
                 frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
@@ -133,4 +134,3 @@ class TestPayStackAPI(FrappeTestCase):
 
         updated_order = frappe.get_doc("Order", self.test_order.name)
         self.assertEqual(updated_order.status, "Paid")
-

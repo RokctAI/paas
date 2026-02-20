@@ -2,6 +2,7 @@ import frappe
 import json
 import uuid
 
+
 @frappe.whitelist()
 def get_brands(limit_start: int = 0, limit_page_length: int = 10):
     """

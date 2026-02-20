@@ -3,6 +3,7 @@
 import frappe
 from frappe.model.document import Document
 
+
 class Order(Document):
     def before_save(self):
         self.calculate_totals()
@@ -54,4 +55,3 @@ class Order(Document):
         self.total_discount = total_discount
         self.service_fee = service_fee
         self.commission_fee = commission_fee
-

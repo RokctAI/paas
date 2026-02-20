@@ -1,6 +1,7 @@
 import frappe
 from ..utils import _get_seller_shop
 
+
 @frappe.whitelist()
 def get_seller_bonuses(limit_start: int = 0, limit_page_length: int = 20):
     """

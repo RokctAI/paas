@@ -6,6 +6,7 @@ import json
 from frappe.tests.utils import FrappeTestCase
 from paas.api.seller_shop_settings.seller_shop_settings import get_seller_shop_working_days, update_seller_shop_working_days
 
+
 class TestSellerDashboard(FrappeTestCase):
     def setUp(self):
         frappe.set_user("Administrator")
@@ -26,7 +27,7 @@ class TestSellerDashboard(FrappeTestCase):
             self.shop = frappe.get_doc({
                 "doctype": "Shop",
                 "shop_name": "Dashboard Shop",
-                "user": self.owner.name, # This links the shop
+                "user": self.owner.name,  # This links the shop
                 "status": "approved",
                 "uuid": frappe.generate_hash()
             }).insert(ignore_permissions=True)
@@ -55,20 +56,20 @@ class TestSellerDashboard(FrappeTestCase):
     def test_working_days(self):
         # Login as owner
         frappe.set_user(self.owner.name)
-        
+
         # 1. Update Days
         days_data = [
             {"day_of_week": "Monday", "opening_time": "09:00:00", "closing_time": "17:00:00", "is_closed": 0},
             {"day_of_week": "Sunday", "is_closed": 1}
         ]
-        
+
         response = update_seller_shop_working_days(json.dumps(days_data))
         self.assertEqual(response.get("status"), "success")
-        
+
         # 2. Get Days
         fetched_days = get_seller_shop_working_days()
         self.assertEqual(len(fetched_days), 2)
-        
+
         monday = next((d for d in fetched_days if d.get('day_of_week') == "Monday"), None)
         self.assertIsNotNone(monday)
         # Time comes back as timedelta or string depending on db, let's just check existence
@@ -80,12 +81,12 @@ class TestSellerDashboard(FrappeTestCase):
              no_shop_user = frappe.get_doc({"doctype": "User", "email": "no_shop@example.com", "first_name": "NoShop"}).insert(ignore_permissions=True)
         else:
              no_shop_user = frappe.get_doc("User", "no_shop@example.com")
-        
+
         frappe.set_user(no_shop_user.name)
-        
+
         with self.assertRaises(frappe.PermissionError):
             get_seller_shop_working_days()
-            
+
         frappe.set_user("Administrator")
         if frappe.db.exists("User", no_shop_user.name):
             try:

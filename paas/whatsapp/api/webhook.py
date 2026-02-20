@@ -6,6 +6,7 @@ from paas.whatsapp.utils import get_whatsapp_config
 from paas.whatsapp.api.message import handle_message
 from paas.whatsapp.utils import validate_signature
 
+
 @frappe.whitelist(allow_guest=True)
 def webhook():
     """
@@ -14,7 +15,7 @@ def webhook():
     """
     if frappe.request.method == "GET":
         return verify_webhook()
-    
+
     elif frappe.request.method == "POST":
         # Signature Verification
         config = get_whatsapp_config()
@@ -22,12 +23,13 @@ def webhook():
             signature = frappe.request.headers.get("X-Hub-Signature-256")
             if not signature:
                 frappe.throw("Missing Signature", frappe.PermissionError)
-            
+
             # frappe.request.get_data() gives raw bytes needed for HMAC
             if not validate_signature(frappe.request.get_data(), signature, config.get_password('app_secret')):
                  frappe.throw("Invalid Signature", frappe.PermissionError)
 
         return process_webhook()
+
 
 def verify_webhook():
     """
@@ -36,7 +38,7 @@ def verify_webhook():
     hub_mode = frappe.request.args.get("hub.mode")
     hub_challenge = frappe.request.args.get("hub.challenge")
     hub_verify_token = frappe.request.args.get("hub.verify_token")
-    
+
     config = get_whatsapp_config()
     if not config:
         frappe.throw("WhatsApp is not configured for this tenant.", frappe.AuthenticationError)
@@ -45,9 +47,10 @@ def verify_webhook():
         frappe.response.status_code = 200
         frappe.response.raw = int(hub_challenge)
         return
-    
+
     frappe.response.status_code = 403
     return "Verification token mismatch"
+
 
 def process_webhook():
     """
@@ -56,26 +59,26 @@ def process_webhook():
     data = frappe.request.json
     if not data:
         return
-    
+
     try:
         # Check if it's a message or status update
         entry = data.get('entry', [])[0]
         changes = entry.get('changes', [])[0]
         value = changes.get('value', {})
-        
+
         if 'messages' in value:
             message = value['messages'][0]
             # Extract contact info for wa_id/phone
             contact = value.get('contacts', [{}])[0]
             profile_name = contact.get('profile', {}).get('name')
-            
+
             # Use 'wa_id' from contacts if available, else from message 'from'
             wa_id = contact.get('wa_id') or message['from']
-            
+
             handle_message(message, wa_id, profile_name)
-            
+
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "WhatsApp Webhook Error")
         return "Error processing message", 500
-    
+
     return "Processed", 200

@@ -5,6 +5,7 @@ import frappe
 import json
 from frappe.model.document import Document
 
+
 class LocationSettings(Document):
 	def before_save(self):
 		if self.location:

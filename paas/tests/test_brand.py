@@ -5,6 +5,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from paas.api.brand.brand import create_brand, get_brands, get_brand_by_uuid, update_brand, delete_brand
 
+
 class TestBrand(FrappeTestCase):
     def setUp(self):
         frappe.set_user("Administrator")
@@ -28,7 +29,7 @@ class TestBrand(FrappeTestCase):
         # 2. Get List
         brands = get_brands()
         self.assertTrue(len(brands) > 0)
-        
+
         # 3. Get by UUID
         fetched_brand = get_brand_by_uuid(brand['uuid'])
         self.assertEqual(fetched_brand['title'], "Test Brand")

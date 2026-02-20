@@ -2,6 +2,7 @@ import frappe
 import os
 from frappe.utils import get_bench_path
 
+
 def check_site_role():
     """
     Checks the site role before PaaS installation.
@@ -11,6 +12,7 @@ def check_site_role():
     """
     app_role = frappe.conf.get("app_role", "tenant")
     print(f"PaaS installation on site: {frappe.local.site} (app_role: {app_role})")
+
 
 def after_install():
     """
@@ -22,6 +24,7 @@ def after_install():
     setup_product_vector_column()
     run_seeders()
     check_and_fetch_sources()
+
 
 def setup_geospatial_extensions():
     """
@@ -36,6 +39,7 @@ def setup_geospatial_extensions():
         print(f"⚠️ Failed to enable geospatial extensions: {e}")
         return False
 
+
 def setup_vector_extension():
     """
     Enables the pgvector extension if not already enabled.
@@ -47,6 +51,7 @@ def setup_vector_extension():
         frappe.db.rollback()
         print(f"⚠️ Failed to enable pgvector: {e}")
         return False
+
 
 def setup_product_vector_column():
     """
@@ -60,21 +65,22 @@ def setup_product_vector_column():
         # Check if column exists using standard API
         if not frappe.db.has_column("Item", "embedding"):
             print("🛍️ Adding 'embedding' vector column to Product (Item)...")
-            
+
             # Note: DDL statements (ALTER TABLE, CREATE INDEX) require raw SQL.
             # frappe.qb is primarily for Data Manipulation (SELECT, INSERT, UPDATE).
             frappe.db.sql("ALTER TABLE \"tabItem\" ADD COLUMN embedding vector(384)")
-            
+
             # Add an HNSW index for fast approximate nearest neighbor search
             print("🛍️ Creating HNSW index for Product embeddings...")
             frappe.db.sql("""
                 CREATE INDEX ON \"tabItem\" USING hnsw (embedding vector_l2_ops)
             """)
-            
+
     except Exception as e:
         frappe.db.rollback()
         frappe.log_error(f"Failed to setup Product vector column: {e}")
         print(f"⚠️ Failed to setup vector column: {e}")
+
 
 def setup_gin_indexes():
     """
@@ -88,10 +94,10 @@ def setup_gin_indexes():
     create_gin_index("tabRemote Config", "softener_maintenance_durations")
     create_gin_index("tabRemote Config", "maintenance_types")
     create_gin_index("tabRemote Config", "filter_types")
-    
+
     create_gin_index("tabRequest Model", "data")
     create_gin_index("tabPayment Payload", "payload")
-    
+
     # WhatsApp GIN Indexes
     create_gin_index("tabWhatsApp Session", "cart_items")
     # Check if metadata column exists before indexing (handle missing table gracefully)
@@ -106,18 +112,19 @@ def setup_gin_indexes():
     create_fts_index("tabItem", "item_name")
     create_fts_index("tabShop", "shop_name")
     create_fts_index("tabCategory", "keywords")
-    
+
     create_fts_index("tabUser", "first_name")
     create_fts_index("tabUser", "last_name")
     create_fts_index("tabUser", "email")
     create_fts_index("tabUser", "phone")
+
 
 def create_gin_index(table, column):
     try:
         # Sanitize table name for index (remove 'tab', replace spaces with underscores)
         clean_table = table.lower().replace('tab', '').replace(' ', '_')
         index_name = f"{clean_table}_{column}_gin_idx"
-        
+
         # Check if index exists
         chk = frappe.db.sql(f"SELECT 1 FROM pg_indexes WHERE indexname = '{index_name}'", pluck=True)
         if not chk:
@@ -129,11 +136,12 @@ def create_gin_index(table, column):
         # Log purely as warning, don't crash install
         print(f"⚠️ Failed to create GIN index {index_name}: {str(e)}")
 
+
 def create_fts_index(table, column):
     try:
         clean_table = table.lower().replace('tab', '').replace(' ', '_')
         index_name = f"{clean_table}_{column}_fts_idx"
-        
+
         chk = frappe.db.sql(f"SELECT 1 FROM pg_indexes WHERE indexname = '{index_name}'", pluck=True)
         if not chk:
             frappe.db.sql(f"CREATE INDEX {index_name} ON \"{table}\" USING GIN (to_tsvector('english', {column}))")
@@ -141,17 +149,18 @@ def create_fts_index(table, column):
         frappe.db.rollback()
         print(f"⚠️ Failed to create FTS index {index_name}: {str(e)}")
 
+
 def run_seeders():
     """
     Runs sensitive seeders from control app if available.
     Only runs on tenant sites - control sites skip seeding.
     """
     app_role = frappe.conf.get("app_role", "tenant")
-    
+
     if app_role == "control":
         print("Skipping PaaS seeders on control site (Swagger documentation only).")
         return
-    
+
     # Only seed on tenant sites
     try:
         # Dynamic loading to avoid strict module dependency (prevents install crashes)
@@ -159,7 +168,7 @@ def run_seeders():
             try:
                 # Path: apps/control/control/seeds/scripts/{script_name}.py
                 script_path = os.path.join(get_bench_path(), "apps", "control", "control", "seeds", "scripts", f"{script_name}.py")
-                
+
                 if not os.path.exists(script_path):
                     print(f"Seeder script not found: {script_path}")
                     return
@@ -176,7 +185,7 @@ def run_seeders():
         # Execute
         run_seeder_script("seed_paas_payments")
         run_seeder_script("seed_paas_juvo_settings")
-        
+
         # Run main PaaS seeder (handles global data + conditional Juvo data)
         print("Running main PaaS seeder...")
         from paas import seed
@@ -190,15 +199,16 @@ def run_seeders():
         print(f"Error running PaaS seeders: {e}")
         frappe.log_error(f"Error running PaaS seeders: {e}", "PaaS Seeder Error")
 
+
 def check_and_fetch_sources():
     """
     Checks if Flutter source code exists. If not, requests Control to fetch it.
     """
     print("--- Checking for Flutter Source Code ---")
-    
+
     # Path: paas/builder/source_code
     source_code_path = frappe.get_app_path("paas", "builder", "source_code")
-    
+
     # Check if directory exists and has content (ignoring .keep)
     missing = True
     if os.path.exists(source_code_path):
@@ -206,7 +216,7 @@ def check_and_fetch_sources():
         if contents:
             missing = False
             print(f"✅ PaaS Source Code detected: {contents}")
-            
+
     if missing:
         print(f"⚠️ PaaS Flutter Source Code missing in {source_code_path}.")
         print("Requesting Control app to fetch sources...")

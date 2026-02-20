@@ -5,6 +5,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from paas.api.user.user import get_user_membership, get_user_membership_history
 
+
 class TestMembershipAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
@@ -57,7 +58,7 @@ class TestMembershipAPI(FrappeTestCase):
                 self.membership_plan.delete(ignore_permissions=True)
         except Exception:
             pass
-            
+
         if hasattr(self, "test_user") and self.test_user and frappe.db.exists("User", self.test_user.name):
             try:
                 frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
@@ -85,4 +86,3 @@ class TestMembershipAPI(FrappeTestCase):
 
         membership = get_user_membership()
         self.assertIsNone(membership)
-

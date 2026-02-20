@@ -3,6 +3,7 @@
 
 import frappe
 
+
 def get_whatsapp_config():
     """
     Fetches the WhatsApp Tenant Configuration.
@@ -13,12 +14,14 @@ def get_whatsapp_config():
         return None
     return config
 
+
 @frappe.whitelist()
 def get_admin_whatsapp_config():
     """
     Returns the config for the Admin Settings page (even if disabled).
     """
     return frappe.get_single("WhatsApp Tenant Config")
+
 
 @frappe.whitelist()
 def save_whatsapp_config(enabled=0, phone_number_id=None, access_token=None, app_secret=None, verify_token=None):
@@ -34,12 +37,13 @@ def save_whatsapp_config(enabled=0, phone_number_id=None, access_token=None, app
     doc.save()
     return doc
 
+
 def get_or_create_session(wa_id, phone_number=None, name=None):
     """
     Retrieves or creates a WhatsApp Session for the given wa_id.
     """
     session_name = frappe.db.get_value("WhatsApp Session", {"wa_id": wa_id}, "name")
-    
+
     if session_name:
         session = frappe.get_doc("WhatsApp Session", session_name)
     else:
@@ -48,13 +52,13 @@ def get_or_create_session(wa_id, phone_number=None, name=None):
         # User.phone might be '+27...' or '082...'
         # We try exact match or suffix match
         linked_user = None
-        
+
         # Simple exact match first
         user_name = frappe.db.get_value("User", {"phone": wa_id}, "name")
         if not user_name:
             # Try with '+' prefix
             user_name = frappe.db.get_value("User", {"phone": f"+{wa_id}"}, "name")
-            
+
         linked_user = user_name
 
         session = frappe.get_doc({
@@ -66,12 +70,13 @@ def get_or_create_session(wa_id, phone_number=None, name=None):
             "cart_items": "[]"
         })
         session.insert(ignore_permissions=True)
-        frappe.db.commit() 
-        
+        frappe.db.commit()
+
         session.insert(ignore_permissions=True)
-        frappe.db.commit() 
-        
+        frappe.db.commit()
+
     return session
+
 
 def validate_signature(payload, signature, app_secret):
     """
@@ -79,7 +84,7 @@ def validate_signature(payload, signature, app_secret):
     """
     import hmac
     import hashlib
-    
+
     if not app_secret:
         # If no secret configured, we can't validate (or we fail secure? User choice. Let's log warning and pass for smooth transition if empty)
         # Security Best Practice: Fail if expected but missing.
@@ -89,14 +94,14 @@ def validate_signature(payload, signature, app_secret):
     # Signature format: "sha256=..."
     if not signature.startswith("sha256="):
         return False
-        
+
     sig = signature.split("sha256=")[1]
-    
+
     # Calculate HMAC
     calculated_sig = hmac.new(
         key=app_secret.encode('utf-8'),
         msg=payload,
         digestmod=hashlib.sha256
     ).hexdigest()
-    
+
     return hmac.compare_digest(sig, calculated_sig)

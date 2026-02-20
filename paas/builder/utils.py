@@ -3,6 +3,7 @@
 import frappe
 import os
 
+
 def prevent_uninstall_if_build_active():
     """
     This function is called by the `on_uninstall` hook.
@@ -33,7 +34,7 @@ def get_available_source_projects():
         source_path = frappe.get_app_path("paas", "builder", "source_code")
         if not os.path.exists(source_path):
             return []
-            
+
         projects = []
         for item in os.listdir(source_path):
             item_path = os.path.join(source_path, item)
@@ -41,7 +42,7 @@ def get_available_source_projects():
                 # Format label: paas_customer -> Customer
                 label = item.replace("paas_", "").replace("_", " ").title()
                 projects.append({"label": label, "value": item})
-                
+
         return sorted(projects, key=lambda x: x["label"])
     except Exception as e:
         frappe.log_error(f"Error listing source projects: {e}")

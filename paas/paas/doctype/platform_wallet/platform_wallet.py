@@ -5,6 +5,7 @@ from frappe.model.document import Document
 import frappe
 import requests
 
+
 class PlatformWallet(Document):
     def onload(self):
         try:

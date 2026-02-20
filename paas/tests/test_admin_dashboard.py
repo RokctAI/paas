@@ -3,7 +3,8 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from paas.api.admin_settings.admin_settings import get_all_languages, update_email_settings
+from paas.api.admin_settings.admin_settings import get_all_languages
+
 
 class TestAdminDashboard(FrappeTestCase):
     def setUp(self):
@@ -26,7 +27,7 @@ class TestAdminDashboard(FrappeTestCase):
 
     def test_get_languages(self):
         frappe.set_user(self.admin_user.name)
-        
+
         # Ensure at least one language exists (standard Frappe)
         try:
             langs = get_all_languages()
@@ -45,9 +46,9 @@ class TestAdminDashboard(FrappeTestCase):
              }).insert(ignore_permissions=True)
         else:
              guest = frappe.get_doc("User", "guest_tester@example.com")
-             
+
         frappe.set_user(guest.name)
-        
+
         with self.assertRaises(frappe.PermissionError):
             get_all_languages()
 

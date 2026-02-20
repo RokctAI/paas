@@ -1,6 +1,7 @@
 import frappe
 from paas.api.utils import _get_seller_shop
 
+
 @frappe.whitelist()
 def get_seller_statistics():
     """
@@ -12,11 +13,11 @@ def get_seller_statistics():
     progress_orders_count = frappe.db.count("Order", {"shop": shop, "status": ["in", ["New", "Accepted", "Shipped"]]})
     cancel_orders_count = frappe.db.count("Order", {"shop": shop, "status": "Cancelled"})
     delivered_orders_count = frappe.db.count("Order", {"shop": shop, "status": "Delivered"})
-    
+
     # Products out of stock: Count Stock items with quantity <= 0 for this shop's products
     t_stock = frappe.qb.DocType("Stock")
     t_product = frappe.qb.DocType("Product")
-    
+
     products_out_of_count = (
         frappe.qb.from_(t_stock)
         .join(t_product).on(t_stock.product == t_product.name)
@@ -27,7 +28,7 @@ def get_seller_statistics():
     ).run()[0][0]
 
     products_count = frappe.db.count("Product", {"shop": shop, "active": 1})
-    
+
     # Reviews count (assuming Review DocType has a 'shop' field or linked via 'order')
     try:
         reviews_count = frappe.db.count("Review", {"shop": shop})
@@ -51,14 +52,14 @@ def get_seller_statistics():
 
     t_order_item = frappe.qb.DocType("Order Item")
     t_item = frappe.qb.DocType("Item")
-    
+
     top_selling_products = (
         frappe.qb.from_(t_order_item)
         .join(t_order).on(t_order.name == t_order_item.parent)
         .join(t_item).on(t_item.name == t_order_item.product)
         .select(
-            t_order_item.product, 
-            t_item.item_name, 
+            t_order_item.product,
+            t_item.item_name,
             frappe.qb.fn.Sum(t_order_item.quantity).as_("total_quantity")
         )
         .where(t_order.shop == shop)

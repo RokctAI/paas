@@ -1,6 +1,7 @@
 import frappe
 from frappe.utils.password import check_password
 
+
 def validate(request=None):
     """
     Custom authentication hook to support 'Bearer <api_key>:<api_secret>'

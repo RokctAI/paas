@@ -3,15 +3,16 @@ import os
 import json
 from frappe.utils import get_bench_path
 
+
 class JSONSeeder:
     def __init__(self, site_name, fixtures_path):
         self.site_name = site_name
         self.fixtures_path = fixtures_path
-        self.user_map = {} # old_id -> email
-        self.shop_map = {} # old_id -> name
-        self.category_map = {} # old_id -> name
-        self.brand_map = {} # old_id -> name
-        self.product_map = {} # old_id -> name
+        self.user_map = {}  # old_id -> email
+        self.shop_map = {}  # old_id -> name
+        self.category_map = {}  # old_id -> name
+        self.brand_map = {}  # old_id -> name
+        self.product_map = {}  # old_id -> name
 
     def load_json(self, filename):
         file_path = os.path.join(self.fixtures_path, filename)
@@ -37,7 +38,7 @@ class JSONSeeder:
             try:
                 email = u.get('email')
                 if not email: continue
-                
+
                 if frappe.db.exists("User", email):
                     self.user_map[u.get('id')] = email
                     continue
@@ -177,7 +178,6 @@ class JSONSeeder:
         stocks = self.load_json('stocks.json')
         # Logic for stocks might need adjustment based on DocType definition
         # Assuming simple linkage for now
-        pass
 
     def seed_settings(self):
         settings = self.load_json('parcel_order_settings.json')
@@ -237,7 +237,7 @@ class JSONSeeder:
                 # Address and Location are Small Text in DocType, so dump as JSON string
                 address_val = json.dumps(addr.get('address_details')) if addr.get('address_details') else None
                 location_val = json.dumps(addr.get('location')) if addr.get('location') else None
-                
+
                 frappe.get_doc({
                     "doctype": "User Address",
                     "user": user_email,
@@ -263,7 +263,7 @@ class JSONSeeder:
                 frappe.get_doc({
                     "doctype": "User Membership",
                     "user": user_email,
-                    "membership": mem_id, 
+                    "membership": mem_id,
                     "start_date": mem.get('start_date'),
                     "end_date": mem.get('end_date'),
                     "is_active": int(mem.get('is_active', 1))
@@ -287,7 +287,7 @@ class JSONSeeder:
         self.seed_users()
         self.seed_user_addresses()
         self.seed_user_memberships()
-        self.seed_roles() # This now handles assignment
+        self.seed_roles()  # This now handles assignment
         frappe.db.commit()
 
         # 2. Shops
@@ -311,7 +311,7 @@ class JSONSeeder:
         for r in roles:
             role_name = r.get('name')
             if not role_name: continue
-            
+
             if not frappe.db.exists("Role", role_name):
                 frappe.get_doc({
                     "doctype": "Role",
@@ -322,7 +322,7 @@ class JSONSeeder:
     def seed_roles(self):
         print("Assigning Roles...")
         roles = self.load_json('roles.json')
-        role_map = {} # id -> name
+        role_map = {}  # id -> name
         for r in roles:
             role_name = r.get('name')
             if not role_name: continue
@@ -333,7 +333,7 @@ class JSONSeeder:
         for mhr in model_has_roles:
             try:
                 if mhr.get('model_type') != 'App\\Models\\User': continue
-                
+
                 user_id = mhr.get('model_id')
                 user_email = self.user_map.get(user_id)
                 if not user_email: continue
@@ -362,7 +362,7 @@ class JSONSeeder:
             try:
                 # Basic mapping
                 doc_data = {"doctype": doctype}
-                
+
                 # Check if already exists
                 unique_val = item.get(unique_field)
                 if not unique_val: continue
@@ -379,12 +379,12 @@ class JSONSeeder:
                 # Copy all fields from item to doc_data
                 # Exclude id if mapped to name
                 for k, v in item.items():
-                    if k == 'id': continue 
+                    if k == 'id': continue
                     doc_data[k] = v
-                
+
                 # Inject 'active' if missing and 'active' is 1/0
                 if 'active' in item:
-                    doc_data['docstatus'] = 0 # Draft by default
+                    doc_data['docstatus'] = 0  # Draft by default
 
                 frappe.get_doc(doc_data).insert(ignore_permissions=True)
             except Exception as e:
@@ -425,10 +425,10 @@ class JSONSeeder:
 
     def run(self):
         print(f"--- Seeder Started: {self.site_name} ---")
-        
+
         # Always run global seeds
         self.seed_global()
-        
+
         # Run generic seeds for simple types
         self.seed_remaining()
 
@@ -440,12 +440,14 @@ class JSONSeeder:
 
         print("--- Seeder Completed ---")
 
+
 def execute():
     site = frappe.local.site
     # UPDATED: Use seeds_data directory instead of fixtures to prevent auto-import
     fixtures_path = os.path.join(get_bench_path(), "apps/control/control/seeds")
     seeder = JSONSeeder(site, fixtures_path)
     seeder.run()
+
 
 if __name__ == "__main__":
     execute()

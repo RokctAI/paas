@@ -5,13 +5,14 @@ import frappe
 import json
 from paas.whatsapp.responses import send_text
 
+
 def add_to_cart(session, item_code, options=None):
     """
     Adds an item to the session cart.
     """
     # Parse existing cart
     cart = json.loads(session.cart_items) if session.cart_items else []
-    
+
     # Check if exists (Simple check: matches item_code AND options)
     # If options differ, it's a new line item.
     found = False
@@ -24,7 +25,7 @@ def add_to_cart(session, item_code, options=None):
                 item['qty'] += 1
                 found = True
                 break
-            
+
     if not found:
         item = frappe.get_doc("Item", item_code)
         cart.append({
@@ -34,8 +35,8 @@ def add_to_cart(session, item_code, options=None):
             "name": item.item_name,
             "options": options or {}
         })
-        
+
     session.cart_items = json.dumps(cart)
     session.save(ignore_permissions=True)
-    
+
     send_text(session.wa_id, f"✅ Added to cart! You have {len(cart)} items.")

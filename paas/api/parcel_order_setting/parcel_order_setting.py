@@ -1,5 +1,6 @@
 import frappe
 
+
 @frappe.whitelist(allow_guest=True)
 def get_parcel_order_settings():
     """
@@ -15,6 +16,7 @@ def get_parcel_order_settings():
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "get_parcel_order_settings Error")
         frappe.throw(f"An error occurred while fetching parcel order settings: {str(e)}")
+
 
 @frappe.whitelist()
 def create_parcel_order_setting(setting_data):
@@ -35,6 +37,7 @@ def create_parcel_order_setting(setting_data):
         frappe.log_error(frappe.get_traceback(), "create_parcel_order_setting Error")
         frappe.throw(f"An error occurred while creating parcel order setting: {str(e)}")
 
+
 @frappe.whitelist()
 def update_parcel_order_setting(name, setting_data):
     """
@@ -53,6 +56,7 @@ def update_parcel_order_setting(name, setting_data):
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "update_parcel_order_setting Error")
         frappe.throw(f"An error occurred while updating parcel order setting: {str(e)}")
+
 
 @frappe.whitelist()
 def delete_parcel_order_setting(name):

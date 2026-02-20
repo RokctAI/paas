@@ -1,6 +1,7 @@
 import frappe
 from paas.utils import get_subscription_details
 
+
 @frappe.whitelist(allow_guest=True)
 def get_remote_config(app_type="Customer", site_name=None):
     """

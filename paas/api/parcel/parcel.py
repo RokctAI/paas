@@ -2,6 +2,7 @@ import frappe
 import json
 from paas.api.utils import api_response
 
+
 @frappe.whitelist()
 def create_parcel_order(order_data):
     """
@@ -26,7 +27,7 @@ def create_parcel_order(order_data):
         "status": initial_status,
         "total_price": order_data.get("total_price"),
         "currency": order_data.get("currency"),
-        "parcel_type": order_data.get("type"), # Mapped from 'type' to 'parcel_type'
+        "parcel_type": order_data.get("type"),  # Mapped from 'type' to 'parcel_type'
         "note": order_data.get("note"),
         "tax": order_data.get("tax"),
         "phone_from": order_data.get("phone_from"),
@@ -169,7 +170,7 @@ def update_parcel_status(parcel_order_id, status):
 
         # Role-Based Authorization
         if "System Manager" in frappe.get_roles() or "Administrator" in frappe.get_roles():
-            pass # Admins can do anything
+            pass  # Admins can do anything
 
         elif "Deliveryman" in frappe.get_roles():
             if current_status == "Ready" and status == "On a way":
@@ -214,11 +215,12 @@ def calculate_price(type_id, address_from, address_to):
     address_from/to: JSON strings or dicts with latitude/longitude.
     """
     return api_response(data={
-        "price": 50.0, # Mock price
+        "price": 50.0,  # Mock price
         "delivery_fee": 10.0,
         "km": 5.2,
         "time": "15-20 min"
     })
+
 
 @frappe.whitelist()
 def add_parcel_review(parcel_id: str, rating: int, review: str = None):
@@ -228,14 +230,15 @@ def add_parcel_review(parcel_id: str, rating: int, review: str = None):
     parcel = frappe.get_doc("Parcel Order", parcel_id)
     if parcel.status != "Delivered":
         frappe.throw("Cannot review an undelivered parcel.")
-    
+
     parcel.rating = rating
     if review:
         parcel.review = review
     parcel.save(ignore_permissions=True)
     return {"status": "success"}
 
+
 # Aliases for backward compatibility or hook mapping
 get_parcel_categories = get_types
 get_parcel_calculate = calculate_price
-initiate_parcel_payment = create_parcel_order # Assuming flow or placeholder needed
+initiate_parcel_payment = create_parcel_order  # Assuming flow or placeholder needed

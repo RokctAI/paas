@@ -4,6 +4,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from paas.api.coupon.coupon import check_coupon
 
+
 class TestCouponAPI(FrappeTestCase):
     def setUp(self):
         # Create a shop
@@ -68,7 +69,7 @@ class TestCouponAPI(FrappeTestCase):
             self.zero_quantity_coupon.delete(ignore_permissions=True)
         except Exception:
             pass
-            
+
         if hasattr(self, "shop") and self.shop:
             try:
                 self.shop.delete(ignore_permissions=True)
@@ -100,4 +101,3 @@ class TestCouponAPI(FrappeTestCase):
             check_coupon(code="", shop_id=self.shop.name)
         with self.assertRaises(frappe.exceptions.ValidationError):
             check_coupon(code="VALID10", shop_id="")
-

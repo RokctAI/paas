@@ -6,8 +6,9 @@ from frappe.tests.utils import FrappeTestCase
 from paas.api.admin_content.admin_content import (
     create_admin_banner, get_admin_banners, update_admin_banner, delete_admin_banner,
     create_admin_faq, get_admin_faqs, update_admin_faq, delete_admin_faq,
-    create_admin_faq_category, get_admin_faq_categories
+    create_admin_faq_category
 )
+
 
 class TestAdminContent_New(FrappeTestCase):
     def setUp(self):
@@ -41,19 +42,19 @@ class TestAdminContent_New(FrappeTestCase):
     def test_admin_faq_crud(self):
         # 1. Create Category
         cat = create_admin_faq_category({"category_name": "Admin Cat"})
-        
+
         # 2. Create FAQ
         faq = create_admin_faq({"question": "Admin Question", "answer": "Ans", "faq_category": cat['name']})
         self.assertEqual(faq['question'], "Admin Question")
-        
+
         # 3. Get
         faqs = get_admin_faqs()
         self.assertTrue(len(faqs) > 0)
-        
+
         # 4. Update
         update_admin_faq(faq['name'], {"question": "Updated Q"})
         self.assertEqual(frappe.db.get_value("FAQ", faq['name'], "question"), "Updated Q")
-        
+
         # 5. Delete
         delete_admin_faq(faq['name'])
         self.assertFalse(frappe.db.exists("FAQ", faq['name']))

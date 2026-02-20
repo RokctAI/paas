@@ -1,6 +1,7 @@
 import frappe
 from paas.api.utils import _get_seller_shop
 
+
 @frappe.whitelist()
 def get_seller_request_models(limit_start: int = 0, limit_page_length: int = 20):
     """
@@ -19,6 +20,7 @@ def get_seller_request_models(limit_start: int = 0, limit_page_length: int = 20)
         order_by="creation desc"
     )
     return request_models
+
 
 @frappe.whitelist()
 def get_seller_customer_addresses(limit_start: int = 0, limit_page_length: int = 20):

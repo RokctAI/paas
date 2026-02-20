@@ -4,10 +4,11 @@
 import frappe
 from frappe.model.document import Document
 
+
 class DeliveryZone(Document):
     def validate(self):
         if self.delivery_fee < 0:
             frappe.throw("Delivery Fee cannot be negative")
-        
+
         if not self.coordinates:
             frappe.throw("Coordinates are required for a delivery zone")

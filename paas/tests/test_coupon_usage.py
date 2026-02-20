@@ -5,6 +5,7 @@ import json
 from frappe.tests.utils import FrappeTestCase
 from paas.api.order.order import create_order
 
+
 class TestCouponUsage(FrappeTestCase):
     def setUp(self):
         if not frappe.db.exists("User", "test_coupon_user@example.com"):
@@ -75,7 +76,7 @@ class TestCouponUsage(FrappeTestCase):
                     frappe.db.commit()
                 except Exception:
                     pass
-        
+
         try:
             if hasattr(self, "test_shop") and self.test_shop and frappe.db.exists("Shop", self.test_shop.name):
                 frappe.delete_doc("Shop", self.test_shop.name, ignore_permissions=True)
@@ -115,4 +116,3 @@ class TestCouponUsage(FrappeTestCase):
             "order": order_name
         })
         self.assertTrue(coupon_usage_exists, "Coupon Usage document was not created.")
-

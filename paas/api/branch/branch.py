@@ -1,6 +1,7 @@
 import frappe
 import json
 
+
 @frappe.whitelist(allow_guest=True)
 def get_branches(shop_id: str):
     """

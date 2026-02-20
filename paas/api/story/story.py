@@ -1,5 +1,6 @@
 import frappe
 
+
 @frappe.whitelist()
 def get_story(page: int = 1, lang: str = "en"):
     """
@@ -11,17 +12,17 @@ def get_story(page: int = 1, lang: str = "en"):
         limit_start=(page - 1) * 10,
         limit=10,
     )
-    
+
     grouped = {}
     for s in stories:
         shop_id = s.shop
         if not shop_id: continue
-        
+
         if shop_id not in grouped:
             grouped[shop_id] = []
-        
+
         shop_logo = frappe.db.get_value("Shop", shop_id, "logo")
-        
+
         grouped[shop_id].append({
             "shop_id": int(shop_id) if shop_id.isdigit() else shop_id,
             "logo_img": shop_logo,
@@ -32,5 +33,5 @@ def get_story(page: int = 1, lang: str = "en"):
             "created_at": s.creation.isoformat() if s.creation else None,
             "updated_at": s.modified.isoformat() if s.modified else None,
         })
-        
+
     return list(grouped.values())

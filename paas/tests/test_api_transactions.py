@@ -6,6 +6,7 @@ from frappe.tests.utils import FrappeTestCase
 from paas.api.user.user import get_user_transactions
 import time
 
+
 class TestTransactionsAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
@@ -111,10 +112,9 @@ class TestTransactionsAPI(FrappeTestCase):
         # Get the first page with one item
         transactions = get_user_transactions(limit=1)
         self.assertEqual(len(transactions["data"]), 1)
-        self.assertEqual(transactions["data"][0].get("amount"), 250.0) # Highest amount / newest
+        self.assertEqual(transactions["data"][0].get("amount"), 250.0)  # Highest amount / newest
 
         # Get the second page
         transactions = get_user_transactions(start=1, limit=1)
         self.assertEqual(len(transactions["data"]), 1)
         self.assertAlmostEqual(transactions["data"][0].get("amount"), 50.0)
-

@@ -2,6 +2,7 @@ import frappe
 import json
 from paas.api.utils import _get_seller_shop
 
+
 @frappe.whitelist()
 def get_seller_shop_working_days():
     """
@@ -221,6 +222,7 @@ def delete_seller_branch(branch_name):
 
     frappe.delete_doc("Branch", branch_name, ignore_permissions=True)
     return {"status": "success", "message": "Branch deleted successfully."}
+
 
 @frappe.whitelist()
 def get_seller_deliveryman_settings():

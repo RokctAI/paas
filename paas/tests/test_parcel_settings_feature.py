@@ -10,6 +10,7 @@ from paas.api.parcel_order_setting.parcel_order_setting import (
     delete_parcel_order_setting
 )
 
+
 class TestParcelSettingsFeature(FrappeTestCase):
     def setUp(self):
         frappe.set_user("Administrator")

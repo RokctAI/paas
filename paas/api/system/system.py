@@ -1,6 +1,7 @@
 import frappe
 from paas.api.utils import api_response
 
+
 @frappe.whitelist()
 def get_weather(location: str):
     """
@@ -47,6 +48,7 @@ def get_weather(location: str):
         frappe.log_error(frappe.get_traceback(), "Weather Proxy API Error")
         frappe.throw(f"An error occurred while fetching weather data from the control plane: {e}")
 
+
 @frappe.whitelist(allow_guest=True)
 def api_status():
     """
@@ -84,6 +86,7 @@ def get_currencies():
     )
     return api_response(data=currencies)
 
+
 @frappe.whitelist()
 def trigger_system_update():
     """
@@ -91,15 +94,16 @@ def trigger_system_update():
     """
     if frappe.session.user == "Guest":
         frappe.throw("Unauthorized")
-    
+
     # Check if user is System Manager
     if "System Manager" not in frappe.get_roles():
         frappe.throw("Unauthorized")
 
     # Enqueue the migration task
     frappe.enqueue("frappe.migrate.migrate", queue="long")
-    
+
     return api_response(message="System migration started in background.")
+
 
 @frappe.whitelist(allow_guest=True)
 def get_global_settings():
@@ -108,44 +112,45 @@ def get_global_settings():
     Aggregates data from 'Settings' and 'Global Settings'.
     """
     settings_data = []
-    
+
     try:
         settings = frappe.get_single("Settings")
-        
+
         # Map specific fields that the frontend likely needs
         # Based on analysis of Flutter app usage, it generally expects keys like:
         # 'app_name', 'default_tax', 'default_currency', etc.
         # mapping schema fields to generic keys
-        
+
         if settings.project_title:
             settings_data.append({"key": "app_name", "value": settings.project_title})
-            
+
         if settings.service_fee:
             settings_data.append({"key": "default_tax", "value": str(settings.service_fee)})
-            
+
         if settings.deliveryman_order_acceptance_time:
              settings_data.append({"key": "deliveryman_order_acceptance_time", "value": str(settings.deliveryman_order_acceptance_time)})
-             
+
         # Add map key if available in Global Settings
         global_settings = frappe.get_single("Global Settings")
         if global_settings.google_maps_api_key:
             settings_data.append({"key": "google_maps_key", "value": global_settings.google_maps_api_key})
-            
+
         # Add default language (mock or fetch)
         settings_data.append({"key": "default_language", "value": "en"})
-        
+
         # Add default currency
         currency = frappe.db.get_value("Currency", {"enabled": 1}, "name")
         if currency:
              settings_data.append({"key": "default_currency", "value": currency})
-             
+
         # Add distance unit (mock)
         settings_data.append({"key": "distance_unit", "value": "km"})
 
     except Exception as e:
         frappe.log_error(f"Error fetching global settings: {e}")
-        
+
     return api_response(data=settings_data)
+
 
 @frappe.whitelist(allow_guest=True)
 def get_policy(lang: str = "en"):
@@ -153,6 +158,7 @@ def get_policy(lang: str = "en"):
     Returns the privacy policy.
     """
     return {"content": "Privacy Policy content..."}
+
 
 @frappe.whitelist(allow_guest=True)
 def get_terms(lang: str = "en"):

@@ -3,6 +3,7 @@ import json
 
 # --- Product Extra Group APIs ---
 
+
 @frappe.whitelist()
 def create_extra_group(data):
     """
@@ -10,13 +11,14 @@ def create_extra_group(data):
     """
     if isinstance(data, str):
         data = json.loads(data)
-    
+
     doc = frappe.get_doc({
         "doctype": "Product Extra Group",
         **data
     })
     doc.insert()
     return doc.as_dict()
+
 
 @frappe.whitelist()
 def get_extra_groups(shop_id=None):
@@ -26,8 +28,9 @@ def get_extra_groups(shop_id=None):
     filters = {}
     if shop_id:
         filters["shop"] = shop_id
-        
+
     return frappe.get_list("Product Extra Group", filters=filters, fields=["*"])
+
 
 @frappe.whitelist()
 def update_extra_group(name, data):
@@ -36,11 +39,12 @@ def update_extra_group(name, data):
     """
     if isinstance(data, str):
         data = json.loads(data)
-        
+
     doc = frappe.get_doc("Product Extra Group", name)
     doc.update(data)
     doc.save()
     return doc.as_dict()
+
 
 @frappe.whitelist()
 def delete_extra_group(name):
@@ -52,6 +56,7 @@ def delete_extra_group(name):
 
 # --- Product Extra Value APIs ---
 
+
 @frappe.whitelist()
 def create_extra_value(data):
     """
@@ -59,13 +64,14 @@ def create_extra_value(data):
     """
     if isinstance(data, str):
         data = json.loads(data)
-        
+
     doc = frappe.get_doc({
         "doctype": "Product Extra Value",
         **data
     })
     doc.insert()
     return doc.as_dict()
+
 
 @frappe.whitelist()
 def get_extra_values(group_id):
@@ -74,6 +80,7 @@ def get_extra_values(group_id):
     """
     return frappe.get_list("Product Extra Value", filters={"extra_group": group_id}, fields=["*"])
 
+
 @frappe.whitelist()
 def update_extra_value(name, data):
     """
@@ -81,11 +88,12 @@ def update_extra_value(name, data):
     """
     if isinstance(data, str):
         data = json.loads(data)
-        
+
     doc = frappe.get_doc("Product Extra Value", name)
     doc.update(data)
     doc.save()
     return doc.as_dict()
+
 
 @frappe.whitelist()
 def delete_extra_value(name):

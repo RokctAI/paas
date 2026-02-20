@@ -6,6 +6,7 @@ from unittest.mock import MagicMock, patch
 import frappe
 from paas.branding import get_paas_branding, get_paas_brand_html
 
+
 class TestBranding(unittest.TestCase):
     def setUp(self):
         # Patching methods

@@ -5,6 +5,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from paas.api.shop.shop import get_nearest_delivery_points
 
+
 class TestDeliveryPointAPI(FrappeTestCase):
     def setUp(self):
         # Create a test delivery point

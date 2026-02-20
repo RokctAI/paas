@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 
+
 class FlutterAppConfiguration(Document):
 	def onload(self):
 		"""

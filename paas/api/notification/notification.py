@@ -3,6 +3,7 @@ import json
 import requests
 from paas.api.utils import api_response
 
+
 @frappe.whitelist()
 def send_push_notification(user: str, title: str, body: str, data: dict = None):
     """
@@ -57,6 +58,7 @@ def send_push_notification(user: str, title: str, body: str, data: dict = None):
         frappe.log_error(frappe.get_traceback(), "Push Notification Exception")
         return {"status": "error", "message": str(e)}
 
+
 @frappe.whitelist()
 def get_default_sms_payload():
     """
@@ -81,6 +83,7 @@ def get_default_sms_payload():
 
     return json.dumps(payload)
 
+
 @frappe.whitelist()
 def get_notification_settings():
     """
@@ -90,7 +93,7 @@ def get_notification_settings():
     user = frappe.session.user
     if user == "Guest":
         frappe.throw("You must be logged in to view notification settings.", frappe.AuthenticationError)
-        
+
     # Get all notification types
     # Assuming 'Notification Type' doctype exists from confirmed check
     # If it doesn't exist in some envs, we handle gracefully
@@ -98,36 +101,37 @@ def get_notification_settings():
         types = frappe.get_all("Notification Type", fields=["name", "type", "payload"])
     except Exception:
         return api_response(data=[])
-        
+
     # Get user preferences
     prefs = frappe.get_all(
         "User Notification Preference",
         filters={"user": user},
         fields=["name", "notification_type", "active"]
     )
-    
+
     prefs_map = {p.notification_type: p for p in prefs}
-    
+
     result = []
     for t in types:
         # Default to active if no preference set
         is_active = True
         pref_id = None
-        
+
         if t.name in prefs_map:
             is_active = bool(prefs_map[t.name].active)
             pref_id = prefs_map[t.name].name
-            
+
         result.append({
-            "id": 0, # Flutter expects int, send 0 or valid int if available (Doctype doesn't have int id by default)
-            "type": t.type or t.name, # Use 'type' field or fallback to name
+            "id": 0,  # Flutter expects int, send 0 or valid int if available (Doctype doesn't have int id by default)
+            "type": t.type or t.name,  # Use 'type' field or fallback to name
             "active": is_active,
             "created_at": None,
             "updated_at": None,
-            "payload": [] # Mock payload list
+            "payload": []  # Mock payload list
         })
-        
-    return api_response(data={"data": result}) # Wrap in data.data as per Flutter model
+
+    return api_response(data={"data": result})  # Wrap in data.data as per Flutter model
+
 
 @frappe.whitelist()
 def update_notification_settings(type: str, active: int):
@@ -137,12 +141,12 @@ def update_notification_settings(type: str, active: int):
     user = frappe.session.user
     if user == "Guest":
          frappe.throw("You must be logged in to update notification settings.", frappe.AuthenticationError)
-         
+
     # Check if preference exists
     # We match by 'notification_type' which is the Link to Notification Type
     # But input 'type' might be the string 'Order Update' etc from the 'type' field of Notification Type doctype
     # We need to resolve it to the Notification Type name
-    
+
     nt_name = frappe.db.get_value("Notification Type", {"type": type}, "name")
     if not nt_name:
         # fallback if type passed IS the name
@@ -150,10 +154,10 @@ def update_notification_settings(type: str, active: int):
             nt_name = type
         else:
              frappe.throw(f"Invalid notification type: {type}")
-             
+
     # Find existing preference
     pref_name = frappe.db.get_value("User Notification Preference", {"user": user, "notification_type": nt_name}, "name")
-    
+
     if pref_name:
         doc = frappe.get_doc("User Notification Preference", pref_name)
         doc.active = 1 if active else 0
@@ -165,9 +169,9 @@ def update_notification_settings(type: str, active: int):
             "notification_type": nt_name,
             "active": 1 if active else 0
         }).insert(ignore_permissions=True)
-        
-        
+
     return api_response(message="Notification settings updated successfully.")
+
 
 @frappe.whitelist()
 def get_user_notifications(start=0, limit=20):
@@ -187,6 +191,7 @@ def get_user_notifications(start=0, limit=20):
         limit=limit
     )
 
+
 @frappe.whitelist()
 def get_notification_count():
     """
@@ -195,9 +200,10 @@ def get_notification_count():
     user = frappe.session.user
     if user == "Guest":
         return api_response(data={"count": 0})
-        
+
     count = frappe.db.count("Notification Log", {"user": user, "read": 0})
     return api_response(data={"count": count})
+
 
 @frappe.whitelist()
 def mark_notification_logs_as_read(ids=None):
@@ -210,10 +216,10 @@ def mark_notification_logs_as_read(ids=None):
 
     if isinstance(ids, str):
         ids = json.loads(ids)
-        
+
     if not ids:
         return api_response(message="No IDs provided")
-        
+
     for name in ids:
         if frappe.db.exists("Notification Log", name):
              doc = frappe.get_doc("Notification Log", name)
@@ -221,8 +227,9 @@ def mark_notification_logs_as_read(ids=None):
              if (hasattr(doc, 'for_user') and doc.for_user == user) or doc.owner == user:
                  doc.read = 1
                  doc.save(ignore_permissions=True)
-                 
+
     return api_response(message="Notifications marked as read")
+
 
 @frappe.whitelist()
 def read_all_notifications():
@@ -232,13 +239,14 @@ def read_all_notifications():
     user = frappe.session.user
     if user == "Guest":
          frappe.throw("You must be logged in.", frappe.AuthenticationError)
-         
+
     logs = frappe.get_all("Notification Log", filters={"for_user": user, "read": 0})
     # Also check owner if for_user is not used? Standard Frappe uses for_user
     for log in logs:
         frappe.db.set_value("Notification Log", log.name, "read", 1)
-        
+
     return api_response(message="All notifications marked as read")
+
 
 @frappe.whitelist()
 def read_one_notification(name):
@@ -248,11 +256,11 @@ def read_one_notification(name):
     user = frappe.session.user
     if user == "Guest":
          frappe.throw("You must be logged in.", frappe.AuthenticationError)
-         
+
     if frappe.db.exists("Notification Log", name):
          doc = frappe.get_doc("Notification Log", name)
          if (hasattr(doc, 'for_user') and doc.for_user == user) or doc.owner == user:
              doc.read = 1
              doc.save(ignore_permissions=True)
-             
+
     return api_response(message="Notification marked as read")

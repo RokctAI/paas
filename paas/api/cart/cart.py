@@ -1,5 +1,6 @@
 import frappe
 
+
 @frappe.whitelist()
 def get_cart(shop_id: str):
     """
@@ -56,7 +57,7 @@ def add_to_cart(qty: int, shop_id: str, item_code: str = None, stock_id: int = N
 
     # Check if item already exists in cart (matching stock_id and addons)
     existing_item = None
-    
+
     # helper for addons comparison
     def compare_addons(a1, a2):
         # simplified check: sort by stock_id and compare
@@ -66,7 +67,7 @@ def add_to_cart(qty: int, shop_id: str, item_code: str = None, stock_id: int = N
         if len(a1) != len(a2): return False
         # Deep compare implementation needed or just assume new row if complex
         # For MVP, we will just add a new row if addons are present to avoid merging complexity
-        return False 
+        return False
 
     # If no addons, we can try to merge
     should_merge = (len(addons_data) == 0)
@@ -82,7 +83,7 @@ def add_to_cart(qty: int, shop_id: str, item_code: str = None, stock_id: int = N
             elif item_code:
                 if detail.item == item_code and (not detail.stock_id):
                     match = True
-            
+
             if match:
                  # Check if existing item has addons. If yes, don't merge (since we have no addons)
                  existing_addons = json.loads(detail.addons) if detail.addons else []
@@ -96,11 +97,11 @@ def add_to_cart(qty: int, shop_id: str, item_code: str = None, stock_id: int = N
         # Get Price
         price = 0
         if item_code:
-             price = frappe.db.get_value("Product", item_code, "price") or 0 # field name might be diff
+             price = frappe.db.get_value("Product", item_code, "price") or 0  # field name might be diff
         # If stock_id, might want to fetch specific price
-        
+
         cart.append("items", {
-            "item": item_code, # Ensure item_code is provided by Caller
+            "item": item_code,  # Ensure item_code is provided by Caller
             "quantity": qty,
             "price": price,
             "stock_id": stock_id,
@@ -161,6 +162,7 @@ def calculate_cart_totals(cart_name: str):
     cart.total_price = total_price
     cart.save(ignore_permissions=True)
 
+
 @frappe.whitelist()
 def create_cart(cart: dict, lang: str = "en"):
     """
@@ -179,6 +181,7 @@ def create_cart(cart: dict, lang: str = "en"):
     cart_doc.insert(ignore_permissions=True)
     return cart_doc.as_dict()
 
+
 @frappe.whitelist()
 def insert_cart(cart: dict, lang: str = "en"):
     """
@@ -192,6 +195,7 @@ def insert_cart(cart: dict, lang: str = "en"):
         })
     cart_doc.save(ignore_permissions=True)
     return cart_doc.as_dict()
+
 
 @frappe.whitelist()
 def insert_cart_with_group(cart: dict, lang: str = "en"):
@@ -207,6 +211,7 @@ def insert_cart_with_group(cart: dict, lang: str = "en"):
     cart_doc.save(ignore_permissions=True)
     return cart_doc.as_dict()
 
+
 @frappe.whitelist()
 def create_and_cart(cart: dict, lang: str = "en"):
     """
@@ -214,12 +219,14 @@ def create_and_cart(cart: dict, lang: str = "en"):
     """
     return create_cart(cart, lang)
 
+
 @frappe.whitelist()
 def get_cart_in_group(cart_id: str, shop_id: str, cart_uuid: str, lang: str = "en"):
     """
     Retrieves a group cart.
     """
     return frappe.get_doc("Cart", cart_id)
+
 
 @frappe.whitelist()
 def delete_cart(cart_id: int, lang: str = "en"):
@@ -229,6 +236,7 @@ def delete_cart(cart_id: int, lang: str = "en"):
     frappe.delete_doc("Cart", cart_id, ignore_permissions=True)
     return {"status": "success"}
 
+
 @frappe.whitelist()
 def change_status(user_uuid: str, cart_id: str, lang: str = "en"):
     """
@@ -236,6 +244,7 @@ def change_status(user_uuid: str, cart_id: str, lang: str = "en"):
     """
     # This is a placeholder for the actual implementation.
     return {"status": "success"}
+
 
 @frappe.whitelist()
 def delete_user(cart_id: int, user_id: str, lang: str = "en"):
@@ -249,6 +258,7 @@ def delete_user(cart_id: int, user_id: str, lang: str = "en"):
 
     cart_doc.save(ignore_permissions=True)
     return cart_doc.as_dict()
+
 
 @frappe.whitelist()
 def join_order(cart_id: str, user_name: str, lang: str = "en"):

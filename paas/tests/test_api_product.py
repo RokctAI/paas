@@ -5,6 +5,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from paas.api.product.product import get_products, get_product_by_uuid
 
+
 class TestProductAPI(FrappeTestCase):
     def setUp(self):
         # Create a Shop
@@ -33,7 +34,7 @@ class TestProductAPI(FrappeTestCase):
 
         # Ensure Custom Fields exist (since they seem missing found in test env)
         from frappe.custom.doctype.custom_field.custom_field import create_custom_field
-        
+
         if not frappe.db.has_column("Item", "uuid"):
             create_custom_field("Item", {
                 "fieldname": "uuid",
@@ -41,11 +42,11 @@ class TestProductAPI(FrappeTestCase):
                 "fieldtype": "Data",
                 "unique": 1
             })
-            
+
         if not frappe.db.has_column("Item", "is_visible_in_website"):
             create_custom_field("Item", {
                 "fieldname": "is_visible_in_website",
-                "label": "Is Visible In Website", 
+                "label": "Is Visible In Website",
                 "fieldtype": "Check",
                 "default": 1
             })
@@ -53,7 +54,7 @@ class TestProductAPI(FrappeTestCase):
         if not frappe.db.has_column("Item", "status"):
             create_custom_field("Item", {
                 "fieldname": "status",
-                "label": "Status", 
+                "label": "Status",
                 "fieldtype": "Select",
                 "options": "Published\nDraft",
                 "default": "Published"
@@ -62,12 +63,12 @@ class TestProductAPI(FrappeTestCase):
         if not frappe.db.has_column("Item", "approval_status"):
             create_custom_field("Item", {
                 "fieldname": "approval_status",
-                "label": "Approval Status", 
+                "label": "Approval Status",
                 "fieldtype": "Select",
                 "options": "Approved\nPending",
                 "default": "Approved"
             })
-            
+
         frappe.clear_cache(doctype="Item")
 
         if not frappe.db.exists("Item", "Test Product 1"):
@@ -89,13 +90,13 @@ class TestProductAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
         else:
             self.product = frappe.get_doc("Item", "Test Product 1")
-    
+
     def tearDown(self):
         frappe.set_user("Administrator")
         # Cleanup
         if frappe.db.exists("Item", "Test Product 1"):
             frappe.delete_doc("Item", "Test Product 1", force=True, ignore_permissions=True)
-        
+
         if frappe.db.exists("Shop", "Product Test Shop"):
              # Shop deletion might require deleting items first, which we did above
              try:
@@ -107,12 +108,12 @@ class TestProductAPI(FrappeTestCase):
         """Test fetching products list."""
         response = get_products(limit_page_length=20)
         products = response.get("data")
-        
+
         self.assertIsInstance(products, list)
-        
+
         product_names = [p['name'] for p in products]
         self.assertIn("Test Product 1", product_names)
-        
+
         # Verify structure
         test_prod = next(p for p in products if p['name'] == "Test Product 1")
         self.assertIn("item_name", test_prod)
@@ -129,13 +130,13 @@ class TestProductAPI(FrappeTestCase):
                 "item_group": "All Item Groups",
                 "shop": self.shop.name,
                 "standard_rate": 200,
-                "stock_uom": "Nos", # Fixed: Mandatory field
+                "stock_uom": "Nos",  # Fixed: Mandatory field
                 "is_stock_item": 0,
                 "description": "A very specific searchable description.",
                 "status": "Published",
                 "approval_status": "Approved"
             }).insert(ignore_permissions=True)
-            
+
         response = get_products(search="Searchable")
         products = response.get("data")
         self.assertTrue(any(p['item_name'] == "Searchable Product" for p in products))
@@ -145,16 +146,16 @@ class TestProductAPI(FrappeTestCase):
         # Setup UUID for the item if not present (Item doesn't always have UUID by default unless custom field)
         # Assuming Item has a uuid field based on previous context, or we use name?
         # api/product/product.py: get_product_by_uuid uses "uuid" field.
-        
+
         # Check if Item has uuid field
         if not self.product.get("uuid"):
             import uuid
             self.product.uuid = str(uuid.uuid4())
             self.product.save(ignore_permissions=True)
-            
+
         response = get_product_by_uuid(uuid=self.product.uuid)
         product_details = response.get("data")
-        
+
         self.assertIsNotNone(product_details)
         self.assertEqual(product_details['name'], "Test Product 1")
         self.assertEqual(product_details['uuid'], self.product.uuid)

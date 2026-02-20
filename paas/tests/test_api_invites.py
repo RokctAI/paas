@@ -5,6 +5,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from paas.api.user.user import create_invite, get_user_invites, update_invite_status
 
+
 class TestInvitesAPI(FrappeTestCase):
     def setUp(self):
         # Create test users
@@ -14,7 +15,7 @@ class TestInvitesAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
         else:
             self.inviting_user = frappe.get_doc("User", "inviter@example.com")
-            
+
         if not frappe.db.exists("User", "invited@example.com"):
             self.invited_user = frappe.get_doc({
                 "doctype": "User", "email": "invited@example.com", "first_name": "Invited"
@@ -40,7 +41,7 @@ class TestInvitesAPI(FrappeTestCase):
                 self.shop.delete(ignore_permissions=True)
             except frappe.exceptions.LinkExistsError:
                 pass
-        
+
         for user_email in ["inviter@example.com", "invited@example.com"]:
             if frappe.db.exists("User", user_email):
                 try:
@@ -85,4 +86,3 @@ class TestInvitesAPI(FrappeTestCase):
         # The inviting user should not be able to update the status
         with self.assertRaises(frappe.PermissionError):
             update_invite_status(name=invite.get("name"), status="Accepted")
-

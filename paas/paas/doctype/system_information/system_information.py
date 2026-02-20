@@ -3,6 +3,7 @@ from frappe.model.document import Document
 import json
 import os
 
+
 class SystemInformation(Document):
     def onload(self):
         # Core Version (Frappe)
@@ -10,7 +11,7 @@ class SystemInformation(Document):
 
         # PaaS Version from paas/versions.json
         paas_versions_file = frappe.get_app_path("paas", "versions.json")
-        
+
         try:
             with open(paas_versions_file, "r") as f:
                 paas_versions = json.load(f)
@@ -28,11 +29,11 @@ class SystemInformation(Document):
                         rcore_versions = json.load(f)
                     self.flutter_sdk_version = rcore_versions.get("flutter_sdk_version", "Unknown")
         except Exception:
-            pass # Fail silently if r core issues
+            pass  # Fail silently if r core issues
 
         # 2. Control/Brain/Payments Versions
         # Always try Remote API. If opensource/offline, these remain Unavailable/NA.
-        
+
         self.control = "Unavailable"
         self.brain = "Unavailable"
         self.payments = "Unavailable"
@@ -41,16 +42,16 @@ class SystemInformation(Document):
             import requests
             # Get the control platform URL from site config
             control_url = frappe.conf.get("control_url", "https://platform.rokct.ai")
-            
+
             # Only try fetching if it looks like a real URL
             if control_url and "http" in control_url:
                 api_endpoint = f"{control_url}/api/method/control.control.api.versions.get_versions"
                 response = requests.get(api_endpoint, timeout=3)
-                
+
                 if response.status_code == 200:
                     data = response.json()
                     api_versions = data.get("message", {})
-                    
+
                     if isinstance(api_versions, dict):
                         def get_ver(app_name):
                             app_data = api_versions.get(app_name, {})

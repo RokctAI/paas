@@ -1,6 +1,7 @@
 import frappe
 from paas.api.utils import _get_seller_shop
 
+
 @frappe.whitelist()
 def get_seller_delivery_man_delivery_zones(limit_start: int = 0, limit_page_length: int = 20):
     """
@@ -28,6 +29,7 @@ def get_seller_delivery_man_delivery_zones(limit_start: int = 0, limit_page_leng
         limit=limit_page_length
     )
     return delivery_zones
+
 
 @frappe.whitelist()
 def adjust_seller_inventory(item_code: str, warehouse: str, new_qty: int):

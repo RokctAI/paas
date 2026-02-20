@@ -5,6 +5,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 import paas.utils as utils
 
+
 class TestUtils(unittest.TestCase):
     def test_get_subscription_details_standalone(self):
         # Force HAS_CORE to False

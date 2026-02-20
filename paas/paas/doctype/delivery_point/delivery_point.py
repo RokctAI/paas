@@ -29,9 +29,9 @@ def get_nearest_delivery_points(latitude, longitude, radius=20):
         frappe.throw("Invalid coordinates or radius.")
 
     t_dp = frappe.qb.DocType("Delivery Point")
-    
+
     # Haversine formula using frappe.qb functions
-    
+
     # We can use CustomFunction for the math parts
     from frappe.query_builder.functions import CustomFunction
     radians = CustomFunction("RADIANS", ["x"])
@@ -42,16 +42,16 @@ def get_nearest_delivery_points(latitude, longitude, radius=20):
     power = CustomFunction("POWER", ["x", "y"])
     asin = CustomFunction("ASIN", ["x"])
 
-    # The formula: 
+    # The formula:
     # 6371 * 2 * ASIN(SQRT(POWER(SIN(RADIANS(lat2 - lat1) / 2), 2) + COS(RADIANS(lat1)) * COS(RADIANS(lat2)) * POWER(SIN(RADIANS(lon2 - lon1) / 2), 2)))
-    
+
     d_lat = radians(t_dp.latitude - latitude)
     d_lon = radians(t_dp.longitude - longitude)
-    
+
     a = power(sin(d_lat / 2), 2) + cos(radians(latitude)) * cos(radians(t_dp.latitude)) * power(sin(d_lon / 2), 2)
     c = 2 * asin(sqrt(a))
     distance = 6371 * c
-    
+
     query = (
         frappe.qb.from_(t_dp)
         .select(
@@ -63,7 +63,7 @@ def get_nearest_delivery_points(latitude, longitude, radius=20):
         .orderby(distance)
         .limit(20)
     )
-    
+
     delivery_points = query.run(as_dict=True)
 
     return delivery_points

@@ -6,6 +6,7 @@ from frappe.tests.utils import FrappeTestCase
 from paas.api.user.user import get_user_wallet, get_wallet_history
 import uuid
 
+
 class TestWalletAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
@@ -55,7 +56,7 @@ class TestWalletAPI(FrappeTestCase):
             self.wallet.delete(ignore_permissions=True)
         except Exception:
             pass
-            
+
         if frappe.db.exists("User", self.test_user.name):
             try:
                 self.test_user.delete(ignore_permissions=True)
@@ -82,10 +83,9 @@ class TestWalletAPI(FrappeTestCase):
         # Get the first page with a limit of 1
         history = get_wallet_history(limit=1)
         self.assertEqual(len(history["data"]), 1)
-        self.assertEqual(history["data"][0].get("transaction_type"), "Withdraw") # It's ordered by creation desc
+        self.assertEqual(history["data"][0].get("transaction_type"), "Withdraw")  # It's ordered by creation desc
 
         # Get the second page
         history = get_wallet_history(start=1, limit=1)
         self.assertEqual(len(history["data"]), 1)
         self.assertEqual(history["data"][0].get("transaction_type"), "Topup")
-

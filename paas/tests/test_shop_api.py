@@ -4,6 +4,7 @@ from frappe.tests.utils import FrappeTestCase
 # Import the functions to be tested
 from paas.api.shop.shop import create_shop, get_shops, get_shop_details
 
+
 class TestShopAPI(FrappeTestCase):
     def setUp(self):
         # Create users
@@ -103,7 +104,7 @@ class TestShopAPI(FrappeTestCase):
     def tearDown(self):
         # This method will be run after each test
         frappe.set_user("Administrator")
-        
+
         # Delete Key Documents First (Children/Linked)
         shops_to_delete = ["Test Shop 1", "Test Shop 2", "Test Shop 3 Not Approved", "Test Shop 4 Not Visible"]
         for shop_name in shops_to_delete:
@@ -112,7 +113,7 @@ class TestShopAPI(FrappeTestCase):
                     frappe.delete_doc("Shop", shop_name, force=True, ignore_permissions=True)
                 except Exception:
                     pass
-                 
+
         # Delete Users
         users_to_delete = ["test-seller@example.com", "test-seller-2@example.com", "non-seller@example.com"]
         for user_email in users_to_delete:
@@ -140,10 +141,10 @@ class TestShopAPI(FrappeTestCase):
         # ensuring we handle both direct dict (from legacy calls in setup) vs actual API response if testing the function directly
         # But here self.shop1 is result of create_shop call in setUp.
         # Let's adjust access based on the wrapper.
-        
+
         # NOTE: In setUp, create_shop returns the api_response dict.
         # So self.shop1 is {"data": {...}, "message": ...}
-        
+
         shop_data = self.shop1.get("data")
         self.assertIn('uuid', shop_data)
         self.assertIn('slug', shop_data)
@@ -165,19 +166,19 @@ class TestShopAPI(FrappeTestCase):
 
     def test_get_shops_pagination(self):
         """Test pagination for get_shops."""
-        # Since other tests might leave data (like 'My Awesome Shop'), we can't assume 
+        # Since other tests might leave data (like 'My Awesome Shop'), we can't assume
         # our shops are at index 0 and 1.
-        # Strategy: Fetch all (or many) sorted by name, find our shops' indices, 
+        # Strategy: Fetch all (or many) sorted by name, find our shops' indices,
         # then test pagination targeting those specific offsets.
-        
+
         all_shops_response = get_shops(limit_page_length=100, order_by="shop_name", order="asc")
         all_shops = all_shops_response.get("data")
-        
+
         # Find index of Test Shop 1
         index_1 = next((i for i, s in enumerate(all_shops) if s['id'] == 'Test Shop 1'), -1)
         # Find index of Test Shop 2
         index_2 = next((i for i, s in enumerate(all_shops) if s['id'] == 'Test Shop 2'), -1)
-        
+
         if index_1 != -1:
             # Test fetching via pagination at the calculated index
             response1 = get_shops(limit_start=index_1, limit_page_length=1, order_by="shop_name", order="asc")
@@ -197,7 +198,7 @@ class TestShopAPI(FrappeTestCase):
         uuid = self.shop1.get("data")['uuid']
         response = get_shop_details(uuid=uuid)
         shop_details = response.get("data")
-        
+
         self.assertIsNotNone(shop_details)
         self.assertEqual(shop_details['id'], self.shop1.get("data")['shop_name'])
         self.assertEqual(shop_details['uuid'], uuid)
@@ -229,7 +230,7 @@ class TestShopAPI(FrappeTestCase):
         # Test ordering by name descending
         response_desc = get_shops(order_by="shop_name", order="desc")
         shops_desc = response_desc.get("data")
-        
+
         # Filter to only our shops to verify RELATIVE order
         our_shops = [s for s in shops_desc if s['id'] in ["Test Shop 1", "Test Shop 2"]]
         if len(our_shops) >= 2:
@@ -239,11 +240,12 @@ class TestShopAPI(FrappeTestCase):
         # Test ordering by name ascending
         response_asc = get_shops(order_by="shop_name", order="asc")
         shops_asc = response_asc.get("data")
-        
+
         our_shops_asc = [s for s in shops_asc if s['id'] in ["Test Shop 1", "Test Shop 2"]]
         if len(our_shops_asc) >= 2:
             self.assertEqual(our_shops_asc[0]['id'], "Test Shop 1")
             self.assertEqual(our_shops_asc[1]['id'], "Test Shop 2")
+
 
 if __name__ == '__main__':
     # This allows running the tests directly

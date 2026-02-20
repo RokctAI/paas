@@ -4,8 +4,10 @@
 from frappe.model.document import Document
 import frappe
 
+
 class Product(Document):
 	pass
+
 
 def auto_vectorize_product(doc, method=None):
     """
@@ -18,7 +20,7 @@ def auto_vectorize_product(doc, method=None):
     try:
         # Check if Brain is installed and accessible
         from brain.services.llm_service import embed_text
-        
+
         # Construct context for embedding
         # We want to capture: Name, Group, Description, Shop
         # "Pizza Margherita (Food) - Delicious cheese pizza"
@@ -27,18 +29,18 @@ def auto_vectorize_product(doc, method=None):
             text += f"\n{doc.description}"
         if hasattr(doc, 'shop') and doc.shop:
             text += f"\nShop: {doc.shop}"
-            
+
         vector = embed_text(text)
-        
+
         if vector:
             # Direct SQL update to avoid recursive triggers or permission issues
             frappe.db.sql(f"""
-                UPDATE "tabItem" 
-                SET embedding = '{vector}' 
+                UPDATE "tabItem"
+                SET embedding = '{vector}'
                 WHERE name = %s
             """, (doc.name,))
             # We don't commit here, we let the transaction handler do it
-            
+
     except ImportError:
         # Brain app not installed or service not available
         pass

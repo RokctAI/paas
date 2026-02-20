@@ -2,6 +2,7 @@ import frappe
 import json
 import uuid
 
+
 @frappe.whitelist()
 def get_categories(limit_start: int = 0, limit_page_length: int = 10, order_by: str = "name", order: str = "desc", parent: bool = False, select: bool = False, **kwargs):
     """
@@ -44,8 +45,6 @@ def get_category_types():
     category_meta = frappe.get_meta("Category")
     type_field = category_meta.get_field("type")
     return type_field.options.split("\n")
-
-
 
 
 @frappe.whitelist()

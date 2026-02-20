@@ -5,6 +5,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from paas.api.payment.payment import get_payfast_settings, save_payfast_card, get_saved_payfast_cards, delete_payfast_card, handle_payfast_callback, process_payfast_token_payment
 
+
 class TestPayFastAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
@@ -81,7 +82,7 @@ class TestPayFastAPI(FrappeTestCase):
                     frappe.db.commit()
                 except Exception:
                     pass
-                    
+
         if hasattr(self, "shop") and self.shop and frappe.db.exists("Shop", self.shop.name):
             try:
                 frappe.delete_doc("Shop", self.shop.name, force=True, ignore_permissions=True)
@@ -127,4 +128,3 @@ class TestPayFastAPI(FrappeTestCase):
         frappe.set_user(self.test_user.name)
         with self.assertRaises(frappe.exceptions.ValidationError):
             process_payfast_token_payment(self.test_order.name, "test_token")
-

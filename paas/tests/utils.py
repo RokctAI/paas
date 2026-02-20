@@ -1,5 +1,6 @@
 import frappe
 
+
 def before_tests():
     """
     Setup required data before running tests.
@@ -21,6 +22,7 @@ def before_tests():
     frappe.clear_cache()
     print("DEBUG: Fixtures Created. Stock Entry Types:", frappe.db.get_all("Stock Entry Type", pluck="name"))
 
+
 def create_warehouse_types():
     if frappe.db.exists("DocType", "Warehouse Type"):
         if not frappe.db.exists("Warehouse Type", "Transit"):
@@ -29,6 +31,7 @@ def create_warehouse_types():
                 "name": "Transit"
             }).insert(ignore_permissions=True)
 
+
 def create_customer_groups():
     if frappe.db.exists("DocType", "Customer Group"):
         if not frappe.db.exists("Customer Group", "All Customer Groups"):
@@ -36,8 +39,9 @@ def create_customer_groups():
                 "doctype": "Customer Group",
                 "customer_group_name": "All Customer Groups",
                 "is_group": 1,
-                "parent_customer_group": "" 
+                "parent_customer_group": ""
             }).insert(ignore_permissions=True)
+
 
 def create_item_groups():
     if frappe.db.exists("DocType", "Item Group"):
@@ -49,6 +53,7 @@ def create_item_groups():
                 "parent_item_group": ""
             }).insert(ignore_permissions=True)
 
+
 def create_territories():
     if frappe.db.exists("DocType", "Territory"):
         if not frappe.db.exists("Territory", "All Territories"):
@@ -58,6 +63,7 @@ def create_territories():
                 "is_group": 1,
                 "parent_territory": ""
             }).insert(ignore_permissions=True)
+
 
 def create_supplier_groups():
     if frappe.db.exists("DocType", "Supplier Group"):
@@ -69,6 +75,7 @@ def create_supplier_groups():
                 "parent_supplier_group": ""
             }).insert(ignore_permissions=True)
 
+
 def create_sales_persons():
     if frappe.db.exists("DocType", "Sales Person"):
         if not frappe.db.exists("Sales Person", "All Sales Persons"):
@@ -78,6 +85,7 @@ def create_sales_persons():
                 "is_group": 1,
                 "parent_sales_person": ""
             }).insert(ignore_permissions=True)
+
 
 def create_test_company():
     if frappe.db.exists("DocType", "Company"):
@@ -89,6 +97,7 @@ def create_test_company():
                 "default_currency": "INR",
                 "country": "India"
             }).insert(ignore_permissions=True)
+
 
 def create_test_warehouses():
     if not frappe.db.exists("DocType", "Warehouse"):
@@ -125,6 +134,7 @@ def create_test_warehouses():
             "parent_warehouse": "_Test Warehouse Group - _TC"  # Link it to group!
         }).insert(ignore_permissions=True)
 
+
 def create_stock_entry_types():
     if frappe.db.exists("DocType", "Stock Entry Type"):
         for name, purpose in [
@@ -140,6 +150,7 @@ def create_stock_entry_types():
                     "is_standard": 1
                 }).insert(ignore_permissions=True)
 
+
 def create_fiscal_year():
     if frappe.db.exists("DocType", "Fiscal Year"):
         if not frappe.db.exists("Fiscal Year", "_Test Fiscal Year 2026"):
@@ -151,6 +162,7 @@ def create_fiscal_year():
                 "companies": [{"company": "_Test Company"}]
             }).insert(ignore_permissions=True)
 
+
 def create_gender():
     for gender in ["Male", "Female", "Other"]:
         if not frappe.db.exists("Gender", gender):
@@ -158,6 +170,7 @@ def create_gender():
                 "doctype": "Gender",
                 "gender": gender
             }).insert(ignore_permissions=True)
+
 
 def create_user_custom_fields():
     """
@@ -172,6 +185,7 @@ def create_user_custom_fields():
             "label": "Ringfenced Balance",
             "default": "0"
         }).insert(ignore_permissions=True)
+
 
 def create_roles():
     """

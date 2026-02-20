@@ -3,6 +3,7 @@
 
 import frappe
 
+
 @frappe.whitelist()
 def get_banners(page: int = 1, limit_page_length: int = 10):
     """
@@ -16,12 +17,14 @@ def get_banners(page: int = 1, limit_page_length: int = 10):
         order_by="creation desc"
     )
 
+
 @frappe.whitelist()
 def get_banner(id: str):
     """
     Fetches a single banner.
     """
     return frappe.get_doc("Banner", id)
+
 
 @frappe.whitelist()
 def get_ads(page: int = 1):
@@ -36,12 +39,14 @@ def get_ads(page: int = 1):
         offset=(page - 1) * 10,
     )
 
+
 @frappe.whitelist()
 def get_ad(id: str):
     """
     Fetches a single banner that is marked as an ad.
     """
     return frappe.get_doc("Banner", id)
+
 
 @frappe.whitelist()
 def like_banner(id: str):

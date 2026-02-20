@@ -7,6 +7,7 @@ import io
 from paas.utils import check_subscription_feature
 from paas.api.utils import api_response
 
+
 @frappe.whitelist()
 def logout():
     """
@@ -28,9 +29,9 @@ def login(usr, pwd):
         login_manager.post_login()
     except frappe.AuthenticationError:
         return api_response(message="Invalid credentials", status_code=401)
-    
+
     user = frappe.get_doc("User", frappe.session.user)
-    
+
     # Generate API keys if missing
     api_secret = None
     if not user.api_key:
@@ -48,7 +49,7 @@ def login(usr, pwd):
         user.save(ignore_permissions=True)
 
     token = f"{user.api_key}:{api_secret}"
-    
+
     # Fetch shop details if available
     shop = None
     try:
@@ -74,12 +75,12 @@ def login(usr, pwd):
             "access_token": token,
             "token_type": "Bearer",
             "user": {
-                "id": user.name, # Use email/name as ID
+                "id": user.name,  # Use email/name as ID
                 "email": user.email,
                 "firstname": user.first_name,
                 "lastname": user.last_name,
                 "phone": user.phone,
-                "role": "user", # Default role for mobile app
+                "role": "user",  # Default role for mobile app
                 "active": 1,
                 "img": user.user_image,
                 "shop": shop,
@@ -99,7 +100,7 @@ def get_profile():
         frappe.throw("You must be logged in to view your profile.", frappe.AuthenticationError)
 
     user_doc = frappe.get_doc("User", user)
-    
+
     # Fetch shop details if available
     shop = None
     shop_name = frappe.db.get_value("Shop", {"user": user}, "name")
@@ -149,7 +150,7 @@ def update_profile(firstname=None, lastname=None, email=None, phone=None, images
         user_doc.last_name = lastname
     if phone:
         user_doc.phone = phone
-    
+
     # Handle Image Upload (expects list or single string URL)
     if images:
         if isinstance(images, list) and len(images) > 0:
@@ -364,11 +365,12 @@ def forgot_password(user: str):
         else:
             # Frappe's standard email flow
             frappe.core.doctype.user.user.reset_password(user=user)
-            
+
         return api_response(message="If a user with this email/phone exists, a password reset code/link has been sent.")
     except Exception:
         # For security, always return success
         return api_response(message="If a user with this email/phone exists, a password reset code/link has been sent.")
+
 
 @frappe.whitelist(allow_guest=True)
 def forgot_password_confirm(email, verify_code, password=None):
@@ -379,7 +381,7 @@ def forgot_password_confirm(email, verify_code, password=None):
     try:
         is_phone = email.startswith('+') or email.isdigit()
         user_name = None
-        
+
         if is_phone:
             user_name = frappe.db.get_value("User", {"phone": email}, "name")
             cached_otp = frappe.cache.get_value(f"password_reset_otp:{email}")
@@ -392,22 +394,23 @@ def forgot_password_confirm(email, verify_code, password=None):
                 # Verify standard Frappe reset token
                 if user_doc.reset_password_key != verify_code:
                     return api_response(message="Invalid or expired reset token", status_code=400)
-        
+
         if not user_name:
             return api_response(message="User not found", status_code=404)
-            
+
         if password:
             user_doc = frappe.get_doc("User", user_name)
             user_doc.set("new_password", password)
-            user_doc.reset_password_key = None # Clear token after use
+            user_doc.reset_password_key = None  # Clear token after use
             user_doc.save(ignore_permissions=True)
             if is_phone:
                 frappe.cache.delete_value(f"password_reset_otp:{email}")
             return api_response(message="Password updated successfully")
-        
+
         return api_response(message="Code verified")
     except Exception as e:
         return api_response(message=str(e), status_code=500)
+
 
 @frappe.whitelist(allow_guest=True)
 def login_with_google(email, display_name, id, avatar=None):
@@ -418,13 +421,13 @@ def login_with_google(email, display_name, id, avatar=None):
         return api_response(message="Email is required", status_code=400)
 
     user_name = frappe.db.get_value("User", {"email": email}, "name")
-    
+
     if not user_name:
         # Create new user
         names = display_name.split(" ", 1)
         first_name = names[0]
         last_name = names[1] if len(names) > 1 else ""
-        
+
         user = frappe.get_doc({
             "doctype": "User",
             "email": email,
@@ -454,7 +457,7 @@ def login_with_google(email, display_name, id, avatar=None):
         user.save(ignore_permissions=True)
 
     token = f"{user.api_key}:{api_secret}"
-    
+
     return api_response(
         message="Logged In via Google",
         data={
@@ -472,6 +475,7 @@ def login_with_google(email, display_name, id, avatar=None):
             }
         }
     )
+
 
 @frappe.whitelist()
 def search_user(name: str, page: int = 1, limit: int = 20, lang: str = "en"):
@@ -491,7 +495,7 @@ def search_user(name: str, page: int = 1, limit: int = 20, lang: str = "en"):
     to_tsvector = Function("to_tsvector")
     plainto_tsquery = Function("plainto_tsquery")
     tsq = plainto_tsquery("english", name)
-    
+
     query = query.where(
         (to_tsvector("english", t_user.first_name).matches(tsq)) |
         (to_tsvector("english", t_user.last_name).matches(tsq)) |
@@ -501,6 +505,7 @@ def search_user(name: str, page: int = 1, limit: int = 20, lang: str = "en"):
 
     users = query.limit(limit).offset((page - 1) * limit).run(as_dict=True)
     return api_response(data=users)
+
 
 @frappe.whitelist()
 def send_wallet_balance(amount: float, name_or_number: str, message: str = None, lang: str = "en"):
@@ -515,7 +520,7 @@ def send_wallet_balance(amount: float, name_or_number: str, message: str = None,
     recipient = frappe.db.get_value("User", {"phone": name_or_number}, "name")
     if not recipient:
         recipient = frappe.db.get_value("User", {"email": name_or_number}, "name")
-    
+
     if not recipient:
         frappe.throw("Recipient not found.")
 
@@ -525,16 +530,18 @@ def send_wallet_balance(amount: float, name_or_number: str, message: str = None,
     # Logic to transfer funds (Mock implementation if Wallet logic is complex/hidden)
     # Ideally calls a Wallet service
     # wallet_service.transfer(sender, recipient, amount, message)
-    
+
     return {"status": "success", "message": "Funds transferred successfully."}
+
 
 @frappe.whitelist()
 def update_profile_image(image: str):
     """
-    Updates the user's profile image. 
+    Updates the user's profile image.
     Alias/Wrapper for update_profile logic specific to image.
     """
     return update_profile(images=image)
+
 
 @frappe.whitelist()
 def get_user_order_refunds(page: int = 1, lang: str = "en"):
@@ -546,14 +553,15 @@ def get_user_order_refunds(page: int = 1, lang: str = "en"):
         "Order Refund",
         filters={"user": user},
         fields=["name", "amount", "reason", "status", "creation", "modified"],
-        limit_start=None, # Deprecated
-        limit_page_length=None, # Deprecated
+        limit_start=None,  # Deprecated
+        limit_page_length=None,  # Deprecated
         offset=(page - 1) * 10,
         limit=10,
         order_by="creation desc",
         ignore_permissions=True
     )
     return refunds
+
 
 @frappe.whitelist()
 def get_user_membership():
@@ -577,6 +585,7 @@ def get_user_membership():
 
     return user_membership[0]
 
+
 @frappe.whitelist()
 def get_user_membership_history():
     """
@@ -592,6 +601,7 @@ def get_user_membership_history():
         fields=["name", "membership", "start_date", "end_date", "is_active"],
         order_by="end_date desc"
     )
+
 
 @frappe.whitelist()
 def get_user_parcel_orders():
@@ -609,6 +619,7 @@ def get_user_parcel_orders():
         order_by="creation desc",
         ignore_permissions=True
     )
+
 
 @frappe.whitelist()
 def get_user_parcel_order(name):
@@ -641,6 +652,7 @@ def get_user_addresses():
         fields=["name", "title", "address", "location", "active"]
     )
 
+
 @frappe.whitelist()
 def get_user_address(name):
     """
@@ -655,6 +667,7 @@ def get_user_address(name):
         frappe.throw("You are not authorized to view this address.", frappe.PermissionError)
 
     return address.as_dict()
+
 
 @frappe.whitelist()
 def add_user_address(address_data):
@@ -679,6 +692,7 @@ def add_user_address(address_data):
     address.insert(ignore_permissions=True)
     return address.as_dict()
 
+
 @frappe.whitelist()
 def update_user_address(name, address_data):
     """
@@ -701,6 +715,7 @@ def update_user_address(name, address_data):
     address.active = address_data.get("active", address.active)
     address.save(ignore_permissions=True)
     return address.as_dict()
+
 
 @frappe.whitelist()
 def delete_user_address(name):
@@ -734,6 +749,7 @@ def get_user_invites():
         fields=["name", "shop", "role", "status"]
     )
 
+
 @frappe.whitelist()
 def create_invite(shop, user, role):
     """
@@ -752,6 +768,7 @@ def create_invite(shop, user, role):
     })
     invite.insert(ignore_permissions=True)
     return invite.as_dict()
+
 
 @frappe.whitelist()
 def update_invite_status(name, status):
@@ -785,6 +802,7 @@ def get_user_wallet():
 
     wallet = frappe.get_doc("Wallet", {"user": user})
     return api_response(data=wallet.as_dict())
+
 
 @frappe.whitelist()
 def get_wallet_history(start=0, limit=20):
@@ -866,6 +884,7 @@ def register_device_token(device_token: str, provider: str):
     }).insert(ignore_permissions=True)
     return api_response(message="Device token registered successfully.")
 
+
 @frappe.whitelist()
 def get_user_transactions(start=0, limit=20):
     """
@@ -903,6 +922,7 @@ def get_user_shop():
         return api_response(data=frappe.get_doc("Shop", shop_name).as_dict())
     except frappe.DoesNotExistError:
         return api_response(data=None)
+
 
 @frappe.whitelist()
 def update_seller_shop(shop_data):
@@ -948,6 +968,7 @@ def update_seller_shop(shop_data):
     shop.save(ignore_permissions=True)
     return api_response(data=shop.as_dict())
 
+
 @frappe.whitelist()
 def update_user_shop(shop_data):
     """
@@ -974,6 +995,7 @@ def get_user_request_models(start=0, limit=20):
         limit=limit
     )
     return api_response(data=models)
+
 
 @frappe.whitelist()
 def create_request_model(model_type, model_id, data):
@@ -1007,12 +1029,13 @@ def get_user_tickets(limit_start=0, limit_page_length=20):
 
     return frappe.get_all(
         "Ticket",
-        filters={"created_by_user": user, "parent_ticket": None}, # Only get parent tickets
+        filters={"created_by_user": user, "parent_ticket": None},  # Only get parent tickets
         fields=["name", "subject", "status", "creation"],
         order_by="creation desc",
         offset=limit_start,
         limit=limit_page_length
     )
+
 
 @frappe.whitelist()
 def get_user_ticket(name):
@@ -1037,6 +1060,7 @@ def get_user_ticket(name):
     ticket_dict["replies"] = replies
     return ticket_dict
 
+
 @frappe.whitelist()
 def create_ticket(subject, content, order_id=None):
     """
@@ -1059,6 +1083,7 @@ def create_ticket(subject, content, order_id=None):
     })
     ticket.insert(ignore_permissions=True)
     return ticket.as_dict()
+
 
 @frappe.whitelist()
 def reply_to_ticket(name, content):
@@ -1157,6 +1182,7 @@ def get_user_order_refunds(page=1):
     )
     return refunds
 
+
 @frappe.whitelist()
 def create_order_refund(order, cause):
     """
@@ -1205,6 +1231,7 @@ def get_user_notifications(start=0, limit=20):
         limit=limit
     )
 
+
 @frappe.whitelist()
 def get_notification_count():
     """
@@ -1213,9 +1240,10 @@ def get_notification_count():
     user = frappe.session.user
     if user == "Guest":
         return api_response(data={"count": 0})
-        
+
     count = frappe.db.count("Notification Log", {"user": user, "read": 0})
     return api_response(data={"count": count})
+
 
 @frappe.whitelist()
 def mark_notification_logs_as_read(ids=None):
@@ -1228,18 +1256,19 @@ def mark_notification_logs_as_read(ids=None):
 
     if isinstance(ids, str):
         ids = json.loads(ids)
-        
+
     if not ids:
         return api_response(message="No IDs provided")
-        
+
     for name in ids:
         if frappe.db.exists("Notification Log", name):
              doc = frappe.get_doc("Notification Log", name)
-             if doc.for_user == user or doc.owner == user: # Check ownership
+             if doc.for_user == user or doc.owner == user:  # Check ownership
                  doc.read = 1
                  doc.save(ignore_permissions=True)
-                 
+
     return api_response(message="Notifications marked as read")
+
 
 @frappe.whitelist()
 def read_all_notifications():
@@ -1249,12 +1278,13 @@ def read_all_notifications():
     user = frappe.session.user
     if user == "Guest":
          frappe.throw("You must be logged in.", frappe.AuthenticationError)
-         
+
     logs = frappe.get_all("Notification Log", filters={"for_user": user, "read": 0})
     for log in logs:
         frappe.db.set_value("Notification Log", log.name, "read", 1)
-        
+
     return api_response(message="All notifications marked as read")
+
 
 @frappe.whitelist()
 def read_one_notification(name):
@@ -1264,7 +1294,7 @@ def read_one_notification(name):
     user = frappe.session.user
     if user == "Guest":
          frappe.throw("You must be logged in.", frappe.AuthenticationError)
-         
+
     if frappe.db.exists("Notification Log", name):
          doc = frappe.get_doc("Notification Log", name)
          # Verify it belongs to user ( Notification Log uses 'for_user' usually, but sometimes owner)
@@ -1274,5 +1304,5 @@ def read_one_notification(name):
          elif doc.owner == user:
              doc.read = 1
              doc.save(ignore_permissions=True)
-             
+
     return api_response(message="Notification marked as read")

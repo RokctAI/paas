@@ -6,6 +6,7 @@ from frappe.tests.utils import FrappeTestCase
 from paas.api.user.user import add_user_address, get_user_addresses, get_user_address, update_user_address, delete_user_address
 import json
 
+
 class TestUserAddressAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
@@ -47,7 +48,7 @@ class TestUserAddressAPI(FrappeTestCase):
         }
         response = add_user_address(address_data=json.dumps(address_data))
         added_address = response
-        
+
         self.assertEqual(added_address.get("title"), "Home")
         self.assertEqual(added_address.get("user"), self.test_user.name)
 
@@ -66,11 +67,11 @@ class TestUserAddressAPI(FrappeTestCase):
         address_data = {"title": "Work"}
         response = add_user_address(address_data=json.dumps({"title": "Initial"}))
         added_address = response
-        
+
         update_data = {"title": "Updated Work"}
         response = update_user_address(name=added_address.get("name"), address_data=json.dumps(update_data))
         updated_address = response
-        
+
         self.assertEqual(updated_address.get("title"), "Updated Work")
 
     def test_delete_user_address(self):
@@ -96,7 +97,7 @@ class TestUserAddressAPI(FrappeTestCase):
 
         # Switch to other user to create address
         frappe.set_user(other_user.name)
-        
+
         # Check if address already exists to avoid DuplicateEntryError
         if not frappe.db.exists("User Address", {"user": other_user.name, "title": "Other's Home"}):
             other_address = add_user_address(address_data=json.dumps({"title": "Other's Home"}))
@@ -130,4 +131,3 @@ class TestUserAddressAPI(FrappeTestCase):
                     frappe.db.commit()
                 except Exception:
                     pass
-

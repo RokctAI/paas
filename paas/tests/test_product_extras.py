@@ -9,6 +9,7 @@ from paas.api.product_extra.product_extra import (
 )
 from paas.api.stock.stock import create_stock
 
+
 class TestProductExtras(FrappeTestCase):
     def setUp(self):
         frappe.set_user("Administrator")
@@ -71,7 +72,7 @@ class TestProductExtras(FrappeTestCase):
             "extras": [val_large.name]
         }
         stock = create_stock(stock_data)
-        
+
         # Verify Stock
         self.assertEqual(stock.sku, "PIZZA-L")
         self.assertEqual(stock.price, 120)

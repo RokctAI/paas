@@ -1,6 +1,7 @@
 import frappe
 from ..utils import _get_seller_shop
 
+
 @frappe.whitelist()
 def get_seller_transactions(limit_start=0, limit_page_length=20):
     """
@@ -58,6 +59,7 @@ def get_seller_shop_payments(limit_start: int = 0, limit_page_length: int = 20):
         order_by="creation desc"
     )
     return payments
+
 
 @frappe.whitelist()
 def get_seller_payment_to_partners(limit_start: int = 0, limit_page_length: int = 20):

@@ -1,9 +1,11 @@
 import frappe
 
+
 def _require_admin():
     """Helper function to ensure the user has the System Manager role."""
     if "System Manager" not in frappe.get_roles():
         frappe.throw("You are not authorized to perform this action.", frappe.PermissionError)
+
 
 def _get_seller_shop(user_id):
     """Helper function to get the shop for a given user."""
@@ -16,6 +18,7 @@ def _get_seller_shop(user_id):
         frappe.throw("User is not linked to any shop.", frappe.PermissionError)
 
     return shop
+
 
 def api_response(data=None, message=None, status_code=200):
     """
@@ -34,8 +37,8 @@ def api_response(data=None, message=None, status_code=200):
         response["message"] = message
     if status_code:
         response["status_code"] = status_code
-    
-    # Frappe automatically wraps 'api/method' returns in 'message', 
+
+    # Frappe automatically wraps 'api/method' returns in 'message',
     # so this essentially creates {"message": {"data": ..., "message": ...}}
     # which the Flutter app's interceptor will handle.
     return response

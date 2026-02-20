@@ -6,6 +6,7 @@ from frappe.utils import now_datetime
 from frappe.tests.utils import FrappeTestCase
 from paas.api.blog.blog import create_blog, get_blogs
 
+
 class TestBlog(FrappeTestCase):
     def tearDown(self):
         frappe.db.rollback()

@@ -1,5 +1,6 @@
 import frappe
 
+
 @frappe.whitelist()
 def get_tags(lang: str = "en"):
     """

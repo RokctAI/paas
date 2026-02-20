@@ -3,6 +3,7 @@ import json
 import requests
 from paas.api.utils import _get_seller_shop
 
+
 @frappe.whitelist()
 def get_seller_coupons(limit_start: int = 0, limit_page_length: int = 20):
     """
@@ -235,6 +236,7 @@ def delete_seller_banner(banner_name):
 
     frappe.delete_doc("Banner", banner_name, ignore_permissions=True)
     return {"status": "success", "message": "Banner deleted successfully."}
+
 
 @frappe.whitelist()
 def get_ads_packages():

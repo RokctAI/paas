@@ -1,5 +1,6 @@
 import frappe
 
+
 def is_point_in_polygon(point, polygon):
     """
     Checks if a point is inside a polygon using the Ray-Casting algorithm.
@@ -23,6 +24,7 @@ def is_point_in_polygon(point, polygon):
         p1x, p1y = p2x, p2y
 
     return inside
+
 
 @frappe.whitelist(allow_guest=True)
 def get_delivery_zone_by_shop(shop_id: str):
@@ -53,6 +55,7 @@ def check_delivery_zone(shop_id: str, latitude: float, longitude: float):
     else:
         return {"status": "error", "message": "Address is outside the delivery zone."}
 
+
 @frappe.whitelist(allow_guest=True)
 def get_delivery_points():
     """
@@ -72,6 +75,7 @@ def get_delivery_point(name):
     Retrieves a single delivery point by its name.
     """
     return frappe.get_doc("Delivery Point", name).as_dict()
+
 
 @frappe.whitelist(allow_guest=True)
 def get_driver_location(driver_id: str):

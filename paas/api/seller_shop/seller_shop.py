@@ -2,6 +2,7 @@ import frappe
 import json
 from paas.api.utils import _get_seller_shop
 
+
 @frappe.whitelist()
 def get_shop():
     """
@@ -39,6 +40,7 @@ def get_shop():
         'description': shop.description
     }
 
+
 @frappe.whitelist()
 def update_shop(shop_data):
     """
@@ -54,7 +56,7 @@ def update_shop(shop_data):
 
     # Update allowed fields
     allowed_fields = [
-        "phone", "address", "location", "min_amount", "tax", 
+        "phone", "address", "location", "min_amount", "tax",
         "delivery_time_type", "delivery_time_from", "delivery_time_to",
         "open", "logo", "cover_photo", "description"
     ]
@@ -62,17 +64,18 @@ def update_shop(shop_data):
     for field in allowed_fields:
         if field in shop_data:
             shop.set(field, shop_data[field])
-    
+
     # Handle specific mapping if needed (e.g. logo_img -> logo)
     if "logo_img" in shop_data:
         shop.logo = shop_data["logo_img"]
     if "background_img" in shop_data:
         shop.cover_photo = shop_data["background_img"]
     if "title" in shop_data:
-        shop.shop_name = shop_data["title"] # Assuming shop_name is the field
+        shop.shop_name = shop_data["title"]  # Assuming shop_name is the field
 
     shop.save(ignore_permissions=True)
     return shop.as_dict()
+
 
 @frappe.whitelist()
 def set_working_status(status):
@@ -81,9 +84,9 @@ def set_working_status(status):
     """
     user = frappe.session.user
     shop_id = _get_seller_shop(user)
-    
+
     shop = frappe.get_doc("Shop", shop_id)
-    
+
     # status can be boolean or string "true"/"false" or 0/1
     if isinstance(status, str):
         if status.lower() == "true":
@@ -92,8 +95,8 @@ def set_working_status(status):
             status = 0
         else:
             status = int(status)
-            
+
     shop.open = 1 if status else 0
     shop.save(ignore_permissions=True)
-    
+
     return shop.open

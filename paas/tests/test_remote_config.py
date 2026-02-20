@@ -7,6 +7,7 @@ import frappe
 from paas.api.remote_config import get_remote_config
 from types import SimpleNamespace
 
+
 class TestRemoteConfig(unittest.TestCase):
     def setUp(self):
         # Patching database and doc methods
@@ -73,8 +74,8 @@ class TestRemoteConfig(unittest.TestCase):
                 )
             if name == "RC-Customer":
                 return SimpleNamespace(
-                    pin_loading_min=5, # Overrides common
-                    show_flag="", # Should use common because empty string
+                    pin_loading_min=5,  # Overrides common
+                    show_flag="",  # Should use common because empty string
                     country_code_iso="US"
                 )
             return None

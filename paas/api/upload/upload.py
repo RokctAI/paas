@@ -2,6 +2,7 @@ import frappe
 from frappe.utils.file_manager import save_file
 from paas.api.utils import api_response
 
+
 @frappe.whitelist()
 def upload_file(file, filename=None, is_private=0):
     """
@@ -16,7 +17,7 @@ def upload_file(file, filename=None, is_private=0):
             dn=None,
             is_private=is_private
         )
-        
+
         return {
             "file_url": file_doc.file_url,
             "file_name": file_doc.file_name,
@@ -26,6 +27,7 @@ def upload_file(file, filename=None, is_private=0):
         frappe.log_error(f"File upload failed: {str(e)}")
         frappe.throw(f"Failed to upload file: {str(e)}")
 
+
 @frappe.whitelist()
 def upload_multi_image(files: list = None, upload_type: str = None, doc_name: str = None, lang: str = "en"):
     """
@@ -34,7 +36,7 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
     # 1. Handle file input robustly
     # If `files` arg is empty, check `frappe.request.files`
     file_list = []
-    
+
     # attempt to parse list if passed as string (common in some frappe calls)
     if isinstance(files, str):
         import json
@@ -47,13 +49,13 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
          # If it's a list of objects/dicts, we might need to handle differently
          # But usually file uploads come via request.files in multipart/form-data
          pass
-    
+
     # 2. Main Source: frappe.request.files
-    # usage: formData.append('files', fileObj); 
+    # usage: formData.append('files', fileObj);
     if frappe.request.files:
         # 'files' key might contain multiple files
         file_list = frappe.request.files.getlist("files")
-        
+
         # If 'files' key is empty, maybe they used other keys or just sent files without rigid keys?
         # frappe.request.files is a MultiDict.
         if not file_list:
@@ -92,15 +94,15 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
 
     doc = frappe.get_doc(doctype, doc_name)
     # Ideally check permissions here: doc.check_permission("write")
-    # But for now we rely on the logic that if they can call this, and know the ID... 
+    # But for now we rely on the logic that if they can call this, and know the ID...
     # (Secure this further if needed based on business logic)
 
     file_urls = []
-    
+
     for file_obj in file_list:
         filename = getattr(file_obj, "filename", "unknown.jpg")
         content = getattr(file_obj, "read", lambda: b"")()
-        
+
         # Reset stream just in case
         try:
             if hasattr(file_obj, 'seek'):
@@ -120,9 +122,9 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
                 "attached_to_doctype": doctype,
                 "attached_to_name": doc.name,
                 "content": content,
-                "is_private": 0 
+                "is_private": 0
             })
-            file_doc.insert(ignore_permissions=True) 
+            file_doc.insert(ignore_permissions=True)
             file_urls.append(file_doc.file_url)
         except Exception as e:
             frappe.log_error(f"Error saving file {filename}: {e}")
@@ -133,7 +135,7 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
 
     # 5. Update Record Fields if specific types
     # This logic assumes we replace the image field with the FIRST uploaded image
-    # If multiple images are uploaded for 'shopsLogo', only the first takes effect on the field, 
+    # If multiple images are uploaded for 'shopsLogo', only the first takes effect on the field,
     # but all are attached as Files.
     if upload_type == "shopsLogo":
         doc.db_set("logo", file_urls[0])
@@ -141,9 +143,8 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
          doc.db_set("background_image", file_urls[0])
     elif upload_type == "users":
          doc.db_set("user_image", file_urls[0])
-    
-    # For products/reviews/others, usually we just want them attached, not setting a specific single field 
-    # (unless 'image' field exists and is empty? Logic implies just attachment for now)
-    
-    return {"file_urls": file_urls}
 
+    # For products/reviews/others, usually we just want them attached, not setting a specific single field
+    # (unless 'image' field exists and is empty? Logic implies just attachment for now)
+
+    return {"file_urls": file_urls}

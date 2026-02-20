@@ -9,6 +9,7 @@ from paas.api.admin_logistics.admin_logistics import (
     create_delivery_vehicle_type, get_delivery_vehicle_types
 )
 
+
 class TestAdminLogistics(FrappeTestCase):
     def setUp(self):
         frappe.set_user("Administrator")
@@ -28,7 +29,7 @@ class TestAdminLogistics(FrappeTestCase):
         # Create
         setting = create_parcel_order_setting({"type": "Test Type", "price": 10})
         self.assertEqual(setting['type'], "Test Type")
-        
+
         # Get
         settings = get_parcel_order_settings()
         self.assertTrue(len(settings) > 0)
@@ -38,7 +39,7 @@ class TestAdminLogistics(FrappeTestCase):
         vtype = create_delivery_vehicle_type({"name": "Bike", "base_fare": 10})
         # Name might be randomized/hashed, so check if it exists instead of equality
         self.assertTrue(vtype.get('name'))
-        
+
         # Get
         types = get_delivery_vehicle_types()
         self.assertTrue(len(types) > 0)

@@ -5,6 +5,7 @@ from frappe.tests.utils import FrappeTestCase
 from paas.api.order.order import create_order, list_orders, get_order_details, update_order_status, add_order_review, cancel_order
 import json
 
+
 class TestOrderAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
@@ -80,7 +81,7 @@ class TestOrderAPI(FrappeTestCase):
             except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
                 frappe.db.set_value("User", self.test_user.name, "enabled", 0)
                 frappe.db.commit()
-        
+
         if hasattr(self, "test_shop") and self.test_shop and frappe.db.exists("Shop", self.test_shop.name):
             try:
                 # Cleanup products for this shop first
@@ -225,10 +226,10 @@ class TestOrderAPI(FrappeTestCase):
                 }
             ]
         }).insert(ignore_permissions=True)
-        
-        frappe.set_user(self.test_user.name) # Though update requires admin/shop owner usually tested as admin in tearDown but here set_user
+
+        frappe.set_user(self.test_user.name)  # Though update requires admin/shop owner usually tested as admin in tearDown but here set_user
         # We need update_order_status to work.
-        
+
         # 1. Accept Order -> Stock -1
         update_order_status(order.name, "Accepted")
         self.test_stock.reload()
@@ -239,4 +240,3 @@ class TestOrderAPI(FrappeTestCase):
         update_order_status(order.name, "Cancelled")
         self.test_stock.reload()
         self.assertEqual(self.test_stock.quantity, 10)
-

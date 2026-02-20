@@ -1,5 +1,6 @@
 import frappe
 
+
 @frappe.whitelist(allow_guest=True)
 def check_coupon(code: str, shop_id: str, qty: int = 1):
     """

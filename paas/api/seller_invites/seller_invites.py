@@ -1,6 +1,7 @@
 import frappe
 from ..utils import _get_seller_shop
 
+
 @frappe.whitelist()
 def get_seller_invites():
     """

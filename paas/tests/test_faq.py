@@ -5,6 +5,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from paas.api.faq.faq import create_faq, get_faqs
 
+
 class TestFAQ(FrappeTestCase):
     def tearDown(self):
         frappe.db.rollback()

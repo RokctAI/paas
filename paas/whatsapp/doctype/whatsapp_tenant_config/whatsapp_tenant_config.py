@@ -6,6 +6,7 @@ from frappe.model.document import Document
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 
+
 class WhatsAppTenantConfig(Document):
     @frappe.whitelist()
     def generate_keys(self):
@@ -14,30 +15,31 @@ class WhatsAppTenantConfig(Document):
         """
         if self.private_key and self.public_key:
              frappe.throw("Keys already exist. Clear them first if you want to regenerate functionality.")
-             
+
         private_key = rsa.generate_private_key(
             public_exponent=65537,
             key_size=2048,
         )
-        
+
         # Serialize Private Key
         pem_private = private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.PKCS8,
             encryption_algorithm=serialization.NoEncryption()
         )
-        
+
         # Serialize Public Key
         public_key = private_key.public_key()
         pem_public = public_key.public_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         )
-        
+
         self.private_key = pem_private.decode('utf-8')
         self.public_key = pem_public.decode('utf-8')
         self.save()
         return "Keys Generated Successfully"
+
 
 @frappe.whitelist(allow_guest=True)
 def get_config():
@@ -52,6 +54,6 @@ def get_config():
         }
     except Exception:
         return {
-            "is_multi_vendor": True, # Default to safe fallback
+            "is_multi_vendor": True,  # Default to safe fallback
             "default_shop": None
         }

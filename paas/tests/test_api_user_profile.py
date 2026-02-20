@@ -6,6 +6,7 @@ from frappe.tests.utils import FrappeTestCase
 from paas.api.user.user import get_user_profile, update_user_profile
 import json
 
+
 class TestUserProfileAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
@@ -80,15 +81,15 @@ class TestUserProfileAPI(FrappeTestCase):
 
     def test_delete_account(self):
         from paas.api.user.user import delete_account
-        
+
         # Ensure we are logged in
         frappe.set_user(self.test_user.name)
-        
+
         response = delete_account()
-        
+
         # Check success message
         self.assertIn(response.get("message"), ["Account deleted successfully.", "Account deactivated successfully."])
-        
+
         # Verify user is gone OR disabled
         if not frappe.db.exists("User", self.test_user.name):
             # Deleted

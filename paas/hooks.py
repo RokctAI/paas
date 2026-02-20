@@ -25,6 +25,7 @@ auth_hooks = ["paas.api.auth.auth.validate"]
 # ----------------
 import frappe
 
+
 def get_safe_scheduler_events():
 	"""
 	Safely get scheduler events by checking if frappe.conf exists.
@@ -36,7 +37,7 @@ def get_safe_scheduler_events():
 
 	app_role = frappe.conf.get("app_role", "tenant")
 	events = {}
-	
+
 	if app_role == "tenant":
 		# PaaS tasks only run on tenant sites
 		events = {
@@ -47,8 +48,9 @@ def get_safe_scheduler_events():
 				"paas.tasks.remove_expired_stories"
 			]
 		}
-	
+
 	return events
+
 
 scheduler_events = get_safe_scheduler_events()
 
