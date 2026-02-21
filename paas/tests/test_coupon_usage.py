@@ -65,7 +65,7 @@ class TestCouponUsage(FrappeTestCase):
         self.test_currency = "USD"
         self.test_currency = "USD"
 
-    def tearDown(self):
+    def tearDown(self):  # noqa: C901
         frappe.set_user("Administrator")
         if frappe.db.exists("User", self.test_user.name):
             try:
