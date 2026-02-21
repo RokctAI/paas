@@ -236,7 +236,7 @@ def send_product_flow(wa_id, product, flow_id):
     """
     Sends a WhatsApp Flow for product customization.
     """
-    config = get_whatsapp_config()
+    _config = get_whatsapp_config()
 
     # Construct the initial screen data (if your flow expects it)
     # This depends on how the Flow is built in Meta Flow Builder.

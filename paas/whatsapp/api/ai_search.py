@@ -20,7 +20,7 @@ def get_brain_embedding(text):
         return embed_text(text)
     except ImportError:
         return None
-    except Exception as e:
+    except Exception:
         print(f"⚠️ Brain Service Error: {e}")
         return None
 
@@ -75,7 +75,7 @@ def semantic_search(query, shop_id, top_k=3):
 
         return final_results
 
-    except Exception as e:
+    except Exception:
         frappe.log_error(f"PaaS Vector Search Failed: {e}")
         return []
 
@@ -107,7 +107,7 @@ def load_intents_from_config():
     try:
         # Robust way: Get path relative to the 'brain' app module (where config lives)
         path = frappe.get_app_path("brain", "ai_config", "customer_intents.json")
-    except Exception as e:
+    except Exception:
         return get_fallback_intents()
 
     if not os.path.exists(path):
@@ -124,7 +124,7 @@ def load_intents_from_config():
                 prototypes[key] = val.split(" ")
 
             return prototypes
-    except Exception as e:
+    except Exception:
         print(f"❌ Failed to parse intent config: {e}")
         return get_fallback_intents()
 
@@ -157,7 +157,7 @@ def get_intent_embeddings():
             else:
                 # Fallback empty
                 _INTENT_EMBEDDINGS[intent] = []
-        except Exception as e:
+        except Exception:
             print(f"⚠️ Failed to embed intent '{intent}': {e}")
             _INTENT_EMBEDDINGS[intent] = []
 

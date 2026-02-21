@@ -62,6 +62,6 @@ class TestAdminDashboard(FrappeTestCase):
                 # We'll just call the update function with empty data or verify access
                 # But update_email_settings requires data
                 pass
-        except Exception as e:
+        except Exception:
             # Pass if it's just a missing doctype or config in test env
             pass

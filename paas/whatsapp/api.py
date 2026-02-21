@@ -65,7 +65,7 @@ def process_webhook():
 
             handle_message(message, wa_id, profile_name)
 
-    except Exception as e:
+    except Exception:
         frappe.log_error(frappe.get_traceback(), "WhatsApp Webhook Error")
         return "Error processing message", 500
 

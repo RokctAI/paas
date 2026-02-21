@@ -356,7 +356,7 @@ def get_shops_by_ids(shop_ids: list = None, **kwargs):
     """
     Retrieves shops by a list of IDs.
     """
-    filters = {}
+    _filters = {}
     ids_to_filter = shop_ids
 
     # Handle possible JSON string or alternative kwarg
@@ -364,7 +364,7 @@ def get_shops_by_ids(shop_ids: list = None, **kwargs):
         try:
             import json
             ids_to_filter = json.loads(kwargs.get("shops")) if isinstance(kwargs.get("shops"), str) else kwargs.get("shops")
-        except:
+        except Exception:
             ids_to_filter = None
 
     if not ids_to_filter:

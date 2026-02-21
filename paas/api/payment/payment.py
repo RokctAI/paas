@@ -118,7 +118,7 @@ def initiate_flutterwave_payment(order_id: str):
             frappe.log_error(f"Flutterwave initiation failed: {response_data.get('message')}", "Flutterwave Error")
             frappe.throw("Failed to initiate payment with Flutterwave.")
 
-    except Exception as e:
+    except Exception:
         frappe.db.rollback()
         frappe.log_error(frappe.get_traceback(), "Flutterwave Payment Initiation Failed")
         frappe.throw(f"An error occurred during payment initiation: {e}")
@@ -184,7 +184,7 @@ def flutterwave_callback():
             frappe.local.response["location"] = failure_url + f"?reason={status}"
             return
 
-    except Exception as e:
+    except Exception:
         frappe.db.rollback()
         frappe.log_error(frappe.get_traceback(), "Flutterwave Callback Failed")
         frappe.local.response["type"] = "redirect"
@@ -706,7 +706,7 @@ def _charge_flutterwave_token(token, amount, currency, description, user):
             return res_data
         else:
             frappe.throw(f"Flutterwave Error: {res_data.get('message')}")
-    except Exception as e:
+    except Exception:
         frappe.log_error(frappe.get_traceback(), "Flutterwave Token Charge Failed")
         frappe.throw("Card payment failed. Please check your card balance or try another card.")
 
@@ -721,7 +721,7 @@ def _charge_payfast_token(token, amount, currency, description):
     base_url = "api.payfast.co.za" if not is_sandbox else "sandbox.payfast.co.za"
 
     merchant_id = settings.get("merchant_id")
-    merchant_key = settings.get("merchant_key")
+    _merchant_key = settings.get("merchant_key")
     pass_phrase = settings.get("pass_phrase")
 
     # Ad-hoc charge endpoint
@@ -751,7 +751,7 @@ def _charge_payfast_token(token, amount, currency, description):
     # a) Merge base params with body
     all_params = {**params, **body}
     # b) Initial Sort
-    keys_sorted = sorted(all_params.keys())
+    _keys_sorted = sorted(all_params.keys())
 
     # c) Add passphrase (if exists) after initial sort but then sort AGAIN
     signature_params = all_params.copy()
@@ -789,7 +789,7 @@ def _charge_payfast_token(token, amount, currency, description):
             frappe.log_error(f"PayFast API Error ({response.status_code}): {response.text}", "PayFast Token Charge Failed")
             frappe.throw(f"Payment failed: {error_msg}")
 
-    except Exception as e:
+    except Exception:
         frappe.log_error(frappe.get_traceback(), "PayFast Token Charge Exception")
         frappe.throw("Error connecting to payment gateway.")
 

@@ -133,7 +133,7 @@ def create_translation():
     if isinstance(values, str):
         try:
             values = json.loads(values)
-        except:
+        except Exception:
             pass
 
     if not group or not key or not isinstance(values, dict):
@@ -170,7 +170,7 @@ def update_translation(key=None):
     if isinstance(values, str):
         try:
             values = json.loads(values)
-        except:
+        except Exception:
             pass
 
     if not group or not isinstance(values, dict):
@@ -201,7 +201,7 @@ def delete_translation():
     if isinstance(ids, str):
         try:
             ids = json.loads(ids)
-        except:
+        except Exception:
             pass
 
     if not ids or not isinstance(ids, list):
@@ -276,7 +276,7 @@ def restore_all_translations():
     for d in deleted:
         try:
             restore_document(d)
-        except:
+        except Exception:
             pass
     return _api_success(message="Successfully restored")
 

@@ -148,7 +148,7 @@ def get_shop_reservations(shop_id, status=None, date_from=None, date_to=None):
     """Get all reservations for a specific shop."""
     check_shop_permission(shop_id, "Seller")
 
-    filters = {"booking.shop": shop_id}  # This relies on Booking (Slot) having shop.
+    _filters = {"booking.shop": shop_id}  # This relies on Booking (Slot) having shop.
     # Wait, UserBooking links to Booking (Slot). Booking (Slot) has Shop.
     # So we can filter by booking.shop if standard queries support it, or we filter manually.
     # Frappe get_list supports child table filtering but this is a Link.

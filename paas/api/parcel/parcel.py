@@ -103,7 +103,7 @@ def get_parcel_orders(limit=20, offset=0, status=None):
             import json
             try:
                 filters["status"] = ["in", json.loads(status)]
-            except:
+            except Exception:
                 filters["status"] = status
         elif isinstance(status, list):
             filters["status"] = ["in", status]

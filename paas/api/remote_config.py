@@ -17,12 +17,12 @@ def get_remote_config(app_type="Customer", site_name=None):
         # Optionally check for "paas" module in sub_details.get("modules")
         # if "paas" not in sub_details.get("modules", []):
         #    frappe.throw("This feature requires a PaaS subscription.")
-    except Exception as e:
+    except Exception:
         frappe.log_error(frappe.get_traceback(), "Remote Config Subscription Check Failed")
         frappe.throw("Could not verify subscription status.")
 
     # 2. Fetch Configuration Sources
-    current_site = frappe.local.site
+    _current_site = frappe.local.site
 
     # A. Project Title from Settings
     project_title = frappe.db.get_single_value("Settings", "project_title")

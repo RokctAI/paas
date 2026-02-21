@@ -32,7 +32,7 @@ def get_seller_statistics():
     # Reviews count (assuming Review DocType has a 'shop' field or linked via 'order')
     try:
         reviews_count = frappe.db.count("Review", {"shop": shop})
-    except:
+    except Exception:
         reviews_count = 0
 
     # Financials (Delivered orders only)

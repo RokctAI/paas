@@ -283,7 +283,7 @@ def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type
     if isinstance(address, str) and address:
         try:
             address = json.loads(address)
-        except:
+        except Exception:
             address = None
 
     cart = frappe.get_doc("Cart", cart_id)
@@ -359,7 +359,7 @@ def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type
                     coupon_price = (product_total - discount) * (coupon_doc.discount_percentage / 100)
                 else:  # Fixed Amount
                     coupon_price = coupon_doc.discount_amount
-        except:
+        except Exception:
             pass
 
     # 6. Calculate Final Total

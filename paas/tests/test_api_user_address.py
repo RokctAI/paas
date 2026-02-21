@@ -64,7 +64,7 @@ class TestUserAddressAPI(FrappeTestCase):
         self.assertEqual(addresses[0].get("title"), "Home")
 
     def test_update_user_address(self):
-        address_data = {"title": "Work"}
+        _address_data = {"title": "Work"}
         response = add_user_address(address_data=json.dumps({"title": "Initial"}))
         added_address = response
 

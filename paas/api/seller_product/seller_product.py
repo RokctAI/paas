@@ -41,7 +41,7 @@ def create_seller_product(product_data):
     try:
         paas_settings = frappe.get_single("Permission Settings")
         initial_status = "published" if paas_settings.auto_approve_products else "pending"
-    except:
+    except Exception:
         initial_status = "published"
 
     new_product = frappe.get_doc({

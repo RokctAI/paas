@@ -136,7 +136,7 @@ class TestShopAPI(FrappeTestCase):
 
     def test_create_shop_success(self):
         """Test successful shop creation."""
-        response = self.shop1
+        _response = self.shop1
         # If create_shop was wrapped, it returns a dict with 'data' key or similar structure
         # ensuring we handle both direct dict (from legacy calls in setup) vs actual API response if testing the function directly
         # But here self.shop1 is result of create_shop call in setUp.

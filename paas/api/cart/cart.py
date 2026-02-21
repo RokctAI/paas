@@ -52,7 +52,7 @@ def add_to_cart(qty: int, shop_id: str, item_code: str = None, stock_id: int = N
     if addons:
         try:
             addons_data = json.loads(addons) if isinstance(addons, str) else addons
-        except:
+        except Exception:
             addons_data = []
 
     # Check if item already exists in cart (matching stock_id and addons)

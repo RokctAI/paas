@@ -256,8 +256,8 @@ def finalize_order(session):
     payment_method = checkout_data.get('payment_method', 'cod')
 
     # 1. Process Payment (Simplistic Implementation)
-    transaction_id = None
-    order_status = "New"
+    _transaction_id = None
+    _order_status = "New"
     payment_status = "Unpaid"
 
     if payment_method == 'wallet':

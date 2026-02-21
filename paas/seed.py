@@ -48,7 +48,7 @@ class JSONSeeder:
                 first_name = name.split(' ')[0] if name else "User"
                 last_name = ' '.join(name.split(' ')[1:]) if name and ' ' in name else ''
 
-                doc = frappe.get_doc({
+                _doc = frappe.get_doc({
                     "doctype": "User",
                     "email": email,
                     "first_name": first_name,
@@ -60,7 +60,7 @@ class JSONSeeder:
                 self.user_map[u.get('id')] = email
                 print(f"Inserted User: {email}")
 
-            except Exception as e:
+            except Exception:
                 print(f"Error user {u.get('email')}: {e}")
 
     def seed_shops(self):
@@ -78,7 +78,7 @@ class JSONSeeder:
 
                 user_email = self.user_map.get(s.get('user_id')) or "Administrator"
 
-                doc = frappe.get_doc({
+                _doc = frappe.get_doc({
                     "doctype": "Shop",
                     "shop_name": shop_name,
                     "user": user_email,
@@ -87,7 +87,7 @@ class JSONSeeder:
                 }).insert(ignore_permissions=True)
                 self.shop_map[s.get('id')] = shop_name
                 print(f"Inserted Shop: {shop_name}")
-            except Exception as e:
+            except Exception:
                 print(f"Error shop {s.get('name')}: {e}")
 
     def seed_categories(self):
@@ -114,7 +114,7 @@ class JSONSeeder:
                     "active": 1
                 }).insert(ignore_permissions=True)
                 self.category_map[c.get('id')] = doc.name
-            except Exception as e:
+            except Exception:
                 print(f"Error category {c.get('title')}: {e}")
 
     def seed_brands(self):
@@ -134,7 +134,7 @@ class JSONSeeder:
                     "brand": title
                 }).insert(ignore_permissions=True)
                 self.brand_map[b.get('id')] = doc.name
-            except Exception as e:
+            except Exception:
                 print(f"Error brand {b.get('title')}: {e}")
 
     def seed_units(self):
@@ -152,7 +152,7 @@ class JSONSeeder:
                     "doctype": "UOM",
                     "uom_name": name
                 }).insert(ignore_permissions=True)
-            except Exception as e:
+            except Exception:
                 print(f"Error unit {u.get('name')}: {e}")
 
     def seed_products(self):
@@ -177,11 +177,11 @@ class JSONSeeder:
                     "brand": brand
                 }).insert(ignore_permissions=True)
                 self.product_map[p.get('id')] = doc.name
-            except Exception as e:
+            except Exception:
                 print(f"Error product {p.get('title')}: {e}")
 
     def seed_stocks(self):
-        stocks = self.load_json('stocks.json')
+        _stocks = self.load_json('stocks.json')
         # Logic for stocks might need adjustment based on DocType definition
         # Assuming simple linkage for now
 
@@ -202,7 +202,7 @@ class JSONSeeder:
                     "price": float(s.get('price') or 0),
                     "price_per_km": float(s.get('price_km') or 0)
                 }).insert(ignore_permissions=True)
-            except Exception as e:
+            except Exception:
                 print(f"Error setting {s.get('type')}: {e}")
 
     def seed_translations(self):
@@ -229,7 +229,7 @@ class JSONSeeder:
                     "group": t.get('group'),
                     "status": t.get('status')
                 }).insert(ignore_permissions=True)
-            except Exception as e:
+            except Exception:
                 print(f"Error translation {t.get('key')}: {e}")
 
     def seed_user_addresses(self):
@@ -254,7 +254,7 @@ class JSONSeeder:
                     "location": location_val,
                     "active": int(addr.get('is_active', 1))
                 }).insert(ignore_permissions=True)
-            except Exception as e:
+            except Exception:
                 print(f"Error seeding address {addr.get('id')}: {e}")
 
     def seed_user_memberships(self):
@@ -278,7 +278,7 @@ class JSONSeeder:
                     "end_date": mem.get('end_date'),
                     "is_active": int(mem.get('is_active', 1))
                 }).insert(ignore_permissions=True)
-            except Exception as e:
+            except Exception:
                 # print(f"Error seeding membership {mem.get('membership_id')}: {e}")
                 pass
 
@@ -365,7 +365,7 @@ class JSONSeeder:
                         "role": role_name
                     })
                     user.save(ignore_permissions=True)
-            except Exception as e:
+            except Exception:
                 # print(f"Error assigning role: {e}")
                 pass
 
@@ -406,7 +406,7 @@ class JSONSeeder:
                     doc_data['docstatus'] = 0  # Draft by default
 
                 frappe.get_doc(doc_data).insert(ignore_permissions=True)
-            except Exception as e:
+            except Exception:
                 # print(f"Error {doctype} {item.get('id')}: {e}")
                 pass
 
@@ -439,7 +439,7 @@ class JSONSeeder:
         for filename, doctype in generic_map.items():
             try:
                 self.seed_generic(filename, doctype)
-            except Exception as e:
+            except Exception:
                 print(f"Failed generic seed for {filename}: {e}")
 
     def run(self):

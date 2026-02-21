@@ -617,7 +617,7 @@ def add_product_review(product_uuid, rating, comment=None, images=None):
     if not product_name:
         frappe.throw("Product not found.")
 
-    doc = {
+    _doc = {
         "doctype": "Item Review",
         "user": user,
         "item": product_name,

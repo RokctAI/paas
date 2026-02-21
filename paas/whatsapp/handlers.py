@@ -54,7 +54,7 @@ def handle_interactive(reply, session):
 
     if type_ == 'list_reply':
         item_id = reply['list_reply']['id']
-        title = reply['list_reply']['title']
+        _title = reply['list_reply']['title']
 
         if item_id.startswith("shop_"):
             shop_uuid = item_id.split("_")[1]

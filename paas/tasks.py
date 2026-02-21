@@ -33,7 +33,7 @@ def remove_expired_stories():
         try:
             frappe.delete_doc("Story", story_name, ignore_permissions=True, force=True)
             print(f"  - Deleted expired story: {story_name}")
-        except Exception as e:
+        except Exception:
             frappe.log_error(frappe.get_traceback(), f"Failed to delete expired story {story_name}")
 
     frappe.db.commit()
@@ -126,7 +126,7 @@ def process_repeating_orders():
                     res = process_token_payment(new_order.name, card.token)
                     if res.get("status") == "success":
                         payment_success = True
-                except Exception as e:
+                except Exception:
                     print(f"Card payment failed for {new_order.name}: {e}")
 
             if not payment_success:
@@ -145,7 +145,7 @@ def process_repeating_orders():
                         body=f"Your repeating order for {new_order.shop} could not be paid. Please pay manually or check your wallet.",
                         data={"order_id": new_order.name, "type": "payment_failed"}
                     )
-                except:
+                except Exception:
                     pass
             else:
                 # If Wallet payment succeeded, order might not be inserted yet
@@ -164,7 +164,7 @@ def process_repeating_orders():
                 "next_execution": next_exec
             })
 
-        except Exception as e:
+        except Exception:
             frappe.log_error(frappe.get_traceback(), f"Failed to process Repeating Order {ro.name}")
         finally:
             # Reset user context to Administrator/System

@@ -42,7 +42,7 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
         import json
         try:
             files = json.loads(files)
-        except:
+        except Exception:
             pass
 
     if isinstance(files, list):
