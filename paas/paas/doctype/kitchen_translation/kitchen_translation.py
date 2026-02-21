@@ -10,4 +10,3 @@ from frappe.model.document import Document
 
 class KitchenTranslation(Document):
     pass
-
