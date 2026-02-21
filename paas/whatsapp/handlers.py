@@ -34,7 +34,7 @@ def handle_message(message, wa_id, profile_name):
 
 def handle_text(text, session):
     if text in ['hi', 'hello', 'menu', 'start']:
-        send_text(session.wa_id, f"👋 Hello! Please share your location to find shops near you.\n\nTap 📎 -> Location -> Send Current Location.")
+        send_text(session.wa_id, "👋 Hello! Please share your location to find shops near you.\n\nTap 📎 -> Location -> Send Current Location.")
     else:
         # Default fallback
         send_text(session.wa_id, "I didn't understand that. Type 'Hi' to start.")
