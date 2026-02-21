@@ -13,7 +13,7 @@ from paas.api.shop.shop import get_shops
 from paas.api.product.product import get_products_by_category
 
 
-def handle_interactive(reply, session):
+def handle_interactive(reply, session):  # noqa: C901
     """
     Handles List Selections, Button Clicks, and Flow Responses.
     """
