@@ -121,7 +121,7 @@ def get_order_details(order_id: str):
 
 
 @frappe.whitelist()
-def update_order_status(order_id: str, status: str):
+def update_order_status(order_id: str, status: str):  # noqa: C901
     """
     Updates the status of a specific order.
     """
@@ -279,7 +279,7 @@ def get_order_statuses():
 
 
 @frappe.whitelist()
-def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type='Delivery'):
+def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type='Delivery'):  # noqa: C901
     if isinstance(address, str) and address:
         try:
             address = json.loads(address)
