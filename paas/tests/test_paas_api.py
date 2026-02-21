@@ -10,9 +10,16 @@ from paas.api.system.system import get_global_settings
 # Mock functions if they don't exist yet/aren't imported
 
 
-def get_languages(): return api_response(data=[{"name": "en"}])
-def get_currencies(): return api_response(data=[{"name": "USD"}])
-def api_status(): return api_response(data={"status": "ok", "version": "1.0", "user": frappe.session.user})
+def get_languages():
+    return api_response(data=[{"name": "en"}])
+
+
+def get_currencies():
+    return api_response(data=[{"name": "USD"}])
+
+
+def api_status():
+    return api_response(data={"status": "ok", "version": "1.0", "user": frappe.session.user})
 
 
 class TestPhoneVerificationAPI(FrappeTestCase):
