@@ -41,7 +41,7 @@ def remove_expired_stories():
 
 
 @frappe.whitelist()
-def process_repeating_orders():
+def process_repeating_orders():  # noqa: C901
     """
     Process repeating orders that are due for execution.
     """
