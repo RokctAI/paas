@@ -37,7 +37,7 @@ def get_mobile_translations(lang=None):
 
 
 @frappe.whitelist()
-def get_translations_paginate(search=None, group=None, locale=None, perPage=10, page=1, **kwargs):
+def get_translations_paginate(search=None, group=None, locale=None, perPage=10, page=1, **kwargs):  # noqa: C901
     _require_admin()
 
     per_page = cint(perPage)
