@@ -369,7 +369,7 @@ class JSONSeeder:
                 # print(f"Error assigning role: {e}")
                 pass
 
-    def seed_generic(self, filename, doctype, unique_field='id', name_field='name'):
+    def seed_generic(self, filename, doctype, unique_field='id', name_field='name'):  # noqa: C901
         data = self.load_json(filename)
         if not data:
             return
