@@ -452,7 +452,7 @@ def replace_image_asset(temp_dir, app_config, field_name, target_path_relative):
         with open(target_path_full, 'wb') as f:
             f.write(file_content)
         log_message(f"Replaced asset at {target_path_relative}", app_config.name)
-    except Exception:
+    except Exception as e:
         log_message(f"Error replacing image asset for {field_name}: {e}", app_config.name)
 
 
@@ -469,7 +469,7 @@ def place_google_services_json(temp_dir, app_config):
         with open(target_path, 'wb') as f:
             f.write(file_content)
         log_message("Placed google-services.json.", app_config.name)
-    except Exception:
+    except Exception as e:
         log_message(f"Error placing google-services.json: {e}", app_config.name)
 
 
@@ -527,7 +527,7 @@ def generate_app_icons(temp_dir, app_config, settings):
         log_message(result.stdout, app_config.name)
 
         log_message("Icon generation complete.", app_config.name)
-    except Exception:
+    except Exception as e:
         log_message(f"Error generating icons: {e}", app_config.name)
         if hasattr(e, 'stderr'):
             log_message(e.stderr, app_config.name)
@@ -587,7 +587,7 @@ def get_project_version(source_project):
             pubspec_data = yaml.safe_load(f)
 
         return pubspec_data.get('version', 'Version not specified')
-    except Exception:
+    except Exception as e:
         frappe.log_error(f"Could not get project version for {source_project}: {e}")
         return "Error reading version"
 
@@ -728,7 +728,7 @@ def _generate_flutter_app(app_config_name):  # noqa: C901
             user=app_config.owner
         )
 
-    except Exception:
+    except Exception as e:
         frappe.db.rollback()
         log_message(f"Build failed: {str(e)}", app_config.name)
         log_message(frappe.get_traceback(), app_config.name)
