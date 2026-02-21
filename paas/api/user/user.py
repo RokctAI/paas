@@ -1167,7 +1167,7 @@ def update_user_profile(profile_data):
 
 
 @frappe.whitelist()
-def get_user_order_refunds(page=1):
+def get_user_order_refunds(page=1):  # noqa: F811
     user = frappe.session.user
     if user == "Guest":
         frappe.throw("You must be logged in to view your refunds.")
