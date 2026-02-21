@@ -8,7 +8,7 @@ import json
 
 
 class TestParcelOrderAPI(FrappeTestCase):
-    def setUp(self):
+    def setUp(self):  # noqa: C901
         # Create a test user
         if not frappe.db.exists("User", "test_parcel_order@example.com"):
             self.test_user = frappe.get_doc({
