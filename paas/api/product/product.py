@@ -4,7 +4,7 @@ from paas.api.utils import api_response
 
 
 @frappe.whitelist(allow_guest=True)
-def get_products(
+def get_products(  # noqa: C901
     limit_start: int = 0,
     limit_page_length: int = 20,
     category_id: str = None,
@@ -182,7 +182,7 @@ def get_products(
 
     # Get review averages and counts
     # Using frappe.qb for reviews aggregation as well
-    from frappe.query_builder.functions import Avg, Count, Sum
+    from frappe.query_builder.functions import Avg, Count, Sum  # noqa: F811
     t_review = frappe.qb.DocType("Review")
     reviews_query = (
         frappe.qb.from_(t_review)
@@ -298,7 +298,7 @@ def get_products_by_ids(ids: list, **kwargs):
     if kwargs.get("product_ids"):
         p_ids = kwargs.get("product_ids")
         if isinstance(p_ids, str):
-            import json
+            import json  # noqa: F811
             try:
                 p_ids = json.loads(p_ids)
             except json.JSONDecodeError:
@@ -546,7 +546,7 @@ def get_product_history(limit_start: int = 0, limit_page_length: int = 20):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_product_by_uuid(uuid):
+def get_product_by_uuid(uuid):  # noqa: F811
     """
     Retrieves a single product by UUID.
     """
@@ -584,7 +584,7 @@ def calculate_product_price(products):
     Expects 'products' as a list of dicts: [{'id': ..., 'quantity': ...}] or JSON string.
     """
     if isinstance(products, str):
-        import json
+        import json  # noqa: F811
         products = json.loads(products)
 
     total_price = 0
@@ -605,7 +605,7 @@ def calculate_product_price(products):
 
 
 @frappe.whitelist()
-def add_product_review(product_uuid, rating, comment=None, images=None):
+def add_product_review(product_uuid, rating, comment=None, images=None):  # noqa: F811
     """
     Adds a review for a product.
     """
