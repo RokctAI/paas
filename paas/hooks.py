@@ -23,7 +23,7 @@ auth_hooks = ["paas.api.auth.auth.validate"]
 
 # Scheduler Events
 # ----------------
-import frappe
+import frappe  # noqa: E402
 
 
 def get_safe_scheduler_events():
