@@ -5,7 +5,7 @@ import os
 
 
 class SystemInformation(Document):
-    def onload(self):
+    def onload(self):  # noqa: C901
         # Core Version (Frappe)
         self.core = f"Frappe {frappe.__version__}"
 
