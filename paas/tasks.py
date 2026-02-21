@@ -126,7 +126,7 @@ def process_repeating_orders():  # noqa: C901
                     res = process_token_payment(new_order.name, card.token)
                     if res.get("status") == "success":
                         payment_success = True
-                except Exception:
+                except Exception as e:
                     print(f"Card payment failed for {new_order.name}: {e}")
 
             if not payment_success:
