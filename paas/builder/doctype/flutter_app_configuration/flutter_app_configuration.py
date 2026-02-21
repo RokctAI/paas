@@ -6,7 +6,7 @@ from frappe.model.document import Document
 
 
 class FlutterAppConfiguration(Document):
-    def onload(self):
+    def onload(self):  # noqa: C901
         """
         Populate read-only fields from system settings for display purposes.
         These values are not saved to the DB if read-only, but help the user see what will be used.
