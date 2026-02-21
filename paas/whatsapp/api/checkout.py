@@ -244,7 +244,7 @@ def confirm_order_summary(session):
     session.save(ignore_permissions=True)
 
 
-def finalize_order(session):
+def finalize_order(session):  # noqa: C901
     """
     Step 4: Process Payment & Create Order
     """
@@ -317,9 +317,9 @@ def finalize_order(session):
         # 3. Process Payment
         if payment_method == 'wallet':
             # Call Real Wallet Payment
-            from paas.api.payment.payment import process_wallet_payment
+            from paas.api.payment.payment import process_wallet_payment  # noqa: F811
             process_wallet_payment(order_id)
-            send_text(session.wa_id, f"✅ Payment Successful (Wallet)!")
+            send_text(session.wa_id, "✅ Payment Successful (Wallet)!")
 
         elif payment_method.startswith('card_'):
             # Call Real Card Payment
@@ -327,9 +327,9 @@ def finalize_order(session):
             token = frappe.db.get_value("Saved Card", card_name, "token")
 
             if token:
-                from paas.api.payment.payment import process_token_payment
+                from paas.api.payment.payment import process_token_payment  # noqa: F811
                 process_token_payment(order_id, token)
-                send_text(session.wa_id, f"✅ Payment Successful (Card)!")
+                send_text(session.wa_id, "✅ Payment Successful (Card)!")
             else:
                 send_text(session.wa_id, "⚠️ Card Token not found. Order created as Unpaid.")
 
