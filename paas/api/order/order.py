@@ -169,7 +169,7 @@ def update_order_status(order_id: str, status: str):  # noqa: C901
                         "product": item.product,
                         "quantity": -item.quantity,  # Allow negative logic if started from 0
                         "price": item.price  # Init price
-                        }).insert(ignore_permissions=True)
+                    }).insert(ignore_permissions=True)
 
     # Restore stock if order is Cancelled/Rejected from a status that deducted stock
     if status in ["Cancelled", "Rejected"] and previous_status in ["Accepted", "Prepared", "Delivered"]:  # Assuming these are downstream of Accepted
