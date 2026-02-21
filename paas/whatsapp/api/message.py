@@ -28,7 +28,7 @@ def handle_message(message, wa_id, profile_name):
         handle_interactive(reply, session)
 
 
-def handle_text(text, session):
+def handle_text(text, session):  # noqa: C901
     text = text.lower().strip()
 
     if text in ['hi', 'hello', 'menu', 'start']:
