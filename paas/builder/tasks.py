@@ -81,10 +81,10 @@ def get_windows_exe_name(temp_dir):
     # Fallback to a reasonable default if not found
     return "app"
 
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET  # noqa: E402
 
 
-def modify_project_files(temp_dir, app_config):
+def modify_project_files(temp_dir, app_config):  # noqa: C901
     """
     Modifies the files in the temporary Flutter project directory
     based on the app configuration.
@@ -608,7 +608,7 @@ def generate_flutter_app(app_config_name):
     return {"status": "enqueued"}
 
 
-def _generate_flutter_app(app_config_name):
+def _generate_flutter_app(app_config_name):  # noqa: C901
     """
     This is the actual worker function that performs the build.
     It is not whitelisted and is intended to be called only by the queue.
