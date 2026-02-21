@@ -101,7 +101,7 @@ class TestShopAPI(FrappeTestCase):
         # Switch back to administrator
         frappe.set_user("Administrator")
 
-    def tearDown(self):
+    def tearDown(self):  # noqa: C901
         # This method will be run after each test
         frappe.set_user("Administrator")
 
