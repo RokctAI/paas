@@ -23,7 +23,7 @@ class TestBookingFeature(FrappeTestCase):
             }).insert(ignore_permissions=True)
         else:
             self.user = frappe.get_doc("User", "test_booker@example.com")
-            
+
         # Create a Shop
         if not frappe.db.exists("Shop", "Test Shop"):
             self.shop = frappe.get_doc({
@@ -88,7 +88,7 @@ class TestBookingFeature(FrappeTestCase):
         frappe.set_user(self.user.name)
         start_date = add_days(now_datetime(), 1)
         end_date = frappe.utils.add_to_date(start_date, hours=1) # 1 hour later
-        
+
         res_data = {
             "booking": slot.name,
             "table": self.table.name,
@@ -108,7 +108,7 @@ class TestBookingFeature(FrappeTestCase):
 
         # 4. Cancel Reservation
         update_reservation_status(reservation.name, "Cancelled")
-        
+
         # 5. Verify Availability Again (Should be free now)
         # Note: Logic might need to filter out cancelled bookings. 
         # Let's check if create_reservation succeeds now.

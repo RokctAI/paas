@@ -5,4 +5,4 @@ from frappe.model.document import Document
 
 
 class PaaSPaymentGatewaySetting(Document):
-	pass
+    pass

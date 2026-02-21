@@ -74,20 +74,20 @@ def get_products(
     if search:
         from frappe.query_builder.functions import Function
         from pypika.terms import Term
-        
+
         class MatchTerm(Term):
             def __init__(self, left, right, alias=None):
                 super().__init__(alias)
                 self.left = left
                 self.right = right
-            
+
             def get_sql(self, **kwargs):
                 return f"{self.left.get_sql(**kwargs)} @@ {self.right.get_sql(**kwargs)}"
 
         # Instantiate functions
         ts_vector = Function("to_tsvector", "english", t_item.item_name)
         ts_query = Function("plainto_tsquery", "english", search)
-        
+
         # Use custom term for @@ operator
         query = query.where(MatchTerm(ts_vector, ts_query))
 
@@ -102,7 +102,7 @@ def get_products(
             .where(t_review.reviewable_type == 'Item')
             .groupby(t_review.reviewable_id)
         ).as_("t_reviews")
-        
+
         query = query.left_join(subquery).on(subquery.reviewable_id == t_item.name)
 
         if rating:
@@ -138,7 +138,7 @@ def get_products(
     elif order_by == "new":
         query = query.orderby(t_item.creation, order=frappe.qb.desc)
     elif order_by == "old":
-         query = query.orderby(t_item.creation, order=frappe.qb.asc)
+        query = query.orderby(t_item.creation, order=frappe.qb.asc)
     else:
         # Default order
         query = query.orderby(t_item.creation, order=frappe.qb.desc)
@@ -164,7 +164,7 @@ def get_products(
     # Get active discounts
     today = frappe.utils.nowdate()
     discounts_map = {}
-    
+
     # Check if Pricing Rule exists and has item_code (to avoid issues in test envs or limited installs)
     if frappe.db.exists("DocType", "Pricing Rule") and frappe.db.has_column("Pricing Rule", "item_code"):
         try:
@@ -191,7 +191,7 @@ def get_products(
         .groupby(t_review.reviewable_id)
     )
     reviews_data = reviews_query.run(as_dict=True)
- 
+
     reviews_map = {r['reviewable_id']: r for r in reviews_data}
 
     # --- Assemble Final Response ---
@@ -272,7 +272,7 @@ def get_discounted_products(limit_start: int = 0, limit_page_length: int = 20):
         return api_response(data=[])
 
     # Paginate on the final list of item codes
-    paginated_item_codes = list(item_codes)[limit_start : limit_start + limit_page_length]
+    paginated_item_codes = list(item_codes)[limit_start: limit_start + limit_page_length]
 
     if not paginated_item_codes:
         return api_response(data=[])
@@ -304,7 +304,7 @@ def get_products_by_ids(ids: list, **kwargs):
                 pass # Handle invalid JSON gracefully
         if isinstance(p_ids, list):
             product_ids_to_filter = p_ids
-    
+
     if not product_ids_to_filter:
         return api_response(data=[])
 
@@ -553,9 +553,9 @@ def get_product_by_uuid(uuid):
         product_name = frappe.db.get_value("Item", {"uuid": uuid}, "name")
         if not product_name:
             frappe.throw("Product not found", frappe.DoesNotExistError)
-        
+
         product = frappe.get_doc("Item", product_name)
-        
+
         # Reuse default formatter or simple dict
         data = {
             "id": product.name,
@@ -567,9 +567,9 @@ def get_product_by_uuid(uuid):
             "unit": product.stock_uom,
             "shop_id": product.get("shop"), 
             "category_id": product.item_group,
-             "galleries": [],
-             "stocks": [],
-             "extras": [],
+            "galleries": [],
+            "stocks": [],
+            "extras": [],
         }
         return api_response(data=data)
     except Exception as e:
@@ -588,7 +588,7 @@ def calculate_product_price(products):
 
     total_price = 0
     total_tax = 0
-    
+
     for item in products:
         # Resolve item ID to price
         # item['id'] usually maps to stock_id/variant

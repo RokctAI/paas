@@ -30,12 +30,12 @@ def check_availability(shop_id, table_id, start_date, end_date, exclude_reservat
         "start_date": ["<", end_date],
         "end_date": [">", start_date]
     }
-    
+
     if exclude_reservation_id:
         filters["name"] = ["!=", exclude_reservation_id]
 
     overlapping_reservations = frappe.get_all("User Booking", filters=filters)
-    
+
     return len(overlapping_reservations) == 0
 
 # Admin/Seller Booking Slot Management (The 'Booking' DocType)
@@ -48,9 +48,9 @@ def create_booking_slot(data):
     if not frappe.has_permission("Booking", "create"):
         # Fallback to shop permission check if not system admin
         if data.get("shop"):
-             check_shop_permission(data.get("shop"), "Seller")
+            check_shop_permission(data.get("shop"), "Seller")
         else:
-             frappe.throw("Not permitted", frappe.PermissionError)
+            frappe.throw("Not permitted", frappe.PermissionError)
 
     data["doctype"] = "Booking"
     doc = frappe.get_doc(data)
@@ -69,7 +69,7 @@ def update_booking_slot(name, data):
     if not frappe.has_permission("Booking", "write"):
         doc = frappe.get_doc("Booking", name)
         check_shop_permission(doc.shop, "Seller")
-    
+
     doc = frappe.get_doc("Booking", name)
     doc.update(data)
     doc.save()
@@ -95,16 +95,16 @@ def create_reservation(data):
         frappe.throw("You must be logged in to create a booking.", frappe.PermissionError)
 
     booking_data = frappe._dict(data)
-    
+
     # Validation
     if not booking_data.get("table"):
         frappe.throw("Table is required.")
     if not booking_data.get("start_date") or not booking_data.get("end_date"):
         frappe.throw("Start and End dates are required.")
-        
+
     start_date = get_datetime(booking_data.get("start_date"))
     end_date = get_datetime(booking_data.get("end_date"))
-    
+
     if start_date >= end_date:
         frappe.throw("End date must be after start date.")
 
@@ -144,14 +144,14 @@ def get_shop_reservations(shop_id, status=None, date_from=None, date_to=None):
     # So we can filter by booking.shop if standard queries support it, or we filter manually.
     # Frappe get_list supports child table filtering but this is a Link.
     # We might need to query User Booking where booking in (select name from Booking where shop=shop_id)
-    
+
     # Alternative: User Booking -> Table -> Shop Section -> Shop.
     # Let's use Table -> Shop Section -> Shop as it's more direct for the physical location.
-    
+
     # Fetch tables for the shop
     shop_sections = frappe.get_all("Shop Section", filters={"shop": shop_id}, pluck="name")
     tables = frappe.get_all("Table", filters={"shop_section": ["in", shop_sections]}, pluck="name")
-    
+
     if not tables:
         return []
 
@@ -169,10 +169,10 @@ def get_shop_reservations(shop_id, status=None, date_from=None, date_to=None):
 def update_reservation_status(name, status):
     """Update the status of a reservation."""
     doc = frappe.get_doc("User Booking", name)
-    
+
     # Permission check: User can cancel their own. Seller can accept/reject.
     user = frappe.session.user
-    
+
     if user == doc.user:
         if status == "Cancelled":
             doc.status = "Cancelled"
@@ -180,7 +180,7 @@ def update_reservation_status(name, status):
             return doc
         else:
             frappe.throw("You can only cancel your own booking.", frappe.PermissionError)
-            
+
     # Check if user is seller for this shop
     # Need to traverse to Shop ID
     table = frappe.get_doc("Table", doc.table)

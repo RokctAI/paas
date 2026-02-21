@@ -5,4 +5,4 @@ import frappe
 from frappe.model.document import Document
 
 class RemoteConfig(Document):
-	pass
+    pass

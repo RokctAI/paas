@@ -9,4 +9,4 @@ from frappe.model.document import Document
 
 
 class ComboItem(Document):
-	pass
+    pass

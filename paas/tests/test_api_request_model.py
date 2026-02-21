@@ -52,7 +52,7 @@ class TestRequestModelAPI(FrappeTestCase):
             self.shop.delete(ignore_permissions=True)
         except Exception:
             pass
-            
+
         if frappe.db.exists("User", self.test_user.name):
             try:
                 self.test_user.delete(ignore_permissions=True)

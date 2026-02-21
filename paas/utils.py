@@ -32,7 +32,7 @@ def check_subscription_feature(feature_module):
     """
     if HAS_CORE:
         return core_check_feature(feature_module)
-    
+
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
@@ -49,7 +49,7 @@ def get_subscription_details():
     """
     if HAS_CORE:
         return core_get_details()
-    
+
     # Default fallback for standalone PaaS
     return {
         "status": "Active",

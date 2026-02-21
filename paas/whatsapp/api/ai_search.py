@@ -87,7 +87,8 @@ def cosine_similarity(v1, v2):
     Manual Cosine Similarity implementation.
     v1, v2: List[float]
     """
-    if not v1 or not v2: return 0.0
+    if not v1 or not v2:
+        return 0.0
 
     dot_product = sum(a*b for a, b in zip(v1, v2))
     norm_v1 = math.sqrt(sum(a*a for a in v1))
@@ -218,7 +219,7 @@ def extract_entity(text, intent):
         if clean_text.startswith(phrase + " "):
             clean_text = clean_text[len(phrase)+1:]
         elif clean_text.startswith(phrase):
-             clean_text = clean_text[len(phrase):]
+            clean_text = clean_text[len(phrase):]
 
     return clean_text.strip()
 
@@ -244,9 +245,9 @@ def search_global_shops(query):
         .where(t_shop.status == 'Approved')
         .where((t_shop.shop_type != 'Ecommerce') & (t_shop.is_ecommerce == 0))
         .where(
-            (t_shop.name.like(f"%{query}%")) |
-            (t_shop.description.like(f"%{query}%")) |
-            (t_shop.uuid.isin(subquery))
+            (t_shop.name.like(f"%{query}%"))
+            | (t_shop.description.like(f"%{query}%"))
+            | (t_shop.uuid.isin(subquery))
         )
         .limit(5)
     ).run(as_dict=True)

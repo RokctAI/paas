@@ -6,4 +6,4 @@ from frappe.model.document import Document
 
 
 class CashbackRule(Document):
-	pass
+    pass

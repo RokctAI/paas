@@ -100,15 +100,15 @@ def get_parcel_orders(limit=20, offset=0, status=None):
     filters = {"user": user}
     if status:
         if isinstance(status, str) and "[" in status:
-             import json
-             try:
-                 filters["status"] = ["in", json.loads(status)]
-             except:
-                 filters["status"] = status
+            import json
+            try:
+                filters["status"] = ["in", json.loads(status)]
+            except:
+                filters["status"] = status
         elif isinstance(status, list):
-             filters["status"] = ["in", status]
+            filters["status"] = ["in", status]
         else:
-             filters["status"] = status
+            filters["status"] = status
 
     parcel_orders = frappe.get_list(
         "Parcel Order",

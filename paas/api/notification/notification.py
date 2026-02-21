@@ -140,7 +140,7 @@ def update_notification_settings(type: str, active: int):
     """
     user = frappe.session.user
     if user == "Guest":
-         frappe.throw("You must be logged in to update notification settings.", frappe.AuthenticationError)
+        frappe.throw("You must be logged in to update notification settings.", frappe.AuthenticationError)
 
     # Check if preference exists
     # We match by 'notification_type' which is the Link to Notification Type
@@ -153,7 +153,7 @@ def update_notification_settings(type: str, active: int):
         if frappe.db.exists("Notification Type", type):
             nt_name = type
         else:
-             frappe.throw(f"Invalid notification type: {type}")
+            frappe.throw(f"Invalid notification type: {type}")
 
     # Find existing preference
     pref_name = frappe.db.get_value("User Notification Preference", {"user": user, "notification_type": nt_name}, "name")
@@ -212,7 +212,7 @@ def mark_notification_logs_as_read(ids=None):
     """
     user = frappe.session.user
     if user == "Guest":
-         frappe.throw("You must be logged in.", frappe.AuthenticationError)
+        frappe.throw("You must be logged in.", frappe.AuthenticationError)
 
     if isinstance(ids, str):
         ids = json.loads(ids)
@@ -222,11 +222,11 @@ def mark_notification_logs_as_read(ids=None):
 
     for name in ids:
         if frappe.db.exists("Notification Log", name):
-             doc = frappe.get_doc("Notification Log", name)
-             # Check ownership/for_user
-             if (hasattr(doc, 'for_user') and doc.for_user == user) or doc.owner == user:
-                 doc.read = 1
-                 doc.save(ignore_permissions=True)
+            doc = frappe.get_doc("Notification Log", name)
+            # Check ownership/for_user
+            if (hasattr(doc, 'for_user') and doc.for_user == user) or doc.owner == user:
+                doc.read = 1
+                doc.save(ignore_permissions=True)
 
     return api_response(message="Notifications marked as read")
 
@@ -238,7 +238,7 @@ def read_all_notifications():
     """
     user = frappe.session.user
     if user == "Guest":
-         frappe.throw("You must be logged in.", frappe.AuthenticationError)
+        frappe.throw("You must be logged in.", frappe.AuthenticationError)
 
     logs = frappe.get_all("Notification Log", filters={"for_user": user, "read": 0})
     # Also check owner if for_user is not used? Standard Frappe uses for_user
@@ -255,12 +255,12 @@ def read_one_notification(name):
     """
     user = frappe.session.user
     if user == "Guest":
-         frappe.throw("You must be logged in.", frappe.AuthenticationError)
+        frappe.throw("You must be logged in.", frappe.AuthenticationError)
 
     if frappe.db.exists("Notification Log", name):
-         doc = frappe.get_doc("Notification Log", name)
-         if (hasattr(doc, 'for_user') and doc.for_user == user) or doc.owner == user:
-             doc.read = 1
-             doc.save(ignore_permissions=True)
+        doc = frappe.get_doc("Notification Log", name)
+        if (hasattr(doc, 'for_user') and doc.for_user == user) or doc.owner == user:
+            doc.read = 1
+            doc.save(ignore_permissions=True)
 
     return api_response(message="Notification marked as read")

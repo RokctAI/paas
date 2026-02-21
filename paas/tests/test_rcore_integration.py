@@ -34,7 +34,7 @@ class TestRcoreIntegration(FrappeTestCase):
             self.customer = frappe.get_doc("Customer", "Test Rcore Customer")
             # Ensure link exists
             if self.customer.meta.has_field("user") and not self.customer.user:
-                 self.customer.db_set("user", self.user.name)
+                self.customer.db_set("user", self.user.name)
 
     def tearDown(self):
         # Cleanup

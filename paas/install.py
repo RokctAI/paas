@@ -58,8 +58,8 @@ def setup_product_vector_column():
     Adds a vector(384) column to the Product table for semantic search.
     """
     if not setup_vector_extension():
-         print("⚠️ Skipping Product vector column creation due to missing extension.")
-         return
+        print("⚠️ Skipping Product vector column creation due to missing extension.")
+        return
 
     try:
         # Check if column exists using standard API
@@ -232,9 +232,9 @@ def check_and_fetch_sources():
                     print("❌ Error: 'control.control.api.fetch_paas_sources' method not found.")
                     print("Please ensure Control app is updated.")
                 except Exception as ex:
-                     print(f"❌ Error during fetch request: {ex}")
+                    print(f"❌ Error during fetch request: {ex}")
             else:
-                 print("ℹ️ Control app is not installed. Cannot auto-fetch sources.")
-                 print("Please manually clone sources into: " + source_code_path)
+                print("ℹ️ Control app is not installed. Cannot auto-fetch sources.")
+                print("Please manually clone sources into: " + source_code_path)
         except Exception as e:
             print(f"❌ Error initiating source check: {e}")

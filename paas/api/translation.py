@@ -41,18 +41,18 @@ def get_translations_paginate(search=None, group=None, locale=None, perPage=10, 
     start = (current_page - 1) * per_page
 
     t_translation = frappe.qb.DocType("PaaS Translation")
-    
+
     # Base query for filtering
     base_query = frappe.qb.from_(t_translation)
-    
+
     if group:
         base_query = base_query.where(t_translation.group == group)
     if locale:
         base_query = base_query.where(t_translation.locale == locale)
     if search:
         base_query = base_query.where(
-            (t_translation.key.like(f"%{search}%")) | 
-            (t_translation.value.like(f"%{search}%"))
+            (t_translation.key.like(f"%{search}%")) 
+            | (t_translation.value.like(f"%{search}%"))
         )
 
     # Count total distinct keys
@@ -60,11 +60,11 @@ def get_translations_paginate(search=None, group=None, locale=None, perPage=10, 
     total_keys = count_query.run()[0][0]
 
     if total_keys == 0:
-         return _api_success({
+        return _api_success({
             "total": 0,
             "perPage": per_page,
             "translations": {}
-        })
+            })
 
     # Get paginated distinct keys
     keys_query = base_query.select(frappe.qb.fn.Distinct(t_translation.key))
@@ -81,14 +81,14 @@ def get_translations_paginate(search=None, group=None, locale=None, perPage=10, 
 
     if search:
         details_query = details_query.where(
-            (t_translation.key.like(f"%{search}%")) | 
-            (t_translation.value.like(f"%{search}%"))
+            (t_translation.key.like(f"%{search}%")) 
+            | (t_translation.value.like(f"%{search}%"))
         )
     if group:
         details_query = details_query.where(t_translation.group == group)
     if locale:
         details_query = details_query.where(t_translation.locale == locale)
-        
+
     details_query = details_query.orderby(t_translation.key, order=frappe.qb.asc)
     details = details_query.run(as_dict=True)
 

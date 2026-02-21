@@ -32,7 +32,7 @@ class TestInvitesAPI(FrappeTestCase):
                 "country": "India"
             }).insert(ignore_permissions=True)
         else:
-             self.shop = frappe.get_doc("Company", "Test Invite Shop")
+            self.shop = frappe.get_doc("Company", "Test Invite Shop")
 
     def tearDown(self):
         frappe.db.delete("Invitation")

@@ -12,6 +12,6 @@ def handle_location(lat, long, session):
     # 1. Update Session Location
     session.location = json.dumps({"lat": lat, "long": long})
     session.save(ignore_permissions=True)
-    
+
     # 2. Send Confirmation Map
     send_static_map_confirmation(session.wa_id, lat, long)

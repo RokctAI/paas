@@ -22,18 +22,18 @@ def flow_data():
         encrypted_flow_data_b64 = req_json.get("encrypted_flow_data")
         encrypted_aes_key_b64 = req_json.get("encrypted_aes_key")
         initial_vector_b64 = req_json.get("initial_vector")
-        
+
         config = get_whatsapp_config()
         if not config or not config.private_key:
             return {"error": "Server not configured for encryption."}
-            
+
         # 1. Decrypt AES Key
         private_key = serialization.load_pem_private_key(
             config.get_password("private_key").encode(),
             password=None,
             backend=default_backend()
         )
-        
+
         decrypted_aes_key = private_key.decrypt(
             base64.b64decode(encrypted_aes_key_b64),
             padding.OAEP(
@@ -42,7 +42,7 @@ def flow_data():
                 label=None
             )
         )
-        
+
         # 2. Decrypt Flow Data
         iv = base64.b64decode(initial_vector_b64)
         flow_data_encrypted = base64.b64decode(encrypted_flow_data_b64)
@@ -60,28 +60,28 @@ def flow_data():
         decryptor = cipher.decryptor()
         decrypted_data_json = decryptor.update(ciphertext) + decryptor.finalize()
         decoded_data = json.loads(decrypted_data_json.decode('utf-8'))
-        
+
         # 3. Process Logic
         # decoded_data contains 'flow_token', 'screen', 'data'
         response_data = handle_business_logic(decoded_data)
-        
+
         # 4. Encrypt Response
         # Generate new IV
         flipped_iv = bytearray(iv)
         for i in range(len(flipped_iv)):
             flipped_iv[i] ^= 0xFF
         new_iv = bytes(flipped_iv)
-        
+
         encryptor = Cipher(
             algorithms.AES(decrypted_aes_key),
             modes.GCM(new_iv),
             backend=default_backend()
         ).encryptor()
-        
+
         response_bytes = json.dumps(response_data).encode('utf-8')
         ciphertext_resp = encryptor.update(response_bytes) + encryptor.finalize()
         tag_resp = encryptor.tag
-        
+
         encrypted_response = ciphertext_resp + tag_resp
         return base64.b64encode(encrypted_response).decode('utf-8')
 
@@ -99,13 +99,13 @@ def handle_business_logic(data):
     # Extract flow_token to identify product
     # flow_token = data.get('flow_token')
     # Use generic layout for now
-    
+
     return {
         "screen": "screen_0",
         "data": {
-             "options": [
-                 {"id": "opt_1", "title": "Option 1 (Generic)"},
-                 {"id": "opt_2", "title": "Option 2 (Generic)"}
-             ]
+            "options": [
+                {"id": "opt_1", "title": "Option 1 (Generic)"},
+                {"id": "opt_2", "title": "Option 2 (Generic)"}
+                ]
         }
     }

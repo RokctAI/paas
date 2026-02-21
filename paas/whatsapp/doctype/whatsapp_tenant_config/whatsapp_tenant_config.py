@@ -14,7 +14,7 @@ class WhatsAppTenantConfig(Document):
         Generates RSA 2048 Key Pair for WhatsApp Flows Encryption.
         """
         if self.private_key and self.public_key:
-             frappe.throw("Keys already exist. Clear them first if you want to regenerate functionality.")
+            frappe.throw("Keys already exist. Clear them first if you want to regenerate functionality.")
 
         private_key = rsa.generate_private_key(
             public_exponent=65537,

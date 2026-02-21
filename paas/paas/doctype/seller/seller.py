@@ -6,5 +6,5 @@ from frappe.model.document import Document
 
 
 class Seller(Document):
-	pass
+    pass
 

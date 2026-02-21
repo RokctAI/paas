@@ -9,5 +9,5 @@ from frappe.model.document import Document
 
 
 class ShopCategory(Document):
-	pass
+    pass
 

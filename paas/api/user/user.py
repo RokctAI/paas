@@ -497,10 +497,10 @@ def search_user(name: str, page: int = 1, limit: int = 20, lang: str = "en"):
     tsq = plainto_tsquery("english", name)
 
     query = query.where(
-        (to_tsvector("english", t_user.first_name).matches(tsq)) |
-        (to_tsvector("english", t_user.last_name).matches(tsq)) |
-        (to_tsvector("english", t_user.email).matches(tsq)) |
-        (to_tsvector("english", t_user.phone).matches(tsq))
+        (to_tsvector("english", t_user.first_name).matches(tsq))
+        | (to_tsvector("english", t_user.last_name).matches(tsq))
+        | (to_tsvector("english", t_user.email).matches(tsq))
+        | (to_tsvector("english", t_user.phone).matches(tsq))
     )
 
     users = query.limit(limit).offset((page - 1) * limit).run(as_dict=True)
@@ -948,14 +948,14 @@ def update_seller_shop(shop_data):
     # Handle name change (Rename Doc) BEFORE other updates
     new_shop_name = shop_data.get("shop_name") or shop_data.get("title")
     if new_shop_name and new_shop_name != shop.name:
-         # Switch to admin to bypass permission check for rename
-         current_user = frappe.session.user
-         frappe.set_user("Administrator")
-         try:
-             new_name = frappe.rename_doc("Shop", shop.name, new_shop_name)
-             shop = frappe.get_doc("Shop", new_name)
-         finally:
-             frappe.set_user(current_user)
+        # Switch to admin to bypass permission check for rename
+        current_user = frappe.session.user
+        frappe.set_user("Administrator")
+        try:
+            new_name = frappe.rename_doc("Shop", shop.name, new_shop_name)
+            shop = frappe.get_doc("Shop", new_name)
+        finally:
+            frappe.set_user(current_user)
 
     for key, value in shop_data.items():
         if key in updatable_fields:
@@ -1252,7 +1252,7 @@ def mark_notification_logs_as_read(ids=None):
     """
     user = frappe.session.user
     if user == "Guest":
-         frappe.throw("You must be logged in.", frappe.AuthenticationError)
+        frappe.throw("You must be logged in.", frappe.AuthenticationError)
 
     if isinstance(ids, str):
         ids = json.loads(ids)
@@ -1262,10 +1262,10 @@ def mark_notification_logs_as_read(ids=None):
 
     for name in ids:
         if frappe.db.exists("Notification Log", name):
-             doc = frappe.get_doc("Notification Log", name)
-             if doc.for_user == user or doc.owner == user:  # Check ownership
-                 doc.read = 1
-                 doc.save(ignore_permissions=True)
+            doc = frappe.get_doc("Notification Log", name)
+            if doc.for_user == user or doc.owner == user:  # Check ownership
+                doc.read = 1
+                doc.save(ignore_permissions=True)
 
     return api_response(message="Notifications marked as read")
 
@@ -1277,7 +1277,7 @@ def read_all_notifications():
     """
     user = frappe.session.user
     if user == "Guest":
-         frappe.throw("You must be logged in.", frappe.AuthenticationError)
+        frappe.throw("You must be logged in.", frappe.AuthenticationError)
 
     logs = frappe.get_all("Notification Log", filters={"for_user": user, "read": 0})
     for log in logs:
@@ -1293,16 +1293,16 @@ def read_one_notification(name):
     """
     user = frappe.session.user
     if user == "Guest":
-         frappe.throw("You must be logged in.", frappe.AuthenticationError)
+        frappe.throw("You must be logged in.", frappe.AuthenticationError)
 
     if frappe.db.exists("Notification Log", name):
-         doc = frappe.get_doc("Notification Log", name)
-         # Verify it belongs to user ( Notification Log uses 'for_user' usually, but sometimes owner)
-         if hasattr(doc, 'for_user') and doc.for_user == user:
-             doc.read = 1
-             doc.save(ignore_permissions=True)
-         elif doc.owner == user:
-             doc.read = 1
-             doc.save(ignore_permissions=True)
+        doc = frappe.get_doc("Notification Log", name)
+        # Verify it belongs to user ( Notification Log uses 'for_user' usually, but sometimes owner)
+        if hasattr(doc, 'for_user') and doc.for_user == user:
+            doc.read = 1
+            doc.save(ignore_permissions=True)
+        elif doc.owner == user:
+            doc.read = 1
+            doc.save(ignore_permissions=True)
 
     return api_response(message="Notification marked as read")

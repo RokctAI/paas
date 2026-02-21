@@ -128,7 +128,7 @@ def get_global_settings():
             settings_data.append({"key": "default_tax", "value": str(settings.service_fee)})
 
         if settings.deliveryman_order_acceptance_time:
-             settings_data.append({"key": "deliveryman_order_acceptance_time", "value": str(settings.deliveryman_order_acceptance_time)})
+            settings_data.append({"key": "deliveryman_order_acceptance_time", "value": str(settings.deliveryman_order_acceptance_time)})
 
         # Add map key if available in Global Settings
         global_settings = frappe.get_single("Global Settings")
@@ -141,7 +141,7 @@ def get_global_settings():
         # Add default currency
         currency = frappe.db.get_value("Currency", {"enabled": 1}, "name")
         if currency:
-             settings_data.append({"key": "default_currency", "value": currency})
+            settings_data.append({"key": "default_currency", "value": currency})
 
         # Add distance unit (mock)
         settings_data.append({"key": "distance_unit", "value": "km"})

@@ -78,9 +78,9 @@ class TestSellerDashboard(FrappeTestCase):
     def test_get_days_without_shop(self):
         # Create user without shop
         if not frappe.db.exists("User", "no_shop@example.com"):
-             no_shop_user = frappe.get_doc({"doctype": "User", "email": "no_shop@example.com", "first_name": "NoShop"}).insert(ignore_permissions=True)
+            no_shop_user = frappe.get_doc({"doctype": "User", "email": "no_shop@example.com", "first_name": "NoShop"}).insert(ignore_permissions=True)
         else:
-             no_shop_user = frappe.get_doc("User", "no_shop@example.com")
+            no_shop_user = frappe.get_doc("User", "no_shop@example.com")
 
         frappe.set_user(no_shop_user.name)
 

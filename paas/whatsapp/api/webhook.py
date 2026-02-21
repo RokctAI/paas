@@ -26,7 +26,7 @@ def webhook():
 
             # frappe.request.get_data() gives raw bytes needed for HMAC
             if not validate_signature(frappe.request.get_data(), signature, config.get_password('app_secret')):
-                 frappe.throw("Invalid Signature", frappe.PermissionError)
+                frappe.throw("Invalid Signature", frappe.PermissionError)
 
         return process_webhook()
 

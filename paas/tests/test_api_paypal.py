@@ -34,14 +34,14 @@ class TestPayPalAPI(FrappeTestCase):
 
         # Create Product
         if not frappe.db.exists("Product", {"title": "PayPal Product"}):
-             self.product = frappe.get_doc({
+            self.product = frappe.get_doc({
                 "doctype": "Product",
                 "shop": self.shop.name,
                 "title": "PayPal Product",
                 "price": 100
-             }).insert(ignore_permissions=True)
+            }).insert(ignore_permissions=True)
         else:
-             self.product = frappe.get_doc("Product", {"title": "PayPal Product"})
+            self.product = frappe.get_doc("Product", {"title": "PayPal Product"})
 
         # Create a test order
         self.test_order = frappe.get_doc({

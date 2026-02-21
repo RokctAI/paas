@@ -49,17 +49,22 @@ class TestRemoteConfig(unittest.TestCase):
         # Mock Settings
         def get_single_value_side_effect(doctype, field):
             if doctype == "Settings":
-                if field == "project_title": return "My Project"
-                if field == "enable_marketplace": return 1
-                if field == "default_shop": return "Shop1"
+                if field == "project_title":
+                    return "My Project"
+                if field == "enable_marketplace":
+                    return 1
+                if field == "default_shop":
+                    return "Shop1"
             return None
         frappe.db.get_single_value.side_effect = get_single_value_side_effect
 
         # Mock Remote Config names
         def get_value_side_effect(doctype, filters, fieldname):
             if doctype == "Remote Config":
-                if filters.get("app_type") == "Common": return "RC-Common"
-                if filters.get("app_type") == "Customer": return "RC-Customer"
+                if filters.get("app_type") == "Common":
+                    return "RC-Common"
+                if filters.get("app_type") == "Customer":
+                    return "RC-Customer"
             return None
         frappe.db.get_value.side_effect = get_value_side_effect
 

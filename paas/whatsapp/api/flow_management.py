@@ -14,14 +14,14 @@ def create_flow():
     config = frappe.get_single("WhatsApp Tenant Config")
     if not config.access_token or not config.waba_id:
         frappe.throw("Please ensure Access Token and WABA ID are saved first.")
-        
+
     api_version = "v21.0"
     base_url = f"https://graph.facebook.com/{api_version}"
     headers = {
         "Authorization": f"Bearer {config.access_token}",
         "Content-Type": "application/json"
     }
-    
+
     # 1. Create Flow Container
     # Name must be unique per WABA? Ideally yes.
     flow_name = f"Rokct Customizer {frappe.utils.random_string(4)}"
@@ -30,7 +30,7 @@ def create_flow():
         "name": flow_name,
         "categories": ["SHOPPING"]
     }
-    
+
     try:
         resp = requests.post(create_url, headers=headers, json=payload)
         resp.raise_for_status()
@@ -52,7 +52,7 @@ def create_flow():
         # Let's check typical usage. 
         # API: POST /{flow_id}/assets 
     }
-    
+
     # Python requests for multipart
     files = {
         'file': ('flow.json', json.dumps(layout), 'application/json')
@@ -63,13 +63,13 @@ def create_flow():
     }
     # Remove Content-Type header for multipart to let requests set boundary
     headers_multipart = {"Authorization": f"Bearer {config.access_token}"}
-    
+
     try:
         resp = requests.post(asset_url, headers=headers_multipart, data=data, files=files)
         resp.raise_for_status()
     except Exception as e:
-         frappe.log_error(f"Flow Asset Upload Failed: {str(e)} -> {resp.text if 'resp' in locals() else ''}")
-         frappe.throw(f"Failed to upload Flow JSON: {str(e)}")
+        frappe.log_error(f"Flow Asset Upload Failed: {str(e)} -> {resp.text if 'resp' in locals() else ''}")
+        frappe.throw(f"Failed to upload Flow JSON: {str(e)}")
 
     # 3. Publish Flow
     publish_url = f"{base_url}/{flow_id}/publish"
@@ -77,17 +77,17 @@ def create_flow():
         resp = requests.post(publish_url, headers=headers)
         resp.raise_for_status()
     except Exception as e:
-         frappe.log_error(f"Flow Publish Failed: {str(e)} -> {resp.text if 'resp' in locals() else ''}")
-         # We warn but don't stop, saving the ID is useful
-         frappe.msgprint("Flow created but failed to publish. Check Meta Business Manager.")
+        frappe.log_error(f"Flow Publish Failed: {str(e)} -> {resp.text if 'resp' in locals() else ''}")
+        # We warn but don't stop, saving the ID is useful
+        frappe.msgprint("Flow created but failed to publish. Check Meta Business Manager.")
 
     # 4. Save ID
     config.flow_id = flow_id
     config.save(ignore_permissions=True)
-    
+
     endpoint_url = frappe.utils.get_url("/api/v1/method/paas.api.whatsapp_flow_endpoint")
     msg = f"Flow '{flow_name}' created! ID: {flow_id}. <br><b>IMPORTANT:</b> Go to Meta Business Manager -> Flows -> {flow_name} -> Endpoint and paste this URL:<br><b>{endpoint_url}</b>"
-    
+
     return {"status": "success", "flow_id": flow_id, "message": msg}
 
 def get_generic_flow_layout():
@@ -110,8 +110,8 @@ def get_generic_flow_layout():
                         "items": {
                             "type": "object",
                             "properties": {
-                                "id": { "type": "string" },
-                                "title": { "type": "string" }
+                                "id": {"type": "string"},
+                                "title": {"type": "string"}
                             }
                         },
                         "__example__": [

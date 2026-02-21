@@ -46,9 +46,9 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
             pass
 
     if isinstance(files, list):
-         # If it's a list of objects/dicts, we might need to handle differently
-         # But usually file uploads come via request.files in multipart/form-data
-         pass
+        # If it's a list of objects/dicts, we might need to handle differently
+        # But usually file uploads come via request.files in multipart/form-data
+        pass
 
     # 2. Main Source: frappe.request.files
     # usage: formData.append('files', fileObj);
@@ -59,7 +59,7 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
         # If 'files' key is empty, maybe they used other keys or just sent files without rigid keys?
         # frappe.request.files is a MultiDict.
         if not file_list:
-             file_list = list(frappe.request.files.values())
+            file_list = list(frappe.request.files.values())
 
     if not file_list:
         frappe.log_error("No files found in upload_multi_image request")
@@ -90,7 +90,7 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
 
     # 4. Check Permission / Existence
     if not frappe.db.exists(doctype, doc_name):
-         frappe.throw(f"{doctype} {doc_name} not found.")
+        frappe.throw(f"{doctype} {doc_name} not found.")
 
     doc = frappe.get_doc(doctype, doc_name)
     # Ideally check permissions here: doc.check_permission("write")
@@ -131,7 +131,7 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
             continue
 
     if not file_urls:
-         return api_response(message="No files were successfully uploaded", status_code=500)
+        return api_response(message="No files were successfully uploaded", status_code=500)
 
     # 5. Update Record Fields if specific types
     # This logic assumes we replace the image field with the FIRST uploaded image
@@ -140,9 +140,9 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
     if upload_type == "shopsLogo":
         doc.db_set("logo", file_urls[0])
     elif upload_type == "shopsBack":
-         doc.db_set("background_image", file_urls[0])
+        doc.db_set("background_image", file_urls[0])
     elif upload_type == "users":
-         doc.db_set("user_image", file_urls[0])
+        doc.db_set("user_image", file_urls[0])
 
     # For products/reviews/others, usually we just want them attached, not setting a specific single field
     # (unless 'image' field exists and is empty? Logic implies just attachment for now)

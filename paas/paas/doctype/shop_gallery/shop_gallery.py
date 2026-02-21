@@ -9,4 +9,4 @@ from frappe.model.document import Document
 
 
 class ShopGallery(Document):
-	pass
+    pass

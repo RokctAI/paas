@@ -53,16 +53,16 @@ class TestDeliveryPointAPI(FrappeTestCase):
         # We need to catch either, or simply assertRaises(Exception) if we want to be broad
         # But let's try to be specific based on previous error logs: frappe.exceptions.FrappeTypeError
         try:
-             from frappe.exceptions import FrappeTypeError
-             ErrorType = FrappeTypeError
+            from frappe.exceptions import FrappeTypeError
+            ErrorType = FrappeTypeError
         except ImportError:
-             ErrorType = TypeError
+            ErrorType = TypeError
 
         with self.assertRaises((frappe.exceptions.ValidationError, ErrorType, TypeError)):
             get_nearest_delivery_points(latitude=None, longitude=56.78)
         with self.assertRaises((frappe.exceptions.ValidationError, ErrorType, TypeError)):
             get_nearest_delivery_points(latitude=12.34, longitude=None)
         with self.assertRaises((frappe.exceptions.ValidationError, ErrorType, ValueError)):
-             # "invalid" string might cause ValueError inside float() conversion if it bypasses type check
-             # or TypeError if type check catches it.
+            # "invalid" string might cause ValueError inside float() conversion if it bypasses type check
+            # or TypeError if type check catches it.
             get_nearest_delivery_points(latitude="invalid", longitude="invalid")

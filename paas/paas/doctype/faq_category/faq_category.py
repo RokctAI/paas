@@ -6,5 +6,5 @@ from frappe.model.document import Document
 
 
 class FAQCategory(Document):
-	pass
+    pass
 

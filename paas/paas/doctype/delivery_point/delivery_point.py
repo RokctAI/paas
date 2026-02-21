@@ -6,7 +6,7 @@ from frappe.model.document import Document
 
 
 class DeliveryPoint(Document):
-	pass
+    pass
 
 
 @frappe.whitelist()

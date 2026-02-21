@@ -33,18 +33,19 @@ class TestPhoneVerificationAPI(FrappeTestCase):
             "read_only": 1,
             "hidden": 1
         })
+
     def setUp(self):
         # Create a test user
         self.test_user_phone = "+19876543210"
-        
+
         # Cleanup potential duplicates to ensure API targets the correct user
         frappe.db.delete("User", {"phone": self.test_user_phone})
         if frappe.db.exists("User", "test_phone_user@example.com"):
-             try:
-                 frappe.delete_doc("User", "test_phone_user@example.com", force=True, ignore_permissions=True)
-             except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
-                 frappe.db.set_value("User", "test_phone_user@example.com", "enabled", 0)
-                 frappe.db.commit()
+            try:
+                frappe.delete_doc("User", "test_phone_user@example.com", force=True, ignore_permissions=True)
+            except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
+                frappe.db.set_value("User", "test_phone_user@example.com", "enabled", 0)
+                frappe.db.commit()
 
         self.test_user = frappe.get_doc({
             "doctype": "User",
@@ -148,7 +149,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         for call in call_args_list:
             args, _ = call
             if args and args[0] == f"phone_otp:{phone_number}":
-                 self.fail(f"Cache deletion called for {args[0]} unexpectedly")
+                self.fail(f"Cache deletion called for {args[0]} unexpectedly")
 
     @patch("frappe.cache.get_value")
     def test_verify_code_expired(self, mock_get_value):
@@ -188,7 +189,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         if not frappe.db.exists("Language", "en"):
             frappe.get_doc({"doctype": "Language", "language_code": "en", "language_name": "English", "enabled": 1}).insert()
         if not frappe.db.exists("Language", "tlh"):
-             frappe.get_doc({"doctype": "Language", "language_code": "tlh", "language_name": "Klingon", "enabled": 0}).insert()
+            frappe.get_doc({"doctype": "Language", "language_code": "tlh", "language_name": "Klingon", "enabled": 0}).insert()
 
         # Act
         response = get_languages()
@@ -211,7 +212,7 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         if not frappe.db.exists("Currency", "USD"):
             frappe.get_doc({"doctype": "Currency", "currency_name": "USD", "symbol": "$", "enabled": 1}).insert()
         if not frappe.db.exists("Currency", "KLG"):
-             frappe.get_doc({"doctype": "Currency", "currency_name": "Klingon Darsek", "symbol": "KLG", "enabled": 0}).insert()
+            frappe.get_doc({"doctype": "Currency", "currency_name": "Klingon Darsek", "symbol": "KLG", "enabled": 0}).insert()
 
         # Act
         response = get_currencies()

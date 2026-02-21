@@ -9,5 +9,5 @@ import frappe
 from frappe.model.document import Document
 
 class ReceiptIngredient(Document):
-	pass
+    pass
 

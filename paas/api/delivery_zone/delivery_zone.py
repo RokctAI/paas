@@ -123,8 +123,8 @@ def calculate_delivery_price(lat, lng, shop):
         try:
             loc = json.loads(shop.location)
             if isinstance(loc, dict) and "features" in loc:  # GeoJSON
-                 coords = loc["features"][0]["geometry"]["coordinates"]
-                 shop_lat, shop_lng = coords[1], coords[0]
+                coords = loc["features"][0]["geometry"]["coordinates"]
+                shop_lat, shop_lng = coords[1], coords[0]
         except:
             pass
 

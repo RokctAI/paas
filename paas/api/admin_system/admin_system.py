@@ -10,7 +10,7 @@ def get_system_info():
     """
     # Fetch the System Information document
     doc = frappe.get_single("System Information")
-    
+
     # Trigger version fetch/update logic (onload usually runs on desk access, do we need to trigger it?)
     # Document.onload is not called by get_single automatically for API response usually, 
     # but specific logic might be needed. 
@@ -18,7 +18,7 @@ def get_system_info():
     # Let's manually trigger it to ensure fresh data if it's not persistent.
     if hasattr(doc, "onload"):
         doc.onload()
-        
+
     return doc.as_dict()
 
 @frappe.whitelist()
@@ -41,7 +41,7 @@ def get_backups():
                 "size": os.path.getsize(os.path.join(backups_path, fname)),
                 "path": f"/private/backups/{fname}"
             })
-            
+
     # Sort by filename (date prefix) desc
     backups.sort(key=lambda x: x["filename"], reverse=True)
     return backups
@@ -53,7 +53,7 @@ def create_backup():
     """
     if "System Manager" not in frappe.get_roles():
         frappe.throw("Unauthorized")
-        
+
     # This usually requires background worker. 
     # For simplicity, we might just enqueue it or allow it if system permits.
     # Frappe's backup capability is usually CLI driven or scheduled.
@@ -69,6 +69,6 @@ def clear_system_cache():
     """
     if "System Manager" not in frappe.get_roles():
         frappe.throw("Unauthorized")
-        
+
     frappe.clear_cache()
     return {"status": "success", "message": "Cache cleared."}

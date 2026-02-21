@@ -16,7 +16,8 @@ def get_story(page: int = 1, lang: str = "en"):
     grouped = {}
     for s in stories:
         shop_id = s.shop
-        if not shop_id: continue
+        if not shop_id:
+            continue
 
         if shop_id not in grouped:
             grouped[shop_id] = []

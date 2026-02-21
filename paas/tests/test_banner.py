@@ -11,7 +11,7 @@ class TestBanner(FrappeTestCase):
         frappe.set_user("Administrator")
         # cleanup
         frappe.db.delete("Banner", {"title": "Test Banner"})
-        
+
         # Create a Banner ensuring it's an ad
         self.banner = frappe.get_doc({
             "doctype": "Banner",

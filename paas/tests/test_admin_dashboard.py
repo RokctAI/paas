@@ -36,16 +36,16 @@ class TestAdminDashboard(FrappeTestCase):
             if langs:
                 self.assertIn("language_name", langs[0])
         except frappe.PermissionError:
-             self.fail("System Manager should encounter PermissionError")
+            self.fail("System Manager should encounter PermissionError")
 
     def test_non_admin_access(self):
         # Create non-admin
         if not frappe.db.exists("User", "guest_tester@example.com"):
-             guest = frappe.get_doc({
+            guest = frappe.get_doc({
                 "doctype": "User", "email": "guest_tester@example.com", "first_name": "Guest"
-             }).insert(ignore_permissions=True)
+            }).insert(ignore_permissions=True)
         else:
-             guest = frappe.get_doc("User", "guest_tester@example.com")
+            guest = frappe.get_doc("User", "guest_tester@example.com")
 
         frappe.set_user(guest.name)
 
@@ -58,10 +58,10 @@ class TestAdminDashboard(FrappeTestCase):
         try:
             # We skip actually updating potentially sensitive global settings in a test
             # but we can try to fetch them if the doctype exists
-             if frappe.db.exists("DocType", "Email Settings"):
-                 # We'll just call the update function with empty data or verify access
-                 # But update_email_settings requires data
-                 pass
+            if frappe.db.exists("DocType", "Email Settings"):
+                # We'll just call the update function with empty data or verify access
+                # But update_email_settings requires data
+                pass
         except Exception as e:
             # Pass if it's just a missing doctype or config in test env
             pass

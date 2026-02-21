@@ -9,5 +9,5 @@ from frappe.model.document import Document
 
 
 class ProductTranslation(Document):
-	pass
+    pass
 

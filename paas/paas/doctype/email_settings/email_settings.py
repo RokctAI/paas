@@ -6,8 +6,8 @@ from frappe.model.document import Document
 
 
 class EmailSettings(Document):
-	def onload(self):
-		if not self.sender_email:
-			self.relay_status = "Using Email Relay"
-		else:
-			self.relay_status = "Configured"
+    def onload(self):
+        if not self.sender_email:
+            self.relay_status = "Using Email Relay"
+        else:
+            self.relay_status = "Configured"

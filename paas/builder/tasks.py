@@ -313,7 +313,7 @@ def modify_project_files(temp_dir, app_config):
         }
         for key, value in numeric_replacements.items():
             if value is not None:
-                 content = re.sub(f"static double {key} = .*;", f"static double {key} = {value};", content)
+                content = re.sub(f"static double {key} = .*;", f"static double {key} = {value};", content)
 
         with open(constants_path, 'w') as f:
             f.write(content)
@@ -690,7 +690,7 @@ def _generate_flutter_app(app_config_name):
             artifact_extension = "exe"
 
         if not os.path.exists(artifact_path):
-             raise Exception(f"Build succeeded but artifact file not found at expected location: {artifact_path}")
+            raise Exception(f"Build succeeded but artifact file not found at expected location: {artifact_path}")
 
         log_message(f"Artifact found at: {artifact_path}", app_config.name)
 

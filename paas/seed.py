@@ -37,7 +37,8 @@ class JSONSeeder:
         for u in users:
             try:
                 email = u.get('email')
-                if not email: continue
+                if not email:
+                    continue
 
                 if frappe.db.exists("User", email):
                     self.user_map[u.get('id')] = email
@@ -67,7 +68,8 @@ class JSONSeeder:
         for s in shops:
             try:
                 name = s.get('name')
-                if not name: continue
+                if not name:
+                    continue
 
                 shop_name = f"{name} - {s.get('id')}"
                 if frappe.db.exists("Shop", shop_name):
@@ -96,7 +98,8 @@ class JSONSeeder:
         for c in cats:
             try:
                 title = c.get('title')
-                if not title: continue
+                if not title:
+                    continue
 
                 if frappe.db.exists("Category", title):
                     self.category_map[c.get('id')] = title
@@ -119,7 +122,8 @@ class JSONSeeder:
         for b in brands:
             try:
                 title = b.get('title')
-                if not title: continue
+                if not title:
+                    continue
 
                 if frappe.db.exists("Brand", title):
                     self.brand_map[b.get('id')] = title
@@ -138,7 +142,8 @@ class JSONSeeder:
         for u in units:
             try:
                 name = u.get('name')
-                if not name: continue
+                if not name:
+                    continue
 
                 if frappe.db.exists("UOM", name):
                     continue
@@ -155,7 +160,8 @@ class JSONSeeder:
         for p in products:
             try:
                 title = p.get('title')
-                if not title: continue
+                if not title:
+                    continue
 
                 if frappe.db.exists("Product", {"title": title}):
                     self.product_map[p.get('id')] = frappe.db.get_value("Product", {"title": title}, "name")
@@ -184,7 +190,8 @@ class JSONSeeder:
         for s in settings:
             try:
                 type_name = s.get('type')
-                if not type_name: continue
+                if not type_name:
+                    continue
 
                 if frappe.db.exists("Parcel Order Setting", {"type": type_name}):
                     continue
@@ -204,7 +211,8 @@ class JSONSeeder:
             try:
                 key = t.get('key')
                 locale = t.get('locale')
-                if not key or not locale: continue
+                if not key or not locale:
+                    continue
 
                 # Check if exists (assuming key+locale is unique enough or just key?)
                 # PaaS Translation might not have a unique constraint on key+locale in standard way,
@@ -255,10 +263,12 @@ class JSONSeeder:
             try:
                 user_id = mem.get('user_id')
                 user_email = self.user_map.get(user_id)
-                if not user_email: continue
+                if not user_email:
+                    continue
 
                 mem_id = mem.get('membership_id')
-                if not mem_id: continue
+                if not mem_id:
+                    continue
 
                 frappe.get_doc({
                     "doctype": "User Membership",
@@ -305,12 +315,14 @@ class JSONSeeder:
 
         # 5. Settings & Others
         self.seed_settings()
+
     def create_roles(self):
         print("Creating Roles...")
         roles = self.load_json('roles.json')
         for r in roles:
             role_name = r.get('name')
-            if not role_name: continue
+            if not role_name:
+                continue
 
             if not frappe.db.exists("Role", role_name):
                 frappe.get_doc({
@@ -325,22 +337,26 @@ class JSONSeeder:
         role_map = {}  # id -> name
         for r in roles:
             role_name = r.get('name')
-            if not role_name: continue
+            if not role_name:
+                continue
             role_map[r.get('id')] = role_name
 
         # Assign roles to users
         model_has_roles = self.load_json('model_has_roles.json')
         for mhr in model_has_roles:
             try:
-                if mhr.get('model_type') != 'App\\Models\\User': continue
+                if mhr.get('model_type') != 'App\\Models\\User':
+                    continue
 
                 user_id = mhr.get('model_id')
                 user_email = self.user_map.get(user_id)
-                if not user_email: continue
+                if not user_email:
+                    continue
 
                 role_id = mhr.get('role_id')
                 role_name = role_map.get(role_id)
-                if not role_name: continue
+                if not role_name:
+                    continue
 
                 user = frappe.get_doc("User", user_email)
                 # Check if role already assigned
@@ -355,7 +371,8 @@ class JSONSeeder:
 
     def seed_generic(self, filename, doctype, unique_field='id', name_field='name'):
         data = self.load_json(filename)
-        if not data: return
+        if not data:
+            return
 
         print(f"Seeding {doctype} from {filename}...")
         for item in data:
@@ -365,7 +382,8 @@ class JSONSeeder:
 
                 # Check if already exists
                 unique_val = item.get(unique_field)
-                if not unique_val: continue
+                if not unique_val:
+                    continue
 
                 # Map id to name if needed (common in Laravel migration)
                 if 'id' in item and 'name' not in item:
@@ -379,7 +397,8 @@ class JSONSeeder:
                 # Copy all fields from item to doc_data
                 # Exclude id if mapped to name
                 for k, v in item.items():
-                    if k == 'id': continue
+                    if k == 'id':
+                        continue
                     doc_data[k] = v
 
                 # Inject 'active' if missing and 'active' is 1/0
@@ -414,7 +433,7 @@ class JSONSeeder:
             "taxes.json": "Tax",
             "tickets.json": "Ticket",
             "wallets.json": "Wallet",
-             # Add more as needed based on file list
+            # Add more as needed based on file list
         }
 
         for filename, doctype in generic_map.items():

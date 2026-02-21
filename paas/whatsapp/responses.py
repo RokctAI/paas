@@ -188,7 +188,7 @@ def send_product_card(wa_id, product):
                         "title": "🛒 Add to Cart"
                     }
                 },
-                 {
+                {
                     "type": "reply",
                     "reply": {
                         "id": f"back_cat",  # Simplified back
@@ -205,29 +205,29 @@ def send_product_card(wa_id, product):
             "image": {"link": image_url},
             "caption": caption,
             "type": "interactive",  # Wait, type is interactive for image with buttons?
-             # Actually, for Image + Buttons, it is type="interactive", header={"type": "image", ...}
-             "interactive": {
+            # Actually, for Image + Buttons, it is type="interactive", header={"type": "image", ...}
+            "interactive": {
                 "type": "button",
                 "header": {
-                     "type": "image",
-                     "image": {"link": image_url}
+                    "type": "image",
+                    "image": {"link": image_url}
                 },
                 "body": {
                     "text": caption
                 },
                 "action": interactive['action']
-             }
+                }
         }
     else:
-         # Text Only Card
-         payload = {
+        # Text Only Card
+        payload = {
             "type": "interactive",
             "interactive": {
-                 "type": "button",
-                 "body": {"text": caption},
-                 "action": interactive['action']
-            }
-         }
+                "type": "button",
+                "body": {"text": caption},
+                "action": interactive['action']
+                }
+        }
 
     send_message(wa_id, payload)
 
@@ -307,12 +307,12 @@ def send_cart_summary(wa_id, session):
             opt_list = []
             for k, v in item['options'].items():
                 if k not in ['product_name', 'price']:  # Filter internal keys
-                     # If generic object structure from flow
-                     if isinstance(v, list):
-                         vals = [x.get('title', x) for x in v]
-                         opt_list.append(f"{', '.join(vals)}")
-                     else:
-                         opt_list.append(str(v))
+                    # If generic object structure from flow
+                    if isinstance(v, list):
+                        vals = [x.get('title', x) for x in v]
+                        opt_list.append(f"{', '.join(vals)}")
+                    else:
+                        opt_list.append(str(v))
             if opt_list:
                 opts_str = f" _({', '.join(opt_list)})_"
 
@@ -394,13 +394,13 @@ def send_static_map_confirmation(wa_id, lat, long):
         "type": "interactive",
         "interactive": {
             "type": "button",
-             "header": {
-                 "type": "image",
-                 "image": {"link": image_url}
-            },
+            "header": {
+                "type": "image",
+                "image": {"link": image_url}
+                },
             "body": {
                 "text": "📍 We pinned your location here. Is this accurate?"
-            },
+                },
             "action": {
                 "buttons": [
                     {
@@ -418,7 +418,7 @@ def send_static_map_confirmation(wa_id, lat, long):
                         }
                     }
                 ]
-            }
+                }
         }
     }
     send_message(wa_id, payload)

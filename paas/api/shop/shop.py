@@ -81,7 +81,7 @@ def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str =
     for shop in shops:
         # Hierarchical COD: Global AND Shop
         is_cod = is_global_cod_enabled and (shop.enable_cod if shop.enable_cod is not None else 1)
-        
+
         formatted_shops.append({
             'id': shop.name,
             'uuid': shop.uuid,
@@ -129,7 +129,7 @@ def get_shop_details(uuid: str):
     # Global COD Check
     cash_gateway = frappe.db.get_value("PaaS Payment Gateway", {"gateway_controller": "Cash", "enabled": 1})
     is_global_cod_enabled = bool(cash_gateway)
-    
+
     # Hierarchical COD: Global AND Shop
     # Note: shop object from get_doc has attributes directly
     is_cod = is_global_cod_enabled and (shop.enable_cod if shop.enable_cod is not None else 1)
@@ -207,7 +207,7 @@ def search_shops(search: str, category_id: int = None, limit_start: int = 0, lim
     for shop in shops:
         # Hierarchical COD: Global AND Shop
         is_cod = is_global_cod_enabled and (shop.enable_cod if shop.enable_cod is not None else 1)
-        
+
         formatted_shops.append({
             'id': shop.name,
             'uuid': shop.uuid,
@@ -257,10 +257,10 @@ def get_nearby_shops(latitude: float, longitude: float, radius_km: float = 10, l
     Retrieves a list of shops within a given radius.
     """
     if latitude is None or longitude is None:
-         return get_shops()
+        return get_shops()
 
     if latitude is None or longitude is None:
-         return get_shops()
+        return get_shops()
 
     try:
         lat = float(latitude)
@@ -280,7 +280,7 @@ def get_nearby_shops(latitude: float, longitude: float, radius_km: float = 10, l
             AND earth_box(ll_to_earth(%s, %s), %s) @> ll_to_earth(latitude, longitude)
             AND earth_distance(ll_to_earth(%s, %s), ll_to_earth(latitude, longitude)) < %s
     """
-    
+
     nearby_shops_data = frappe.db.sql(query, (lat, lon, radius, lat, lon, radius), as_dict=True)
     nearby_shop_ids = [s.name for s in nearby_shops_data]
 
@@ -326,7 +326,7 @@ def check_driver_zone(shop_id=None, address=None):
     # Get Shop Location
     shop = frappe.db.get_value("Shop", shop_id, ["latitude", "longitude"], as_dict=True)
     if not shop or not shop.latitude or not shop.longitude:
-         return api_response(data={"status": False, "message": "Shop location not found"})
+        return api_response(data={"status": False, "message": "Shop location not found"})
 
     shop_lat = float(shop.latitude)
     shop_lon = float(shop.longitude)
@@ -339,7 +339,7 @@ def check_driver_zone(shop_id=None, address=None):
 
     # Default Max Radius: 50km (Can be made configurable in Shop settings later)
     max_radius_km = 50.0 
-    
+
     return api_response(data={
         "status": distance_km <= max_radius_km,
         "distance": round(distance_km, 2)
@@ -353,14 +353,14 @@ def get_shops_by_ids(shop_ids: list = None, **kwargs):
     """
     filters = {}
     ids_to_filter = shop_ids
-    
+
     # Handle possible JSON string or alternative kwarg
     if kwargs.get("shops"):
         try:
-             import json
-             ids_to_filter = json.loads(kwargs.get("shops")) if isinstance(kwargs.get("shops"), str) else kwargs.get("shops")
+            import json
+            ids_to_filter = json.loads(kwargs.get("shops")) if isinstance(kwargs.get("shops"), str) else kwargs.get("shops")
         except:
-             ids_to_filter = None
+            ids_to_filter = None
 
     if not ids_to_filter:
         return api_response(data=[])
@@ -376,7 +376,7 @@ def get_shops_by_ids(shop_ids: list = None, **kwargs):
             "shop_type", "is_ecommerce"
         ]
     )
-    
+
     # Simple formatter (reuse get_shops logic ideally, but keep simple here)
     formatted_shops = []
     for shop in shops:
@@ -386,12 +386,12 @@ def get_shops_by_ids(shop_ids: list = None, **kwargs):
             'slug': shop.slug,
             'logo_img': shop.logo,
             'background_img': shop.cover_photo,
-             'translation': {
+            'translation': {
                 'title': shop.name,
                 'address': shop.address
-            }
+                }
         })
-        
+
     return api_response(data=formatted_shops)
 
 @frappe.whitelist()
@@ -442,7 +442,7 @@ def get_nearest_delivery_points(latitude: float, longitude: float, radius_km: fl
             AND earth_distance(ll_to_earth(%s, %s), ll_to_earth(latitude, longitude)) < %s
         ORDER BY distance_km ASC
     """
-    
+
     nearby_points = frappe.db.sql(query, (lat, lon, lat, lon, radius, lat, lon, radius), as_dict=True)
 
     # Format explicitly if needed (frappe.db.sql returns dicts/values)

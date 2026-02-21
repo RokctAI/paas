@@ -9,7 +9,7 @@ def get_languages(active=True):
     filters = {}
     if active:
         filters["active"] = 1
-        
+
     return frappe.get_list("PaaS Language", filters=filters, fields=["name", "title", "locale", "backward", "default", "active", "img"])
 
 @frappe.whitelist(allow_guest=True)
@@ -28,9 +28,9 @@ def get_translations(locale, group=None):
     filters = {"locale": locale, "status": 1}
     if group:
         filters["group"] = group
-        
+
     translations = frappe.get_list("PaaS Translation", filters=filters, fields=["key", "value", "group"])
-    
+
     # Transform into nested dict if needed, or flat key-value pairs
     result = {}
     for t in translations:
@@ -40,5 +40,5 @@ def get_translations(locale, group=None):
             if t.group not in result:
                 result[t.group] = {}
             result[t.group][t.key] = t.value
-            
+
     return result

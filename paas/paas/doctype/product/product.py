@@ -6,7 +6,7 @@ import frappe
 
 
 class Product(Document):
-	pass
+    pass
 
 
 def auto_vectorize_product(doc, method=None):

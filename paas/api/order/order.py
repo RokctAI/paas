@@ -57,14 +57,14 @@ def create_order(order_data):
         })
 
     order.insert(ignore_permissions=True)
-    
+
     # Calculate cashback
     # We do this after insert so we might have access to db-generated fields if needed, 
     # though grand_total might still need to be calculated explicitly if not done by controller.
     # Assuming the controller calculates total_price on save/insert.
     if order.total_price:
-         cashback_amount = frappe.call("paas.api.shop.shop.check_cashback", shop_id=order_data.get("shop"), amount=order.total_price)
-         order.db_set("cashback_amount", cashback_amount.get("cashback_amount"))
+        cashback_amount = frappe.call("paas.api.shop.shop.check_cashback", shop_id=order_data.get("shop"), amount=order.total_price)
+        order.db_set("cashback_amount", cashback_amount.get("cashback_amount"))
 
     if order_data.get("coupon_code"):
         coupon = frappe.get_doc("Coupon", {"code": order_data.get("coupon_code")})
@@ -74,9 +74,9 @@ def create_order(order_data):
             "user": order.user,
             "order": order.name
         }).insert(ignore_permissions=True)
- 
+
     return api_response(data=order.as_dict(), message="Order created successfully.")
- 
+
 
 @frappe.whitelist()
 def list_orders(limit_start: int = 0, limit_page_length: int = 20):
@@ -163,21 +163,21 @@ def update_order_status(order_id: str, status: str):
                 else:
                     # Optional: Create stock record if missing? checking with user pref "stocks belong to sellers"
                     # For now, let's log or create if not exists
-                     frappe.get_doc({
+                    frappe.get_doc({
                         "doctype": "Stock",
                         "shop": order.shop,
                         "product": item.product,
                         "quantity": -item.quantity, # Allow negative logic if started from 0
                         "price": item.price # Init price
-                    }).insert(ignore_permissions=True)
+                        }).insert(ignore_permissions=True)
 
     # Restore stock if order is Cancelled/Rejected from a status that deducted stock
     if status in ["Cancelled", "Rejected"] and previous_status in ["Accepted", "Prepared", "Delivered"]: # Assuming these are downstream of Accepted
         for item in order.order_items:
             product_doc = frappe.get_doc("Product", item.product)
             if product_doc.track_stock:
-                 stock_name = frappe.db.get_value("Stock", {"shop": order.shop, "product": item.product}, "name")
-                 if stock_name:
+                stock_name = frappe.db.get_value("Stock", {"shop": order.shop, "product": item.product}, "name")
+                if stock_name:
                     stock_doc = frappe.get_doc("Stock", stock_name)
                     stock_doc.quantity += item.quantity
                     stock_doc.save(ignore_permissions=True)
@@ -297,14 +297,14 @@ def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type
     for item in cart.items:
         # Using 'Product' instead of 'Item' as per project conventions
         product_doc = frappe.get_doc("Product", item.item)
-        
+
         item_price = product_doc.price or 0
         item_qty = item.quantity or 0
         item_tax = (item_price * (product_doc.tax or 0) / 100) * item_qty
         item_discount = (item_price * (item.discount_percentage or 0) / 100) * item_qty
-        
+
         item_total = (item_price * item_qty) - item_discount + item_tax
-        
+
         product_total += (item_price * item_qty)
         product_tax += item_tax
         discount += item_discount

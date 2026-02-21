@@ -117,16 +117,16 @@ class TestShopAPI(FrappeTestCase):
         # Delete Users
         users_to_delete = ["test-seller@example.com", "test-seller-2@example.com", "non-seller@example.com"]
         for user_email in users_to_delete:
-             if frappe.db.exists("User", user_email):
-                  try:
-                      frappe.delete_doc("User", user_email, force=True, ignore_permissions=True)
-                  except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
-                      # If links exist, just disable the user to allow tests to pass
-                      try:
-                          frappe.db.set_value("User", user_email, "enabled", 0)
-                          frappe.db.commit()
-                      except Exception:
-                          pass
+            if frappe.db.exists("User", user_email):
+                try:
+                    frappe.delete_doc("User", user_email, force=True, ignore_permissions=True)
+                except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
+                    # If links exist, just disable the user to allow tests to pass
+                    try:
+                        frappe.db.set_value("User", user_email, "enabled", 0)
+                        frappe.db.commit()
+                    except Exception:
+                        pass
 
     def test_create_shop_unauthorized(self):
         """Test that a user without the Seller role cannot create a shop."""

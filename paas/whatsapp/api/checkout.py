@@ -46,7 +46,7 @@ def start_checkout(session):
     Step 1: Ask for Delivery Address
     """
     rows = []
-    
+
     # 1. Linked User Addresses
     if session.linked_user:
         addresses = frappe.get_list("User Address", 
@@ -75,7 +75,7 @@ def start_checkout(session):
         "title": "Type New Address",
         "description": "Enter text address manually"
     })
-    
+
     payload = {
         "recipient_type": "individual",
         "type": "interactive",
@@ -111,10 +111,10 @@ def select_payment_method(session):
     # Calculate Total first to display or verify wallet balance
     cart = json.loads(session.cart_items)
     total = sum([item['qty'] * item['price'] for item in cart])
-    
+
     # Check Logic
     options = get_payment_options(session, total)
-    
+
     if not options:
         send_text(session.wa_id, "⚠️ No payment methods available. Please contact support.")
         return
@@ -129,7 +129,7 @@ def select_payment_method(session):
                 "title": opt['label']
             }
         })
-        
+
     payload = {
         "recipient_type": "individual",
         "type": "interactive",
@@ -152,36 +152,36 @@ def get_payment_options(session, total):
     Determine valid payment options based on Hierarchical COD settings and User Wallet/Cards.
     """
     options = []
-    
+
     # 1. Wallet
     if session.linked_user:
         wallet = frappe.db.get_value("User", session.linked_user, "wallet_balance") or 0.0
         if wallet >= total:
             options.append({"id": "wallet", "label": f"Wallet ({frappe.fmt_money(wallet)})"})
-            
+
     # 2. Saved Cards (PayFast/Direct)
     if session.linked_user:
         # Assuming we have a helper or query
         cards = frappe.get_list("Saved Card", filters={"user": session.linked_user}, fields=["name", "last_four", "card_type"])
         for card in cards:
             options.append({"id": f"card_{card['name']}", "label": f"{card['card_type']} ({card['last_four']})"})
-            
+
     # 3. Cash on Delivery (COD) Logic
     # Check 1: Shop Level Toggle
     shop_cod = frappe.db.get_value("Shop", session.current_shop, "enable_cod")
-    
+
     # Default to Enabled if not set
     if shop_cod is None: 
         shop_cod = 1
-    
+
     # Check 2: Global Payment Gateway Toggle
     is_global_enabled = True
     if frappe.db.exists("PaaS Payment Gateway", {"gateway_controller": "Cash"}):
-         is_global_enabled = bool(frappe.db.get_value("PaaS Payment Gateway", {"gateway_controller": "Cash", "enabled": 1}))
-         
+        is_global_enabled = bool(frappe.db.get_value("PaaS Payment Gateway", {"gateway_controller": "Cash", "enabled": 1}))
+
     if is_global_enabled and shop_cod:
         options.append({"id": "cod", "label": "Cash on Delivery"})
-        
+
     return options
 
 def handle_payment_selection(session, payload):
@@ -190,10 +190,10 @@ def handle_payment_selection(session, payload):
     """
     # payload: "pay_wallet", "pay_cod", "pay_card_xxx" (prefix handled by shop.py? No, shop.py passes raw ID)
     # shop.py passes 'btn_id'. If button was 'pay_wallet', payload is 'pay_wallet'.
-    
+
     payment_method = payload.replace("pay_", "")
     save_checkout_data(session, {"payment_method": payment_method})
-    
+
     confirm_order_summary(session)
 
 def confirm_order_summary(session):
@@ -203,21 +203,21 @@ def confirm_order_summary(session):
     cart = json.loads(session.cart_items)
     total = sum([item['qty'] * item['price'] for item in cart])
     checkout_data = json.loads(session.checkout_data)
-    
+
     # Format Address
     addr_display = "Selected Address"
     if checkout_data.get('type') == 'manual':
         addr_display = checkout_data['address']
     elif checkout_data.get('type') == 'saved':
-         addr_display = "Saved Address" # Could fetch title
+        addr_display = "Saved Address" # Could fetch title
     elif checkout_data.get('type') == 'location':
-         addr_display = "Pinned Location"
-         
+        addr_display = "Pinned Location"
+
     # Format Payment
     pay_method = checkout_data.get('payment_method')
-    
+
     msg = f"📝 *Order Summary*\n\nItems: {len(cart)}\nTotal: *{frappe.fmt_money(total)}*\nDelivery: {addr_display}\nPayment: *{pay_method.upper()}*\n\n✅ Ready to complete?"
-    
+
     payload = {
         "recipient_type": "individual",
         "type": "interactive",
@@ -240,17 +240,18 @@ def finalize_order(session):
     """
     Step 4: Process Payment & Create Order
     """
-    if not session.cart_items: return
+    if not session.cart_items:
+        return
 
     cart = json.loads(session.cart_items)
     checkout_data = json.loads(session.checkout_data)
     payment_method = checkout_data.get('payment_method', 'cod')
-    
+
     # 1. Process Payment (Simplistic Implementation)
     transaction_id = None
     order_status = "New"
     payment_status = "Unpaid"
-    
+
     if payment_method == 'wallet':
         # Deduct wallet
         # Verify balance again to be safe
@@ -259,21 +260,21 @@ def finalize_order(session):
         if (user.wallet_balance or 0) < total:
             send_text(session.wa_id, "❌ Insufficient wallet balance. Order cancelled.")
             return
-        
+
         # Debiting is typically done via Transaction creation often *after* order or *during*.
         # paas.api.payment.process_wallet_payment expects amount.
         # implementation details vary. Let's assume we mark Order `payment_type` = "Wallet" and Backend handles deduction?
         # OR we deduct now. Let's do a simple deduction call logic if we had it. 
         # For now, Set Order Type = Wallet.
         payment_status = "Paid" 
-        
+
     elif payment_method.startswith('card_'):
         # Token Payment
         # card_token = payment_method.replace("card_", "") 
         # Actually it's card NAME. We need to fetch TOKEN.
         # Skipping actual gateway call for MVP safety, just marking "Credit Card"
         payment_status = "Paid" # Optimistic
-        
+
     elif payment_method == 'cod':
         payment_status = "Unpaid"
 
@@ -285,7 +286,7 @@ def finalize_order(session):
             "quantity": item['qty'],
             "price": item['price']
         })
-        
+
     order_payload = {
         "user": session.linked_user or frappe.session.user,
         "shop": session.current_shop,
@@ -304,25 +305,25 @@ def finalize_order(session):
     try:
         new_order = paas_create_order(order_payload)
         order_id = new_order.get('name')
-        
+
         # 3. Process Payment
         if payment_method == 'wallet':
-             # Call Real Wallet Payment
-             from paas.api.payment.payment import process_wallet_payment
-             process_wallet_payment(order_id)
-             send_text(session.wa_id, f"✅ Payment Successful (Wallet)!")
+            # Call Real Wallet Payment
+            from paas.api.payment.payment import process_wallet_payment
+            process_wallet_payment(order_id)
+            send_text(session.wa_id, f"✅ Payment Successful (Wallet)!")
 
         elif payment_method.startswith('card_'):
-             # Call Real Card Payment
-             card_name = payment_method.replace("card_", "")
-             token = frappe.db.get_value("Saved Card", card_name, "token")
-             
-             if token:
-                 from paas.api.payment.payment import process_token_payment
-                 process_token_payment(order_id, token)
-                 send_text(session.wa_id, f"✅ Payment Successful (Card)!")
-             else:
-                 send_text(session.wa_id, "⚠️ Card Token not found. Order created as Unpaid.") 
+            # Call Real Card Payment
+            card_name = payment_method.replace("card_", "")
+            token = frappe.db.get_value("Saved Card", card_name, "token")
+
+            if token:
+                from paas.api.payment.payment import process_token_payment
+                process_token_payment(order_id, token)
+                send_text(session.wa_id, f"✅ Payment Successful (Card)!")
+            else:
+                send_text(session.wa_id, "⚠️ Card Token not found. Order created as Unpaid.") 
 
         send_text(session.wa_id, f"🎉 Order Placed! ID: {new_order.get('name')}")
         session.cart_items = "[]"

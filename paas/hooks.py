@@ -27,29 +27,29 @@ import frappe
 
 
 def get_safe_scheduler_events():
-	"""
-	Safely get scheduler events by checking if frappe.conf exists.
-	This prevents crashes during installation where frappe.conf is not yet available.
-	"""
-	# This function is called at import time, so we must be defensive.
-	if not hasattr(frappe, "conf") or not frappe.conf:
-		return {}
+    """
+    Safely get scheduler events by checking if frappe.conf exists.
+    This prevents crashes during installation where frappe.conf is not yet available.
+    """
+    # This function is called at import time, so we must be defensive.
+    if not hasattr(frappe, "conf") or not frappe.conf:
+        return {}
 
-	app_role = frappe.conf.get("app_role", "tenant")
-	events = {}
+    app_role = frappe.conf.get("app_role", "tenant")
+    events = {}
 
-	if app_role == "tenant":
-		# PaaS tasks only run on tenant sites
-		events = {
-			"hourly": [
-				"paas.tasks.process_repeating_orders"
-			],
-			"daily": [
-				"paas.tasks.remove_expired_stories"
-			]
-		}
+    if app_role == "tenant":
+        # PaaS tasks only run on tenant sites
+        events = {
+            "hourly": [
+                "paas.tasks.process_repeating_orders"
+            ],
+            "daily": [
+                "paas.tasks.remove_expired_stories"
+            ]
+        }
 
-	return events
+    return events
 
 
 scheduler_events = get_safe_scheduler_events()
@@ -614,7 +614,7 @@ whitelisted_methods = {
     "paas.api.user.update_user_shop": "paas.api.user.user.update_user_shop",
     "paas.api.user.verify_phone_code": "paas.api.user.user.verify_phone_code",
     "paas.api.waiter.get_waiter_order_report": "paas.api.waiter.waiter.get_waiter_order_report",
-    "paas.api.waiter.get_waiter_orders": "paas.api.waiter.waiter.get_waiter_orders",}
+    "paas.api.waiter.get_waiter_orders": "paas.api.waiter.waiter.get_waiter_orders", }
 
 # Fixtures
 # ---------

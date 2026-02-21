@@ -98,11 +98,11 @@ class TestProductAPI(FrappeTestCase):
             frappe.delete_doc("Item", "Test Product 1", force=True, ignore_permissions=True)
 
         if frappe.db.exists("Shop", "Product Test Shop"):
-             # Shop deletion might require deleting items first, which we did above
-             try:
+            # Shop deletion might require deleting items first, which we did above
+            try:
                 frappe.delete_doc("Shop", "Product Test Shop", force=True, ignore_permissions=True)
-             except Exception:
-                 pass
+            except Exception:
+                pass
 
     def test_get_products(self):
         """Test fetching products list."""

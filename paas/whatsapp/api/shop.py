@@ -40,24 +40,24 @@ def handle_interactive(reply, session):
         if item_code:
             add_to_cart(session, item_code, options=flow_data)
         else:
-             send_text(session.wa_id, "❌ Error processing selection. Please try again.")
+            send_text(session.wa_id, "❌ Error processing selection. Please try again.")
 
     elif type_ == 'list_reply':
         item_id = reply['list_reply']['id']
 
         if item_id.startswith("addr_"):
-             from paas.whatsapp.api.checkout import handle_checkout_action
-             # Handle Address Select
-             if item_id == "addr_new":
-                 # Trigger manual input
-                 from paas.whatsapp.responses import send_text
-                 send_text(session.wa_id, "📍 Please type your full delivery address:")
-                 session.current_flow = "checkout_address_input"
-                 session.save(ignore_permissions=True)
-             elif item_id == "addr_location":
-                 handle_checkout_action(session, 'address_location')
-             else:
-                 handle_checkout_action(session, 'address_selected', payload=item_id)
+            from paas.whatsapp.api.checkout import handle_checkout_action
+            # Handle Address Select
+            if item_id == "addr_new":
+                # Trigger manual input
+                from paas.whatsapp.responses import send_text
+                send_text(session.wa_id, "📍 Please type your full delivery address:")
+                session.current_flow = "checkout_address_input"
+                session.save(ignore_permissions=True)
+            elif item_id == "addr_location":
+                handle_checkout_action(session, 'address_location')
+            else:
+                handle_checkout_action(session, 'address_selected', payload=item_id)
 
         elif item_id.startswith("shop_"):
             shop_uuid = item_id.split("_")[1]
@@ -88,12 +88,12 @@ def handle_interactive(reply, session):
 
             # If Config has Flow ID and Product needs it, send Flow
             if config.flow_id and has_variants:
-                 send_product_flow(session.wa_id, product, config.flow_id)
+                send_product_flow(session.wa_id, product, config.flow_id)
             else:
-                 send_product_card(session.wa_id, product)
+                send_product_card(session.wa_id, product)
 
         elif item_id == "cmd_view_cart":
-             send_cart_summary(session.wa_id, session)
+            send_cart_summary(session.wa_id, session)
 
     elif type_ == 'button_reply':
         btn_id = reply['button_reply']['id']
@@ -132,9 +132,9 @@ def handle_interactive(reply, session):
             send_text(session.wa_id, "Cart cleared.")
 
         elif btn_id == 'cmd_place_order':
-             from paas.whatsapp.api.checkout import handle_checkout_action
-             handle_checkout_action(session, 'place_order')
+            from paas.whatsapp.api.checkout import handle_checkout_action
+            handle_checkout_action(session, 'place_order')
 
         elif btn_id.startswith('pay_'):
-             from paas.whatsapp.api.checkout import handle_checkout_action
-             handle_checkout_action(session, 'payment_selected', payload=btn_id)
+            from paas.whatsapp.api.checkout import handle_checkout_action
+            handle_checkout_action(session, 'payment_selected', payload=btn_id)

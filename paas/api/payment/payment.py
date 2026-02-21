@@ -153,9 +153,9 @@ def flutterwave_callback():
             response.raise_for_status()
             verification_data = response.json()
 
-            if (verification_data.get("status") == "success" and
-                verification_data["data"]["tx_ref"] == tx_ref and
-                verification_data["data"]["amount"] >= order.grand_total):
+            if (verification_data.get("status") == "success"
+                and verification_data["data"]["tx_ref"] == tx_ref
+                    and verification_data["data"]["amount"] >= order.grand_total):
 
                 order.payment_status = "Paid"
                 order.custom_payment_transaction_id = transaction_id
@@ -233,7 +233,7 @@ def handle_payfast_callback():
     pf_param_string = pf_param_string[:-1]
 
     if passphrase:
-         pf_param_string += f"&passphrase={passphrase}"
+        pf_param_string += f"&passphrase={passphrase}"
 
     signature = frappe.utils.md5_hash(pf_param_string)
 
@@ -647,8 +647,8 @@ def _charge_card_token(token, amount, currency, description, user):
     """
     saved_card_name = frappe.db.get_value("Saved Card", {"token": token, "user": user})
     if not saved_card_name:
-         frappe.throw("Invalid or unauthorized token.", frappe.PermissionError)
-    
+        frappe.throw("Invalid or unauthorized token.", frappe.PermissionError)
+
     saved_card = frappe.get_doc("Saved Card", saved_card_name)
     gateway_name = saved_card.gateway or "PayFast"  # Default to PayFast for legacy
 
@@ -675,9 +675,9 @@ def _charge_flutterwave_token(token, amount, currency, description, user):
         "Authorization": f"Bearer {settings.get_password('secret_key')}",
         "Content-Type": "application/json"
     }
-    
+
     user_email = frappe.db.get_value("User", user, "email")
-    
+
     payload = {
         "token": token,
         "currency": currency,
@@ -707,11 +707,11 @@ def _charge_payfast_token(token, amount, currency, description):
     settings = get_payfast_settings()
     is_sandbox = settings.get('is_sandbox', True)
     base_url = "api.payfast.co.za" if not is_sandbox else "sandbox.payfast.co.za"
-    
+
     merchant_id = settings.get("merchant_id")
     merchant_key = settings.get("merchant_key")
     pass_phrase = settings.get("pass_phrase")
-    
+
     # Ad-hoc charge endpoint
     url = f"https://{base_url}/subscriptions/{token}/adhoc"
     if is_sandbox and not url.endswith("/api"): # Sandbox API is usually under /api
@@ -719,43 +719,43 @@ def _charge_payfast_token(token, amount, currency, description):
 
     # PayFast API requires amount in cents for adhoc charges
     amount_in_cents = int(float(amount) * 100)
-    
+
     # 1. Prepare base parameters
     params = {
         'merchant-id': merchant_id,
         'version': 'v1',
         'timestamp': frappe.utils.now_datetime().strftime('%Y-%m-%dT%H:%M:%S'),
     }
-    
+
     # 2. Add body parameters (these are also signed)
     body = {
         'amount': amount_in_cents,
         'item_name': description,
         'm_payment_id': frappe.utils.generate_hash()[:10]
     }
-    
+
     # 3. Generate Signature
     # According to PayFastCardService.php:
     # a) Merge base params with body
     all_params = {**params, **body}
     # b) Initial Sort
     keys_sorted = sorted(all_params.keys())
-    
+
     # c) Add passphrase (if exists) after initial sort but then sort AGAIN
     signature_params = all_params.copy()
     if pass_phrase:
-         signature_params['passphrase'] = pass_phrase
-    
+        signature_params['passphrase'] = pass_phrase
+
     final_sorted_keys = sorted(signature_params.keys())
-    
+
     # d) Build query string
     from urllib.parse import urlencode
     # PayFast expects standard urlencoding for the signature string
     signature_string = "&".join([f"{k}={urlencode(str(signature_params[k]))}" for k in final_sorted_keys])
-    
+
     import hashlib
     signature = hashlib.md5(signature_string.encode('utf-8')).hexdigest()
-    
+
     # 4. Prepare Headers
     headers = {
         'merchant-id': merchant_id,
@@ -765,18 +765,18 @@ def _charge_payfast_token(token, amount, currency, description):
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     }
-    
+
     try:
         response = requests.post(url, json=body, headers=headers, timeout=30)
         res_data = response.json() if response.text else {}
-        
+
         if response.status_code in [200, 202] and res_data.get('status') == 'success':
             return res_data
         else:
             error_msg = res_data.get('data', {}).get('response', 'Unknown PayFast Error')
             frappe.log_error(f"PayFast API Error ({response.status_code}): {response.text}", "PayFast Token Charge Failed")
             frappe.throw(f"Payment failed: {error_msg}")
-            
+
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "PayFast Token Charge Exception")
         frappe.throw("Error connecting to payment gateway.")
@@ -802,7 +802,7 @@ def process_token_payment(order_id, token):
         description=description,
         user=user
     )
-    
+
     # If successful, update order status
     if result.get("status") == "success":
         order.payment_status = "Paid"
@@ -830,15 +830,15 @@ def tip_process(order_id: str, tip_amount: float):
         order.tip_amount = tip_amount
         order.total_price += tip_amount # Update total? Or keep separate?
         order.save(ignore_permissions=True)
-        
+
         # If already paid, might need to charge the tip separately.
         # This implementation assumes it's added before payment or just recorded.
         # If separate charge needed:
         # charge_token(user_token, tip_amount)
-        
+
         return {"status": "success", "message": "Tip added successfully."}
     else:
-         frappe.throw("Tips can only be added to delivered orders (conceptually).")
+        frappe.throw("Tips can only be added to delivered orders (conceptually).")
 
     transaction = frappe.get_doc({
         "doctype": "Transaction",
@@ -898,21 +898,21 @@ def process_wallet_payment(order_id):
     user = frappe.session.user
     if user == "Guest":
         frappe.throw("You must be logged in.")
-        
+
     order = frappe.get_doc("Order", order_id)
     if order.user != user:
         frappe.throw("Unauthorized.", frappe.PermissionError)
-        
+
     user_doc = frappe.get_doc("User", user)
     balance = user_doc.wallet_balance or 0.0
-    
+
     if balance < order.grand_total:
-         frappe.throw("Insufficient Wallet Balance.")
-         
+        frappe.throw("Insufficient Wallet Balance.")
+
     # Deduct
     user_doc.wallet_balance = balance - order.grand_total
     user_doc.save(ignore_permissions=True)
-    
+
     # Transaction
     transaction = frappe.get_doc({
         "doctype": "Transaction",
@@ -924,8 +924,8 @@ def process_wallet_payment(order_id):
         "type": "Debit" 
     })
     transaction.insert(ignore_permissions=True)
-    
+
     order.payment_status = "Paid"
     order.save()
-    
+
     return {"status": "success"}

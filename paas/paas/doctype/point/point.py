@@ -9,4 +9,4 @@ from frappe.model.document import Document
 
 
 class Point(Document):
-	pass
+    pass

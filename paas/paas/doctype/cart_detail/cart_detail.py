@@ -5,4 +5,4 @@ import frappe
 from frappe.model.document import Document
 
 class CartDetail(Document):
-	pass
+    pass

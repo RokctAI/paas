@@ -74,67 +74,67 @@ class TestParcelOrderAPI(FrappeTestCase):
 
         # 0. Create Item Group "All Item Groups" if missing
         if not frappe.db.exists("Item Group", "All Item Groups"):
-             frappe.get_doc({
+            frappe.get_doc({
                 "doctype": "Item Group",
                 "item_group_name": "All Item Groups",
                 "is_group": 1
-             }).insert(ignore_permissions=True)
+            }).insert(ignore_permissions=True)
 
         # 1. Create UOM "Nos" if missing
         if not frappe.db.exists("UOM", "Nos"):
-             frappe.get_doc({
+            frappe.get_doc({
                 "doctype": "UOM",
                 "uom_name": "Nos",
                 "must_be_whole_number": 1
-             }).insert(ignore_permissions=True)
+            }).insert(ignore_permissions=True)
 
         # 2. Create Unique Shop
         self.shop_name = f"Test Shop {frappe.generate_hash(length=5)}"
         # Check if Shop doctype exists (it must)
         if frappe.db.exists("DocType", "Shop"):
-             self.test_shop = frappe.get_doc({
-                 "doctype": "Shop",
-                 "shop_name": self.shop_name,
-                 "uuid": frappe.generate_hash(length=10),  # Add mandatory UUID
-                 "user": self.test_user.name,
-                 "status": "approved",
-                 "open": 1,
-                 "visibility": 1,
-                 "delivery": 1,
-                 "phone": "+919999999999"
-             }).insert(ignore_permissions=True)
-             frappe.db.commit()
+            self.test_shop = frappe.get_doc({
+                "doctype": "Shop",
+                "shop_name": self.shop_name,
+                "uuid": frappe.generate_hash(length=10),  # Add mandatory UUID
+                "user": self.test_user.name,
+                "status": "approved",
+                "open": 1,
+                "visibility": 1,
+                "delivery": 1,
+                "phone": "+919999999999"
+            }).insert(ignore_permissions=True)
+            frappe.db.commit()
 
-             # 3. Create Unique Product (The 'item' field in Parcel Order Item links to Product)
+            # 3. Create Unique Product (The 'item' field in Parcel Order Item links to Product)
 
-             # Create Shop Unit "Kg" if missing (Shop Unit is Shop-specific)
-             # We create it for this specific shop
-             unit_name = f"Kg-{self.shop_name}"
-             if not frappe.db.exists("Shop Unit", unit_name):
-                 shop_unit = frappe.get_doc({
-                     "doctype": "Shop Unit",
-                     "name": unit_name,
-                     "unit_name": "Kg",
-                     "shop": self.test_shop.name
-                 }).insert(ignore_permissions=True)
-                 unit_name = shop_unit.name
-             frappe.db.commit()
+            # Create Shop Unit "Kg" if missing (Shop Unit is Shop-specific)
+            # We create it for this specific shop
+            unit_name = f"Kg-{self.shop_name}"
+            if not frappe.db.exists("Shop Unit", unit_name):
+                shop_unit = frappe.get_doc({
+                    "doctype": "Shop Unit",
+                    "name": unit_name,
+                    "unit_name": "Kg",
+                    "shop": self.test_shop.name
+                }).insert(ignore_permissions=True)
+                unit_name = shop_unit.name
+            frappe.db.commit()
 
-             self.product_name = f"Test Product {frappe.generate_hash(length=5)}"
-             self.product = frappe.get_doc({
-                 "doctype": "Product",
-                 "title": self.product_name,
-                 "shop": self.test_shop.name,
-                 "price": 10.0,
-                 "unit": unit_name,
-                 "active": 1,
-                 "track_stock": 0
-             }).insert(ignore_permissions=True)
-             frappe.db.commit()
-             self.item_code = self.product.name
+            self.product_name = f"Test Product {frappe.generate_hash(length=5)}"
+            self.product = frappe.get_doc({
+                "doctype": "Product",
+                "title": self.product_name,
+                "shop": self.test_shop.name,
+                "price": 10.0,
+                "unit": unit_name,
+                "active": 1,
+                "track_stock": 0
+            }).insert(ignore_permissions=True)
+            frappe.db.commit()
+            self.item_code = self.product.name
         else:
-             # Fallback if Shop doesn't exist (unlikely in PaaS)
-             self.item_code = "Test Item"
+            # Fallback if Shop doesn't exist (unlikely in PaaS)
+            self.item_code = "Test Item"
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
@@ -145,9 +145,9 @@ class TestParcelOrderAPI(FrappeTestCase):
         # Clean up created documents
         frappe.db.delete("Parcel Order", {"user": self.test_user.name})
         if hasattr(self, "parcel_setting"):
-             frappe.db.delete("Parcel Order Setting", {"name": self.parcel_setting.name})
+            frappe.db.delete("Parcel Order Setting", {"name": self.parcel_setting.name})
         if hasattr(self, "delivery_point"):
-             frappe.db.delete("Delivery Point", {"name": self.delivery_point.name})
+            frappe.db.delete("Delivery Point", {"name": self.delivery_point.name})
 
         if hasattr(self, "product") and self.product:
             frappe.delete_doc("Product", self.product.name, force=True, ignore_permissions=True)
@@ -157,7 +157,7 @@ class TestParcelOrderAPI(FrappeTestCase):
 
         # Clean up Item if we created it previously (legacy cleanup)
         if frappe.db.exists("Item", "Test Item"):
-             frappe.delete_doc("Item", "Test Item", force=True, ignore_permissions=True)
+            frappe.delete_doc("Item", "Test Item", force=True, ignore_permissions=True)
 
         if frappe.db.exists("User", self.test_user.name):
             try:

@@ -79,7 +79,7 @@ def process_repeating_orders():
             new_order.transaction_date = now
             new_order.delivery_date = now.date() 
             new_order.amended_from = None
-            
+
             # Initial status is "Draft" or "Payment Failed" until payment succeeds
             new_order.status = "Payment Failed" 
             new_order.payment_status = "Pending"
@@ -92,14 +92,14 @@ def process_repeating_orders():
                     user_doc = frappe.get_doc("User", ro.user)
                     user_doc.set("ringfenced_balance", (user_doc.get("ringfenced_balance") or 0.0) - new_order.grand_total)
                     user_doc.save(ignore_permissions=True)
-                    
+
                     # Update RO
                     frappe.db.set_value("Repeating Order", ro.name, "ringfenced_amount", ro.ringfenced_amount - new_order.grand_total)
-                    
+
                     new_order.payment_status = "Paid"
                     new_order.status = "New"
                     payment_success = True
-                    
+
                     # Log Capture Transaction
                     transaction = frappe.get_doc({
                         "doctype": "Transaction",
@@ -113,7 +113,7 @@ def process_repeating_orders():
                     transaction.insert(ignore_permissions=True)
                 else:
                     print(f"Insufficient ringfenced funds for {ro.name}")
-            
+
             elif ro.payment_method == "Saved Card" and ro.saved_card:
                 try:
                     from paas.api.payment.payment import process_token_payment
@@ -131,9 +131,9 @@ def process_repeating_orders():
                 # If order wasn't inserted by card logic yet
                 if not new_order.name:
                     new_order.insert(ignore_permissions=True)
-                
+
                 print(f"Payment failed for order {new_order.name}. Order status set to {new_order.status}")
-                
+
                 # Notify User
                 try:
                     from paas.api.notification.notification import send_push_notification
@@ -182,7 +182,7 @@ def process_repeating_orders():
     )
     for ro_name in expired_ro:
         frappe.db.set_value("Repeating Order", ro_name, "is_active", 0)
-    
+
     if expired_ro:
         frappe.db.commit()
         print(f"Cleaned up {len(expired_ro)} expired auto-orders.")

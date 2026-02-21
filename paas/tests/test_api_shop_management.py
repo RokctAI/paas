@@ -55,7 +55,7 @@ class TestShopManagementAPI(FrappeTestCase):
                     frappe.db.set_value("User", "other_owner@example.com", "enabled", 0)
         except Exception:
             pass
-        
+
         # Handle cases where shop names might have changed and weren't caught by cascade
         frappe.db.delete("Shop", {"user": ["in", ["shop_owner@example.com", "other_owner@example.com"]]})
         frappe.db.commit()
@@ -87,7 +87,7 @@ class TestShopManagementAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
         else:
             other_user = frappe.get_doc("User", other_user_email)
-            
+
         if not frappe.db.exists("Shop", "Other Shop"):
             other_shop = frappe.get_doc({
                 "doctype": "Shop", 
@@ -105,7 +105,7 @@ class TestShopManagementAPI(FrappeTestCase):
         # The test update_other_user_shop_permission in original code was slightly flawed 
         # because update_user_shop doesn't take a shop ID.
         # So it really tests that update_user_shop only updates YOUR shop.
-        
+
         # We can test that if we don't have a shop, it fails.
         # But let's keep it simple.
         pass

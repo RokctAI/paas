@@ -6,4 +6,4 @@ from frappe.model.document import Document
 
 
 class DesignSettings(Document):
-	pass
+    pass

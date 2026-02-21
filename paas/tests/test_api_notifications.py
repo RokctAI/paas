@@ -23,12 +23,12 @@ class TestNotificationsAPI(FrappeTestCase):
 
         # Create notification type if not exists (Usually standard, but Alert might be missing)
         if not frappe.db.exists("Notification Type", "Alert"):
-             # Assuming 'Notification Type' is a doctype, or it's just a select/link options.
-             # The error was LinkValidationError, link to 'Notification Type'.
-             # Standard Frappe actually doesn't use 'Notification Type' link in Notification Log usually?
-             # 'type' is a Select in standard Notification Log.
-             # But here key is 'notification_type', likely custom or mapped.
-             pass
+            # Assuming 'Notification Type' is a doctype, or it's just a select/link options.
+            # The error was LinkValidationError, link to 'Notification Type'.
+            # Standard Frappe actually doesn't use 'Notification Type' link in Notification Log usually?
+            # 'type' is a Select in standard Notification Log.
+            # But here key is 'notification_type', likely custom or mapped.
+            pass
 
         # If 'notification_type' is a Link field to 'Notification Type' DocType:
         # We need to construct it. But let's check if the DocType exists first.
