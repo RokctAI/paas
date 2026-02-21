@@ -44,7 +44,7 @@ def semantic_search(query, shop_id, top_k=3):
         # Determine if we need to format the vector as string
         vector_str = str(query_vector)
 
-        results = frappe.db.sql(f"""
+        results = frappe.db.sql("""
             SELECT
                 name, uuid, item_name as title, description,
                 (embedding <=> %s) as distance
