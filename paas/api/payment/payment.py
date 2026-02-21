@@ -118,7 +118,7 @@ def initiate_flutterwave_payment(order_id: str):
             frappe.log_error(f"Flutterwave initiation failed: {response_data.get('message')}", "Flutterwave Error")
             frappe.throw("Failed to initiate payment with Flutterwave.")
 
-    except Exception:
+    except Exception as e:
         frappe.db.rollback()
         frappe.log_error(frappe.get_traceback(), "Flutterwave Payment Initiation Failed")
         frappe.throw(f"An error occurred during payment initiation: {e}")
