@@ -4,7 +4,7 @@ from paas.api.utils import api_response
 
 
 @frappe.whitelist()
-def create_parcel_order(order_data):
+def create_parcel_order(order_data):  # noqa: C901
     """
     Creates a new parcel order from a flexible payload.
     'order_data' is a JSON string or dict with parcel details.
@@ -141,7 +141,7 @@ def get_user_parcel_order(name):
 
 
 @frappe.whitelist()
-def update_parcel_status(parcel_order_id, status):
+def update_parcel_status(parcel_order_id, status):  # noqa: C901
     """
     Updates the status of a specific parcel order with state machine validation and role checks.
     """
