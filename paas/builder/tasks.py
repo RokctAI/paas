@@ -9,6 +9,7 @@ import tempfile
 import re
 import yaml
 
+
 def log_message(message, app_config_name):
     """Helper function to append messages to the build log."""
     app_config = frappe.get_doc("Flutter App Configuration", app_config_name)
@@ -17,6 +18,7 @@ def log_message(message, app_config_name):
     app_config.db_set("build_log", new_log)
     frappe.db.commit()
     frappe.logger().info(f"Build Log ({app_config_name}): {message}")
+
 
 def get_original_package_name(temp_dir):
     """Reads the original package name from the android/app/build.gradle file."""
@@ -28,6 +30,7 @@ def get_original_package_name(temp_dir):
         if match:
             return match.group(1)
     raise Exception("Could not find original package name in build.gradle")
+
 
 def rename_android_package_structure(temp_dir, old_package_name, new_package_name, app_config_name):
     """Renames the android package directory structure."""
@@ -65,6 +68,7 @@ def rename_android_package_structure(temp_dir, old_package_name, new_package_nam
 
     log_message("Successfully renamed Android package structure.", app_config_name)
 
+
 def get_windows_exe_name(temp_dir):
     """Reads the BINARY_NAME from the windows/runner/CMakeLists.txt file."""
     cmake_path = os.path.join(temp_dir, 'windows/runner/CMakeLists.txt')
@@ -78,6 +82,7 @@ def get_windows_exe_name(temp_dir):
     return "app"
 
 import xml.etree.ElementTree as ET
+
 
 def modify_project_files(temp_dir, app_config):
     """
@@ -265,7 +270,7 @@ def modify_project_files(temp_dir, app_config):
             dict_element = root.find('dict')
             for i, elem in enumerate(dict_element):
                 if elem.tag == 'key' and elem.text == 'CFBundleDisplayName':
-                    dict_element[i+1].text = app_config.app_display_name
+                    dict_element[i + 1].text = app_config.app_display_name
                     break
             tree.write(info_plist_path)
             log_message("Updated CFBundleDisplayName in Info.plist", app_config.name)
@@ -375,6 +380,7 @@ def modify_project_files(temp_dir, app_config):
 
     log_message("File modifications complete.", app_config.name)
 
+
 def handle_custom_font(temp_dir, app_config):
     """Handles the uploaded custom font file."""
     if not app_config.custom_font_file:
@@ -449,6 +455,7 @@ def replace_image_asset(temp_dir, app_config, field_name, target_path_relative):
     except Exception as e:
         log_message(f"Error replacing image asset for {field_name}: {e}", app_config.name)
 
+
 def place_google_services_json(temp_dir, app_config):
     if not app_config.google_services_json:
         log_message("No google-services.json uploaded, skipping.", app_config.name)
@@ -464,6 +471,7 @@ def place_google_services_json(temp_dir, app_config):
         log_message("Placed google-services.json.", app_config.name)
     except Exception as e:
         log_message(f"Error placing google-services.json: {e}", app_config.name)
+
 
 def generate_app_icons(temp_dir, app_config, settings):
     if not app_config.app_icon:
@@ -523,6 +531,7 @@ def generate_app_icons(temp_dir, app_config, settings):
         log_message(f"Error generating icons: {e}", app_config.name)
         if hasattr(e, 'stderr'):
             log_message(e.stderr, app_config.name)
+
 
 def update_splash_screen(temp_dir, app_config, settings):
     """Updates the native splash screen configuration."""
@@ -593,10 +602,11 @@ def generate_flutter_app(app_config_name):
     frappe.enqueue(
         'paas.builder.tasks._generate_flutter_app',
         queue='long',
-        timeout=7200, # 2 hours timeout for the build
+        timeout=7200,  # 2 hours timeout for the build
         app_config_name=app_config_name
     )
     return {"status": "enqueued"}
+
 
 def _generate_flutter_app(app_config_name):
     """
@@ -609,7 +619,7 @@ def _generate_flutter_app(app_config_name):
 
     try:
         app_config.db_set("build_status", "In Progress")
-        app_config.db_set("build_log", "") # Clear previous logs
+        app_config.db_set("build_log", "")  # Clear previous logs
         frappe.db.commit()
 
         log_message("Starting build for " + app_config.name, app_config.name)
@@ -734,5 +744,3 @@ def _generate_flutter_app(app_config_name):
         if os.path.exists(temp_dir):
             shutil.rmtree(temp_dir)
             print(f"Cleaned up temporary directory: {temp_dir}")
-
-

@@ -3,6 +3,7 @@ import json
 from frappe.model.document import Document
 from paas.api.utils import api_response
 
+
 @frappe.whitelist(allow_guest=True)
 def create_order(order_data):
     """
@@ -48,7 +49,6 @@ def create_order(order_data):
         "note": order_data.get("note"),
     })
 
-
     for item in order_data.get("order_items", []):
         order.append("order_items", {
             "product": item.get("product"),
@@ -59,7 +59,7 @@ def create_order(order_data):
     order.insert(ignore_permissions=True)
 
     # Calculate cashback
-    # We do this after insert so we might have access to db-generated fields if needed, 
+    # We do this after insert so we might have access to db-generated fields if needed,
     # though grand_total might still need to be calculated explicitly if not done by controller.
     # Assuming the controller calculates total_price on save/insert.
     if order.total_price:
@@ -167,12 +167,12 @@ def update_order_status(order_id: str, status: str):
                         "doctype": "Stock",
                         "shop": order.shop,
                         "product": item.product,
-                        "quantity": -item.quantity, # Allow negative logic if started from 0
-                        "price": item.price # Init price
+                        "quantity": -item.quantity,  # Allow negative logic if started from 0
+                        "price": item.price  # Init price
                         }).insert(ignore_permissions=True)
 
     # Restore stock if order is Cancelled/Rejected from a status that deducted stock
-    if status in ["Cancelled", "Rejected"] and previous_status in ["Accepted", "Prepared", "Delivered"]: # Assuming these are downstream of Accepted
+    if status in ["Cancelled", "Rejected"] and previous_status in ["Accepted", "Prepared", "Delivered"]:  # Assuming these are downstream of Accepted
         for item in order.order_items:
             product_doc = frappe.get_doc("Product", item.product)
             if product_doc.track_stock:
@@ -253,6 +253,7 @@ def cancel_order(order_id: str):
     order.save(ignore_permissions=True)
     return api_response(data=order.as_dict(), message="Order cancelled successfully.")
 
+
 @frappe.whitelist(allow_guest=True)
 def get_order_statuses():
     """
@@ -314,7 +315,7 @@ def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type
             "price": item_price,
             "qty": item_qty,
             "tax": item_tax,
-            "shop_tax": 0, # Placeholder or specific shop tax per item
+            "shop_tax": 0,  # Placeholder or specific shop tax per item
             "discount": item_discount,
             "price_without_tax": item_price,
             "total_price": item_total
@@ -356,10 +357,10 @@ def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type
             if coupon_doc:
                 if coupon_doc.coupon_type == 'Percentage':
                     coupon_price = (product_total - discount) * (coupon_doc.discount_percentage / 100)
-                else: # Fixed Amount
+                else:  # Fixed Amount
                     coupon_price = coupon_doc.discount_amount
         except:
-            pass 
+            pass
 
     # 6. Calculate Final Total
     order_total = (product_total - discount) + delivery_fee + shop_tax + service_fee - coupon_price + float(tips)

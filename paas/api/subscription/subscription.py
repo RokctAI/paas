@@ -6,6 +6,7 @@ from frappe.model.document import Document
 
 # Admin Subscription Management
 
+
 @frappe.whitelist()
 def create_subscription(data):
     """Create a new subscription."""
@@ -15,6 +16,7 @@ def create_subscription(data):
     doc.insert()
     return doc
 
+
 @frappe.whitelist()
 def get_subscription(name):
     """Get a subscription by name."""
@@ -22,12 +24,14 @@ def get_subscription(name):
         frappe.throw("Not permitted", frappe.PermissionError)
     return frappe.get_doc("Subscription", name)
 
+
 @frappe.whitelist()
 def list_subscriptions():
     """List all subscriptions."""
     if not frappe.has_permission("Subscription", "read"):
         frappe.throw("Not permitted", frappe.PermissionError)
     return frappe.get_list("Subscription", fields=["*"])
+
 
 @frappe.whitelist()
 def update_subscription(name, data):
@@ -39,6 +43,7 @@ def update_subscription(name, data):
     doc.save()
     return doc
 
+
 @frappe.whitelist()
 def delete_subscription(name):
     """Delete a subscription."""
@@ -48,6 +53,7 @@ def delete_subscription(name):
     return {"status": "success", "message": "Subscription deleted successfully"}
 
 # Admin Shop Subscription Management
+
 
 @frappe.whitelist()
 def assign_subscription_to_shop(shop, subscription, expired_at):
@@ -69,12 +75,14 @@ def assign_subscription_to_shop(shop, subscription, expired_at):
     doc.insert()
     return doc
 
+
 @frappe.whitelist()
 def get_shop_subscriptions(shop):
     """Get all subscriptions for a shop."""
     if not frappe.has_permission("Shop Subscription", "read"):
         frappe.throw("Not permitted", frappe.PermissionError)
     return frappe.get_list("Shop Subscription", filters={"shop": shop}, fields=["*"])
+
 
 @frappe.whitelist()
 def update_shop_subscription(name, data):
@@ -85,6 +93,7 @@ def update_shop_subscription(name, data):
     doc.update(data)
     doc.save()
     return doc
+
 
 @frappe.whitelist()
 def cancel_shop_subscription(name):
@@ -98,6 +107,7 @@ def cancel_shop_subscription(name):
 
 # Seller Subscription Management
 
+
 def get_seller_shop():
     """Get the shop associated with the current seller."""
     user = frappe.session.user
@@ -110,11 +120,13 @@ def get_seller_shop():
 
     return shop
 
+
 @frappe.whitelist()
 def get_my_shop_subscription():
     """Get the current seller's shop subscription."""
     shop = get_seller_shop()
     return frappe.get_list("Shop Subscription", filters={"shop": shop, "active": 1}, fields=["*"])
+
 
 @frappe.whitelist()
 def subscribe_my_shop(subscription_id):

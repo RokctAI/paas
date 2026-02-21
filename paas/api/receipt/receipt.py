@@ -1,6 +1,7 @@
 import frappe
 import json
 
+
 @frappe.whitelist(allow_guest=True)
 def get_receipts(limit_start: int = 0, limit_page_length: int = 20):
     """

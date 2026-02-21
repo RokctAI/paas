@@ -1,4 +1,4 @@
-# Copyright (c) 2025 ROKCT INTELLIGENCE (PTY) LTD 
+# Copyright (c) 2025 ROKCT INTELLIGENCE (PTY) LTD
 # For license information, please see license.txt
 import frappe
 from frappe.tests.utils import FrappeTestCase
@@ -8,6 +8,8 @@ from paas.api.utils import api_response
 from paas.api.system.system import get_global_settings
 
 # Mock functions if they don't exist yet/aren't imported
+
+
 def get_languages(): return api_response(data=[{"name": "en"}])
 def get_currencies(): return api_response(data=[{"name": "USD"}])
 def api_status(): return api_response(data={"status": "ok", "version": "1.0", "user": frappe.session.user})
@@ -54,7 +56,6 @@ class TestPhoneVerificationAPI(FrappeTestCase):
             "last_name": "User",
             "phone": self.test_user_phone,
         }).insert(ignore_permissions=True)
-
 
     def tearDown(self):
         pass
@@ -254,4 +255,3 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         new_user = frappe.get_doc("User", new_user_email)
         self.assertIsNotNone(new_user.email_verification_token)
         mock_sendmail.assert_called_once()
-

@@ -6,6 +6,7 @@ from frappe.tests.utils import FrappeTestCase
 from paas.api.banner.banner import get_ads, get_ad, like_banner
 from paas.api.admin_content.admin_content import create_admin_banner
 
+
 class TestBanner(FrappeTestCase):
     def setUp(self):
         frappe.set_user("Administrator")

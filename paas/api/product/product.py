@@ -2,6 +2,7 @@ import frappe
 import json
 from paas.api.utils import api_response
 
+
 @frappe.whitelist(allow_guest=True)
 def get_products(
     limit_start: int = 0,
@@ -301,7 +302,7 @@ def get_products_by_ids(ids: list, **kwargs):
             try:
                 p_ids = json.loads(p_ids)
             except json.JSONDecodeError:
-                pass # Handle invalid JSON gracefully
+                pass  # Handle invalid JSON gracefully
         if isinstance(p_ids, list):
             product_ids_to_filter = p_ids
 
@@ -565,7 +566,7 @@ def get_product_by_uuid(uuid):
             "img": product.image,
             "price": product.standard_rate,
             "unit": product.stock_uom,
-            "shop_id": product.get("shop"), 
+            "shop_id": product.get("shop"),
             "category_id": product.item_group,
             "galleries": [],
             "stocks": [],
@@ -617,7 +618,7 @@ def add_product_review(product_uuid, rating, comment=None, images=None):
         frappe.throw("Product not found.")
 
     doc = {
-        "doctype": "Item Review", 
+        "doctype": "Item Review",
         "user": user,
         "item": product_name,
         "rating": rating,
@@ -625,9 +626,10 @@ def add_product_review(product_uuid, rating, comment=None, images=None):
         "image": images[0] if images and len(images) > 0 else None
     }
     # check doc exists
-    # frappe.get_doc(doc).insert(ignore_permissions=True) 
+    # frappe.get_doc(doc).insert(ignore_permissions=True)
     # For now just mock success if doctype missing or logic complex
     return api_response(data=None)
+
 
 @frappe.whitelist()
 def get_suggest_price(item_code: str = None, lang: str = "en", currency: str = "ZAR"):
@@ -645,6 +647,7 @@ def get_suggest_price(item_code: str = None, lang: str = "en", currency: str = "
             "currency": currency
         }
     }
+
 
 @frappe.whitelist()
 def get_product_calculations(item_code: str, quantity: int, lang: str = "en"):

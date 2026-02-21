@@ -6,6 +6,7 @@ from frappe.tests.utils import FrappeTestCase
 from paas.api.user.user import create_request_model, get_user_request_models
 import json
 
+
 class TestRequestModelAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
@@ -76,4 +77,3 @@ class TestRequestModelAPI(FrappeTestCase):
         requests = get_user_request_models()
         self.assertEqual(len(requests["data"]), 1)
         self.assertEqual(requests["data"][0].get("model"), self.product.name)
-

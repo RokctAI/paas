@@ -8,6 +8,7 @@ from paas.api.payment.payment import process_wallet_payment
 from paas.api.payment.payment import process_token_payment
 from paas.api.order.order import create_order as paas_create_order
 
+
 def handle_checkout_action(session, action, payload=None):
     """
     Router for checkout actions.
@@ -32,6 +33,7 @@ def handle_checkout_action(session, action, payload=None):
     elif action == 'place_order':
         finalize_order(session)
 
+
 def save_checkout_data(session, data):
     """
     Helper to update checkout_data JSON.
@@ -41,6 +43,7 @@ def save_checkout_data(session, data):
     session.checkout_data = json.dumps(current_data)
     session.save(ignore_permissions=True)
 
+
 def start_checkout(session):
     """
     Step 1: Ask for Delivery Address
@@ -49,9 +52,9 @@ def start_checkout(session):
 
     # 1. Linked User Addresses
     if session.linked_user:
-        addresses = frappe.get_list("User Address", 
-            filters={"user": session.linked_user, "active": 1},
-            fields=["name", "title", "address"]
+        addresses = frappe.get_list("User Address",
+                                    filters={"user": session.linked_user, "active": 1},
+                                    fields=["name", "title", "address"]
         )
         for addr in addresses[:5]:
             rows.append({
@@ -98,11 +101,12 @@ def start_checkout(session):
     # List reply works regardless of current_flow usually if handled globally check specific ID prefix.
     # But for 'addr_new' logic:
     # shop.py should catch 'addr_new' and send text request + set flow = 'checkout_address_input'
-    # That logic already exists in shop.py? 
+    # That logic already exists in shop.py?
     # Checking shop.py view: Yes, "if item_id == 'addr_new': send_text... session.current_flow = 'checkout_address_input'"
     # So we don't set it here explicitly to input, just "checkout_start"?
-    session.current_flow = "checkout_address_selection" 
+    session.current_flow = "checkout_address_selection"
     session.save(ignore_permissions=True)
+
 
 def select_payment_method(session):
     """
@@ -121,7 +125,7 @@ def select_payment_method(session):
 
     # Create Buttons
     buttons = []
-    for opt in options[:3]: # Max 3 buttons
+    for opt in options[:3]:  # Max 3 buttons
         buttons.append({
             "type": "reply",
             "reply": {
@@ -147,6 +151,7 @@ def select_payment_method(session):
     session.current_flow = "checkout_payment"
     session.save(ignore_permissions=True)
 
+
 def get_payment_options(session, total):
     """
     Determine valid payment options based on Hierarchical COD settings and User Wallet/Cards.
@@ -171,7 +176,7 @@ def get_payment_options(session, total):
     shop_cod = frappe.db.get_value("Shop", session.current_shop, "enable_cod")
 
     # Default to Enabled if not set
-    if shop_cod is None: 
+    if shop_cod is None:
         shop_cod = 1
 
     # Check 2: Global Payment Gateway Toggle
@@ -184,6 +189,7 @@ def get_payment_options(session, total):
 
     return options
 
+
 def handle_payment_selection(session, payload):
     """
     Store payment choice and ask for confirmation.
@@ -195,6 +201,7 @@ def handle_payment_selection(session, payload):
     save_checkout_data(session, {"payment_method": payment_method})
 
     confirm_order_summary(session)
+
 
 def confirm_order_summary(session):
     """
@@ -209,7 +216,7 @@ def confirm_order_summary(session):
     if checkout_data.get('type') == 'manual':
         addr_display = checkout_data['address']
     elif checkout_data.get('type') == 'saved':
-        addr_display = "Saved Address" # Could fetch title
+        addr_display = "Saved Address"  # Could fetch title
     elif checkout_data.get('type') == 'location':
         addr_display = "Pinned Location"
 
@@ -235,6 +242,7 @@ def confirm_order_summary(session):
     send_message(session.wa_id, payload)
     session.current_flow = "checkout_confirm"
     session.save(ignore_permissions=True)
+
 
 def finalize_order(session):
     """
@@ -264,16 +272,16 @@ def finalize_order(session):
         # Debiting is typically done via Transaction creation often *after* order or *during*.
         # paas.api.payment.process_wallet_payment expects amount.
         # implementation details vary. Let's assume we mark Order `payment_type` = "Wallet" and Backend handles deduction?
-        # OR we deduct now. Let's do a simple deduction call logic if we had it. 
+        # OR we deduct now. Let's do a simple deduction call logic if we had it.
         # For now, Set Order Type = Wallet.
-        payment_status = "Paid" 
+        payment_status = "Paid"
 
     elif payment_method.startswith('card_'):
         # Token Payment
-        # card_token = payment_method.replace("card_", "") 
+        # card_token = payment_method.replace("card_", "")
         # Actually it's card NAME. We need to fetch TOKEN.
         # Skipping actual gateway call for MVP safety, just marking "Credit Card"
-        payment_status = "Paid" # Optimistic
+        payment_status = "Paid"  # Optimistic
 
     elif payment_method == 'cod':
         payment_status = "Unpaid"
@@ -323,7 +331,7 @@ def finalize_order(session):
                 process_token_payment(order_id, token)
                 send_text(session.wa_id, f"✅ Payment Successful (Card)!")
             else:
-                send_text(session.wa_id, "⚠️ Card Token not found. Order created as Unpaid.") 
+                send_text(session.wa_id, "⚠️ Card Token not found. Order created as Unpaid.")
 
         send_text(session.wa_id, f"🎉 Order Placed! ID: {new_order.get('name')}")
         session.cart_items = "[]"
@@ -331,4 +339,3 @@ def finalize_order(session):
     except Exception as e:
         frappe.log_error(f"WhatsApp Order Failed: {str(e)}")
         send_text(session.wa_id, "❌ Validating Order failed.")
-

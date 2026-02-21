@@ -133,10 +133,10 @@ def calculate_delivery_price(lat, lng, shop):
     R = 6371  # Earth radius in km
     dLat = math.radians(lat - shop_lat)
     dLon = math.radians(lng - shop_lng)
-    a = math.sin(dLat/2) * math.sin(dLat/2) + \
+    a = math.sin(dLat / 2) * math.sin(dLat / 2) + \
         math.cos(math.radians(shop_lat)) * math.cos(math.radians(lat)) * \
-        math.sin(dLon/2) * math.sin(dLon/2)
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+        math.sin(dLon / 2) * math.sin(dLon / 2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     distance = R * c
 
     price = shop.price + (distance * shop.price_per_km)

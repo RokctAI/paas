@@ -6,6 +6,7 @@ from frappe.tests.utils import FrappeTestCase
 from paas.api.user.user import create_ticket, get_user_tickets, get_user_ticket, reply_to_ticket
 import uuid
 
+
 class TestTicketsAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
@@ -59,4 +60,3 @@ class TestTicketsAPI(FrappeTestCase):
         full_ticket = get_user_ticket(name=ticket.get("name"))
         self.assertEqual(len(full_ticket.get("replies")), 1)
         self.assertEqual(full_ticket.get("replies")[0].get("content"), "This is a reply")
-

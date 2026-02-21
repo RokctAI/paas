@@ -2,6 +2,7 @@ import frappe
 import json
 from paas.api.utils import _get_seller_shop
 
+
 @frappe.whitelist()
 def get_seller_orders(limit_start: int = 0, limit_page_length: int = 20, status: str = None, from_date: str = None, to_date: str = None):
     """
@@ -63,6 +64,7 @@ def update_seller_order_status(order_id, status):
     order.status = status
     order.save(ignore_permissions=True)
     return order.as_dict()
+
 
 @frappe.whitelist()
 def get_seller_order_refunds(limit_start: int = 0, limit_page_length: int = 20):

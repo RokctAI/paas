@@ -4,13 +4,14 @@
 import frappe
 from frappe import _
 
+
 def get_paas_branding():
     """Get PaaS branding settings for tenant"""
     try:
         # Check if tenant has PaaS plan
-        subscription = frappe.db.get_value('Company Subscription', 
-                                          {'company': frappe.defaults.get_user_default('Company')},
-                                          ['subscription_plan'], as_dict=True)
+        subscription = frappe.db.get_value('Company Subscription',
+                                           {'company': frappe.defaults.get_user_default('Company')},
+                                           ['subscription_plan'], as_dict=True)
 
         if not subscription:
             return {'enabled': False}

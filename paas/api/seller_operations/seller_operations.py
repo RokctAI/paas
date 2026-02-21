@@ -3,6 +3,7 @@ import json
 import uuid
 from paas.api.utils import _get_seller_shop
 
+
 @frappe.whitelist()
 def get_seller_kitchens(limit_start: int = 0, limit_page_length: int = 20):
     """
@@ -80,6 +81,7 @@ def delete_seller_kitchen(kitchen_name):
     frappe.delete_doc("Kitchen", kitchen_name, ignore_permissions=True)
     return {"status": "success", "message": "Kitchen deleted successfully."}
 
+
 @frappe.whitelist()
 def get_seller_inventory_items(limit_start: int = 0, limit_page_length: int = 20, item_code: str = None):
     """
@@ -106,6 +108,7 @@ def get_seller_inventory_items(limit_start: int = 0, limit_page_length: int = 20
         limit=limit_page_length
     )
     return inventory_items
+
 
 @frappe.whitelist()
 def adjust_seller_inventory(item_code: str, warehouse: str, new_qty: int):
@@ -140,6 +143,7 @@ def adjust_seller_inventory(item_code: str, warehouse: str, new_qty: int):
     stock_entry.submit()
 
     return {"status": "success", "message": f"Inventory for {item_code} adjusted to {new_qty}."}
+
 
 @frappe.whitelist()
 def get_seller_menus(limit_start: int = 0, limit_page_length: int = 20):
@@ -233,6 +237,7 @@ def delete_seller_menu(menu_name):
 
     frappe.delete_doc("Menu", menu_name, ignore_permissions=True)
     return {"status": "success", "message": "Menu deleted successfully."}
+
 
 @frappe.whitelist()
 def get_seller_receipts(limit_start: int = 0, limit_page_length: int = 20):

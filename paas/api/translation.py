@@ -4,6 +4,7 @@ from frappe.utils import cint
 from frappe import _
 from paas.api.utils import _require_admin
 
+
 def _api_success(data=None, message=""):
     return {
         "status": True,
@@ -12,6 +13,7 @@ def _api_success(data=None, message=""):
         "timestamp": frappe.utils.now_datetime().isoformat()
     }
 
+
 def _api_error(message="", status_code=500):
     frappe.local.response['http_status_code'] = status_code
     return {
@@ -19,6 +21,7 @@ def _api_error(message="", status_code=500):
         "message": message,
         "timestamp": frappe.utils.now_datetime().isoformat()
     }
+
 
 @frappe.whitelist(allow_guest=True)
 def get_mobile_translations(lang=None):
@@ -31,6 +34,7 @@ def get_mobile_translations(lang=None):
     result = {t["key"]: t["value"] for t in translations}
 
     return _api_success(result, message="Successfully fetched")
+
 
 @frappe.whitelist()
 def get_translations_paginate(search=None, group=None, locale=None, perPage=10, page=1, **kwargs):
@@ -51,7 +55,7 @@ def get_translations_paginate(search=None, group=None, locale=None, perPage=10, 
         base_query = base_query.where(t_translation.locale == locale)
     if search:
         base_query = base_query.where(
-            (t_translation.key.like(f"%{search}%")) 
+            (t_translation.key.like(f"%{search}%"))
             | (t_translation.value.like(f"%{search}%"))
         )
 
@@ -75,13 +79,13 @@ def get_translations_paginate(search=None, group=None, locale=None, perPage=10, 
 
     # Get details for the fetched keys
     details_query = frappe.qb.from_(t_translation).select(
-        t_translation.name, t_translation.group, t_translation.key, 
+        t_translation.name, t_translation.group, t_translation.key,
         t_translation.locale, t_translation.value, t_translation.status
     ).where(t_translation.key.isin(keys_list))
 
     if search:
         details_query = details_query.where(
-            (t_translation.key.like(f"%{search}%")) 
+            (t_translation.key.like(f"%{search}%"))
             | (t_translation.value.like(f"%{search}%"))
         )
     if group:
@@ -117,6 +121,7 @@ def get_translations_paginate(search=None, group=None, locale=None, perPage=10, 
         "translations": result_dict
     })
 
+
 @frappe.whitelist()
 def create_translation():
     _require_admin()
@@ -148,6 +153,7 @@ def create_translation():
         doc.insert(ignore_permissions=True)
 
     return _api_success(message="Successfully created")
+
 
 @frappe.whitelist()
 def update_translation(key=None):
@@ -185,6 +191,7 @@ def update_translation(key=None):
 
     return _api_success(message="Successfully updated")
 
+
 @frappe.whitelist()
 def delete_translation():
     _require_admin()
@@ -207,6 +214,7 @@ def delete_translation():
 
     return _api_success(message="Successfully deleted")
 
+
 def delete_translation_single(key):
     _require_admin()
     if not key:
@@ -217,6 +225,7 @@ def delete_translation_single(key):
         frappe.delete_doc("PaaS Translation", d, ignore_permissions=True)
 
     return _api_success(message="Successfully deleted")
+
 
 def get_translation_single(key):
     _require_admin()
@@ -242,6 +251,7 @@ def get_translation_single(key):
 
     return _api_success(data)
 
+
 @frappe.whitelist()
 def drop_all_translations():
     _require_admin()
@@ -250,11 +260,13 @@ def drop_all_translations():
         frappe.delete_doc("PaaS Translation", d, ignore_permissions=True)
     return _api_success(message="Successfully dropped all")
 
+
 @frappe.whitelist()
 def truncate_translations():
     _require_admin()
     frappe.db.delete("PaaS Translation")
     return _api_success(message="Successfully truncated")
+
 
 @frappe.whitelist()
 def restore_all_translations():
@@ -267,6 +279,7 @@ def restore_all_translations():
         except:
             pass
     return _api_success(message="Successfully restored")
+
 
 @frappe.whitelist()
 def import_translations():
@@ -309,6 +322,7 @@ def import_translations():
 
     except Exception as e:
         return _api_error(f"Import failed: {str(e)}")
+
 
 @frappe.whitelist()
 def export_translations():

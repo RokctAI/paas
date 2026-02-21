@@ -1,6 +1,7 @@
 import frappe
 from paas.api.utils import api_response
 
+
 @frappe.whitelist()
 def request_payout(amount: float, lang: str = "en"):
     """

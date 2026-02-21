@@ -9,4 +9,3 @@ from frappe.tests.utils import FrappeTestCase
 
 class TestFAQCategory(FrappeTestCase):
     pass
-

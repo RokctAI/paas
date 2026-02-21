@@ -3,6 +3,7 @@ import json
 import requests
 from frappe.model.document import Document
 
+
 @frappe.whitelist(allow_guest=True)
 def get_payment_gateways():
     """
@@ -175,7 +176,7 @@ def flutterwave_callback():
                 frappe.local.response["location"] = failure_url + "?reason=verification_failed"
                 return
 
-        else: # Status is 'cancelled' or 'failed'
+        else:  # Status is 'cancelled' or 'failed'
             order.payment_status = "Failed"
             order.save(ignore_permissions=True)
             frappe.db.commit()
@@ -188,6 +189,7 @@ def flutterwave_callback():
         frappe.log_error(frappe.get_traceback(), "Flutterwave Callback Failed")
         frappe.local.response["type"] = "redirect"
         frappe.local.response["location"] = failure_url + "?reason=internal_error"
+
 
 @frappe.whitelist()
 def get_payfast_settings():
@@ -320,6 +322,7 @@ def delete_payfast_card(card_name: str):
     frappe.delete_doc("Saved Card", card_name, ignore_permissions=True)
     return {"status": "success", "message": "Card deleted successfully."}
 
+
 @frappe.whitelist(allow_guest=True)
 def handle_paypal_callback():
     """
@@ -389,7 +392,6 @@ def initiate_paypal_payment(order_id: str):
     settings = {s.key: s.value for s in paypal_settings_doc.settings}
     success_url = paypal_settings_doc.success_redirect_url or f"{frappe.utils.get_url()}/api/method/paas.api.handle_paypal_callback"
     failure_url = paypal_settings_doc.failure_redirect_url or f"{frappe.utils.get_url()}/api/method/paas.api.handle_paypal_callback"
-
 
     auth_url = "https://api-m.sandbox.paypal.com/v1/oauth2/token" if settings.get("paypal_mode") == "sandbox" else "https://api-m.paypal.com/v1/oauth2/token"
     client_id = settings.get("paypal_sandbox_client_id") if settings.get("paypal_mode") == "sandbox" else settings.get("paypal_live_client_id")
@@ -491,6 +493,7 @@ def initiate_paystack_payment(order_id: str):
 
     return {"redirect_url": paystack_data["data"]["authorization_url"]}
 
+
 @frappe.whitelist(allow_guest=True)
 def handle_paystack_callback():
     """
@@ -527,6 +530,7 @@ def handle_paystack_callback():
         transaction.status = "Failed"
         transaction.save(ignore_permissions=True)
 
+
 @frappe.whitelist(allow_guest=True)
 def log_payment_payload(payload):
     """
@@ -538,6 +542,7 @@ def log_payment_payload(payload):
     }).insert(ignore_permissions=True)
     return {"status": "success"}
 
+
 @frappe.whitelist(allow_guest=True)
 def handle_stripe_webhook():
     """
@@ -545,6 +550,7 @@ def handle_stripe_webhook():
     """
     # TODO: Implement Stripe webhook logic
     return {"status": "success"}
+
 
 @frappe.whitelist()
 def get_saved_cards():
@@ -558,6 +564,7 @@ def get_saved_cards():
         fields=["name", "gateway", "token", "last_four", "card_type", "expiry_date", "card_holder_name"]
     )
     return cards
+
 
 @frappe.whitelist()
 def tokenize_card(card_number, card_holder, expiry_date, cvc):
@@ -600,6 +607,7 @@ def tokenize_card(card_number, card_holder, expiry_date, cvc):
         "expiry_date": expiry_date
     }
 
+
 @frappe.whitelist()
 def delete_card(card_name):
     user = frappe.session.user
@@ -612,6 +620,7 @@ def delete_card(card_name):
 
     frappe.delete_doc("Saved Card", card_name, ignore_permissions=True)
     return {"status": "success"}
+
 
 @frappe.whitelist()
 def process_direct_card_payment(order_id, card_number, card_holder, expiry_date, cvc, save_card=False):
@@ -641,6 +650,7 @@ def process_direct_card_payment(order_id, card_number, card_holder, expiry_date,
 
     return {"status": "success", "transaction_id": transaction.name}
 
+
 def _charge_card_token(token, amount, currency, description, user):
     """
     Internal helper to charge a saved card token via the appropriate gateway.
@@ -657,10 +667,11 @@ def _charge_card_token(token, amount, currency, description, user):
     elif gateway_name == "PayFast":
         return _charge_payfast_token(token, amount, currency, description)
     else:
-        # Fallback to local simulation if no production gateway is matched, 
+        # Fallback to local simulation if no production gateway is matched,
         # but log a warning as this shouldn't happen in production.
         frappe.log_error(f"Unsupported gateway {gateway_name} for token charge.", "Payment Warning")
         return {"status": "success", "message": "Simulated success (Unconfigured Gateway)"}
+
 
 def _charge_flutterwave_token(token, amount, currency, description, user):
     """
@@ -699,6 +710,7 @@ def _charge_flutterwave_token(token, amount, currency, description, user):
         frappe.log_error(frappe.get_traceback(), "Flutterwave Token Charge Failed")
         frappe.throw("Card payment failed. Please check your card balance or try another card.")
 
+
 def _charge_payfast_token(token, amount, currency, description):
     """
     Executes a tokenized charge via PayFast (Ad Hoc Subscription pattern).
@@ -714,7 +726,7 @@ def _charge_payfast_token(token, amount, currency, description):
 
     # Ad-hoc charge endpoint
     url = f"https://{base_url}/subscriptions/{token}/adhoc"
-    if is_sandbox and not url.endswith("/api"): # Sandbox API is usually under /api
+    if is_sandbox and not url.endswith("/api"):  # Sandbox API is usually under /api
         url = f"https://sandbox.payfast.co.za/api/subscriptions/{token}/adhoc"
 
     # PayFast API requires amount in cents for adhoc charges
@@ -754,7 +766,7 @@ def _charge_payfast_token(token, amount, currency, description):
     signature_string = "&".join([f"{k}={urlencode(str(signature_params[k]))}" for k in final_sorted_keys])
 
     import hashlib
-    signature = hashlib.md5(signature_string.encode('utf-8')).hexdigest()
+    signature = hashlib.md5(signature_string.encode('utf-8')).hexdigest()  # nosec B324 - PayFast API requires MD5
 
     # 4. Prepare Headers
     headers = {
@@ -780,6 +792,7 @@ def _charge_payfast_token(token, amount, currency, description):
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "PayFast Token Charge Exception")
         frappe.throw("Error connecting to payment gateway.")
+
 
 @frappe.whitelist()
 def process_token_payment(order_id, token):
@@ -811,6 +824,7 @@ def process_token_payment(order_id, token):
 
     return result
 
+
 @frappe.whitelist()
 def tip_process(order_id: str, tip_amount: float):
     """
@@ -824,11 +838,11 @@ def tip_process(order_id: str, tip_amount: float):
     if order.user != user:
         frappe.throw("You are not authorized to tip for this order.", frappe.PermissionError)
 
-    if order.status == "Delivered": # Tipping usually AFTER delivery or during rating
+    if order.status == "Delivered":  # Tipping usually AFTER delivery or during rating
         # Logic to add tip to order or create a separate transaction
         # For now, we update the order's tip field
         order.tip_amount = tip_amount
-        order.total_price += tip_amount # Update total? Or keep separate?
+        order.total_price += tip_amount  # Update total? Or keep separate?
         order.save(ignore_permissions=True)
 
         # If already paid, might need to charge the tip separately.
@@ -854,6 +868,7 @@ def tip_process(order_id: str, tip_amount: float):
     order.save()
 
     return {"status": "success", "transaction_id": transaction.name}
+
 
 @frappe.whitelist()
 def process_wallet_top_up(amount, token=None):
@@ -890,6 +905,7 @@ def process_wallet_top_up(amount, token=None):
 
     return {"status": "success", "transaction_id": transaction.name}
 
+
 @frappe.whitelist()
 def process_wallet_payment(order_id):
     """
@@ -921,7 +937,7 @@ def process_wallet_payment(order_id):
         "reference_docname": order_id,
         "amount": -order.grand_total,
         "status": "Success",
-        "type": "Debit" 
+        "type": "Debit"
     })
     transaction.insert(ignore_permissions=True)
 

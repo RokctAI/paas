@@ -11,6 +11,7 @@ from paas.api.booking.booking import (
 )
 from frappe.utils import add_days, now_datetime
 
+
 class TestBookingFeature(FrappeTestCase):
     def setUp(self):
         # Create a Test User
@@ -66,7 +67,7 @@ class TestBookingFeature(FrappeTestCase):
                 frappe.delete_doc("User", self.user.name, force=True, ignore_permissions=True)
             except frappe.exceptions.LinkExistsError:
                 frappe.db.set_value("User", self.user.name, "enabled", 0)
-        # Also clean up Shop and Shop Section if needed, but User delete might cascade if Owner. 
+        # Also clean up Shop and Shop Section if needed, but User delete might cascade if Owner.
         # If Shop remains, next run uses existing Shop.
         # But reservations?
         frappe.db.delete("User Booking", {"user": "test_booker@example.com"})
@@ -87,7 +88,7 @@ class TestBookingFeature(FrappeTestCase):
         # 2. Create a Reservation (as User)
         frappe.set_user(self.user.name)
         start_date = add_days(now_datetime(), 1)
-        end_date = frappe.utils.add_to_date(start_date, hours=1) # 1 hour later
+        end_date = frappe.utils.add_to_date(start_date, hours=1)  # 1 hour later
 
         res_data = {
             "booking": slot.name,
@@ -110,8 +111,7 @@ class TestBookingFeature(FrappeTestCase):
         update_reservation_status(reservation.name, "Cancelled")
 
         # 5. Verify Availability Again (Should be free now)
-        # Note: Logic might need to filter out cancelled bookings. 
+        # Note: Logic might need to filter out cancelled bookings.
         # Let's check if create_reservation succeeds now.
         reservation_2 = create_reservation(res_data)
         self.assertEqual(reservation_2.status, "New")
-

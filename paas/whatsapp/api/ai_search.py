@@ -90,9 +90,9 @@ def cosine_similarity(v1, v2):
     if not v1 or not v2:
         return 0.0
 
-    dot_product = sum(a*b for a, b in zip(v1, v2))
-    norm_v1 = math.sqrt(sum(a*a for a in v1))
-    norm_v2 = math.sqrt(sum(b*b for b in v2))
+    dot_product = sum(a * b for a, b in zip(v1, v2))
+    norm_v1 = math.sqrt(sum(a * a for a in v1))
+    norm_v2 = math.sqrt(sum(b * b for b in v2))
 
     if norm_v1 == 0 or norm_v2 == 0:
         return 0.0
@@ -217,7 +217,7 @@ def extract_entity(text, intent):
 
     for phrase in sorted_stops:
         if clean_text.startswith(phrase + " "):
-            clean_text = clean_text[len(phrase)+1:]
+            clean_text = clean_text[len(phrase) + 1:]
         elif clean_text.startswith(phrase):
             clean_text = clean_text[len(phrase):]
 

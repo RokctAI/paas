@@ -26,8 +26,8 @@ def calculate_ringfence_amount(cron_pattern, start_date_str, end_date_str, unit_
 
 @frappe.whitelist()
 def create_repeating_order(original_order: str, start_date: str, cron_pattern: str,
-                             end_date: str = None, payment_method: str = "Wallet",
-                             saved_card: str = None, lang: str = "en"):
+                           end_date: str = None, payment_method: str = "Wallet",
+                           saved_card: str = None, lang: str = "en"):
     """
     Creates a new repeating order with payment preferences and ringfencing.
     Note: Payment method is enforced to 'Wallet' for auto-orders.

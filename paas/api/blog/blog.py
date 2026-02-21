@@ -30,11 +30,11 @@ def get_blogs(type=None, limit=10, start=0):
         filters["type"] = type
 
     runs = frappe.get_list("Blog",
-        filters=filters,
-        fields=["name", "title", "short_description", "img", "published_at", "author", "type"],
-        order_by="published_at desc",
-        offset=start,
-        limit=limit,
+                           filters=filters,
+                           fields=["name", "title", "short_description", "img", "published_at", "author", "type"],
+                           order_by="published_at desc",
+                           offset=start,
+                           limit=limit,
     )
     return api_response(data=runs)
 
@@ -76,10 +76,10 @@ def get_admin_blogs(page: int = 1, limit: int = 10, lang: str = "en"):
     Retrieves all Blogs for Admin (including inactive).
     """
     blogs = frappe.get_list("Blog",
-        fields=["name", "title", "short_description", "img", "published_at", "author", "type", "active"],
-        order_by="creation desc",
-        offset=(page - 1) * limit,
-        limit=limit
+                            fields=["name", "title", "short_description", "img", "published_at", "author", "type", "active"],
+                            order_by="creation desc",
+                            offset=(page - 1) * limit,
+                            limit=limit
     )
     return api_response(data=blogs)
 

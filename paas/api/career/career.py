@@ -1,10 +1,12 @@
 import frappe
 import json
 
+
 def _require_admin():
     """Helper function to ensure the user has the System Manager role."""
     if "System Manager" not in frappe.get_roles():
         frappe.throw("You are not authorized to perform this action.", frappe.PermissionError)
+
 
 @frappe.whitelist(allow_guest=True)
 def get_careers(limit_start: int = 0, limit_page_length: int = 20):
@@ -56,6 +58,7 @@ def get_career(id: str):
             "description": career.description
         }
     }
+
 
 @frappe.whitelist()
 def get_admin_careers(limit_start: int = 0, limit_page_length: int = 20):

@@ -5,6 +5,7 @@ import frappe
 import json
 from paas.whatsapp.responses import send_static_map_confirmation
 
+
 def handle_location(lat, long, session):
     """
     Handles Geo-Location updates.

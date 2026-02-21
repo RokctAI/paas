@@ -6,6 +6,7 @@ import requests
 import json
 from paas.whatsapp.utils import get_whatsapp_config
 
+
 @frappe.whitelist()
 def create_flow():
     """
@@ -46,11 +47,11 @@ def create_flow():
     payload = {
         "name": "flow.json",
         "asset_type": "FLOW_JSON",
-        "file": json.dumps(layout) # Meta expects it as a file upload usually? Or JSON body?
-        # Graph API v18+ for Flows allows JSON body for updates? 
+        "file": json.dumps(layout)  # Meta expects it as a file upload usually? Or JSON body?
+        # Graph API v18+ for Flows allows JSON body for updates?
         # Actually documentation says 'file' parameter with multipart/form-data usually?
-        # Let's check typical usage. 
-        # API: POST /{flow_id}/assets 
+        # Let's check typical usage.
+        # API: POST /{flow_id}/assets
     }
 
     # Python requests for multipart
@@ -90,6 +91,7 @@ def create_flow():
 
     return {"status": "success", "flow_id": flow_id, "message": msg}
 
+
 def get_generic_flow_layout():
     """
     Returns the JSON structure for a dynamic Product Customizer flow.
@@ -119,7 +121,7 @@ def get_generic_flow_layout():
                         ]
                     }
                 },
-                "terminal": True, # Or link to success screen
+                "terminal": True,  # Or link to success screen
                 "layout": {
                     "type": "SingleColumnLayout",
                     "children": [
@@ -139,7 +141,7 @@ def get_generic_flow_layout():
                             "on-click-action": {
                                 "name": "complete",
                                 "payload": {
-                                    "original_product": "${data.product_name}", # Pass context back
+                                    "original_product": "${data.product_name}",  # Pass context back
                                     "options": "${form.selected_options}"
                                 }
                             }

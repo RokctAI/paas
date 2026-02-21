@@ -20,9 +20,10 @@ except ImportError:
         return {
             "status": "Active",
             "plan": "Standalone",
-            "modules": ["all"], 
+            "modules": ["all"],
             "subscription_cache_duration": 86400
         }
+
 
 def check_subscription_feature(feature_module):
     """
@@ -41,6 +42,7 @@ def check_subscription_feature(feature_module):
         return wrapper
     return decorator
 
+
 def get_subscription_details():
     """
     Retrieves subscription details.
@@ -54,6 +56,6 @@ def get_subscription_details():
     return {
         "status": "Active",
         "plan": "Standalone",
-        "modules": ["all"], 
+        "modules": ["all"],
         "subscription_cache_duration": 86400
     }

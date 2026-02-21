@@ -1,6 +1,7 @@
 import frappe
 import json
 
+
 @frappe.whitelist(allow_guest=True)
 def get_languages(active=True):
     """
@@ -12,12 +13,14 @@ def get_languages(active=True):
 
     return frappe.get_list("PaaS Language", filters=filters, fields=["name", "title", "locale", "backward", "default", "active", "img"])
 
+
 @frappe.whitelist(allow_guest=True)
 def get_default_language():
     """
     Retrieves the default language.
     """
     return frappe.get_doc("PaaS Language", {"default": 1}).as_dict()
+
 
 @frappe.whitelist(allow_guest=True)
 def get_translations(locale, group=None):

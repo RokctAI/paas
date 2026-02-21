@@ -11,6 +11,7 @@ import base64
 import json
 import os
 
+
 @frappe.whitelist(allow_guest=True)
 def flow_data():
     """
@@ -46,7 +47,7 @@ def flow_data():
         # 2. Decrypt Flow Data
         iv = base64.b64decode(initial_vector_b64)
         flow_data_encrypted = base64.b64decode(encrypted_flow_data_b64)
-        # Auth Tag is the last 16 bytes of the encrypted data in some implementations, 
+        # Auth Tag is the last 16 bytes of the encrypted data in some implementations,
         # or separate. Meta sends it appended end?
         # Meta spec: "The tag is the last 16 bytes of the encrypted_flow_data"
         tag = flow_data_encrypted[-16:]
@@ -90,6 +91,7 @@ def flow_data():
         # Start simplistic error response? Meta expects specific error format or 500
         frappe.response.status_code = 500
         return str(e)
+
 
 def handle_business_logic(data):
     """

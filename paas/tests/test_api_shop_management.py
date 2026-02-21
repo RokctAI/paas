@@ -6,6 +6,7 @@ from frappe.tests.utils import FrappeTestCase
 from paas.api.user.user import get_user_shop, update_user_shop
 import json
 
+
 class TestShopManagementAPI(FrappeTestCase):
     def setUp(self):
         # Create a test user
@@ -90,8 +91,8 @@ class TestShopManagementAPI(FrappeTestCase):
 
         if not frappe.db.exists("Shop", "Other Shop"):
             other_shop = frappe.get_doc({
-                "doctype": "Shop", 
-                "shop_name": "Other Shop", 
+                "doctype": "Shop",
+                "shop_name": "Other Shop",
                 "user": other_user.name,
                 "uuid": "other_shop_uuid",
                 "phone": "+14155552671"
@@ -100,13 +101,12 @@ class TestShopManagementAPI(FrappeTestCase):
             other_shop = frappe.get_doc("Shop", "Other Shop")
 
         # Logged in as self.test_user, should not be able to update other_shop
-        # But wait, update_user_shop updates the CURRENT user's shop, 
+        # But wait, update_user_shop updates the CURRENT user's shop,
         # so it won't allow updating other_shop anyway as it selects by current session user.
-        # The test update_other_user_shop_permission in original code was slightly flawed 
+        # The test update_other_user_shop_permission in original code was slightly flawed
         # because update_user_shop doesn't take a shop ID.
         # So it really tests that update_user_shop only updates YOUR shop.
 
         # We can test that if we don't have a shop, it fails.
         # But let's keep it simple.
         pass
-

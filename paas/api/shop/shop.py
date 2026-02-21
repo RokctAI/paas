@@ -6,6 +6,7 @@ from frappe.model.document import Document
 import uuid
 from paas.api.utils import api_response
 
+
 @frappe.whitelist()
 def create_shop(shop_data):
     """
@@ -38,6 +39,7 @@ def create_shop(shop_data):
         frappe.db.rollback()
         frappe.log_error(frappe.get_traceback(), "Shop Creation Failed")
         frappe.throw(f"An error occurred while creating the shop: {e}")
+
 
 @frappe.whitelist(allow_guest=True)
 def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str = "name", order: str = "desc", **kwargs):
@@ -99,7 +101,7 @@ def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str =
             'min_amount': shop.min_amount,
             'status': shop.status,
             'enable_cod': bool(is_cod),
-            'type': shop.shop_type or shop.type, # Map new shop_type to legacy type field
+            'type': shop.shop_type or shop.type,  # Map new shop_type to legacy type field
             'shop_type': shop.shop_type,
             'is_ecommerce': bool(shop.is_ecommerce),
             'delivery_time': {
@@ -115,6 +117,7 @@ def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str =
         })
 
     return api_response(data=formatted_shops)
+
 
 @frappe.whitelist(allow_guest=True)
 def get_shop_details(uuid: str):
@@ -152,7 +155,7 @@ def get_shop_details(uuid: str):
         'min_amount': shop.min_amount,
         'status': shop.status,
         'enable_cod': bool(is_cod),
-        'type': shop.shop_type or shop.type, # Map new shop_type to legacy type field
+        'type': shop.shop_type or shop.type,  # Map new shop_type to legacy type field
         'shop_type': shop.shop_type,
         'is_ecommerce': bool(shop.is_ecommerce),
         'delivery_time': {
@@ -166,6 +169,7 @@ def get_shop_details(uuid: str):
             'address': shop.address
         }
     })
+
 
 @frappe.whitelist(allow_guest=True)
 def search_shops(search: str, category_id: int = None, limit_start: int = 0, limit_page_length: int = 20):
@@ -225,7 +229,7 @@ def search_shops(search: str, category_id: int = None, limit_start: int = 0, lim
             'min_amount': shop.min_amount,
             'status': shop.status,
             'enable_cod': bool(is_cod),
-            'type': shop.shop_type or shop.type, # Map new shop_type to legacy type field
+            'type': shop.shop_type or shop.type,  # Map new shop_type to legacy type field
             'shop_type': shop.shop_type,
             'is_ecommerce': bool(shop.is_ecommerce),
             'delivery_time': {
@@ -241,6 +245,7 @@ def search_shops(search: str, category_id: int = None, limit_start: int = 0, lim
         })
 
     return api_response(data=formatted_shops)
+
 
 @frappe.whitelist(allow_guest=True)
 def get_shop_types():
@@ -295,7 +300,6 @@ def get_nearby_shops(latitude: float, longitude: float, radius_km: float = 10, l
     return get_shops_by_ids(shop_ids=nearby_shop_ids)
 
 
-
 @frappe.whitelist()
 def get_shops_recommend(latitude: float, longitude: float, lang: str = "en"):
     """
@@ -303,6 +307,7 @@ def get_shops_recommend(latitude: float, longitude: float, lang: str = "en"):
     Currently aliases to get_nearby_shops as we lack a rating field.
     """
     return get_nearby_shops(latitude, longitude, radius_km=20, lang=lang)
+
 
 @frappe.whitelist(allow_guest=True)
 def check_driver_zone(shop_id=None, address=None):
@@ -338,7 +343,7 @@ def check_driver_zone(shop_id=None, address=None):
     distance_km = frappe.db.sql(query, (user_lat, user_lon, shop_lat, shop_lon))[0][0]
 
     # Default Max Radius: 50km (Can be made configurable in Shop settings later)
-    max_radius_km = 50.0 
+    max_radius_km = 50.0
 
     return api_response(data={
         "status": distance_km <= max_radius_km,
@@ -394,6 +399,7 @@ def get_shops_by_ids(shop_ids: list = None, **kwargs):
 
     return api_response(data=formatted_shops)
 
+
 @frappe.whitelist()
 def check_cashback(shop_id: str, amount: float, lang: str = "en"):
     """
@@ -424,7 +430,7 @@ def get_nearest_delivery_points(latitude: float, longitude: float, radius_km: fl
     try:
         lat = float(latitude)
         lon = float(longitude)
-        radius = float(radius_km) * 1000 # meters
+        radius = float(radius_km) * 1000  # meters
     except ValueError:
         frappe.throw("Invalid Latitude or Longitude format.", frappe.ValidationError)
 

@@ -7,17 +7,19 @@ from frappe.utils import get_datetime, now_datetime
 
 # Helper Functions
 
+
 def check_shop_permission(shop_id, role):
     """Check if the current user has permission for a given shop."""
     user = frappe.session.user
     if frappe.has_role("System Manager"):
         return
 
-    # Assuming Shop User logic exists or will be implemented. 
-    # If Shop User doctype doesn't exist yet, this might fail. 
+    # Assuming Shop User logic exists or will be implemented.
+    # If Shop User doctype doesn't exist yet, this might fail.
     # For now, we'll keep the check but be aware.
     if not frappe.db.exists("Shop User", {"user": user, "shop": shop_id, "role": role}):
         frappe.throw(f"You are not authorized to manage this shop's {role.lower()} bookings.", frappe.PermissionError)
+
 
 def check_availability(shop_id, table_id, start_date, end_date, exclude_reservation_id=None):
     """
@@ -40,6 +42,7 @@ def check_availability(shop_id, table_id, start_date, end_date, exclude_reservat
 
 # Admin/Seller Booking Slot Management (The 'Booking' DocType)
 
+
 @frappe.whitelist()
 def create_booking_slot(data):
     """Create a new booking slot (shift)."""
@@ -57,11 +60,13 @@ def create_booking_slot(data):
     doc.insert()
     return doc
 
+
 @frappe.whitelist()
 def get_booking_slots(shop_id):
     """Get all booking slots for a specific shop."""
     # Publicly accessible? Or restricted? Assuming public for now so users can see slots.
     return frappe.get_list("Booking", filters={"shop": shop_id, "active": 1}, fields=["*"])
+
 
 @frappe.whitelist()
 def update_booking_slot(name, data):
@@ -75,6 +80,7 @@ def update_booking_slot(name, data):
     doc.save()
     return doc
 
+
 @frappe.whitelist()
 def delete_booking_slot(name):
     """Delete a booking slot."""
@@ -86,6 +92,7 @@ def delete_booking_slot(name):
     return {"status": "success", "message": "Booking slot deleted successfully"}
 
 # Reservation Management (The 'User Booking' DocType)
+
 
 @frappe.whitelist()
 def create_reservation(data):
@@ -125,6 +132,7 @@ def create_reservation(data):
     doc.insert(ignore_permissions=True)
     return doc
 
+
 @frappe.whitelist()
 def get_my_reservations():
     """Get the current user's reservations."""
@@ -134,12 +142,13 @@ def get_my_reservations():
 
     return frappe.get_list("User Booking", filters={"user": user}, fields=["*"], order_by="start_date desc")
 
+
 @frappe.whitelist()
 def get_shop_reservations(shop_id, status=None, date_from=None, date_to=None):
     """Get all reservations for a specific shop."""
     check_shop_permission(shop_id, "Seller")
 
-    filters = {"booking.shop": shop_id} # This relies on Booking (Slot) having shop. 
+    filters = {"booking.shop": shop_id}  # This relies on Booking (Slot) having shop.
     # Wait, UserBooking links to Booking (Slot). Booking (Slot) has Shop.
     # So we can filter by booking.shop if standard queries support it, or we filter manually.
     # Frappe get_list supports child table filtering but this is a Link.
@@ -164,6 +173,7 @@ def get_shop_reservations(shop_id, status=None, date_from=None, date_to=None):
         res_filters["end_date"] = ["<=", date_to]
 
     return frappe.get_list("User Booking", filters=res_filters, fields=["*"], order_by="start_date desc")
+
 
 @frappe.whitelist()
 def update_reservation_status(name, status):
@@ -193,6 +203,7 @@ def update_reservation_status(name, status):
 
 # Admin Shop Section & Table Management (Kept mostly same)
 
+
 @frappe.whitelist()
 def create_shop_section(data):
     if not frappe.has_permission("Shop Section", "create"):
@@ -201,9 +212,11 @@ def create_shop_section(data):
     doc.insert()
     return doc
 
+
 @frappe.whitelist()
 def get_shop_section(name):
     return frappe.get_doc("Shop Section", name)
+
 
 @frappe.whitelist()
 def update_shop_section(name, data):
@@ -214,12 +227,14 @@ def update_shop_section(name, data):
     doc.save()
     return doc
 
+
 @frappe.whitelist()
 def delete_shop_section(name):
     if not frappe.has_permission("Shop Section", "delete"):
         frappe.throw("Not permitted", frappe.PermissionError)
     frappe.delete_doc("Shop Section", name)
     return {"status": "success", "message": "Shop Section deleted successfully"}
+
 
 @frappe.whitelist()
 def create_table(data):
@@ -229,9 +244,11 @@ def create_table(data):
     doc.insert()
     return doc
 
+
 @frappe.whitelist()
 def get_table(name):
     return frappe.get_doc("Table", name)
+
 
 @frappe.whitelist()
 def update_table(name, data):
@@ -242,6 +259,7 @@ def update_table(name, data):
     doc.save()
     return doc
 
+
 @frappe.whitelist()
 def delete_table(name):
     if not frappe.has_permission("Table", "delete"):
@@ -249,10 +267,12 @@ def delete_table(name):
     frappe.delete_doc("Table", name)
     return {"status": "success", "message": "Table deleted successfully"}
 
+
 @frappe.whitelist()
 def get_shop_sections_for_booking(shop_id):
     """Get all shop sections for a specific shop."""
     return frappe.get_list("Shop Section", filters={"shop": shop_id}, fields=["*"])
+
 
 @frappe.whitelist()
 def get_tables_for_section(shop_section_id):
@@ -260,6 +280,7 @@ def get_tables_for_section(shop_section_id):
     return frappe.get_list("Table", filters={"shop_section": shop_section_id, "active": 1}, fields=["*"])
 
 # Shop Settings (Working Days / Closed Dates)
+
 
 @frappe.whitelist()
 def manage_shop_booking_working_days(shop_id, working_days):
@@ -277,6 +298,7 @@ def manage_shop_booking_working_days(shop_id, working_days):
     shop.save()
     return shop
 
+
 @frappe.whitelist()
 def manage_shop_booking_closed_dates(shop_id, closed_dates):
     """Manage the booking closed dates for a shop."""
@@ -291,51 +313,62 @@ def manage_shop_booking_closed_dates(shop_id, closed_dates):
 
 # --- Aliases for Backward Compatibility ---
 
+
 @frappe.whitelist()
 def create_booking(data):
     return create_booking_slot(data)
+
 
 @frappe.whitelist()
 def get_booking(name):
     return frappe.get_doc("Booking", name)
 
+
 @frappe.whitelist()
 def update_booking(name, data):
     return update_booking_slot(name, data)
+
 
 @frappe.whitelist()
 def delete_booking(name):
     return delete_booking_slot(name)
 
+
 @frappe.whitelist()
 def create_user_booking(data):
     return create_reservation(data)
+
 
 @frappe.whitelist()
 def get_user_bookings():
     return get_my_reservations()
 
+
 @frappe.whitelist()
 def update_user_booking_status(name, status):
     return update_reservation_status(name, status)
+
 
 @frappe.whitelist()
 def get_shop_bookings(shop_id, status=None, date_from=None, date_to=None):
     return get_shop_reservations(shop_id, status, date_from, date_to)
 
+
 @frappe.whitelist()
 def get_shop_user_bookings(shop_id, status=None, date_from=None, date_to=None):
     return get_shop_reservations(shop_id, status, date_from, date_to)
+
 
 @frappe.whitelist()
 def update_shop_user_booking_status(name, status):
     return update_reservation_status(name, status)
 
+
 @frappe.whitelist()
 def get_my_bookings():
     return get_my_reservations()
 
+
 @frappe.whitelist()
 def cancel_my_booking(name):
     return update_reservation_status(name, "Cancelled")
-

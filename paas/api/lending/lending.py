@@ -1,6 +1,7 @@
 import frappe
 import json
 
+
 @frappe.whitelist()
 def check_loan_eligibility(id_number: str, amount: float, lang: str = "en"):
     """
@@ -17,6 +18,7 @@ def check_loan_eligibility(id_number: str, amount: float, lang: str = "en"):
     loan_eligibility_check.insert(ignore_permissions=True)
     return {"is_eligible": is_eligible}
 
+
 @frappe.whitelist()
 def check_loan_history_eligibility(lang: str = "en"):
     """
@@ -24,6 +26,7 @@ def check_loan_history_eligibility(lang: str = "en"):
     """
     # This is a placeholder for the actual scorecard logic.
     return {"has_disqualifying_history": False}
+
 
 @frappe.whitelist()
 def mark_application_as_rejected(financial_details: dict, lang: str = "en"):
@@ -33,6 +36,7 @@ def mark_application_as_rejected(financial_details: dict, lang: str = "en"):
     # This is a placeholder for the actual scorecard logic.
     return {"status": "success"}
 
+
 @frappe.whitelist()
 def check_financial_eligibility(monthly_income: float, grocery_expenses: float, other_expenses: float, existing_credits: float, lang: str = "en"):
     """
@@ -40,6 +44,7 @@ def check_financial_eligibility(monthly_income: float, grocery_expenses: float, 
     """
     # This is a placeholder for the actual scorecard logic.
     return {"is_eligible": True}
+
 
 @frappe.whitelist()
 def save_incomplete_loan_application(financial_details: dict, lang: str = "en"):
@@ -53,6 +58,7 @@ def save_incomplete_loan_application(financial_details: dict, lang: str = "en"):
     })
     loan_application.insert(ignore_permissions=True)
     return {"name": loan_application.name}
+
 
 @frappe.whitelist()
 def fetch_saved_application(lang: str = "en"):
@@ -69,6 +75,7 @@ def fetch_saved_application(lang: str = "en"):
         return frappe.get_doc("Loan Application", loan_application[0].name)
     return {}
 
+
 @frappe.whitelist()
 def fetch_saved_applications(lang: str = "en"):
     """
@@ -80,6 +87,7 @@ def fetch_saved_applications(lang: str = "en"):
         filters={"customer": user, "status": "Draft"},
     )
     return loan_applications
+
 
 @frappe.whitelist()
 def create_loan_application(financial_details: dict, lang: str = "en"):
@@ -94,12 +102,14 @@ def create_loan_application(financial_details: dict, lang: str = "en"):
     loan_application.insert(ignore_permissions=True)
     return {"name": loan_application.name}
 
+
 @frappe.whitelist()
 def disburse_loan(loan_id: str, lang: str = "en"):
     """
     Disburses a loan.
     """
     return {"status": "success", "message": "Loan disbursed."}
+
 
 @frappe.whitelist()
 def get_my_loan_applications(lang: str = "en"):

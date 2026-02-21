@@ -4,6 +4,7 @@ import frappe
 from frappe.utils import now_datetime
 from datetime import datetime
 
+
 @frappe.whitelist()
 def remove_expired_stories():
     """
@@ -16,10 +17,10 @@ def remove_expired_stories():
     print("Running Daily Expired Stories Cleanup Job...")
 
     expired_stories = frappe.get_all("Story",
-        filters={
-            "expires_at": ["<", now_datetime()]
-        },
-        pluck="name"
+                                     filters={
+                                         "expires_at": ["<", now_datetime()]
+                                         },
+                                     pluck="name"
     )
 
     if not expired_stories:
@@ -38,6 +39,7 @@ def remove_expired_stories():
     frappe.db.commit()
     print("Expired Stories Cleanup Job Complete.")
 
+
 @frappe.whitelist()
 def process_repeating_orders():
     """
@@ -54,12 +56,12 @@ def process_repeating_orders():
 
     # Fetch active repeating orders where next_execution is due or not set (first run)
     repeating_orders = frappe.get_all("Repeating Order",
-        filters={
-            "is_active": 1,
-            "start_date": ["<=", now.date()],
-            "next_execution": ["<=", now]
-        },
-        fields=["name", "user", "original_order", "cron_pattern", "next_execution", "end_date", "payment_method", "saved_card", "ringfenced_amount"]
+                                      filters={
+                                          "is_active": 1,
+                                          "start_date": ["<=", now.date()],
+                                          "next_execution": ["<=", now]
+                                          },
+                                      fields=["name", "user", "original_order", "cron_pattern", "next_execution", "end_date", "payment_method", "saved_card", "ringfenced_amount"]
     )
 
     count = 0
@@ -77,11 +79,11 @@ def process_repeating_orders():
             original_order_doc = frappe.get_doc("Order", ro.original_order)
             new_order = frappe.copy_doc(original_order_doc)
             new_order.transaction_date = now
-            new_order.delivery_date = now.date() 
+            new_order.delivery_date = now.date()
             new_order.amended_from = None
 
             # Initial status is "Draft" or "Payment Failed" until payment succeeds
-            new_order.status = "Payment Failed" 
+            new_order.status = "Payment Failed"
             new_order.payment_status = "Pending"
 
             # Process Payment
@@ -174,11 +176,11 @@ def process_repeating_orders():
 
     # Cleanup: Find paused or active orders that have expired and ensure they are inactive
     expired_ro = frappe.get_all("Repeating Order",
-        filters={
-            "is_active": 1,
-            "end_date": ["<", now.date()]
-        },
-        pluck="name"
+                                filters={
+                                    "is_active": 1,
+                                    "end_date": ["<", now.date()]
+                                    },
+                                pluck="name"
     )
     for ro_name in expired_ro:
         frappe.db.set_value("Repeating Order", ro_name, "is_active", 0)

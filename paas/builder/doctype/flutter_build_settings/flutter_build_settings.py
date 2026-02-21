@@ -4,6 +4,6 @@
 import frappe
 from frappe.model.document import Document
 
+
 class FlutterBuildSettings(Document):
     pass
-

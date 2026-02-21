@@ -3,6 +3,7 @@ import frappe
 from frappe.utils import get_site_path, get_url
 import os
 
+
 @frappe.whitelist()
 def get_system_info():
     """
@@ -12,14 +13,15 @@ def get_system_info():
     doc = frappe.get_single("System Information")
 
     # Trigger version fetch/update logic (onload usually runs on desk access, do we need to trigger it?)
-    # Document.onload is not called by get_single automatically for API response usually, 
-    # but specific logic might be needed. 
+    # Document.onload is not called by get_single automatically for API response usually,
+    # but specific logic might be needed.
     # Our version fetching logic is in onload().
     # Let's manually trigger it to ensure fresh data if it's not persistent.
     if hasattr(doc, "onload"):
         doc.onload()
 
     return doc.as_dict()
+
 
 @frappe.whitelist()
 def get_backups():
@@ -46,6 +48,7 @@ def get_backups():
     backups.sort(key=lambda x: x["filename"], reverse=True)
     return backups
 
+
 @frappe.whitelist()
 def create_backup():
     """
@@ -54,13 +57,14 @@ def create_backup():
     if "System Manager" not in frappe.get_roles():
         frappe.throw("Unauthorized")
 
-    # This usually requires background worker. 
+    # This usually requires background worker.
     # For simplicity, we might just enqueue it or allow it if system permits.
     # Frappe's backup capability is usually CLI driven or scheduled.
     # We can try to trigger it via enqueue.
     from frappe.integrations.utils import make_backup
     frappe.enqueue(make_backup, queue="long")
     return {"status": "success", "message": "Backup started in background."}
+
 
 @frappe.whitelist()
 def clear_system_cache():

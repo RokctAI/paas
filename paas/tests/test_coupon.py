@@ -9,4 +9,3 @@ from frappe.tests.utils import FrappeTestCase
 
 class TestCoupon(FrappeTestCase):
     pass
-

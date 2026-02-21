@@ -114,14 +114,14 @@ def handle_text(text, session):
             # Find active orders (Open, Confirmed, Preparing, On Delivery)
             # Excluding: Delivered, Canceled, Rejected
             orders = frappe.get_all("Order",
-                                   filters={
-                                       "user": session.linked_user,
-                                       "order_status_id": ["not in", [5, 6, 7]]  # Assuming 5=Delivered, 6=Canceled... Checking status IDs later.
-                                       # actually let's just get last 1 order for now
-                                   },
-                order_by="creation desc",
-                limit=1,
-                fields=["name", "order_status_id", "total", "active"])
+                                    filters={
+                                        "user": session.linked_user,
+                                        "order_status_id": ["not in", [5, 6, 7]]  # Assuming 5=Delivered, 6=Canceled... Checking status IDs later.
+                                        # actually let's just get last 1 order for now
+                                        },
+                                    order_by="creation desc",
+                                    limit=1,
+                                    fields=["name", "order_status_id", "total", "active"])
 
             if orders:
                 order = orders[0]
