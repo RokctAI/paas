@@ -34,8 +34,7 @@ def get_blogs(type=None, limit=10, start=0):
                            fields=["name", "title", "short_description", "img", "published_at", "author", "type"],
                            order_by="published_at desc",
                            offset=start,
-                           limit=limit,
-    )
+                           limit=limit)
     return api_response(data=runs)
 
 
@@ -79,8 +78,7 @@ def get_admin_blogs(page: int = 1, limit: int = 10, lang: str = "en"):
                             fields=["name", "title", "short_description", "img", "published_at", "author", "type", "active"],
                             order_by="creation desc",
                             offset=(page - 1) * limit,
-                            limit=limit
-    )
+                            limit=limit)
     return api_response(data=blogs)
 
 
