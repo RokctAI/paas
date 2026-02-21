@@ -36,7 +36,7 @@ class TestShopManagementAPI(FrappeTestCase):
         # Log in as the test user
         frappe.set_user(self.test_user.name)
 
-    def tearDown(self):
+    def tearDown(self):  # noqa: C901
         # Log out
         frappe.set_user("Administrator")
         # Clean up the test users (shops will cascade or we can delete separately)
