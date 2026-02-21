@@ -18,7 +18,7 @@ def get_cart(shop_id: str):
 
 
 @frappe.whitelist()
-def add_to_cart(qty: int, shop_id: str, item_code: str = None, stock_id: int = None, addons: str = None):
+def add_to_cart(qty: int, shop_id: str, item_code: str = None, stock_id: int = None, addons: str = None):  # noqa: C901
     """
     Adds an item to the user's cart. Support multi-cart by shop_id.
     accepts item_code (ProductId) or stock_id (Variant).
