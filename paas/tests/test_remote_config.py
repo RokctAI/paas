@@ -43,7 +43,7 @@ class TestRemoteConfig(unittest.TestCase):
         self.assertIn("Could not verify subscription status", str(cm.exception))
 
     @patch('paas.api.remote_config.get_subscription_details')
-    def test_get_remote_config_active_subscription(self, mock_get_sub):
+    def test_get_remote_config_active_subscription(self, mock_get_sub):  # noqa: C901
         mock_get_sub.return_value = {'status': 'Active'}
 
         # Mock Settings
