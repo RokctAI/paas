@@ -64,6 +64,11 @@ def setup_product_vector_column():
         return
 
     try:
+        # Check if table exists
+        if not frappe.db.table_exists("Item"):
+            print("🛍️ Item table does not exist. Skipping vector column setup.")
+            return
+
         # Check if column exists using standard API
         if not frappe.db.has_column("Item", "embedding"):
             print("🛍️ Adding 'embedding' vector column to Product (Item)...")
@@ -131,7 +136,14 @@ def create_gin_index(table, column):
         clean_table = table.lower().replace('tab', '').replace(' ', '_')
         index_name = f"{clean_table}_{column}_gin_idx"
 
-        # Check if index exists
+        # Check if table exists in information_schema to prevent "relation does not exist" errors
+        table_exists = frappe.db.sql(
+            f"SELECT 1 FROM information_schema.tables WHERE table_name = '{table}'",
+            pluck=True)
+        if not table_exists:
+            print(f"ℹ️ Table {table} does not exist yet. Skipping index {index_name}.")
+            return
+
         chk = frappe.db.sql(
             f"SELECT 1 FROM pg_indexes WHERE indexname = '{index_name}'",
             pluck=True)
@@ -148,8 +160,13 @@ def create_gin_index(table, column):
 
 def create_fts_index(table, column):
     try:
-        clean_table = table.lower().replace('tab', '').replace(' ', '_')
-        index_name = f"{clean_table}_{column}_fts_idx"
+        # Check if table exists
+        table_exists = frappe.db.sql(
+            f"SELECT 1 FROM information_schema.tables WHERE table_name = '{table}'",
+            pluck=True)
+        if not table_exists:
+            print(f"ℹ️ Table {table} does not exist yet. Skipping FTS index {index_name}.")
+            return
 
         chk = frappe.db.sql(
             f"SELECT 1 FROM pg_indexes WHERE indexname = '{index_name}'",
