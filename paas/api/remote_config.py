@@ -22,7 +22,7 @@ def get_remote_config(app_type="Customer", site_name=None):
         frappe.throw("Could not verify subscription status.")
 
     # 2. Fetch Configuration Sources
-    _current_site = frappe.local.site
+    _current_site = frappe.local.site  # noqa: F841
 
     # A. Project Title from Settings
     project_title = frappe.db.get_single_value("Settings", "project_title")
