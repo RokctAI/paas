@@ -721,7 +721,7 @@ def _charge_payfast_token(token, amount, currency, description):
     base_url = "api.payfast.co.za" if not is_sandbox else "sandbox.payfast.co.za"
 
     merchant_id = settings.get("merchant_id")
-    _merchant_key = settings.get("merchant_key")
+    _merchant_key = settings.get("merchant_key")  # noqa: F841
     pass_phrase = settings.get("pass_phrase")
 
     # Ad-hoc charge endpoint
@@ -751,7 +751,7 @@ def _charge_payfast_token(token, amount, currency, description):
     # a) Merge base params with body
     all_params = {**params, **body}
     # b) Initial Sort
-    _keys_sorted = sorted(all_params.keys())
+    _keys_sorted = sorted(all_params.keys())  # noqa: F841
 
     # c) Add passphrase (if exists) after initial sort but then sort AGAIN
     signature_params = all_params.copy()
