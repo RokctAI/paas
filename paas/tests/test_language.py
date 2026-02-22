@@ -19,7 +19,9 @@ class TestLanguage(FrappeTestCase):
             }).insert()
 
         # Create a test translation
-        if not frappe.db.exists("PaaS Translation", {"key": "hello", "locale": "en"}):
+        if not frappe.db.exists(
+            "PaaS Translation", {
+                "key": "hello", "locale": "en"}):
             frappe.get_doc({
                 "doctype": "PaaS Translation",
                 "locale": "en",

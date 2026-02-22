@@ -17,7 +17,8 @@ class TestPayFastAPI(FrappeTestCase):
                 "last_name": "User"
             }).insert(ignore_permissions=True)
         else:
-            self.test_user = frappe.get_doc("User", "test_payfast_user@example.com")
+            self.test_user = frappe.get_doc(
+                "User", "test_payfast_user@example.com")
 
         # Create Shop
         if not frappe.db.exists("Shop", {"shop_name": "PayFast Shop"}):
@@ -41,7 +42,8 @@ class TestPayFastAPI(FrappeTestCase):
                 "price": 100
             }).insert(ignore_permissions=True)
         else:
-            self.product = frappe.get_doc("Product", {"title": "PayFast Product"})
+            self.product = frappe.get_doc(
+                "Product", {"title": "PayFast Product"})
 
         # Create a test order
         self.test_order = frappe.get_doc({
@@ -73,19 +75,36 @@ class TestPayFastAPI(FrappeTestCase):
     def tearDown(self):
         # Clean up the test data
         frappe.set_user("Administrator")
-        if hasattr(self, "test_user") and self.test_user and frappe.db.exists("User", self.test_user.name):
+        if hasattr(
+                self,
+                "test_user") and self.test_user and frappe.db.exists(
+                "User",
+                self.test_user.name):
             try:
-                frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "User",
+                    self.test_user.name,
+                    force=True,
+                    ignore_permissions=True)
             except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
                 try:
-                    frappe.db.set_value("User", self.test_user.name, "enabled", 0)
+                    frappe.db.set_value(
+                        "User", self.test_user.name, "enabled", 0)
                     frappe.db.commit()
                 except Exception:
                     pass
 
-        if hasattr(self, "shop") and self.shop and frappe.db.exists("Shop", self.shop.name):
+        if hasattr(
+                self,
+                "shop") and self.shop and frappe.db.exists(
+                "Shop",
+                self.shop.name):
             try:
-                frappe.delete_doc("Shop", self.shop.name, force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "Shop",
+                    self.shop.name,
+                    force=True,
+                    ignore_permissions=True)
             except Exception:
                 pass
 
@@ -101,8 +120,13 @@ class TestPayFastAPI(FrappeTestCase):
         frappe.set_user(self.test_user.name)
 
         # Save a card
-        card_details = {"last_four": "1234", "card_type": "Visa", "expiry_date": "12/25", "card_holder_name": "Test User"}
-        save_response = save_payfast_card("test_token", json.dumps(card_details))
+        card_details = {
+            "last_four": "1234",
+            "card_type": "Visa",
+            "expiry_date": "12/25",
+            "card_holder_name": "Test User"}
+        save_response = save_payfast_card(
+            "test_token", json.dumps(card_details))
         self.assertEqual(save_response.get("status"), "success")
 
         # Get saved cards

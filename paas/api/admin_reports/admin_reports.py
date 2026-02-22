@@ -22,7 +22,11 @@ def get_admin_statistics():
         .where(t_order.status == 'Delivered')
     ).run()[0][0] or 0
 
-    in_progress_orders = frappe.db.count("Order", {"status": ["in", ["Pending", "Processing", "Ready", "On the way"]]})
+    in_progress_orders = frappe.db.count(
+        "Order", {
+            "status": [
+                "in", [
+                    "Pending", "Processing", "Ready", "On the way"]]})
     cancelled_orders = frappe.db.count("Order", {"status": "Cancelled"})
     delivered_orders = frappe.db.count("Order", {"status": "Delivered"})
     total_products = frappe.db.count("Product")
@@ -38,32 +42,47 @@ def get_admin_statistics():
 
     # Orders per Day
     orders_chart = (
-        frappe.qb.from_(t_order)
-        .select(frappe.qb.fn.Date(t_order.creation).as_("date"), frappe.qb.fn.Count('*').as_("count"))
-        .where(t_order.creation > cutoff_date)
-        .groupby(frappe.qb.fn.Date(t_order.creation))
-        .orderby(frappe.qb.fn.Date(t_order.creation), order=frappe.qb.asc)
-    ).run(as_dict=True)
+        frappe.qb.from_(t_order) .select(
+            frappe.qb.fn.Date(
+                t_order.creation).as_("date"),
+            frappe.qb.fn.Count('*').as_("count")) .where(
+            t_order.creation > cutoff_date) .groupby(
+            frappe.qb.fn.Date(
+                t_order.creation)) .orderby(
+            frappe.qb.fn.Date(
+                t_order.creation),
+            order=frappe.qb.asc)).run(
+        as_dict=True)
 
     # New Users per Day
     t_user = frappe.qb.DocType("User")
     users_chart = (
-        frappe.qb.from_(t_user)
-        .select(frappe.qb.fn.Date(t_user.creation).as_("date"), frappe.qb.fn.Count('*').as_("count"))
-        .where(t_user.creation > cutoff_date)
-        .groupby(frappe.qb.fn.Date(t_user.creation))
-        .orderby(frappe.qb.fn.Date(t_user.creation), order=frappe.qb.asc)
-    ).run(as_dict=True)
+        frappe.qb.from_(t_user) .select(
+            frappe.qb.fn.Date(
+                t_user.creation).as_("date"),
+            frappe.qb.fn.Count('*').as_("count")) .where(
+            t_user.creation > cutoff_date) .groupby(
+            frappe.qb.fn.Date(
+                t_user.creation)) .orderby(
+            frappe.qb.fn.Date(
+                t_user.creation),
+            order=frappe.qb.asc)).run(
+        as_dict=True)
 
     # New Shops per Day
     t_company = frappe.qb.DocType("Company")
     shops_chart = (
-        frappe.qb.from_(t_company)
-        .select(frappe.qb.fn.Date(t_company.creation).as_("date"), frappe.qb.fn.Count('*').as_("count"))
-        .where(t_company.creation > cutoff_date)
-        .groupby(frappe.qb.fn.Date(t_company.creation))
-        .orderby(frappe.qb.fn.Date(t_company.creation), order=frappe.qb.asc)
-    ).run(as_dict=True)
+        frappe.qb.from_(t_company) .select(
+            frappe.qb.fn.Date(
+                t_company.creation).as_("date"),
+            frappe.qb.fn.Count('*').as_("count")) .where(
+            t_company.creation > cutoff_date) .groupby(
+            frappe.qb.fn.Date(
+                t_company.creation)) .orderby(
+            frappe.qb.fn.Date(
+                t_company.creation),
+            order=frappe.qb.asc)).run(
+        as_dict=True)
 
     # Order Status Breakdown
     status_chart = (
@@ -94,7 +113,10 @@ def get_admin_statistics():
 
 
 @frappe.whitelist()
-def get_multi_company_sales_report(from_date: str, to_date: str, company: str = None):
+def get_multi_company_sales_report(
+        from_date: str,
+        to_date: str,
+        company: str = None):
     """
     Retrieves a sales report for a specific company or all companies within a date range (for admins).
     """
@@ -119,7 +141,8 @@ def get_multi_company_sales_report(from_date: str, to_date: str, company: str = 
         fields=["name", "sales_commission_rate"],
         filters={"sales_commission_rate": [">", 0]}
     )
-    commission_map = {c['name']: c['sales_commission_rate'] for c in commission_rates}
+    commission_map = {c['name']: c['sales_commission_rate']
+                      for c in commission_rates}
 
     for order in sales_report:
         commission_rate = commission_map.get(order.shop, 0)
@@ -129,7 +152,12 @@ def get_multi_company_sales_report(from_date: str, to_date: str, company: str = 
 
 
 @frappe.whitelist()
-def get_admin_report(doctype: str, fields: str, filters: str = None, limit_start: int = 0, limit_page_length: int = 20):
+def get_admin_report(
+        doctype: str,
+        fields: str,
+        filters: str = None,
+        limit_start: int = 0,
+        limit_page_length: int = 20):
     """
     Retrieves a report for a specified doctype with given fields and filters (for admins).
     """
@@ -151,7 +179,9 @@ def get_admin_report(doctype: str, fields: str, filters: str = None, limit_start
 
 
 @frappe.whitelist()
-def get_all_wallet_histories(limit_start: int = 0, limit_page_length: int = 20):
+def get_all_wallet_histories(
+        limit_start: int = 0,
+        limit_page_length: int = 20):
     """
     Retrieves a list of all wallet histories on the platform (for admins).
     """
@@ -173,11 +203,17 @@ def get_all_transactions(limit_start: int = 0, limit_page_length: int = 20):
     _require_admin()
     return frappe.get_list(
         "Transaction",
-        fields=["name", "transaction_date", "reference_doctype", "reference_name", "debit", "credit", "currency"],
+        fields=[
+            "name",
+            "transaction_date",
+            "reference_doctype",
+            "reference_name",
+            "debit",
+            "credit",
+            "currency"],
         offset=limit_start,
         limit=limit_page_length,
-        order_by="creation desc"
-    )
+        order_by="creation desc")
 
 
 @frappe.whitelist()

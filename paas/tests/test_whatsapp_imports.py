@@ -12,7 +12,8 @@ except Exception as e:
 
 # Verify Webhook Exposure
 if hasattr(frappe, "whitelist"):
-    # This is just a mock check, actual frappe environment needed to verify whitelist registry
+    # This is just a mock check, actual frappe environment needed to verify
+    # whitelist registry
     pass
 
 print("Test complete.")

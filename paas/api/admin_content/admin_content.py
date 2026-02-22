@@ -133,7 +133,9 @@ def delete_admin_faq(faq_name):
 
 
 @frappe.whitelist()
-def get_admin_faq_categories(limit_start: int = 0, limit_page_length: int = 20):
+def get_admin_faq_categories(
+        limit_start: int = 0,
+        limit_page_length: int = 20):
     """
     Retrieves a list of all FAQ categories (for admins).
     """
@@ -185,4 +187,6 @@ def delete_admin_faq_category(category_name):
     """
     _require_admin()
     frappe.delete_doc("FAQ Category", category_name, ignore_permissions=True)
-    return {"status": "success", "message": "FAQ category deleted successfully."}
+    return {
+        "status": "success",
+        "message": "FAQ category deleted successfully."}

@@ -17,11 +17,21 @@ def check_shop_permission(shop_id, role):
     # Assuming Shop User logic exists or will be implemented.
     # If Shop User doctype doesn't exist yet, this might fail.
     # For now, we'll keep the check but be aware.
-    if not frappe.db.exists("Shop User", {"user": user, "shop": shop_id, "role": role}):
-        frappe.throw(f"You are not authorized to manage this shop's {role.lower()} bookings.", frappe.PermissionError)
+    if not frappe.db.exists(
+            "Shop User", {
+            "user": user, "shop": shop_id, "role": role}):
+        frappe.throw(
+            f"You are not authorized to manage this shop's {
+                role.lower()} bookings.",
+            frappe.PermissionError)
 
 
-def check_availability(shop_id, table_id, start_date, end_date, exclude_reservation_id=None):
+def check_availability(
+        shop_id,
+        table_id,
+        start_date,
+        end_date,
+        exclude_reservation_id=None):
     """
     Check if a table is available for the given time range.
     Returns True if available, False otherwise.
@@ -64,8 +74,14 @@ def create_booking_slot(data):
 @frappe.whitelist()
 def get_booking_slots(shop_id):
     """Get all booking slots for a specific shop."""
-    # Publicly accessible? Or restricted? Assuming public for now so users can see slots.
-    return frappe.get_list("Booking", filters={"shop": shop_id, "active": 1}, fields=["*"])
+    # Publicly accessible? Or restricted? Assuming public for now so users can
+    # see slots.
+    return frappe.get_list(
+        "Booking",
+        filters={
+            "shop": shop_id,
+            "active": 1},
+        fields=["*"])
 
 
 @frappe.whitelist()
@@ -89,7 +105,9 @@ def delete_booking_slot(name):
         check_shop_permission(doc.shop, "Seller")
 
     frappe.delete_doc("Booking", name)
-    return {"status": "success", "message": "Booking slot deleted successfully"}
+    return {
+        "status": "success",
+        "message": "Booking slot deleted successfully"}
 
 # Reservation Management (The 'User Booking' DocType)
 
@@ -99,7 +117,9 @@ def create_reservation(data):
     """Create a new user reservation."""
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to create a booking.", frappe.PermissionError)
+        frappe.throw(
+            "You must be logged in to create a booking.",
+            frappe.PermissionError)
 
     booking_data = frappe._dict(data)
 
@@ -116,13 +136,19 @@ def create_reservation(data):
         frappe.throw("End date must be after start date.")
 
     # Check Availability
-    # We need to know the shop_id. It can be fetched from the Booking Slot or Table.
+    # We need to know the shop_id. It can be fetched from the Booking Slot or
+    # Table.
     table = frappe.get_doc("Table", booking_data.get("table"))
     shop_section = frappe.get_doc("Shop Section", table.shop_section)
     shop_id = shop_section.shop
 
-    if not check_availability(shop_id, booking_data.get("table"), start_date, end_date):
-        frappe.throw("The selected table is not available for the chosen time.")
+    if not check_availability(
+            shop_id,
+            booking_data.get("table"),
+            start_date,
+            end_date):
+        frappe.throw(
+            "The selected table is not available for the chosen time.")
 
     booking_data.user = user
     booking_data.doctype = "User Booking"
@@ -138,9 +164,16 @@ def get_my_reservations():
     """Get the current user's reservations."""
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view your bookings.", frappe.PermissionError)
+        frappe.throw(
+            "You must be logged in to view your bookings.",
+            frappe.PermissionError)
 
-    return frappe.get_list("User Booking", filters={"user": user}, fields=["*"], order_by="start_date desc")
+    return frappe.get_list(
+        "User Booking",
+        filters={
+            "user": user},
+        fields=["*"],
+        order_by="start_date desc")
 
 
 @frappe.whitelist()
@@ -152,14 +185,24 @@ def get_shop_reservations(shop_id, status=None, date_from=None, date_to=None):
     # Wait, UserBooking links to Booking (Slot). Booking (Slot) has Shop.
     # So we can filter by booking.shop if standard queries support it, or we filter manually.
     # Frappe get_list supports child table filtering but this is a Link.
-    # We might need to query User Booking where booking in (select name from Booking where shop=shop_id)
+    # We might need to query User Booking where booking in (select name from
+    # Booking where shop=shop_id)
 
     # Alternative: User Booking -> Table -> Shop Section -> Shop.
-    # Let's use Table -> Shop Section -> Shop as it's more direct for the physical location.
+    # Let's use Table -> Shop Section -> Shop as it's more direct for the
+    # physical location.
 
     # Fetch tables for the shop
-    shop_sections = frappe.get_all("Shop Section", filters={"shop": shop_id}, pluck="name")
-    tables = frappe.get_all("Table", filters={"shop_section": ["in", shop_sections]}, pluck="name")
+    shop_sections = frappe.get_all(
+        "Shop Section", filters={
+            "shop": shop_id}, pluck="name")
+    tables = frappe.get_all(
+        "Table",
+        filters={
+            "shop_section": [
+                "in",
+                shop_sections]},
+        pluck="name")
 
     if not tables:
         return []
@@ -172,7 +215,11 @@ def get_shop_reservations(shop_id, status=None, date_from=None, date_to=None):
     if date_to:
         res_filters["end_date"] = ["<=", date_to]
 
-    return frappe.get_list("User Booking", filters=res_filters, fields=["*"], order_by="start_date desc")
+    return frappe.get_list(
+        "User Booking",
+        filters=res_filters,
+        fields=["*"],
+        order_by="start_date desc")
 
 
 @frappe.whitelist()
@@ -189,7 +236,9 @@ def update_reservation_status(name, status):
             doc.save(ignore_permissions=True)
             return doc
         else:
-            frappe.throw("You can only cancel your own booking.", frappe.PermissionError)
+            frappe.throw(
+                "You can only cancel your own booking.",
+                frappe.PermissionError)
 
     # Check if user is seller for this shop
     # Need to traverse to Shop ID
@@ -233,7 +282,9 @@ def delete_shop_section(name):
     if not frappe.has_permission("Shop Section", "delete"):
         frappe.throw("Not permitted", frappe.PermissionError)
     frappe.delete_doc("Shop Section", name)
-    return {"status": "success", "message": "Shop Section deleted successfully"}
+    return {
+        "status": "success",
+        "message": "Shop Section deleted successfully"}
 
 
 @frappe.whitelist()
@@ -271,13 +322,20 @@ def delete_table(name):
 @frappe.whitelist()
 def get_shop_sections_for_booking(shop_id):
     """Get all shop sections for a specific shop."""
-    return frappe.get_list("Shop Section", filters={"shop": shop_id}, fields=["*"])
+    return frappe.get_list(
+        "Shop Section", filters={
+            "shop": shop_id}, fields=["*"])
 
 
 @frappe.whitelist()
 def get_tables_for_section(shop_section_id):
     """Get all tables for a specific shop section."""
-    return frappe.get_list("Table", filters={"shop_section": shop_section_id, "active": 1}, fields=["*"])
+    return frappe.get_list(
+        "Table",
+        filters={
+            "shop_section": shop_section_id,
+            "active": 1},
+        fields=["*"])
 
 # Shop Settings (Working Days / Closed Dates)
 

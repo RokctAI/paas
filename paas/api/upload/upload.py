@@ -47,7 +47,8 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
 
     if isinstance(files, list):
         # If it's a list of objects/dicts, we might need to handle differently
-        # But usually file uploads come via request.files in multipart/form-data
+        # But usually file uploads come via request.files in
+        # multipart/form-data
         pass
 
     # 2. Main Source: frappe.request.files
@@ -131,7 +132,9 @@ def upload_multi_image(files: list = None, upload_type: str = None, doc_name: st
             continue
 
     if not file_urls:
-        return api_response(message="No files were successfully uploaded", status_code=500)
+        return api_response(
+            message="No files were successfully uploaded",
+            status_code=500)
 
     # 5. Update Record Fields if specific types
     # This logic assumes we replace the image field with the FIRST uploaded image

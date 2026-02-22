@@ -20,7 +20,9 @@ class TestRemoteConfig(unittest.TestCase):
         self.mock_get_doc = self.get_doc_patcher.start()
 
         # Patch frappe.throw to raise Exception with the message
-        self.throw_patcher = patch('frappe.throw', side_effect=lambda msg, **kwargs: (_ for _ in ()).throw(Exception(msg)))
+        self.throw_patcher = patch('frappe.throw',
+                                   side_effect=lambda msg,
+                                   **kwargs: (_ for _ in ()).throw(Exception(msg)))
         self.mock_throw = self.throw_patcher.start()
 
         # Ensure frappe.local is set up
@@ -40,7 +42,9 @@ class TestRemoteConfig(unittest.TestCase):
 
         with self.assertRaises(Exception) as cm:
             get_remote_config()
-        self.assertIn("Could not verify subscription status", str(cm.exception))
+        self.assertIn(
+            "Could not verify subscription status", str(
+                cm.exception))
 
     @patch('paas.api.remote_config.get_subscription_details')
     def test_get_remote_config_active_subscription(self, mock_get_sub):  # noqa: C901
@@ -68,7 +72,8 @@ class TestRemoteConfig(unittest.TestCase):
             return None
         frappe.db.get_value.side_effect = get_value_side_effect
 
-        # Mock Remote Config Docs using SimpleNamespace to avoid MagicMock auto-creation
+        # Mock Remote Config Docs using SimpleNamespace to avoid MagicMock
+        # auto-creation
         def get_doc_side_effect(doctype, name):
             if name == "RC-Common":
                 return SimpleNamespace(

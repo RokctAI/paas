@@ -29,7 +29,10 @@ def get_extra_groups(shop_id=None):
     if shop_id:
         filters["shop"] = shop_id
 
-    return frappe.get_list("Product Extra Group", filters=filters, fields=["*"])
+    return frappe.get_list(
+        "Product Extra Group",
+        filters=filters,
+        fields=["*"])
 
 
 @frappe.whitelist()
@@ -78,7 +81,11 @@ def get_extra_values(group_id):
     """
     Retrieves Extra Values for a specific group.
     """
-    return frappe.get_list("Product Extra Value", filters={"extra_group": group_id}, fields=["*"])
+    return frappe.get_list(
+        "Product Extra Value",
+        filters={
+            "extra_group": group_id},
+        fields=["*"])
 
 
 @frappe.whitelist()

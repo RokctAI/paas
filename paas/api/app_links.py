@@ -7,7 +7,8 @@ def get_assetlinks():
     try:
         config = frappe.get_single("Flutter App Configuration")
         package_name = config.package_name
-        fingerprints = config.sha256_fingerprint.splitlines() if config.sha256_fingerprint else []
+        fingerprints = config.sha256_fingerprint.splitlines(
+        ) if config.sha256_fingerprint else []
 
         # Clean up fingerprints (remove empty lines or whitespace)
         fingerprints = [f.strip() for f in fingerprints if f.strip()]

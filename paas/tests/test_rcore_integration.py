@@ -39,14 +39,20 @@ class TestRcoreIntegration(FrappeTestCase):
     def tearDown(self):
         # Cleanup
         if hasattr(self, "user"):
-            frappe.db.delete("Wallet History", {"wallet": ["in", frappe.get_all("Wallet", {"user": self.user.name}, pluck="name")]})
+            frappe.db.delete(
+                "Wallet History", {
+                    "wallet": [
+                        "in", frappe.get_all(
+                            "Wallet", {
+                                "user": self.user.name}, pluck="name")]})
             frappe.db.delete("Wallet", {"user": self.user.name})
             # Clean up Loan Docs too? Maybe later.
 
     def test_loan_disbursement_wallet_integration(self):
         # 1. Create a Loan Disbursement mock doc
         # 1. Create a Loan Disbursement mock doc
-        # We Mock this because Loan Disbursement might not exist in the test env
+        # We Mock this because Loan Disbursement might not exist in the test
+        # env
         loan_doc = MagicMock()
         loan_doc.doctype = "Loan Disbursement"
         loan_doc.applicant_type = "Customer"
@@ -68,7 +74,10 @@ class TestRcoreIntegration(FrappeTestCase):
         self.assertEqual(wallet.balance, 5000)
 
         # Verify history record
-        history = frappe.get_all("Wallet History", filters={"wallet": wallet.name}, fields=["transaction_type", "amount"])
+        history = frappe.get_all(
+            "Wallet History", filters={
+                "wallet": wallet.name}, fields=[
+                "transaction_type", "amount"])
         self.assertEqual(len(history), 1)
         self.assertEqual(history[0].transaction_type, "Loan Disbursement")
         self.assertEqual(history[0].amount, 5000)

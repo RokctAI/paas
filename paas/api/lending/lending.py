@@ -38,7 +38,12 @@ def mark_application_as_rejected(financial_details: dict, lang: str = "en"):
 
 
 @frappe.whitelist()
-def check_financial_eligibility(monthly_income: float, grocery_expenses: float, other_expenses: float, existing_credits: float, lang: str = "en"):
+def check_financial_eligibility(
+        monthly_income: float,
+        grocery_expenses: float,
+        other_expenses: float,
+        existing_credits: float,
+        lang: str = "en"):
     """
     Checks if a user is financially eligible for a loan.
     """
@@ -47,7 +52,9 @@ def check_financial_eligibility(monthly_income: float, grocery_expenses: float, 
 
 
 @frappe.whitelist()
-def save_incomplete_loan_application(financial_details: dict, lang: str = "en"):
+def save_incomplete_loan_application(
+        financial_details: dict,
+        lang: str = "en"):
     """
     Saves an incomplete loan application as a draft.
     """

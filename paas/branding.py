@@ -17,7 +17,9 @@ def get_paas_branding():
             return {'enabled': False}
 
         # Check if plan includes PaaS
-        plan = frappe.get_doc('Subscription Plan', subscription.subscription_plan)
+        plan = frappe.get_doc(
+            'Subscription Plan',
+            subscription.subscription_plan)
         has_paas = any(module.module_name == 'PaaS' for module in plan.modules)
 
         if not has_paas:
@@ -26,7 +28,8 @@ def get_paas_branding():
         # Get PaaS settings logo and app name
         settings = frappe.get_single('Settings')
 
-        # Use Settings logo if available, otherwise fallback to ROKCT default logos
+        # Use Settings logo if available, otherwise fallback to ROKCT default
+        # logos
         logo = settings.logo if settings and settings.logo else '/assets/rokct/images/logo.svg'
         favicon = settings.favicon if settings and settings.favicon else '/assets/rokct/images/logo.svg'
         app_name = settings.project_title if settings and settings.project_title else 'ROKCT'
@@ -62,13 +65,13 @@ def get_paas_brand_html():
             setTimeout(function() {{
                 // Navbar logo
                 $('.navbar-brand img, .app-logo img, .navbar-home img').attr('src', '{logo_url}');
-                
+
                 // Login page logo
                 $('.login-content img, .for-login img').attr('src', '{logo_url}');
-                
+
                 // Sidebar logo
                 $('.sidebar-logo img').attr('src', '{logo_url}');
-                
+
                 // All Frappe/ERPNext logos
                 $('img').each(function() {{
                     var src = $(this).attr('src');
@@ -76,15 +79,15 @@ def get_paas_brand_html():
                         $(this).attr('src', '{logo_url}');
                     }}
                 }});
-                
+
                 // Set favicon
                 $('link[rel="icon"]').attr('href', '{logo_url}');
                 $('link[rel="shortcut icon"]').attr('href', '{logo_url}');
-                
+
                 // Update page title
                 document.title = '{app_name}';
             }}, 500);
-            
+
             // Re-apply on page navigation
             frappe.router.on('change', function() {{
                 setTimeout(function() {{
@@ -93,7 +96,7 @@ def get_paas_brand_html():
             }});
         }});
     </script>
-    
+
     <style>
         /* Hide Frappe/ERPNext branding */
         .powered-by-frappe,

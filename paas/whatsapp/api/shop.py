@@ -40,7 +40,9 @@ def handle_interactive(reply, session):  # noqa: C901
         if item_code:
             add_to_cart(session, item_code, options=flow_data)
         else:
-            send_text(session.wa_id, "❌ Error processing selection. Please try again.")
+            send_text(
+                session.wa_id,
+                "❌ Error processing selection. Please try again.")
 
     elif type_ == 'list_reply':
         item_id = reply['list_reply']['id']
@@ -51,17 +53,21 @@ def handle_interactive(reply, session):  # noqa: C901
             if item_id == "addr_new":
                 # Trigger manual input
                 from paas.whatsapp.responses import send_text
-                send_text(session.wa_id, "📍 Please type your full delivery address:")
+                send_text(
+                    session.wa_id,
+                    "📍 Please type your full delivery address:")
                 session.current_flow = "checkout_address_input"
                 session.save(ignore_permissions=True)
             elif item_id == "addr_location":
                 handle_checkout_action(session, 'address_location')
             else:
-                handle_checkout_action(session, 'address_selected', payload=item_id)
+                handle_checkout_action(
+                    session, 'address_selected', payload=item_id)
 
         elif item_id.startswith("shop_"):
             shop_uuid = item_id.split("_")[1]
-            session.current_shop = frappe.db.get_value("Shop", {"uuid": shop_uuid}, "name")
+            session.current_shop = frappe.db.get_value(
+                "Shop", {"uuid": shop_uuid}, "name")
             session.save(ignore_permissions=True)
 
             # Fetch Categories (Simplistic Fetch)
@@ -106,13 +112,15 @@ def handle_interactive(reply, session):  # noqa: C901
                 # Mocking Geo Search
                 all_shops = get_shops(limit_page_length=20)
                 # Filter out Ecommerce shops for WhatsApp
-                shops = [s for s in all_shops if s.get('shop_type') != 'Ecommerce' and not s.get('is_ecommerce')]
+                shops = [s for s in all_shops if s.get(
+                    'shop_type') != 'Ecommerce' and not s.get('is_ecommerce')]
                 send_shop_list(session.wa_id, shops[:10])
             else:
                 # Single Vendor -> Go to Default Shop
                 session.current_shop = config.default_shop
                 session.save(ignore_permissions=True)
-                categories = frappe.get_list("Category", fields=["name", "uuid"])
+                categories = frappe.get_list(
+                    "Category", fields=["name", "uuid"])
                 send_category_list(session.wa_id, categories, "default")
 
         elif btn_id == 'loc_retry':

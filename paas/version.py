@@ -8,7 +8,8 @@ import os
 @frappe.whitelist(allow_guest=True)
 def get_version():
     # Path to the directory of this file
-    # We assume this file is in the same directory as versions.json (paas/paas/)
+    # We assume this file is in the same directory as versions.json
+    # (paas/paas/)
     paas_path = os.path.abspath(os.path.dirname(__file__))
     versions_file_path = os.path.join(paas_path, 'versions.json')
 

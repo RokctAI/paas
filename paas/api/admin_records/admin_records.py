@@ -4,7 +4,12 @@ from ..utils import _require_admin
 
 
 @frappe.whitelist()
-def get_all_orders(limit_start: int = 0, limit_page_length: int = 20, status: str = None, from_date: str = None, to_date: str = None):
+def get_all_orders(
+        limit_start: int = 0,
+        limit_page_length: int = 20,
+        status: str = None,
+        from_date: str = None,
+        to_date: str = None):
     """
     Retrieves a list of all orders on the platform (for admins).
     """
@@ -28,7 +33,12 @@ def get_all_orders(limit_start: int = 0, limit_page_length: int = 20, status: st
 
 
 @frappe.whitelist()
-def get_all_parcel_orders(limit_start: int = 0, limit_page_length: int = 20, status: str = None, from_date: str = None, to_date: str = None):
+def get_all_parcel_orders(
+        limit_start: int = 0,
+        limit_page_length: int = 20,
+        status: str = None,
+        from_date: str = None,
+        to_date: str = None):
     """
     Retrieves a list of all parcel orders on the platform (for admins).
     """
@@ -43,11 +53,16 @@ def get_all_parcel_orders(limit_start: int = 0, limit_page_length: int = 20, sta
     parcel_orders = frappe.get_list(
         "Parcel Order",
         filters=filters,
-        fields=["name", "user", "total_price", "status", "delivery_date", "deliveryman"],
+        fields=[
+            "name",
+            "user",
+            "total_price",
+            "status",
+            "delivery_date",
+            "deliveryman"],
         offset=limit_start,
         limit=limit_page_length,
-        order_by="creation desc"
-    )
+        order_by="creation desc")
     return parcel_orders
 
 
@@ -58,7 +73,9 @@ def delete_admin_parcel_order(parcel_order_id):
     """
     _require_admin()
     frappe.delete_doc("Parcel Order", parcel_order_id, ignore_permissions=True)
-    return {"status": "success", "message": "Parcel Order deleted successfully."}
+    return {
+        "status": "success",
+        "message": "Parcel Order deleted successfully."}
 
 
 @frappe.whitelist()
@@ -91,11 +108,18 @@ def get_all_reviews(limit_start: int = 0, limit_page_length: int = 20):
     _require_admin()
     return frappe.get_list(
         "Review",
-        fields=["name", "user", "rating", "comment", "creation", "reviewable_type", "reviewable_id", "published"],
+        fields=[
+            "name",
+            "user",
+            "rating",
+            "comment",
+            "creation",
+            "reviewable_type",
+            "reviewable_id",
+            "published"],
         offset=limit_start,
         limit=limit_page_length,
-        order_by="creation desc"
-    )
+        order_by="creation desc")
 
 
 @frappe.whitelist()
@@ -196,11 +220,16 @@ def get_all_notifications(limit_start: int = 0, limit_page_length: int = 20):
     _require_admin()
     return frappe.get_list(
         "Notification Log",
-        fields=["name", "subject", "document_type", "document_name", "for_user", "creation"],
+        fields=[
+            "name",
+            "subject",
+            "document_type",
+            "document_name",
+            "for_user",
+            "creation"],
         offset=limit_start,
         limit=limit_page_length,
-        order_by="creation desc"
-    )
+        order_by="creation desc")
 
 
 @frappe.whitelist()
@@ -211,11 +240,16 @@ def get_all_bookings(limit_start: int = 0, limit_page_length: int = 20):
     _require_admin()
     return frappe.get_list(
         "Booking",
-        fields=["name", "user", "shop", "booking_date", "number_of_guests", "status"],
+        fields=[
+            "name",
+            "user",
+            "shop",
+            "booking_date",
+            "number_of_guests",
+            "status"],
         offset=limit_start,
         limit=limit_page_length,
-        order_by="booking_date desc"
-    )
+        order_by="booking_date desc")
 
 
 @frappe.whitelist()
@@ -283,8 +317,13 @@ def get_all_request_models(limit_start: int = 0, limit_page_length: int = 20):
     _require_admin()
     return frappe.get_list(
         "Request Model",
-        fields=["name", "model_type", "model", "status", "created_by_user", "created_at"],
+        fields=[
+            "name",
+            "model_type",
+            "model",
+            "status",
+            "created_by_user",
+            "created_at"],
         offset=limit_start,
         limit=limit_page_length,
-        order_by="creation desc"
-    )
+        order_by="creation desc")

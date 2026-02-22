@@ -50,7 +50,9 @@ def delete_subscription(name):
     if not frappe.has_permission("Subscription", "delete"):
         frappe.throw("Not permitted", frappe.PermissionError)
     frappe.delete_doc("Subscription", name)
-    return {"status": "success", "message": "Subscription deleted successfully"}
+    return {
+        "status": "success",
+        "message": "Subscription deleted successfully"}
 
 # Admin Shop Subscription Management
 
@@ -81,7 +83,9 @@ def get_shop_subscriptions(shop):
     """Get all subscriptions for a shop."""
     if not frappe.has_permission("Shop Subscription", "read"):
         frappe.throw("Not permitted", frappe.PermissionError)
-    return frappe.get_list("Shop Subscription", filters={"shop": shop}, fields=["*"])
+    return frappe.get_list(
+        "Shop Subscription", filters={
+            "shop": shop}, fields=["*"])
 
 
 @frappe.whitelist()
@@ -112,11 +116,15 @@ def get_seller_shop():
     """Get the shop associated with the current seller."""
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to manage subscriptions.", frappe.PermissionError)
+        frappe.throw(
+            "You must be logged in to manage subscriptions.",
+            frappe.PermissionError)
 
     shop = frappe.db.get_value("Shop", {"user": user}, "name")
     if not shop:
-        frappe.throw("You do not have a shop associated with your account.", frappe.PermissionError)
+        frappe.throw(
+            "You do not have a shop associated with your account.",
+            frappe.PermissionError)
 
     return shop
 
@@ -125,7 +133,12 @@ def get_seller_shop():
 def get_my_shop_subscription():
     """Get the current seller's shop subscription."""
     shop = get_seller_shop()
-    return frappe.get_list("Shop Subscription", filters={"shop": shop, "active": 1}, fields=["*"])
+    return frappe.get_list(
+        "Shop Subscription",
+        filters={
+            "shop": shop,
+            "active": 1},
+        fields=["*"])
 
 
 @frappe.whitelist()
@@ -134,7 +147,9 @@ def subscribe_my_shop(subscription_id):
     shop = get_seller_shop()
 
     # Cancel any existing active subscriptions for the shop
-    existing_subscriptions = frappe.get_all("Shop Subscription", filters={"shop": shop, "active": 1})
+    existing_subscriptions = frappe.get_all(
+        "Shop Subscription", filters={
+            "shop": shop, "active": 1})
     for sub in existing_subscriptions:
         doc = frappe.get_doc("Shop Subscription", sub.name)
         doc.active = 0

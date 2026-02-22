@@ -22,7 +22,8 @@ class TestUtils(unittest.TestCase):
             # But since we mocked rcore in setup, it should be a MagicMock
             # However, utils.py imported it as `core_get_details`
 
-            # Since paas.utils is already imported, we patch the name in that module
+            # Since paas.utils is already imported, we patch the name in that
+            # module
             with patch('paas.utils.core_get_details') as mock_core:
                 mock_core.return_value = {'status': 'Trialing'}
                 details = utils.get_subscription_details()

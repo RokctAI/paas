@@ -11,7 +11,9 @@ def check_site_role():
     - Control sites: For Swagger documentation (no seeders)
     """
     app_role = frappe.conf.get("app_role", "tenant")
-    print(f"PaaS installation on site: {frappe.local.site} (app_role: {app_role})")
+    print(
+        f"PaaS installation on site: {
+            frappe.local.site} (app_role: {app_role})")
 
 
 def after_install():
@@ -67,8 +69,10 @@ def setup_product_vector_column():
             print("🛍️ Adding 'embedding' vector column to Product (Item)...")
 
             # Note: DDL statements (ALTER TABLE, CREATE INDEX) require raw SQL.
-            # frappe.qb is primarily for Data Manipulation (SELECT, INSERT, UPDATE).
-            frappe.db.sql("ALTER TABLE \"tabItem\" ADD COLUMN embedding vector(384)")
+            # frappe.qb is primarily for Data Manipulation (SELECT, INSERT,
+            # UPDATE).
+            frappe.db.sql(
+                "ALTER TABLE \"tabItem\" ADD COLUMN embedding vector(384)")
 
             # Add an HNSW index for fast approximate nearest neighbor search
             print("🛍️ Creating HNSW index for Product embeddings...")
@@ -100,7 +104,8 @@ def setup_gin_indexes():
 
     # WhatsApp GIN Indexes
     create_gin_index("tabWhatsApp Session", "cart_items")
-    # Check if metadata column exists before indexing (handle missing table gracefully)
+    # Check if metadata column exists before indexing (handle missing table
+    # gracefully)
     try:
         if frappe.db.has_column("tabWhatsApp Session", "metadata"):
             create_gin_index("tabWhatsApp Session", "metadata")
@@ -121,16 +126,20 @@ def setup_gin_indexes():
 
 def create_gin_index(table, column):
     try:
-        # Sanitize table name for index (remove 'tab', replace spaces with underscores)
+        # Sanitize table name for index (remove 'tab', replace spaces with
+        # underscores)
         clean_table = table.lower().replace('tab', '').replace(' ', '_')
         index_name = f"{clean_table}_{column}_gin_idx"
 
         # Check if index exists
-        chk = frappe.db.sql(f"SELECT 1 FROM pg_indexes WHERE indexname = '{index_name}'", pluck=True)
+        chk = frappe.db.sql(
+            f"SELECT 1 FROM pg_indexes WHERE indexname = '{index_name}'",
+            pluck=True)
         if not chk:
             # Try catch GIN index creation
             # If column is json (text), cast to jsonb for indexing support
-            frappe.db.sql(f"CREATE INDEX {index_name} ON \"{table}\" USING GIN (({column}::jsonb))")
+            frappe.db.sql(
+                f"CREATE INDEX {index_name} ON \"{table}\" USING GIN (({column}::jsonb))")
     except Exception as e:
         frappe.db.rollback()
         # Log purely as warning, don't crash install
@@ -142,9 +151,12 @@ def create_fts_index(table, column):
         clean_table = table.lower().replace('tab', '').replace(' ', '_')
         index_name = f"{clean_table}_{column}_fts_idx"
 
-        chk = frappe.db.sql(f"SELECT 1 FROM pg_indexes WHERE indexname = '{index_name}'", pluck=True)
+        chk = frappe.db.sql(
+            f"SELECT 1 FROM pg_indexes WHERE indexname = '{index_name}'",
+            pluck=True)
         if not chk:
-            frappe.db.sql(f"CREATE INDEX {index_name} ON \"{table}\" USING GIN (to_tsvector('english', {column}))")
+            frappe.db.sql(
+                f"CREATE INDEX {index_name} ON \"{table}\" USING GIN (to_tsvector('english', {column}))")
     except Exception as e:
         frappe.db.rollback()
         print(f"⚠️ Failed to create FTS index {index_name}: {str(e)}")
@@ -163,11 +175,19 @@ def run_seeders():
 
     # Only seed on tenant sites
     try:
-        # Dynamic loading to avoid strict module dependency (prevents install crashes)
+        # Dynamic loading to avoid strict module dependency (prevents install
+        # crashes)
         def run_seeder_script(script_name):
             try:
                 # Path: apps/control/control/seeds/scripts/{script_name}.py
-                script_path = os.path.join(get_bench_path(), "apps", "control", "control", "seeds", "scripts", f"{script_name}.py")
+                script_path = os.path.join(
+                    get_bench_path(),
+                    "apps",
+                    "control",
+                    "control",
+                    "seeds",
+                    "scripts",
+                    f"{script_name}.py")
 
                 if not os.path.exists(script_path):
                     print(f"Seeder script not found: {script_path}")
@@ -175,7 +195,8 @@ def run_seeders():
 
                 print(f"Running {script_name} from {script_path}...")
                 import importlib.util
-                spec = importlib.util.spec_from_file_location(script_name, script_path)
+                spec = importlib.util.spec_from_file_location(
+                    script_name, script_path)
                 module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(module)
                 module.execute()
@@ -193,11 +214,14 @@ def run_seeders():
 
         print("PaaS seeders completed successfully.")
     except ImportError:
-        # Seeders not available (control app doesn't have them or not installed)
+        # Seeders not available (control app doesn't have them or not
+        # installed)
         print("Control seeders not found. Skipping sensitive data seeding.")
     except Exception as e:
         print(f"Error running PaaS seeders: {e}")
-        frappe.log_error(f"Error running PaaS seeders: {e}", "PaaS Seeder Error")
+        frappe.log_error(
+            f"Error running PaaS seeders: {e}",
+            "PaaS Seeder Error")
 
 
 def check_and_fetch_sources():
@@ -223,18 +247,23 @@ def check_and_fetch_sources():
         try:
             if "control" in frappe.get_installed_apps():
                 # Dynamically call the function in Control app
-                # Note: This function (control.control.api.fetch_paas_sources) must exist in Control
+                # Note: This function (control.control.api.fetch_paas_sources)
+                # must exist in Control
                 try:
-                    fetch_sources = frappe.get_attr("control.control.api.fetch_paas_sources")
+                    fetch_sources = frappe.get_attr(
+                        "control.control.api.fetch_paas_sources")
                     fetch_sources()
                     print("✅ Successfully requested Control to fetch sources.")
                 except AttributeError:
-                    print("❌ Error: 'control.control.api.fetch_paas_sources' method not found.")
+                    print(
+                        "❌ Error: 'control.control.api.fetch_paas_sources' method not found.")
                     print("Please ensure Control app is updated.")
                 except Exception as ex:
                     print(f"❌ Error during fetch request: {ex}")
             else:
                 print("ℹ️ Control app is not installed. Cannot auto-fetch sources.")
-                print("Please manually clone sources into: " + source_code_path)
+                print(
+                    "Please manually clone sources into: " +
+                    source_code_path)
         except Exception as e:
             print(f"❌ Error initiating source check: {e}")

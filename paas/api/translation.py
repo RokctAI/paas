@@ -60,7 +60,10 @@ def get_translations_paginate(search=None, group=None, locale=None, perPage=10, 
         )
 
     # Count total distinct keys
-    count_query = base_query.select(frappe.qb.fn.Count(frappe.qb.fn.Distinct(t_translation.key)))
+    count_query = base_query.select(
+        frappe.qb.fn.Count(
+            frappe.qb.fn.Distinct(
+                t_translation.key)))
     total_keys = count_query.run()[0][0]
 
     if total_keys == 0:
@@ -68,11 +71,13 @@ def get_translations_paginate(search=None, group=None, locale=None, perPage=10, 
             "total": 0,
             "perPage": per_page,
             "translations": {}
-            })
+        })
 
     # Get paginated distinct keys
     keys_query = base_query.select(frappe.qb.fn.Distinct(t_translation.key))
-    keys_query = keys_query.orderby(t_translation.key, order=frappe.qb.asc).limit(per_page).offset(start)
+    keys_query = keys_query.orderby(
+        t_translation.key,
+        order=frappe.qb.asc).limit(per_page).offset(start)
     paginated_keys = keys_query.run(as_dict=True)
 
     keys_list = [r.key for r in paginated_keys]
@@ -93,7 +98,8 @@ def get_translations_paginate(search=None, group=None, locale=None, perPage=10, 
     if locale:
         details_query = details_query.where(t_translation.locale == locale)
 
-    details_query = details_query.orderby(t_translation.key, order=frappe.qb.asc)
+    details_query = details_query.orderby(
+        t_translation.key, order=frappe.qb.asc)
     details = details_query.run(as_dict=True)
 
     grouped = {}
@@ -208,7 +214,9 @@ def delete_translation():
         return _api_error("Invalid parameters", 400)
 
     for k in ids:
-        docs = frappe.get_all("PaaS Translation", filters={"key": k}, pluck="name")
+        docs = frappe.get_all(
+            "PaaS Translation", filters={
+                "key": k}, pluck="name")
         for d in docs:
             frappe.delete_doc("PaaS Translation", d, ignore_permissions=True)
 
@@ -220,7 +228,9 @@ def delete_translation_single(key):
     if not key:
         return _api_error("Key is required", 400)
 
-    docs = frappe.get_all("PaaS Translation", filters={"key": key}, pluck="name")
+    docs = frappe.get_all(
+        "PaaS Translation", filters={
+            "key": key}, pluck="name")
     for d in docs:
         frappe.delete_doc("PaaS Translation", d, ignore_permissions=True)
 
@@ -232,9 +242,17 @@ def get_translation_single(key):
     if not key:
         return _api_error("Key is required", 400)
 
-    docs = frappe.get_all("PaaS Translation",
-                          filters={"key": key},
-                          fields=["name", "group", "key", "locale", "value", "status"])
+    docs = frappe.get_all(
+        "PaaS Translation",
+        filters={
+            "key": key},
+        fields=[
+            "name",
+            "group",
+            "key",
+            "locale",
+            "value",
+            "status"])
 
     if not docs:
         return _api_error("Translation not found", 404)
@@ -271,7 +289,11 @@ def truncate_translations():
 @frappe.whitelist()
 def restore_all_translations():
     _require_admin()
-    deleted = frappe.get_all("Deleted Document", filters={"deleted_doctype": "PaaS Translation"}, pluck="name")
+    deleted = frappe.get_all(
+        "Deleted Document",
+        filters={
+            "deleted_doctype": "PaaS Translation"},
+        pluck="name")
     from frappe.model.api import restore_document
     for d in deleted:
         try:
@@ -302,7 +324,12 @@ def import_translations():
             if 'key' not in row or 'locale' not in row:
                 continue
 
-            existing = frappe.get_all("PaaS Translation", filters={"key": row['key'], "locale": row['locale']}, pluck="name")
+            existing = frappe.get_all(
+                "PaaS Translation",
+                filters={
+                    "key": row['key'],
+                    "locale": row['locale']},
+                pluck="name")
             if existing:
                 doc = frappe.get_doc("PaaS Translation", existing[0])
                 doc.value = row.get('value', '')
@@ -332,7 +359,9 @@ def export_translations():
         from frappe.utils.file_manager import save_file
         import io
 
-        data = frappe.get_all("PaaS Translation", fields=["group", "key", "locale", "value"])
+        data = frappe.get_all(
+            "PaaS Translation", fields=[
+                "group", "key", "locale", "value"])
         df = pd.DataFrame(data)
 
         output = io.BytesIO()
@@ -354,7 +383,10 @@ def export_translations():
             output = io.StringIO()
             df.to_csv(output, index=False)
             fname = "translations_export.csv"
-            saved = save_file(fname, output.getvalue().encode('utf-8'), is_private=0)
+            saved = save_file(
+                fname,
+                output.getvalue().encode('utf-8'),
+                is_private=0)
             return _api_success({
                 "path": saved.file_url,
                 "file_name": fname

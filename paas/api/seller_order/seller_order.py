@@ -4,7 +4,12 @@ from paas.api.utils import _get_seller_shop
 
 
 @frappe.whitelist()
-def get_seller_orders(limit_start: int = 0, limit_page_length: int = 20, status: str = None, from_date: str = None, to_date: str = None):
+def get_seller_orders(
+        limit_start: int = 0,
+        limit_page_length: int = 20,
+        status: str = None,
+        from_date: str = None,
+        to_date: str = None):
     """
     Retrieves a list of orders for the current seller's shop, with optional filters.
     """
@@ -39,7 +44,9 @@ def get_seller_order_details(order_id):
     order = frappe.get_doc("Order", order_id)
 
     if order.shop != shop:
-        frappe.throw("You are not authorized to view this order.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to view this order.",
+            frappe.PermissionError)
 
     return order.as_dict()
 
@@ -55,11 +62,22 @@ def update_seller_order_status(order_id, status):
     order = frappe.get_doc("Order", order_id)
 
     if order.shop != shop:
-        frappe.throw("You are not authorized to update this order.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this order.",
+            frappe.PermissionError)
 
-    valid_statuses = ["New", "Accepted", "Shipped", "Delivered", "Cancelled", "Paid", "Failed"]
+    valid_statuses = [
+        "New",
+        "Accepted",
+        "Shipped",
+        "Delivered",
+        "Cancelled",
+        "Paid",
+        "Failed"]
     if status not in valid_statuses:
-        frappe.throw(f"Invalid status. Must be one of: {', '.join(valid_statuses)}")
+        frappe.throw(
+            f"Invalid status. Must be one of: {
+                ', '.join(valid_statuses)}")
 
     order.status = status
     order.save(ignore_permissions=True)
@@ -67,7 +85,9 @@ def update_seller_order_status(order_id, status):
 
 
 @frappe.whitelist()
-def get_seller_order_refunds(limit_start: int = 0, limit_page_length: int = 20):
+def get_seller_order_refunds(
+        limit_start: int = 0,
+        limit_page_length: int = 20):
     """
     Retrieves a list of order refunds for the current seller's shop.
     """
@@ -102,7 +122,9 @@ def update_seller_order_refund(refund_name, status, answer=None):
     order = frappe.get_doc("Order", refund.order)
 
     if order.shop != shop:
-        frappe.throw("You are not authorized to update this refund request.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this refund request.",
+            frappe.PermissionError)
 
     if status not in ["Accepted", "Canceled"]:
         frappe.throw("Invalid status. Must be 'Accepted' or 'Canceled'.")
@@ -130,10 +152,19 @@ def get_seller_reviews(limit_start: int = 0, limit_page_length: int = 20):
 
     reviews = frappe.get_list(
         "Review",
-        filters={"reviewable_id": ["in", products], "reviewable_type": "Item"},
-        fields=["name", "user", "rating", "comment", "creation", "reviewable_id"],
+        filters={
+            "reviewable_id": [
+                "in",
+                products],
+            "reviewable_type": "Item"},
+        fields=[
+            "name",
+            "user",
+            "rating",
+            "comment",
+            "creation",
+            "reviewable_id"],
         offset=limit_start,
         limit=limit_page_length,
-        order_by="creation desc"
-    )
+        order_by="creation desc")
     return reviews

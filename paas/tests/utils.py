@@ -20,7 +20,8 @@ def before_tests():
     create_user_custom_fields()
     frappe.db.commit()
     frappe.clear_cache()
-    print("DEBUG: Fixtures Created. Stock Entry Types:", frappe.db.get_all("Stock Entry Type", pluck="name"))
+    print("DEBUG: Fixtures Created. Stock Entry Types:",
+          frappe.db.get_all("Stock Entry Type", pluck="name"))
 
 
 def create_warehouse_types():
@@ -176,7 +177,9 @@ def create_user_custom_fields():
     """
     Creates custom fields for User DocType that are required by PaaS.
     """
-    if not frappe.db.exists("Custom Field", {"dt": "User", "fieldname": "ringfenced_balance"}):
+    if not frappe.db.exists(
+            "Custom Field", {
+            "dt": "User", "fieldname": "ringfenced_balance"}):
         frappe.get_doc({
             "doctype": "Custom Field",
             "dt": "User",

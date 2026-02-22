@@ -3,13 +3,17 @@ from paas.api.utils import _get_seller_shop
 
 
 @frappe.whitelist()
-def get_seller_request_models(limit_start: int = 0, limit_page_length: int = 20):
+def get_seller_request_models(
+        limit_start: int = 0,
+        limit_page_length: int = 20):
     """
     Retrieves a list of request models for the current seller.
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view your request models.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to view your request models.",
+            frappe.AuthenticationError)
 
     request_models = frappe.get_list(
         "Request Model",
@@ -23,7 +27,9 @@ def get_seller_request_models(limit_start: int = 0, limit_page_length: int = 20)
 
 
 @frappe.whitelist()
-def get_seller_customer_addresses(limit_start: int = 0, limit_page_length: int = 20):
+def get_seller_customer_addresses(
+        limit_start: int = 0,
+        limit_page_length: int = 20):
     """
     Retrieves a list of customer addresses for the current seller's shop.
     """

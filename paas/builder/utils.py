@@ -21,8 +21,7 @@ def prevent_uninstall_if_build_active():
     if active_builds:
         frappe.throw(
             "Cannot uninstall the Rokct app while one or more app builds are in progress. "
-            "Please wait for the builds to complete or cancel them from the 'RQ Job' list."
-        )
+            "Please wait for the builds to complete or cancel them from the 'RQ Job' list.")
 
     print("No active builds found. Proceeding with uninstallation.")
 

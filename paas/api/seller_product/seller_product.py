@@ -14,12 +14,21 @@ def get_seller_products(limit_start: int = 0, limit_page_length: int = 20):
 
     products = frappe.get_list(
         "Product",
-        filters={"shop": shop},
-        fields=["name", "title", "description", "image", "price", "active", "status", "category", "unit"],
+        filters={
+            "shop": shop},
+        fields=[
+            "name",
+            "title",
+            "description",
+            "image",
+            "price",
+            "active",
+            "status",
+            "category",
+            "unit"],
         offset=limit_start,
         limit=limit_page_length,
-        order_by="creation desc"
-    )
+        order_by="creation desc")
     return products
 
 
@@ -67,7 +76,9 @@ def update_seller_product(product_name, product_data):
     product = frappe.get_doc("Product", product_name)
 
     if product.shop != shop:
-        frappe.throw("You are not authorized to update this product.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this product.",
+            frappe.PermissionError)
 
     product.update(product_data)
     product.save(ignore_permissions=True)
@@ -85,7 +96,9 @@ def delete_seller_product(product_name):
     product = frappe.get_doc("Product", product_name)
 
     if product.shop != shop:
-        frappe.throw("You are not authorized to delete this product.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to delete this product.",
+            frappe.PermissionError)
 
     frappe.delete_doc("Product", product_name, ignore_permissions=True)
     return {"status": "success", "message": "Product deleted successfully."}
@@ -152,12 +165,22 @@ def update_seller_category(uuid, category_data):
 
     category = frappe.get_doc("Category", category_name)
     if category.shop != shop:
-        frappe.throw("You are not authorized to update this category.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this category.",
+            frappe.PermissionError)
 
     if isinstance(category_data, str):
         category_data = json.loads(category_data)
 
-    updatable_fields = ["slug", "keywords", "parent_category", "type", "image", "active", "status", "input"]
+    updatable_fields = [
+        "slug",
+        "keywords",
+        "parent_category",
+        "type",
+        "image",
+        "active",
+        "status",
+        "input"]
     for key, value in category_data.items():
         if key in updatable_fields:
             category.set(key, value)
@@ -180,7 +203,9 @@ def delete_seller_category(uuid):
 
     category = frappe.get_doc("Category", category_name)
     if category.shop != shop:
-        frappe.throw("You are not authorized to delete this category.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to delete this category.",
+            frappe.PermissionError)
 
     frappe.delete_doc("Category", category_name, ignore_permissions=True)
     return {"status": "success", "message": "Category deleted successfully."}
@@ -247,7 +272,9 @@ def update_seller_brand(uuid, brand_data):
 
     brand = frappe.get_doc("Brand", brand_name)
     if brand.shop != shop:
-        frappe.throw("You are not authorized to update this brand.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this brand.",
+            frappe.PermissionError)
 
     if isinstance(brand_data, str):
         brand_data = json.loads(brand_data)
@@ -275,7 +302,9 @@ def delete_seller_brand(uuid):
 
     brand = frappe.get_doc("Brand", brand_name)
     if brand.shop != shop:
-        frappe.throw("You are not authorized to delete this brand.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to delete this brand.",
+            frappe.PermissionError)
 
     frappe.delete_doc("Brand", brand_name, ignore_permissions=True)
     return {"status": "success", "message": "Brand deleted successfully."}
@@ -335,7 +364,9 @@ def update_seller_extra_group(group_name, group_data):
     group = frappe.get_doc("Product Extra Group", group_name)
 
     if group.shop != shop:
-        frappe.throw("You are not authorized to update this group.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this group.",
+            frappe.PermissionError)
 
     group.update(group_data)
     group.save(ignore_permissions=True)
@@ -353,14 +384,22 @@ def delete_seller_extra_group(group_name):
     group = frappe.get_doc("Product Extra Group", group_name)
 
     if group.shop != shop:
-        frappe.throw("You are not authorized to delete this group.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to delete this group.",
+            frappe.PermissionError)
 
-    frappe.delete_doc("Product Extra Group", group_name, ignore_permissions=True)
+    frappe.delete_doc(
+        "Product Extra Group",
+        group_name,
+        ignore_permissions=True)
     return {"status": "success", "message": "Group deleted successfully."}
 
 
 @frappe.whitelist()
-def get_seller_extra_values(group_name, limit_start: int = 0, limit_page_length: int = 20):
+def get_seller_extra_values(
+        group_name,
+        limit_start: int = 0,
+        limit_page_length: int = 20):
     """
     Retrieves a list of product extra values for a given group.
     """
@@ -386,9 +425,13 @@ def create_seller_extra_value(value_data):
     if isinstance(value_data, str):
         value_data = json.loads(value_data)
 
-    group = frappe.get_doc("Product Extra Group", value_data["product_extra_group"])
+    group = frappe.get_doc(
+        "Product Extra Group",
+        value_data["product_extra_group"])
     if group.shop != shop:
-        frappe.throw("You are not authorized to add a value to this group.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to add a value to this group.",
+            frappe.PermissionError)
 
     new_value = frappe.get_doc({
         "doctype": "Product Extra Value",
@@ -413,7 +456,9 @@ def update_seller_extra_value(value_name, value_data):
     group = frappe.get_doc("Product Extra Group", value.product_extra_group)
 
     if group.shop != shop:
-        frappe.throw("You are not authorized to update this value.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this value.",
+            frappe.PermissionError)
 
     value.update(value_data)
     value.save(ignore_permissions=True)
@@ -432,9 +477,14 @@ def delete_seller_extra_value(value_name):
     group = frappe.get_doc("Product Extra Group", value.product_extra_group)
 
     if group.shop != shop:
-        frappe.throw("You are not authorized to delete this value.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to delete this value.",
+            frappe.PermissionError)
 
-    frappe.delete_doc("Product Extra Value", value_name, ignore_permissions=True)
+    frappe.delete_doc(
+        "Product Extra Value",
+        value_name,
+        ignore_permissions=True)
     return {"status": "success", "message": "Value deleted successfully."}
 
 
@@ -492,7 +542,9 @@ def update_seller_unit(unit_name, unit_data):
     unit = frappe.get_doc("Shop Unit", unit_name)
 
     if unit.shop != shop:
-        frappe.throw("You are not authorized to update this unit.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this unit.",
+            frappe.PermissionError)
 
     unit.update(unit_data)
     unit.save(ignore_permissions=True)
@@ -510,7 +562,9 @@ def delete_seller_unit(unit_name):
     unit = frappe.get_doc("Shop Unit", unit_name)
 
     if unit.shop != shop:
-        frappe.throw("You are not authorized to delete this unit.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to delete this unit.",
+            frappe.PermissionError)
 
     frappe.delete_doc("Shop Unit", unit_name, ignore_permissions=True)
     return {"status": "success", "message": "Unit deleted successfully."}
@@ -570,7 +624,9 @@ def update_seller_tag(tag_name, tag_data):
     tag = frappe.get_doc("Shop Tag", tag_name)
 
     if tag.shop != shop:
-        frappe.throw("You are not authorized to update this tag.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this tag.",
+            frappe.PermissionError)
 
     tag.update(tag_data)
     tag.save(ignore_permissions=True)
@@ -588,7 +644,9 @@ def delete_seller_tag(tag_name):
     tag = frappe.get_doc("Shop Tag", tag_name)
 
     if tag.shop != shop:
-        frappe.throw("You are not authorized to delete this tag.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to delete this tag.",
+            frappe.PermissionError)
 
     frappe.delete_doc("Shop Tag", tag_name, ignore_permissions=True)
     return {"status": "success", "message": "Tag deleted successfully."}

@@ -39,26 +39,42 @@ class TestShopManagementAPI(FrappeTestCase):
     def tearDown(self):  # noqa: C901
         # Log out
         frappe.set_user("Administrator")
-        # Clean up the test users (shops will cascade or we can delete separately)
+        # Clean up the test users (shops will cascade or we can delete
+        # separately)
         try:
             if frappe.db.exists("User", "shop_owner@example.com"):
                 try:
-                    frappe.delete_doc("User", "shop_owner@example.com", force=True, ignore_permissions=True)
+                    frappe.delete_doc(
+                        "User",
+                        "shop_owner@example.com",
+                        force=True,
+                        ignore_permissions=True)
                 except frappe.exceptions.LinkExistsError:
-                    frappe.db.set_value("User", "shop_owner@example.com", "enabled", 0)
+                    frappe.db.set_value(
+                        "User", "shop_owner@example.com", "enabled", 0)
         except Exception:
             pass
         try:
             if frappe.db.exists("User", "other_owner@example.com"):
                 try:
-                    frappe.delete_doc("User", "other_owner@example.com", force=True, ignore_permissions=True)
+                    frappe.delete_doc(
+                        "User",
+                        "other_owner@example.com",
+                        force=True,
+                        ignore_permissions=True)
                 except frappe.exceptions.LinkExistsError:
-                    frappe.db.set_value("User", "other_owner@example.com", "enabled", 0)
+                    frappe.db.set_value(
+                        "User", "other_owner@example.com", "enabled", 0)
         except Exception:
             pass
 
-        # Handle cases where shop names might have changed and weren't caught by cascade
-        frappe.db.delete("Shop", {"user": ["in", ["shop_owner@example.com", "other_owner@example.com"]]})
+        # Handle cases where shop names might have changed and weren't caught
+        # by cascade
+        frappe.db.delete(
+            "Shop", {
+                "user": [
+                    "in", [
+                        "shop_owner@example.com", "other_owner@example.com"]]})
         frappe.db.commit()
 
     def test_get_user_shop(self):
@@ -75,7 +91,9 @@ class TestShopManagementAPI(FrappeTestCase):
             "open": 0
         }
         updated_shop = update_user_shop(shop_data=shop_data)
-        self.assertEqual(updated_shop["data"].get("shop_name"), "My Updated Shop")
+        self.assertEqual(
+            updated_shop["data"].get("shop_name"),
+            "My Updated Shop")
         self.assertEqual(updated_shop["data"].get("phone"), "+14155552671")
         self.assertEqual(updated_shop["data"].get("open"), 0)
 

@@ -4,7 +4,9 @@ from ..utils import _get_seller_shop
 
 
 @frappe.whitelist()
-def get_seller_shop_galleries(limit_start: int = 0, limit_page_length: int = 20):
+def get_seller_shop_galleries(
+        limit_start: int = 0,
+        limit_page_length: int = 20):
     """
     Retrieves a list of shop gallery images for the current seller's shop.
     """
@@ -54,7 +56,11 @@ def delete_seller_shop_gallery(gallery_name):
     gallery = frappe.get_doc("Shop Gallery", gallery_name)
 
     if gallery.shop != shop:
-        frappe.throw("You are not authorized to delete this gallery image.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to delete this gallery image.",
+            frappe.PermissionError)
 
     frappe.delete_doc("Shop Gallery", gallery_name, ignore_permissions=True)
-    return {"status": "success", "message": "Gallery image deleted successfully."}
+    return {
+        "status": "success",
+        "message": "Gallery image deleted successfully."}

@@ -17,7 +17,9 @@ def create_order(order_data):
 
     # Validate phone number if required by admin settings
     if paas_settings.require_phone_for_order and not order_data.get("phone"):
-        frappe.throw("A phone number is required to create this order.", frappe.ValidationError)
+        frappe.throw(
+            "A phone number is required to create this order.",
+            frappe.ValidationError)
 
     shop = frappe.get_doc("Shop", order_data.get("shop"))
 
@@ -63,11 +65,15 @@ def create_order(order_data):
     # though grand_total might still need to be calculated explicitly if not done by controller.
     # Assuming the controller calculates total_price on save/insert.
     if order.total_price:
-        cashback_amount = frappe.call("paas.api.shop.shop.check_cashback", shop_id=order_data.get("shop"), amount=order.total_price)
+        cashback_amount = frappe.call(
+            "paas.api.shop.shop.check_cashback",
+            shop_id=order_data.get("shop"),
+            amount=order.total_price)
         order.db_set("cashback_amount", cashback_amount.get("cashback_amount"))
 
     if order_data.get("coupon_code"):
-        coupon = frappe.get_doc("Coupon", {"code": order_data.get("coupon_code")})
+        coupon = frappe.get_doc("Coupon",
+                                {"code": order_data.get("coupon_code")})
         frappe.get_doc({
             "doctype": "Coupon Usage",
             "coupon": coupon.name,
@@ -75,7 +81,9 @@ def create_order(order_data):
             "order": order.name
         }).insert(ignore_permissions=True)
 
-    return api_response(data=order.as_dict(), message="Order created successfully.")
+    return api_response(
+        data=order.as_dict(),
+        message="Order created successfully.")
 
 
 @frappe.whitelist()
@@ -116,7 +124,9 @@ def get_order_details(order_id: str):
     finally:
         frappe.set_user(original_user)
     if order.user != user:
-        frappe.throw("You are not authorized to view this order.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to view this order.",
+            frappe.PermissionError)
     return api_response(data=order.as_dict())
 
 
@@ -138,11 +148,16 @@ def update_order_status(order_id: str, status: str):  # noqa: C901
         frappe.set_user(original_user)
 
     if order.user != user and "System Manager" not in frappe.get_roles(user):
-        frappe.throw("You are not authorized to update this order.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this order.",
+            frappe.PermissionError)
 
-    valid_statuses = frappe.get_meta("Order").get_field("status").options.split("\n")
+    valid_statuses = frappe.get_meta(
+        "Order").get_field("status").options.split("\n")
     if status not in valid_statuses:
-        frappe.throw(f"Invalid status. Must be one of {', '.join(valid_statuses)}")
+        frappe.throw(
+            f"Invalid status. Must be one of {
+                ', '.join(valid_statuses)}")
 
     previous_status = order.status
     order.status = status
@@ -155,7 +170,8 @@ def update_order_status(order_id: str, status: str):  # noqa: C901
             product_doc = frappe.get_doc("Product", item.product)
             if product_doc.track_stock:
                 # Find the Stock record for this shop and product
-                stock_name = frappe.db.get_value("Stock", {"shop": order.shop, "product": item.product}, "name")
+                stock_name = frappe.db.get_value(
+                    "Stock", {"shop": order.shop, "product": item.product}, "name")
                 if stock_name:
                     stock_doc = frappe.get_doc("Stock", stock_name)
                     stock_doc.quantity -= item.quantity
@@ -171,18 +187,26 @@ def update_order_status(order_id: str, status: str):  # noqa: C901
                         "price": item.price  # Init price
                     }).insert(ignore_permissions=True)
 
-    # Restore stock if order is Cancelled/Rejected from a status that deducted stock
-    if status in ["Cancelled", "Rejected"] and previous_status in ["Accepted", "Prepared", "Delivered"]:  # Assuming these are downstream of Accepted
+    # Restore stock if order is Cancelled/Rejected from a status that deducted
+    # stock
+    if status in [
+        "Cancelled",
+        "Rejected"] and previous_status in [
+        "Accepted",
+        "Prepared",
+            "Delivered"]:  # Assuming these are downstream of Accepted
         for item in order.order_items:
             product_doc = frappe.get_doc("Product", item.product)
             if product_doc.track_stock:
-                stock_name = frappe.db.get_value("Stock", {"shop": order.shop, "product": item.product}, "name")
+                stock_name = frappe.db.get_value(
+                    "Stock", {"shop": order.shop, "product": item.product}, "name")
                 if stock_name:
                     stock_doc = frappe.get_doc("Stock", stock_name)
                     stock_doc.quantity += item.quantity
                     stock_doc.save(ignore_permissions=True)
 
-    return api_response(data=order.as_dict(), message="Order status updated successfully.")
+    return api_response(data=order.as_dict(),
+                        message="Order status updated successfully.")
 
 
 @frappe.whitelist()
@@ -203,12 +227,17 @@ def add_order_review(order_id: str, rating: float, comment: str = None):
         frappe.set_user(original_user)
 
     if order.user != user:
-        frappe.throw("You can only review your own orders.", frappe.PermissionError)
+        frappe.throw(
+            "You can only review your own orders.",
+            frappe.PermissionError)
 
     if order.status != "Delivered":
         frappe.throw("You can only review delivered orders.")
 
-    if frappe.db.exists("Review", {"reviewable_type": "Order", "reviewable_id": order_id, "user": user}):
+    if frappe.db.exists("Review",
+                        {"reviewable_type": "Order",
+                         "reviewable_id": order_id,
+                         "user": user}):
         frappe.throw("You have already reviewed this order.")
 
     review = frappe.get_doc({
@@ -221,7 +250,9 @@ def add_order_review(order_id: str, rating: float, comment: str = None):
         "published": 1
     })
     review.insert(ignore_permissions=True)
-    return api_response(data=review.as_dict(), message="Review added successfully.")
+    return api_response(
+        data=review.as_dict(),
+        message="Review added successfully.")
 
 
 @frappe.whitelist()
@@ -242,16 +273,21 @@ def cancel_order(order_id: str):
         frappe.set_user(original_user)
 
     if order.user != user and "System Manager" not in frappe.get_roles(user):
-        frappe.throw("You are not authorized to cancel this order.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to cancel this order.",
+            frappe.PermissionError)
 
     if order.status != "New":
-        frappe.throw("You can only cancel orders that have not been accepted yet.")
+        frappe.throw(
+            "You can only cancel orders that have not been accepted yet.")
 
     order.status = "Cancelled"
-    # No stock restoration needed for "New" orders as stock wasn't deducted yet.
+    # No stock restoration needed for "New" orders as stock wasn't deducted
+    # yet.
 
     order.save(ignore_permissions=True)
-    return api_response(data=order.as_dict(), message="Order cancelled successfully.")
+    return api_response(data=order.as_dict(),
+                        message="Order cancelled successfully.")
 
 
 @frappe.whitelist(allow_guest=True)
@@ -302,7 +338,8 @@ def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type
         item_price = product_doc.price or 0
         item_qty = item.quantity or 0
         item_tax = (item_price * (product_doc.tax or 0) / 100) * item_qty
-        item_discount = (item_price * (item.discount_percentage or 0) / 100) * item_qty
+        item_discount = (
+            item_price * (item.discount_percentage or 0) / 100) * item_qty
 
         item_total = (item_price * item_qty) - item_discount + item_tax
 
@@ -336,8 +373,13 @@ def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type
             c = 2 * atan2(sqrt(a), sqrt(1 - a))
             return R * c
 
-        if shop.latitude and shop.longitude and address.get('latitude') and address.get('longitude'):
-            distance = haversine(shop.latitude, shop.longitude, address['latitude'], address['longitude'])
+        if shop.latitude and shop.longitude and address.get(
+                'latitude') and address.get('longitude'):
+            distance = haversine(
+                shop.latitude,
+                shop.longitude,
+                address['latitude'],
+                address['longitude'])
             delivery_fee = distance * shop.price_per_km if shop.price_per_km else 0
 
     # 3. Calculate Shop Tax
@@ -353,17 +395,22 @@ def get_calculate(cart_id, address=None, coupon_code=None, tips=0, delivery_type
     if coupon_code:
         try:
             # Check for coupon linked to this shop or global
-            coupon_doc = frappe.db.get_value("Coupon", {"coupon_code": coupon_code, "shop": cart.shop}, ["name", "coupon_type", "discount_percentage", "discount_amount"], as_dict=True)
+            coupon_doc = frappe.db.get_value(
+                "Coupon", {
+                    "coupon_code": coupon_code, "shop": cart.shop}, [
+                    "name", "coupon_type", "discount_percentage", "discount_amount"], as_dict=True)
             if coupon_doc:
                 if coupon_doc.coupon_type == 'Percentage':
-                    coupon_price = (product_total - discount) * (coupon_doc.discount_percentage / 100)
+                    coupon_price = (product_total - discount) * \
+                        (coupon_doc.discount_percentage / 100)
                 else:  # Fixed Amount
                     coupon_price = coupon_doc.discount_amount
         except Exception:
             pass
 
     # 6. Calculate Final Total
-    order_total = (product_total - discount) + delivery_fee + shop_tax + service_fee - coupon_price + float(tips)
+    order_total = (product_total - discount) + delivery_fee + \
+        shop_tax + service_fee - coupon_price + float(tips)
 
     # Return in the format expected by GetCalculateModel
     return api_response(data={

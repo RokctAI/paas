@@ -19,7 +19,11 @@ def get_currencies():
 
 
 def api_status():
-    return api_response(data={"status": "ok", "version": "1.0", "user": frappe.session.user})
+    return api_response(
+        data={
+            "status": "ok",
+            "version": "1.0",
+            "user": frappe.session.user})
 
 
 class TestPhoneVerificationAPI(FrappeTestCase):
@@ -51,9 +55,14 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         frappe.db.delete("User", {"phone": self.test_user_phone})
         if frappe.db.exists("User", "test_phone_user@example.com"):
             try:
-                frappe.delete_doc("User", "test_phone_user@example.com", force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "User",
+                    "test_phone_user@example.com",
+                    force=True,
+                    ignore_permissions=True)
             except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
-                frappe.db.set_value("User", "test_phone_user@example.com", "enabled", 0)
+                frappe.db.set_value(
+                    "User", "test_phone_user@example.com", "enabled", 0)
                 frappe.db.commit()
 
         self.test_user = frappe.get_doc({
@@ -70,7 +79,9 @@ class TestPhoneVerificationAPI(FrappeTestCase):
     def test_check_phone_exists(self):
         response = check_phone(phone=self.test_user_phone)
         self.assertEqual(response.get("data").get("status"), "error")
-        self.assertEqual(response.get("message"), "Phone number already exists.")
+        self.assertEqual(
+            response.get("message"),
+            "Phone number already exists.")
 
     def test_check_phone_not_exists(self):
         response = check_phone(phone="+10123456789")
@@ -87,7 +98,9 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         phone_number = "+11223344556"
         response = send_phone_verification_code(phone=phone_number)
 
-        self.assertEqual(response.get("message"), "Verification code sent successfully.")
+        self.assertEqual(
+            response.get("message"),
+            "Verification code sent successfully.")
 
         # Check that cache was called correctly
         args, kwargs = mock_set_value.call_args
@@ -118,7 +131,9 @@ class TestPhoneVerificationAPI(FrappeTestCase):
 
         response = verify_phone_code(phone=phone_number, otp=correct_otp)
 
-        self.assertEqual(response.get("message"), "Phone number verified successfully.")
+        self.assertEqual(
+            response.get("message"),
+            "Phone number verified successfully.")
 
         # Verify user's phone_verified_at is set
         self.test_user.reload()
@@ -166,7 +181,9 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         response = verify_phone_code(phone=self.test_user_phone, otp="123456")
 
         self.assertEqual(response.get("status_code"), 400)
-        self.assertEqual(response.get("message"), "OTP expired or was not sent. Please request a new one.")
+        self.assertEqual(
+            response.get("message"),
+            "OTP expired or was not sent. Please request a new one.")
 
     def test_api_status(self):
         # Act
@@ -186,7 +203,9 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         response = forgot_password(user=self.test_user.email)
 
         # Assert
-        self.assertIn("password reset code/link has been sent", response.get("message"))
+        self.assertIn(
+            "password reset code/link has been sent",
+            response.get("message"))
         mock_reset_password.assert_called_once_with(user=self.test_user.email)
 
     def test_get_languages(self):
@@ -195,9 +214,15 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         # from paas.api import get_languages
         # Ensure there is at least one enabled and one disabled language
         if not frappe.db.exists("Language", "en"):
-            frappe.get_doc({"doctype": "Language", "language_code": "en", "language_name": "English", "enabled": 1}).insert()
+            frappe.get_doc({"doctype": "Language",
+                            "language_code": "en",
+                            "language_name": "English",
+                            "enabled": 1}).insert()
         if not frappe.db.exists("Language", "tlh"):
-            frappe.get_doc({"doctype": "Language", "language_code": "tlh", "language_name": "Klingon", "enabled": 0}).insert()
+            frappe.get_doc({"doctype": "Language",
+                            "language_code": "tlh",
+                            "language_name": "Klingon",
+                            "enabled": 0}).insert()
 
         # Act
         response = get_languages()
@@ -218,9 +243,15 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         # from paas.api import get_currencies
         # Ensure there is at least one enabled and one disabled currency
         if not frappe.db.exists("Currency", "USD"):
-            frappe.get_doc({"doctype": "Currency", "currency_name": "USD", "symbol": "$", "enabled": 1}).insert()
+            frappe.get_doc({"doctype": "Currency",
+                            "currency_name": "USD",
+                            "symbol": "$",
+                            "enabled": 1}).insert()
         if not frappe.db.exists("Currency", "KLG"):
-            frappe.get_doc({"doctype": "Currency", "currency_name": "Klingon Darsek", "symbol": "KLG", "enabled": 0}).insert()
+            frappe.get_doc({"doctype": "Currency",
+                            "currency_name": "Klingon Darsek",
+                            "symbol": "KLG",
+                            "enabled": 0}).insert()
 
         # Act
         response = get_currencies()
@@ -243,7 +274,11 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         new_user_email = "new_user@example.com"
         if frappe.db.exists("User", new_user_email):
             try:
-                frappe.delete_doc("User", new_user_email, force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "User",
+                    new_user_email,
+                    force=True,
+                    ignore_permissions=True)
             except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
                 frappe.db.set_value("User", new_user_email, "enabled", 0)
                 frappe.db.commit()

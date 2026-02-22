@@ -16,7 +16,8 @@ class TestCouponUsage(FrappeTestCase):
                 "last_name": "User"
             }).insert(ignore_permissions=True)
         else:
-            self.test_user = frappe.get_doc("User", "test_coupon_user@example.com")
+            self.test_user = frappe.get_doc(
+                "User", "test_coupon_user@example.com")
 
         if not frappe.db.exists("Shop", "Test Shop for Coupon Usage"):
             self.test_shop = frappe.get_doc({
@@ -28,7 +29,8 @@ class TestCouponUsage(FrappeTestCase):
                 "uuid": frappe.generate_hash()
             }).insert(ignore_permissions=True)
         else:
-            self.test_shop = frappe.get_doc("Shop", "Test Shop for Coupon Usage")
+            self.test_shop = frappe.get_doc(
+                "Shop", "Test Shop for Coupon Usage")
 
         if not frappe.db.exists("Product", "Test Product for Coupon"):
             self.test_product = frappe.get_doc({
@@ -39,9 +41,12 @@ class TestCouponUsage(FrappeTestCase):
                 "active": 1
             }).insert(ignore_permissions=True)
         else:
-            self.test_product = frappe.get_doc("Product", "Test Product for Coupon")
+            self.test_product = frappe.get_doc(
+                "Product", "Test Product for Coupon")
 
-        if not frappe.db.exists("Coupon", {"code": "TEST10", "shop": self.test_shop.name}):
+        if not frappe.db.exists(
+            "Coupon", {
+                "code": "TEST10", "shop": self.test_shop.name}):
             self.test_coupon = frappe.get_doc({
                 "doctype": "Coupon",
                 "coupon_name": "Test Coupon",
@@ -53,7 +58,8 @@ class TestCouponUsage(FrappeTestCase):
                 "shop": self.test_shop.name
             }).insert(ignore_permissions=True)
         else:
-            self.test_coupon = frappe.get_doc("Coupon", {"code": "TEST10", "shop": self.test_shop.name})
+            self.test_coupon = frappe.get_doc(
+                "Coupon", {"code": "TEST10", "shop": self.test_shop.name})
 
         if not frappe.db.exists("Currency", "USD"):
             frappe.get_doc({
@@ -69,21 +75,46 @@ class TestCouponUsage(FrappeTestCase):
         frappe.set_user("Administrator")
         if frappe.db.exists("User", self.test_user.name):
             try:
-                frappe.delete_doc("User", self.test_user.name, ignore_permissions=True)
+                frappe.delete_doc(
+                    "User",
+                    self.test_user.name,
+                    ignore_permissions=True)
             except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
                 try:
-                    frappe.db.set_value("User", self.test_user.name, "enabled", 0)
+                    frappe.db.set_value(
+                        "User", self.test_user.name, "enabled", 0)
                     frappe.db.commit()
                 except Exception:
                     pass
 
         try:
-            if hasattr(self, "test_shop") and self.test_shop and frappe.db.exists("Shop", self.test_shop.name):
-                frappe.delete_doc("Shop", self.test_shop.name, ignore_permissions=True)
-            if hasattr(self, "test_product") and self.test_product and frappe.db.exists("Product", self.test_product.name):
-                frappe.delete_doc("Product", self.test_product.name, ignore_permissions=True)
-            if hasattr(self, "test_coupon") and self.test_coupon and frappe.db.exists("Coupon", self.test_coupon.name):
-                frappe.delete_doc("Coupon", self.test_coupon.name, ignore_permissions=True)
+            if hasattr(
+                    self,
+                    "test_shop") and self.test_shop and frappe.db.exists(
+                    "Shop",
+                    self.test_shop.name):
+                frappe.delete_doc(
+                    "Shop",
+                    self.test_shop.name,
+                    ignore_permissions=True)
+            if hasattr(
+                    self,
+                    "test_product") and self.test_product and frappe.db.exists(
+                    "Product",
+                    self.test_product.name):
+                frappe.delete_doc(
+                    "Product",
+                    self.test_product.name,
+                    ignore_permissions=True)
+            if hasattr(
+                    self,
+                    "test_coupon") and self.test_coupon and frappe.db.exists(
+                    "Coupon",
+                    self.test_coupon.name):
+                frappe.delete_doc(
+                    "Coupon",
+                    self.test_coupon.name,
+                    ignore_permissions=True)
         except Exception:
             pass
 
@@ -115,4 +146,6 @@ class TestCouponUsage(FrappeTestCase):
             "coupon": self.test_coupon.name,
             "order": order_name
         })
-        self.assertTrue(coupon_usage_exists, "Coupon Usage document was not created.")
+        self.assertTrue(
+            coupon_usage_exists,
+            "Coupon Usage document was not created.")

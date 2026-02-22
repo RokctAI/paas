@@ -9,7 +9,9 @@ def get_deliveryman_orders(limit_start: int = 0, limit_page_length: int = 20):
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view your orders.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to view your orders.",
+            frappe.AuthenticationError)
 
     orders = frappe.get_list(
         "Order",
@@ -23,13 +25,17 @@ def get_deliveryman_orders(limit_start: int = 0, limit_page_length: int = 20):
 
 
 @frappe.whitelist()
-def get_deliveryman_parcel_orders(limit_start: int = 0, limit_page_length: int = 20):
+def get_deliveryman_parcel_orders(
+        limit_start: int = 0,
+        limit_page_length: int = 20):
     """
     Retrieves a list of parcel orders assigned to the current deliveryman.
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view your parcel orders.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to view your parcel orders.",
+            frappe.AuthenticationError)
 
     orders = frappe.get_list(
         "Parcel Order",
@@ -49,7 +55,9 @@ def get_deliveryman_settings():
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view your settings.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to view your settings.",
+            frappe.AuthenticationError)
 
     if not frappe.db.exists("Deliveryman Settings", {"user": user}):
         return {}
@@ -64,7 +72,9 @@ def update_deliveryman_settings(settings_data):
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to update your settings.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to update your settings.",
+            frappe.AuthenticationError)
 
     if isinstance(settings_data, str):
         settings_data = json.loads(settings_data)
@@ -87,7 +97,9 @@ def get_deliveryman_statistics():
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view your statistics.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to view your statistics.",
+            frappe.AuthenticationError)
 
     # Total completed orders
     completed_orders_count = frappe.db.count(
@@ -142,7 +154,9 @@ def get_banned_shops():
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view your banned shops.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to view your banned shops.",
+            frappe.AuthenticationError)
 
     banned_shops = frappe.get_all(
         "Shop Ban",
@@ -159,7 +173,9 @@ def get_payment_to_partners(limit_start: int = 0, limit_page_length: int = 20):
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view your payments.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to view your payments.",
+            frappe.AuthenticationError)
 
     payouts = frappe.get_list(
         "Payout",
@@ -179,7 +195,9 @@ def get_deliveryman_order_report(from_date: str, to_date: str):
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view your order report.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to view your order report.",
+            frappe.AuthenticationError)
 
     orders = frappe.get_all(
         "Order",
@@ -216,7 +234,9 @@ def get_deliveryman_delivery_zones():
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view your delivery zones.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to view your delivery zones.",
+            frappe.AuthenticationError)
 
     delivery_zones = frappe.get_all(
         "Deliveryman Delivery Zone",

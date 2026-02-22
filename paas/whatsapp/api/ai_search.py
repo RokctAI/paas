@@ -39,7 +39,8 @@ def semantic_search(query, shop_id, top_k=3):
     try:
         # We use <=> operator for Cosine Distance (lower is better).
         # Note: pgvector expects the vector as a string representation in SQL unless passed as list param
-        # frappe.db.sql with %s handles lists for some drivers, but explicit string var is safer for vector type
+        # frappe.db.sql with %s handles lists for some drivers, but explicit
+        # string var is safer for vector type
 
         # Determine if we need to format the vector as string
         vector_str = str(query_vector)
@@ -105,8 +106,10 @@ def load_intents_from_config():
     Loads intents from rokct/ai_config/customer_intents.json
     """
     try:
-        # Robust way: Get path relative to the 'brain' app module (where config lives)
-        path = frappe.get_app_path("brain", "ai_config", "customer_intents.json")
+        # Robust way: Get path relative to the 'brain' app module (where config
+        # lives)
+        path = frappe.get_app_path(
+            "brain", "ai_config", "customer_intents.json")
     except Exception:
         return get_fallback_intents()
 
@@ -205,14 +208,30 @@ def extract_entity(text, intent):
     """
     # Common stopwords/action words to strip
     STOP_PHRASES = [
-        "i want to", "i want", "can i get", "give me", "buy", "purchase", "order", "find", "search for",
-        "show me", "looking for", "get", "add to cart", "please", "some", "a", "an", "the"
-    ]
+        "i want to",
+        "i want",
+        "can i get",
+        "give me",
+        "buy",
+        "purchase",
+        "order",
+        "find",
+        "search for",
+        "show me",
+        "looking for",
+        "get",
+        "add to cart",
+        "please",
+        "some",
+        "a",
+        "an",
+        "the"]
 
     clean_text = text.lower().strip()
 
     # Simple iterative strip (not perfect but fast)
-    # Sort phrases by length desc to remove longest first ("i want to" before "i want")
+    # Sort phrases by length desc to remove longest first ("i want to" before
+    # "i want")
     sorted_stops = sorted(STOP_PHRASES, key=len, reverse=True)
 
     for phrase in sorted_stops:
@@ -240,16 +259,20 @@ def search_global_shops(query):
     )
 
     shops = (
-        frappe.qb.from_(t_shop)
-        .select(t_shop.name, t_shop.uuid, t_shop.description, t_shop.logo_img, t_shop.back_img)
-        .where(t_shop.status == 'Approved')
-        .where((t_shop.shop_type != 'Ecommerce') & (t_shop.is_ecommerce == 0))
-        .where(
-            (t_shop.name.like(f"%{query}%"))
-            | (t_shop.description.like(f"%{query}%"))
-            | (t_shop.uuid.isin(subquery))
-        )
-        .limit(5)
-    ).run(as_dict=True)
+        frappe.qb.from_(t_shop) .select(
+            t_shop.name,
+            t_shop.uuid,
+            t_shop.description,
+            t_shop.logo_img,
+            t_shop.back_img) .where(
+            t_shop.status == 'Approved') .where(
+                (t_shop.shop_type != 'Ecommerce') & (
+                    t_shop.is_ecommerce == 0)) .where(
+                        (t_shop.name.like(
+                            f"%{query}%")) | (
+                                t_shop.description.like(
+                                    f"%{query}%")) | (
+                                        t_shop.uuid.isin(subquery))) .limit(5)).run(
+                                            as_dict=True)
 
     return shops

@@ -10,11 +10,18 @@ def get_seller_statistics():
     user = frappe.session.user
     shop = _get_seller_shop(user)
 
-    progress_orders_count = frappe.db.count("Order", {"shop": shop, "status": ["in", ["New", "Accepted", "Shipped"]]})
-    cancel_orders_count = frappe.db.count("Order", {"shop": shop, "status": "Cancelled"})
-    delivered_orders_count = frappe.db.count("Order", {"shop": shop, "status": "Delivered"})
+    progress_orders_count = frappe.db.count(
+        "Order", {
+            "shop": shop, "status": [
+                "in", [
+                    "New", "Accepted", "Shipped"]]})
+    cancel_orders_count = frappe.db.count(
+        "Order", {"shop": shop, "status": "Cancelled"})
+    delivered_orders_count = frappe.db.count(
+        "Order", {"shop": shop, "status": "Delivered"})
 
-    # Products out of stock: Count Stock items with quantity <= 0 for this shop's products
+    # Products out of stock: Count Stock items with quantity <= 0 for this
+    # shop's products
     t_stock = frappe.qb.DocType("Stock")
     t_product = frappe.qb.DocType("Product")
 
@@ -29,7 +36,8 @@ def get_seller_statistics():
 
     products_count = frappe.db.count("Product", {"shop": shop, "active": 1})
 
-    # Reviews count (assuming Review DocType has a 'shop' field or linked via 'order')
+    # Reviews count (assuming Review DocType has a 'shop' field or linked via
+    # 'order')
     try:
         reviews_count = frappe.db.count("Review", {"shop": shop})
     except Exception:

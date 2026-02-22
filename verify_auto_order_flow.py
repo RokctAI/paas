@@ -42,9 +42,9 @@ def verify_flow():
         print("ERROR: Should have failed due to insufficient balance!")
     except Exception as e:
         if "Suggest Topup" in str(e):
-             print(f"SUCCESS: Caught expected error: {e}")
+            print(f"SUCCESS: Caught expected error: {e}")
         else:
-             print(f"FAILURE: Caught unexpected error: {e}")
+            print(f"FAILURE: Caught unexpected error: {e}")
 
     # 5. Top Up Wallet
     print("\nProcessing Top Up...")

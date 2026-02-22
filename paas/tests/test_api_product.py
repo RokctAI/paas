@@ -32,7 +32,8 @@ class TestProductAPI(FrappeTestCase):
                 "enabled": 1
             }).insert(ignore_permissions=True)
 
-        # Ensure Custom Fields exist (since they seem missing found in test env)
+        # Ensure Custom Fields exist (since they seem missing found in test
+        # env)
         from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 
         if not frappe.db.has_column("Item", "uuid"):
@@ -95,12 +96,21 @@ class TestProductAPI(FrappeTestCase):
         frappe.set_user("Administrator")
         # Cleanup
         if frappe.db.exists("Item", "Test Product 1"):
-            frappe.delete_doc("Item", "Test Product 1", force=True, ignore_permissions=True)
+            frappe.delete_doc(
+                "Item",
+                "Test Product 1",
+                force=True,
+                ignore_permissions=True)
 
         if frappe.db.exists("Shop", "Product Test Shop"):
-            # Shop deletion might require deleting items first, which we did above
+            # Shop deletion might require deleting items first, which we did
+            # above
             try:
-                frappe.delete_doc("Shop", "Product Test Shop", force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "Shop",
+                    "Product Test Shop",
+                    force=True,
+                    ignore_permissions=True)
             except Exception:
                 pass
 
@@ -139,7 +149,8 @@ class TestProductAPI(FrappeTestCase):
 
         response = get_products(search="Searchable")
         products = response.get("data")
-        self.assertTrue(any(p['item_name'] == "Searchable Product" for p in products))
+        self.assertTrue(
+            any(p['item_name'] == "Searchable Product" for p in products))
 
     def test_get_product_by_uuid(self):
         """Test fetching a single product by UUID."""

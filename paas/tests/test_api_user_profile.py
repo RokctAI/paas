@@ -22,7 +22,8 @@ class TestUserProfileAPI(FrappeTestCase):
                 "send_welcome_email": 0
             }).insert(ignore_permissions=True)
         else:
-            self.test_user = frappe.get_doc("User", "test_user_profile@example.com")
+            self.test_user = frappe.get_doc(
+                "User", "test_user_profile@example.com")
         self.test_user.add_roles("System Manager")
 
         # Log in as the test user
@@ -33,7 +34,11 @@ class TestUserProfileAPI(FrappeTestCase):
         frappe.set_user("Administrator")
         if frappe.db.exists("User", self.test_user.name):
             try:
-                frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "User",
+                    self.test_user.name,
+                    force=True,
+                    ignore_permissions=True)
             except frappe.exceptions.LinkExistsError:
                 frappe.db.set_value("User", self.test_user.name, "enabled", 0)
 
@@ -76,8 +81,12 @@ class TestUserProfileAPI(FrappeTestCase):
         updated_profile = get_user_profile()
         # Verify that the unauthorized fields were not changed
         updated_profile = get_user_profile()
-        self.assertEqual(updated_profile.get("email"), "test_user_profile@example.com")
-        self.assertTrue("Administrator" not in frappe.get_roles(self.test_user.name))
+        self.assertEqual(
+            updated_profile.get("email"),
+            "test_user_profile@example.com")
+        self.assertTrue(
+            "Administrator" not in frappe.get_roles(
+                self.test_user.name))
 
     def test_delete_account(self):
         from paas.api.user.user import delete_account
@@ -88,7 +97,9 @@ class TestUserProfileAPI(FrappeTestCase):
         response = delete_account()
 
         # Check success message
-        self.assertIn(response.get("message"), ["Account deleted successfully.", "Account deactivated successfully."])
+        self.assertIn(response.get("message"),
+                      ["Account deleted successfully.",
+                       "Account deactivated successfully."])
 
         # Verify user is gone OR disabled
         if not frappe.db.exists("User", self.test_user.name):
@@ -96,4 +107,9 @@ class TestUserProfileAPI(FrappeTestCase):
             pass
         else:
             # Check disabled
-            self.assertEqual(frappe.db.get_value("User", self.test_user.name, "enabled"), 0)
+            self.assertEqual(
+                frappe.db.get_value(
+                    "User",
+                    self.test_user.name,
+                    "enabled"),
+                0)

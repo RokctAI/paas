@@ -5,7 +5,9 @@ import json
 def _require_admin():
     """Helper function to ensure the user has the System Manager role."""
     if "System Manager" not in frappe.get_roles():
-        frappe.throw("You are not authorized to perform this action.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to perform this action.",
+            frappe.PermissionError)
 
 
 @frappe.whitelist(allow_guest=True)

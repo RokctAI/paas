@@ -34,10 +34,14 @@ def handle_message(message, wa_id, profile_name):
 
 def handle_text(text, session):
     if text in ['hi', 'hello', 'menu', 'start']:
-        send_text(session.wa_id, "👋 Hello! Please share your location to find shops near you.\n\nTap 📎 -> Location -> Send Current Location.")
+        send_text(
+            session.wa_id,
+            "👋 Hello! Please share your location to find shops near you.\n\nTap 📎 -> Location -> Send Current Location.")
     else:
         # Default fallback
-        send_text(session.wa_id, "I didn't understand that. Type 'Hi' to start.")
+        send_text(
+            session.wa_id,
+            "I didn't understand that. Type 'Hi' to start.")
 
 
 def handle_location(lat, long, session):
@@ -58,14 +62,18 @@ def handle_interactive(reply, session):
 
         if item_id.startswith("shop_"):
             shop_uuid = item_id.split("_")[1]
-            session.current_shop = frappe.db.get_value("Shop", {"uuid": shop_uuid}, "name")
+            session.current_shop = frappe.db.get_value(
+                "Shop", {"uuid": shop_uuid}, "name")
             session.save(ignore_permissions=True)
             # Fetch Categories for this shop
             # Using paas.api... logic? Or just generic category fetch?
             # Assuming Categories are linked to Shop or Global?
             # Ideally fetch categories that have items in this shop.
-            # detailed implementation needed here, for now mocking global categories or top categories
-            categories = frappe.get_list("Category", fields=["name", "uuid"])  # Filter by shop later
+            # detailed implementation needed here, for now mocking global
+            # categories or top categories
+            categories = frappe.get_list(
+                "Category", fields=[
+                    "name", "uuid"])  # Filter by shop later
             send_category_list(session.wa_id, categories, shop_uuid)
 
         elif item_id.startswith("cat_"):
@@ -79,7 +87,8 @@ def handle_interactive(reply, session):
 
         elif item_id.startswith("prod_"):
             # Product List Selection -> Show Card
-            prod_name = item_id.split("prod_")[1]  # item_name or name? list uses name if unique
+            # item_name or name? list uses name if unique
+            prod_name = item_id.split("prod_")[1]
             # Fetch full details
             product = frappe.get_doc("Item", prod_name).as_dict()
             send_product_card(session.wa_id, product)
@@ -96,14 +105,16 @@ def handle_interactive(reply, session):
                 # Mocking logic: Fetch all shops for now or use geodistance
                 # paas.api.shop.shop.get_shops doesn't native support lat/long sorting yet in the snippet I saw?
                 # We can implement a simple Haversine here or in utils.
-                shops = get_shops(limit_page_length=10)  # Default to all approved
+                # Default to all approved
+                shops = get_shops(limit_page_length=10)
                 send_shop_list(session.wa_id, shops)
             else:
                 # Single Vendor -> Go to Default Shop
                 session.current_shop = config.default_shop
                 session.save(ignore_permissions=True)
                 # Send Categories
-                categories = frappe.get_list("Category", fields=["name", "uuid"])
+                categories = frappe.get_list(
+                    "Category", fields=["name", "uuid"])
                 send_category_list(session.wa_id, categories, "default")
 
         elif btn_id == 'loc_retry':

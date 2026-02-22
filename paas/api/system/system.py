@@ -23,8 +23,12 @@ def get_weather(location: str):
     api_secret = frappe.conf.get("api_secret")
 
     if not control_plane_url or not api_secret:
-        frappe.log_error("Tenant site is not configured to communicate with the control panel.", "Weather Proxy Error")
-        frappe.throw("Platform communication is not configured.", title="Configuration Error")
+        frappe.log_error(
+            "Tenant site is not configured to communicate with the control panel.",
+            "Weather Proxy Error")
+        frappe.throw(
+            "Platform communication is not configured.",
+            title="Configuration Error")
 
     # Construct the secure API call
     scheme = frappe.conf.get("control_plane_scheme", "https")
@@ -37,7 +41,9 @@ def get_weather(location: str):
     try:
         # Use frappe.make_get_request which is a wrapper around requests
         # and handles logging and exceptions in a standard way.
-        response = frappe.make_get_request(api_url, headers=headers, params={"location": location})
+        response = frappe.make_get_request(
+            api_url, headers=headers, params={
+                "location": location})
 
         # Cache the successful response for 10 minutes on the tenant site
         frappe.cache.set_value(cache_key, response, expires_in_sec=600)
@@ -46,7 +52,8 @@ def get_weather(location: str):
 
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "Weather Proxy API Error")
-        frappe.throw(f"An error occurred while fetching weather data from the control plane: {e}")
+        frappe.throw(
+            f"An error occurred while fetching weather data from the control plane: {e}")
 
 
 @frappe.whitelist(allow_guest=True)
@@ -122,18 +129,22 @@ def get_global_settings():
         # mapping schema fields to generic keys
 
         if settings.project_title:
-            settings_data.append({"key": "app_name", "value": settings.project_title})
+            settings_data.append(
+                {"key": "app_name", "value": settings.project_title})
 
         if settings.service_fee:
-            settings_data.append({"key": "default_tax", "value": str(settings.service_fee)})
+            settings_data.append(
+                {"key": "default_tax", "value": str(settings.service_fee)})
 
         if settings.deliveryman_order_acceptance_time:
-            settings_data.append({"key": "deliveryman_order_acceptance_time", "value": str(settings.deliveryman_order_acceptance_time)})
+            settings_data.append({"key": "deliveryman_order_acceptance_time", "value": str(
+                settings.deliveryman_order_acceptance_time)})
 
         # Add map key if available in Global Settings
         global_settings = frappe.get_single("Global Settings")
         if global_settings.google_maps_api_key:
-            settings_data.append({"key": "google_maps_key", "value": global_settings.google_maps_api_key})
+            settings_data.append(
+                {"key": "google_maps_key", "value": global_settings.google_maps_api_key})
 
         # Add default language (mock or fetch)
         settings_data.append({"key": "default_language", "value": "en"})
@@ -141,7 +152,8 @@ def get_global_settings():
         # Add default currency
         currency = frappe.db.get_value("Currency", {"enabled": 1}, "name")
         if currency:
-            settings_data.append({"key": "default_currency", "value": currency})
+            settings_data.append(
+                {"key": "default_currency", "value": currency})
 
         # Add distance unit (mock)
         settings_data.append({"key": "distance_unit", "value": "km"})

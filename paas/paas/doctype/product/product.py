@@ -33,7 +33,8 @@ def auto_vectorize_product(doc, method=None):
         vector = embed_text(text)
 
         if vector:
-            # Direct SQL update to avoid recursive triggers or permission issues
+            # Direct SQL update to avoid recursive triggers or permission
+            # issues
             frappe.db.sql(f"""
                 UPDATE "tabItem"
                 SET embedding = '{vector}'
@@ -46,4 +47,5 @@ def auto_vectorize_product(doc, method=None):
         pass
     except Exception as e:
         # Log but don't break the save
-        frappe.log_error(f"PaaS: Auto-vectorization failed for {doc.name}: {e}")
+        frappe.log_error(
+            f"PaaS: Auto-vectorization failed for {doc.name}: {e}")

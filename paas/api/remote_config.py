@@ -18,7 +18,9 @@ def get_remote_config(app_type="Customer", site_name=None):
         # if "paas" not in sub_details.get("modules", []):
         #    frappe.throw("This feature requires a PaaS subscription.")
     except Exception:
-        frappe.log_error(frappe.get_traceback(), "Remote Config Subscription Check Failed")
+        frappe.log_error(
+            frappe.get_traceback(),
+            "Remote Config Subscription Check Failed")
         frappe.throw("Could not verify subscription status.")
 
     # 2. Fetch Configuration Sources
@@ -28,12 +30,17 @@ def get_remote_config(app_type="Customer", site_name=None):
     project_title = frappe.db.get_single_value("Settings", "project_title")
 
     # B. Common Config
-    common_config_name = frappe.db.get_value("Remote Config", {"app_type": "Common"}, "name")
-    common_config = frappe.get_doc("Remote Config", common_config_name) if common_config_name else None
+    common_config_name = frappe.db.get_value(
+        "Remote Config", {"app_type": "Common"}, "name")
+    common_config = frappe.get_doc(
+        "Remote Config",
+        common_config_name) if common_config_name else None
 
     # C. App Specific Config
-    app_config_name = frappe.db.get_value("Remote Config", {"app_type": app_type}, "name")
-    app_config = frappe.get_doc("Remote Config", app_config_name) if app_config_name else None
+    app_config_name = frappe.db.get_value(
+        "Remote Config", {"app_type": app_type}, "name")
+    app_config = frappe.get_doc("Remote Config",
+                                app_config_name) if app_config_name else None
 
     if not common_config and not app_config:
         # Fallback: Check if config exists for "project_title" as site_name (legacy behavior?)
@@ -46,14 +53,27 @@ def get_remote_config(app_type="Customer", site_name=None):
         val = None
         # Check app specific config first
         if app_config and getattr(app_config, field, None) is not None:
-            if isinstance(getattr(app_config, field), str) and getattr(app_config, field) == "":
+            if isinstance(
+                    getattr(
+                        app_config,
+                        field),
+                    str) and getattr(
+                    app_config,
+                    field) == "":
                 pass
             else:
                 val = getattr(app_config, field)
 
         # Fallback to common config
-        if val is None and common_config and getattr(common_config, field, None) is not None:
-            if isinstance(getattr(common_config, field), str) and getattr(common_config, field) == "":
+        if val is None and common_config and getattr(
+                common_config, field, None) is not None:
+            if isinstance(
+                    getattr(
+                        common_config,
+                        field),
+                    str) and getattr(
+                    common_config,
+                    field) == "":
                 pass
             else:
                 val = getattr(common_config, field)

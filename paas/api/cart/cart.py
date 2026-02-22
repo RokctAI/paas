@@ -10,7 +10,8 @@ def get_cart(shop_id: str):
     if user == "Guest":
         frappe.throw("You must be logged in to view your cart.")
 
-    cart_name = frappe.db.get_value("Cart", {"owner": user, "shop": shop_id, "status": "Active"}, "name")
+    cart_name = frappe.db.get_value(
+        "Cart", {"owner": user, "shop": shop_id, "status": "Active"}, "name")
     if not cart_name:
         return None  # No active cart
 
@@ -36,7 +37,8 @@ def add_to_cart(qty: int, shop_id: str, item_code: str = None, stock_id: int = N
     # For now, we rely on item_code being passed.
 
     # Find or create the Cart document
-    cart_name = frappe.db.get_value("Cart", {"owner": user, "shop": shop_id, "status": "Active"}, "name")
+    cart_name = frappe.db.get_value(
+        "Cart", {"owner": user, "shop": shop_id, "status": "Active"}, "name")
     if not cart_name:
         cart = frappe.get_doc({
             "doctype": "Cart",
@@ -51,7 +53,8 @@ def add_to_cart(qty: int, shop_id: str, item_code: str = None, stock_id: int = N
     addons_data = []
     if addons:
         try:
-            addons_data = json.loads(addons) if isinstance(addons, str) else addons
+            addons_data = json.loads(addons) if isinstance(
+                addons, str) else addons
         except Exception:
             addons_data = []
 
@@ -69,7 +72,8 @@ def add_to_cart(qty: int, shop_id: str, item_code: str = None, stock_id: int = N
         if len(a1) != len(a2):
             return False
         # Deep compare implementation needed or just assume new row if complex
-        # For MVP, we will just add a new row if addons are present to avoid merging complexity
+        # For MVP, we will just add a new row if addons are present to avoid
+        # merging complexity
         return False
 
     # If no addons, we can try to merge
@@ -88,8 +92,10 @@ def add_to_cart(qty: int, shop_id: str, item_code: str = None, stock_id: int = N
                     match = True
 
             if match:
-                # Check if existing item has addons. If yes, don't merge (since we have no addons)
-                existing_addons = json.loads(detail.addons) if detail.addons else []
+                # Check if existing item has addons. If yes, don't merge (since
+                # we have no addons)
+                existing_addons = json.loads(
+                    detail.addons) if detail.addons else []
                 if not existing_addons:
                     existing_item = detail
                     break
@@ -100,7 +106,8 @@ def add_to_cart(qty: int, shop_id: str, item_code: str = None, stock_id: int = N
         # Get Price
         price = 0
         if item_code:
-            price = frappe.db.get_value("Product", item_code, "price") or 0  # field name might be diff
+            price = frappe.db.get_value(
+                "Product", item_code, "price") or 0  # field name might be diff
         # If stock_id, might want to fetch specific price
 
         cart.append("items", {
@@ -134,7 +141,9 @@ def remove_from_cart(cart_detail_name: str):
     cart = frappe.get_doc("Cart", cart_detail.parent)
 
     if cart.owner != user:
-        frappe.throw("You are not authorized to remove this item.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to remove this item.",
+            frappe.PermissionError)
 
     # Remove the item
     cart.remove(cart_detail)
@@ -224,7 +233,11 @@ def create_and_cart(cart: dict, lang: str = "en"):
 
 
 @frappe.whitelist()
-def get_cart_in_group(cart_id: str, shop_id: str, cart_uuid: str, lang: str = "en"):
+def get_cart_in_group(
+        cart_id: str,
+        shop_id: str,
+        cart_uuid: str,
+        lang: str = "en"):
     """
     Retrieves a group cart.
     """

@@ -33,7 +33,11 @@ def get_product_stocks(product_id):
     """
     Retrieves all Stock variants for a Product.
     """
-    return frappe.get_list("Stock", filters={"product": product_id}, fields=["*"])
+    return frappe.get_list(
+        "Stock",
+        filters={
+            "product": product_id},
+        fields=["*"])
 
 
 @frappe.whitelist()

@@ -21,7 +21,8 @@ class TestBranding(unittest.TestCase):
         # Ensure defaults mock is set up
         if not hasattr(frappe, 'defaults'):
             frappe.defaults = MagicMock()
-        frappe.defaults.get_user_default = MagicMock(return_value="Test Company")
+        frappe.defaults.get_user_default = MagicMock(
+            return_value="Test Company")
 
     def tearDown(self):
         self.db_get_value_patcher.stop()
@@ -37,7 +38,8 @@ class TestBranding(unittest.TestCase):
 
     def test_get_paas_branding_no_paas_module(self):
         # Mock subscription found but no PaaS module
-        frappe.db.get_value.return_value = MagicMock(subscription_plan='Basic Plan')
+        frappe.db.get_value.return_value = MagicMock(
+            subscription_plan='Basic Plan')
 
         mock_plan = MagicMock()
         mock_plan.modules = [MagicMock(module_name='Other')]
@@ -48,7 +50,8 @@ class TestBranding(unittest.TestCase):
 
     def test_get_paas_branding_enabled_defaults(self):
         # Mock subscription with PaaS module
-        frappe.db.get_value.return_value = MagicMock(subscription_plan='Pro Plan')
+        frappe.db.get_value.return_value = MagicMock(
+            subscription_plan='Pro Plan')
 
         mock_plan = MagicMock()
         mock_plan.modules = [MagicMock(module_name='PaaS')]
@@ -68,7 +71,8 @@ class TestBranding(unittest.TestCase):
 
     def test_get_paas_branding_enabled_custom(self):
         # Mock subscription with PaaS module
-        frappe.db.get_value.return_value = MagicMock(subscription_plan='Pro Plan')
+        frappe.db.get_value.return_value = MagicMock(
+            subscription_plan='Pro Plan')
 
         mock_plan = MagicMock()
         mock_plan.modules = [MagicMock(module_name='PaaS')]

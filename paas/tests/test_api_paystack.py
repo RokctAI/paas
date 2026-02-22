@@ -17,7 +17,8 @@ class TestPayStackAPI(FrappeTestCase):
                 "last_name": "User"
             }).insert(ignore_permissions=True)
         else:
-            self.test_user = frappe.get_doc("User", "test_paystack_user@example.com")
+            self.test_user = frappe.get_doc(
+                "User", "test_paystack_user@example.com")
 
         # Create a test shop
         if not frappe.db.exists("Shop", "Test PayStack Shop"):
@@ -32,7 +33,9 @@ class TestPayStackAPI(FrappeTestCase):
             self.test_shop = frappe.get_doc("Shop", "Test PayStack Shop")
 
         # Create a test product
-        if not frappe.db.exists("Product", {"title": "Test Product", "shop": self.test_shop.name}):
+        if not frappe.db.exists(
+            "Product", {
+                "title": "Test Product", "shop": self.test_shop.name}):
             self.test_product = frappe.get_doc({
                 "doctype": "Product",
                 "title": "Test Product",
@@ -40,7 +43,8 @@ class TestPayStackAPI(FrappeTestCase):
                 "price": 100
             }).insert(ignore_permissions=True)
         else:
-            self.test_product = frappe.get_doc("Product", {"title": "Test Product", "shop": self.test_shop.name})
+            self.test_product = frappe.get_doc(
+                "Product", {"title": "Test Product", "shop": self.test_shop.name})
 
         # Create a test order
         self.test_order = frappe.get_doc({
@@ -73,17 +77,30 @@ class TestPayStackAPI(FrappeTestCase):
         frappe.set_user("Administrator")
         if frappe.db.exists("User", self.test_user.name):
             try:
-                frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "User",
+                    self.test_user.name,
+                    force=True,
+                    ignore_permissions=True)
             except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
                 try:
-                    frappe.db.set_value("User", self.test_user.name, "enabled", 0)
+                    frappe.db.set_value(
+                        "User", self.test_user.name, "enabled", 0)
                     frappe.db.commit()
                 except Exception:
                     pass
 
-        if hasattr(self, "test_shop") and self.test_shop and frappe.db.exists("Shop", self.test_shop.name):
+        if hasattr(
+                self,
+                "test_shop") and self.test_shop and frappe.db.exists(
+                "Shop",
+                self.test_shop.name):
             try:
-                frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "Shop",
+                    self.test_shop.name,
+                    force=True,
+                    ignore_permissions=True)
             except Exception:
                 pass
 
@@ -106,7 +123,10 @@ class TestPayStackAPI(FrappeTestCase):
         self.assertIn("test_url", response["redirect_url"])
 
         # Verify a transaction was created
-        self.assertTrue(frappe.db.exists("Transaction", {"payment_reference": "test_reference"}))
+        self.assertTrue(
+            frappe.db.exists(
+                "Transaction", {
+                    "payment_reference": "test_reference"}))
 
     @patch('paas.api.payment.payment.requests.get')
     def test_handle_paystack_callback(self, mock_get):
@@ -129,7 +149,8 @@ class TestPayStackAPI(FrappeTestCase):
             handle_paystack_callback()
 
         # Check if the transaction and order status were updated
-        updated_transaction = frappe.get_doc("Transaction", {"payment_reference": "test_reference_callback"})
+        updated_transaction = frappe.get_doc(
+            "Transaction", {"payment_reference": "test_reference_callback"})
         self.assertEqual(updated_transaction.status, "Paid")
 
         updated_order = frappe.get_doc("Order", self.test_order.name)

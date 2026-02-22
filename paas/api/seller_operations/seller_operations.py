@@ -58,7 +58,9 @@ def update_seller_kitchen(kitchen_name, kitchen_data):
     kitchen = frappe.get_doc("Kitchen", kitchen_name)
 
     if kitchen.shop != shop:
-        frappe.throw("You are not authorized to update this kitchen.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this kitchen.",
+            frappe.PermissionError)
 
     kitchen.update(kitchen_data)
     kitchen.save(ignore_permissions=True)
@@ -76,14 +78,19 @@ def delete_seller_kitchen(kitchen_name):
     kitchen = frappe.get_doc("Kitchen", kitchen_name)
 
     if kitchen.shop != shop:
-        frappe.throw("You are not authorized to delete this kitchen.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to delete this kitchen.",
+            frappe.PermissionError)
 
     frappe.delete_doc("Kitchen", kitchen_name, ignore_permissions=True)
     return {"status": "success", "message": "Kitchen deleted successfully."}
 
 
 @frappe.whitelist()
-def get_seller_inventory_items(limit_start: int = 0, limit_page_length: int = 20, item_code: str = None):
+def get_seller_inventory_items(
+        limit_start: int = 0,
+        limit_page_length: int = 20,
+        item_code: str = None):
     """
     Retrieves inventory items (Bin entries) for the current seller's shop.
     Can be filtered by a specific item.
@@ -120,10 +127,13 @@ def adjust_seller_inventory(item_code: str, warehouse: str, new_qty: int):
 
     item = frappe.get_doc("Item", item_code)
     if item.shop != shop:
-        frappe.throw("You are not authorized to adjust inventory for this item.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to adjust inventory for this item.",
+            frappe.PermissionError)
 
     # Get current quantity
-    current_qty = frappe.db.get_value("Bin", {"item_code": item_code, "warehouse": warehouse}, "actual_qty") or 0
+    current_qty = frappe.db.get_value(
+        "Bin", {"item_code": item_code, "warehouse": warehouse}, "actual_qty") or 0
 
     # Create a stock reconciliation entry
     stock_entry = frappe.get_doc({
@@ -142,7 +152,9 @@ def adjust_seller_inventory(item_code: str, warehouse: str, new_qty: int):
     })
     stock_entry.submit()
 
-    return {"status": "success", "message": f"Inventory for {item_code} adjusted to {new_qty}."}
+    return {
+        "status": "success",
+        "message": f"Inventory for {item_code} adjusted to {new_qty}."}
 
 
 @frappe.whitelist()
@@ -175,7 +187,9 @@ def get_seller_menu(menu_name):
     menu = frappe.get_doc("Menu", menu_name)
 
     if menu.shop != shop:
-        frappe.throw("You are not authorized to view this menu.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to view this menu.",
+            frappe.PermissionError)
 
     return menu.as_dict()
 
@@ -215,7 +229,9 @@ def update_seller_menu(menu_name, menu_data):
     menu = frappe.get_doc("Menu", menu_name)
 
     if menu.shop != shop:
-        frappe.throw("You are not authorized to update this menu.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this menu.",
+            frappe.PermissionError)
 
     menu.update(menu_data)
     menu.save(ignore_permissions=True)
@@ -233,7 +249,9 @@ def delete_seller_menu(menu_name):
     menu = frappe.get_doc("Menu", menu_name)
 
     if menu.shop != shop:
-        frappe.throw("You are not authorized to delete this menu.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to delete this menu.",
+            frappe.PermissionError)
 
     frappe.delete_doc("Menu", menu_name, ignore_permissions=True)
     return {"status": "success", "message": "Menu deleted successfully."}
@@ -293,7 +311,9 @@ def update_seller_receipt(receipt_name, receipt_data):
     receipt = frappe.get_doc("Receipt", receipt_name)
 
     if receipt.shop != shop:
-        frappe.throw("You are not authorized to update this receipt.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this receipt.",
+            frappe.PermissionError)
 
     receipt.update(receipt_data)
     receipt.save(ignore_permissions=True)
@@ -311,7 +331,9 @@ def delete_seller_receipt(receipt_name):
     receipt = frappe.get_doc("Receipt", receipt_name)
 
     if receipt.shop != shop:
-        frappe.throw("You are not authorized to delete this receipt.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to delete this receipt.",
+            frappe.PermissionError)
 
     frappe.delete_doc("Receipt", receipt_name, ignore_permissions=True)
     return {"status": "success", "message": "Receipt deleted successfully."}
@@ -347,7 +369,9 @@ def get_seller_combo(combo_name):
     combo = frappe.get_doc("Combo", combo_name)
 
     if combo.shop != shop:
-        frappe.throw("You are not authorized to view this combo.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to view this combo.",
+            frappe.PermissionError)
 
     return combo.as_dict()
 
@@ -387,7 +411,9 @@ def update_seller_combo(combo_name, combo_data):
     combo = frappe.get_doc("Combo", combo_name)
 
     if combo.shop != shop:
-        frappe.throw("You are not authorized to update this combo.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this combo.",
+            frappe.PermissionError)
 
     combo.update(combo_data)
     combo.save(ignore_permissions=True)
@@ -405,7 +431,9 @@ def delete_seller_combo(combo_name):
     combo = frappe.get_doc("Combo", combo_name)
 
     if combo.shop != shop:
-        frappe.throw("You are not authorized to delete this combo.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to delete this combo.",
+            frappe.PermissionError)
 
     frappe.delete_doc("Combo", combo_name, ignore_permissions=True)
     return {"status": "success", "message": "Combo deleted successfully."}

@@ -14,7 +14,8 @@ def validate(request=None):
         if ":" in token:
             try:
                 api_key, api_secret = token.split(":")
-                user = frappe.db.get_value("User", {"api_key": api_key}, "name")
+                user = frappe.db.get_value(
+                    "User", {"api_key": api_key}, "name")
                 if user:
                     if check_password(user, api_secret):
                         frappe.set_user(user)

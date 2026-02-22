@@ -25,7 +25,10 @@ def webhook():
                 frappe.throw("Missing Signature", frappe.PermissionError)
 
             # frappe.request.get_data() gives raw bytes needed for HMAC
-            if not validate_signature(frappe.request.get_data(), signature, config.get_password('app_secret')):
+            if not validate_signature(
+                    frappe.request.get_data(),
+                    signature,
+                    config.get_password('app_secret')):
                 frappe.throw("Invalid Signature", frappe.PermissionError)
 
         return process_webhook()
@@ -41,7 +44,9 @@ def verify_webhook():
 
     config = get_whatsapp_config()
     if not config:
-        frappe.throw("WhatsApp is not configured for this tenant.", frappe.AuthenticationError)
+        frappe.throw(
+            "WhatsApp is not configured for this tenant.",
+            frappe.AuthenticationError)
 
     if hub_mode == "subscribe" and hub_verify_token == config.verify_token:
         frappe.response.status_code = 200

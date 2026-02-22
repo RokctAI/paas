@@ -59,7 +59,8 @@ def flow_data():
             backend=default_backend()
         )
         decryptor = cipher.decryptor()
-        decrypted_data_json = decryptor.update(ciphertext) + decryptor.finalize()
+        decrypted_data_json = decryptor.update(
+            ciphertext) + decryptor.finalize()
         decoded_data = json.loads(decrypted_data_json.decode('utf-8'))
 
         # 3. Process Logic
@@ -80,7 +81,8 @@ def flow_data():
         ).encryptor()
 
         response_bytes = json.dumps(response_data).encode('utf-8')
-        ciphertext_resp = encryptor.update(response_bytes) + encryptor.finalize()
+        ciphertext_resp = encryptor.update(
+            response_bytes) + encryptor.finalize()
         tag_resp = encryptor.tag
 
         encrypted_response = ciphertext_resp + tag_resp
@@ -88,7 +90,8 @@ def flow_data():
 
     except Exception as e:
         frappe.log_error(f"Flow Encryption Error: {str(e)}")
-        # Start simplistic error response? Meta expects specific error format or 500
+        # Start simplistic error response? Meta expects specific error format
+        # or 500
         frappe.response.status_code = 500
         return str(e)
 
@@ -108,6 +111,6 @@ def handle_business_logic(data):
             "options": [
                 {"id": "opt_1", "title": "Option 1 (Generic)"},
                 {"id": "opt_2", "title": "Option 2 (Generic)"}
-                ]
+            ]
         }
     }

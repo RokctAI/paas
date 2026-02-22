@@ -32,10 +32,13 @@ class TestWalletAPI(FrappeTestCase):
                 "price": 100.0
             }).insert(ignore_permissions=True)
         else:
-            self.wallet = frappe.get_doc("Wallet", {"user": self.test_user.name})
+            self.wallet = frappe.get_doc(
+                "Wallet", {"user": self.test_user.name})
 
         # Create wallet history
-        if not frappe.db.exists("Wallet History", {"wallet": self.wallet.name, "transaction_type": "Topup"}):
+        if not frappe.db.exists(
+            "Wallet History", {
+                "wallet": self.wallet.name, "transaction_type": "Topup"}):
             frappe.get_doc({
                 "doctype": "Wallet History",
                 "uuid": str(uuid.uuid4()),
@@ -70,7 +73,9 @@ class TestWalletAPI(FrappeTestCase):
 
     def test_get_wallet_history_pagination(self):
         # Create a second history record
-        if not frappe.db.exists("Wallet History", {"wallet": self.wallet.name, "transaction_type": "Withdraw"}):
+        if not frappe.db.exists(
+            "Wallet History", {
+                "wallet": self.wallet.name, "transaction_type": "Withdraw"}):
             frappe.get_doc({
                 "doctype": "Wallet History",
                 "uuid": str(uuid.uuid4()),
@@ -83,7 +88,9 @@ class TestWalletAPI(FrappeTestCase):
         # Get the first page with a limit of 1
         history = get_wallet_history(limit=1)
         self.assertEqual(len(history["data"]), 1)
-        self.assertEqual(history["data"][0].get("transaction_type"), "Withdraw")  # It's ordered by creation desc
+        self.assertEqual(
+            history["data"][0].get("transaction_type"),
+            "Withdraw")  # It's ordered by creation desc
 
         # Get the second page
         history = get_wallet_history(start=1, limit=1)

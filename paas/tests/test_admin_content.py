@@ -4,10 +4,15 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from paas.api.admin_content.admin_content import (
-    create_admin_banner, get_admin_banners, update_admin_banner, delete_admin_banner,
-    create_admin_faq, get_admin_faqs, update_admin_faq, delete_admin_faq,
-    create_admin_faq_category
-)
+    create_admin_banner,
+    get_admin_banners,
+    update_admin_banner,
+    delete_admin_banner,
+    create_admin_faq,
+    get_admin_faqs,
+    update_admin_faq,
+    delete_admin_faq,
+    create_admin_faq_category)
 
 
 class TestAdminContent_New(FrappeTestCase):
@@ -33,7 +38,12 @@ class TestAdminContent_New(FrappeTestCase):
 
         # Update
         update_admin_banner(banner['name'], {"title": "Updated Admin Banner"})
-        self.assertEqual(frappe.db.get_value("Banner", banner['name'], "title"), "Updated Admin Banner")
+        self.assertEqual(
+            frappe.db.get_value(
+                "Banner",
+                banner['name'],
+                "title"),
+            "Updated Admin Banner")
 
         # Delete
         delete_admin_banner(banner['name'])
@@ -44,7 +54,8 @@ class TestAdminContent_New(FrappeTestCase):
         cat = create_admin_faq_category({"category_name": "Admin Cat"})
 
         # 2. Create FAQ
-        faq = create_admin_faq({"question": "Admin Question", "answer": "Ans", "faq_category": cat['name']})
+        faq = create_admin_faq(
+            {"question": "Admin Question", "answer": "Ans", "faq_category": cat['name']})
         self.assertEqual(faq['question'], "Admin Question")
 
         # 3. Get
@@ -53,7 +64,12 @@ class TestAdminContent_New(FrappeTestCase):
 
         # 4. Update
         update_admin_faq(faq['name'], {"question": "Updated Q"})
-        self.assertEqual(frappe.db.get_value("FAQ", faq['name'], "question"), "Updated Q")
+        self.assertEqual(
+            frappe.db.get_value(
+                "FAQ",
+                faq['name'],
+                "question"),
+            "Updated Q")
 
         # 5. Delete
         delete_admin_faq(faq['name'])

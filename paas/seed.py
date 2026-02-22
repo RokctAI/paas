@@ -24,7 +24,8 @@ class JSONSeeder:
 
     def seed_users(self):
         # Users are in rokct app for security
-        rokct_fixtures_path = os.path.join(get_bench_path(), "apps/control/control/seeds")
+        rokct_fixtures_path = os.path.join(
+            get_bench_path(), "apps/control/control/seeds")
         users_file = os.path.join(rokct_fixtures_path, 'users.json')
 
         if not os.path.exists(users_file):
@@ -46,7 +47,9 @@ class JSONSeeder:
 
                 name = u.get('name', '')
                 first_name = name.split(' ')[0] if name else "User"
-                last_name = ' '.join(name.split(' ')[1:]) if name and ' ' in name else ''
+                last_name = ' '.join(
+                    name.split(' ')[
+                        1:]) if name and ' ' in name else ''
 
                 _doc = frappe.get_doc({
                     "doctype": "User",
@@ -76,7 +79,8 @@ class JSONSeeder:
                     self.shop_map[s.get('id')] = shop_name
                     continue
 
-                user_email = self.user_map.get(s.get('user_id')) or "Administrator"
+                user_email = self.user_map.get(
+                    s.get('user_id')) or "Administrator"
 
                 _doc = frappe.get_doc({
                     "doctype": "Shop",
@@ -164,7 +168,8 @@ class JSONSeeder:
                     continue
 
                 if frappe.db.exists("Product", {"title": title}):
-                    self.product_map[p.get('id')] = frappe.db.get_value("Product", {"title": title}, "name")
+                    self.product_map[p.get('id')] = frappe.db.get_value(
+                        "Product", {"title": title}, "name")
                     continue
 
                 cat = self.category_map.get(p.get('category_id'))
@@ -193,7 +198,9 @@ class JSONSeeder:
                 if not type_name:
                     continue
 
-                if frappe.db.exists("Parcel Order Setting", {"type": type_name}):
+                if frappe.db.exists(
+                    "Parcel Order Setting", {
+                        "type": type_name}):
                     continue
 
                 frappe.get_doc({
@@ -218,7 +225,9 @@ class JSONSeeder:
                 # PaaS Translation might not have a unique constraint on key+locale in standard way,
                 # but let's check. If not, we might duplicate.
                 # Let's assume we check by key and locale.
-                if frappe.db.exists("PaaS Translation", {"key": key, "locale": locale}):
+                if frappe.db.exists(
+                    "PaaS Translation", {
+                        "key": key, "locale": locale}):
                     continue
 
                 frappe.get_doc({
@@ -242,9 +251,12 @@ class JSONSeeder:
                     # print(f"Skipping address for unknown user {user_id}")
                     continue
 
-                # Address and Location are Small Text in DocType, so dump as JSON string
-                address_val = json.dumps(addr.get('address_details')) if addr.get('address_details') else None
-                location_val = json.dumps(addr.get('location')) if addr.get('location') else None
+                # Address and Location are Small Text in DocType, so dump as
+                # JSON string
+                address_val = json.dumps(
+                    addr.get('address_details')) if addr.get('address_details') else None
+                location_val = json.dumps(
+                    addr.get('location')) if addr.get('location') else None
 
                 frappe.get_doc({
                     "doctype": "User Address",
@@ -462,8 +474,11 @@ class JSONSeeder:
 
 def execute():
     site = frappe.local.site
-    # UPDATED: Use seeds_data directory instead of fixtures to prevent auto-import
-    fixtures_path = os.path.join(get_bench_path(), "apps/control/control/seeds")
+    # UPDATED: Use seeds_data directory instead of fixtures to prevent
+    # auto-import
+    fixtures_path = os.path.join(
+        get_bench_path(),
+        "apps/control/control/seeds")
     seeder = JSONSeeder(site, fixtures_path)
     seeder.run()
 

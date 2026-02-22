@@ -32,13 +32,21 @@ def get_original_package_name(temp_dir):
     raise Exception("Could not find original package name in build.gradle")
 
 
-def rename_android_package_structure(temp_dir, old_package_name, new_package_name, app_config_name):
+def rename_android_package_structure(
+        temp_dir,
+        old_package_name,
+        new_package_name,
+        app_config_name):
     """Renames the android package directory structure."""
     if not new_package_name or old_package_name == new_package_name:
-        log_message("Package name is unchanged, skipping directory rename.", app_config_name)
+        log_message(
+            "Package name is unchanged, skipping directory rename.",
+            app_config_name)
         return
 
-    log_message(f"Renaming Android package from {old_package_name} to {new_package_name}", app_config_name)
+    log_message(
+        f"Renaming Android package from {old_package_name} to {new_package_name}",
+        app_config_name)
 
     main_src_dir = os.path.join(temp_dir, 'android/app/src/main')
     lang_dir = ""
@@ -66,7 +74,9 @@ def rename_android_package_structure(temp_dir, old_package_name, new_package_nam
     except OSError:
         pass
 
-    log_message("Successfully renamed Android package structure.", app_config_name)
+    log_message(
+        "Successfully renamed Android package structure.",
+        app_config_name)
 
 
 def get_windows_exe_name(temp_dir):
@@ -80,6 +90,7 @@ def get_windows_exe_name(temp_dir):
             return match.group(1)
     # Fallback to a reasonable default if not found
     return "app"
+
 
 import xml.etree.ElementTree as ET  # noqa: E402
 
@@ -95,16 +106,22 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
     # Google Map Key Fallback
     google_api_key = app_config.google_api_key
     if not google_api_key:
-        google_api_key = frappe.db.get_single_value("Location Settings", "google_map_key")
+        google_api_key = frappe.db.get_single_value(
+            "Location Settings", "google_map_key")
         if google_api_key:
-            log_message("Using Google Map Key from Location Settings", app_config.name)
+            log_message(
+                "Using Google Map Key from Location Settings",
+                app_config.name)
 
     # Firebase Web Key Fallback
     firebase_web_key = app_config.firebase_web_key
     if not firebase_web_key:
-        firebase_web_key = frappe.db.get_single_value("Push Notification Settings", "api_key")
+        firebase_web_key = frappe.db.get_single_value(
+            "Push Notification Settings", "api_key")
         if firebase_web_key:
-            log_message("Using API Key from Push Notification Settings as Firebase Web Key", app_config.name)
+            log_message(
+                "Using API Key from Push Notification Settings as Firebase Web Key",
+                app_config.name)
 
     # PayFast Fallbacks
     pf_merchant_id = app_config.payfast_merchant_id
@@ -115,22 +132,29 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
         try:
             pf_settings_doc = frappe.get_doc("Payment Gateway", "PayFast")
             # Convert settings child table to dict
-            pf_settings_dict = {s.key: s.value for s in pf_settings_doc.settings}
+            pf_settings_dict = {
+                s.key: s.value for s in pf_settings_doc.settings}
 
             if not pf_merchant_id:
                 pf_merchant_id = pf_settings_dict.get("merchant_id")
                 if pf_merchant_id:
-                    log_message("Using Merchant ID from PayFast Payment Gateway", app_config.name)
+                    log_message(
+                        "Using Merchant ID from PayFast Payment Gateway",
+                        app_config.name)
 
             if not pf_merchant_key:
                 pf_merchant_key = pf_settings_dict.get("merchant_key")
                 if pf_merchant_key:
-                    log_message("Using Merchant Key from PayFast Payment Gateway", app_config.name)
+                    log_message(
+                        "Using Merchant Key from PayFast Payment Gateway",
+                        app_config.name)
 
             if not pf_passphrase:
                 pf_passphrase = pf_settings_dict.get("pass_phrase")
                 if pf_passphrase:
-                    log_message("Using Passphrase from PayFast Payment Gateway", app_config.name)
+                    log_message(
+                        "Using Passphrase from PayFast Payment Gateway",
+                        app_config.name)
 
         except Exception:
             # Log but don't fail the build if PayFast gateway is missing/configured differently
@@ -144,13 +168,19 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
         try:
             if frappe.db.exists("DocType", "Location Settings"):
                 if not demo_lat:
-                    demo_lat = frappe.db.get_single_value("Location Settings", "location_latitude")
+                    demo_lat = frappe.db.get_single_value(
+                        "Location Settings", "location_latitude")
                     if demo_lat:
-                        log_message("Using Default Latitude from Location Settings", app_config.name)
+                        log_message(
+                            "Using Default Latitude from Location Settings",
+                            app_config.name)
                 if not demo_long:
-                    demo_long = frappe.db.get_single_value("Location Settings", "location_longitude")
+                    demo_long = frappe.db.get_single_value(
+                        "Location Settings", "location_longitude")
                     if demo_long:
-                        log_message("Using Default Longitude from Location Settings", app_config.name)
+                        log_message(
+                            "Using Default Longitude from Location Settings",
+                            app_config.name)
         except Exception:
             pass
 
@@ -161,7 +191,8 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
     web_domain = None
     if web_url:
         from urllib.parse import urlparse
-        parse_url = web_url if web_url.startswith('http') else f"https://{web_url}"
+        parse_url = web_url if web_url.startswith(
+            'http') else f"https://{web_url}"
         parsed = urlparse(parse_url)
         web_domain = parsed.netloc
 
@@ -176,7 +207,8 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
     uri_host = None
     if uri_prefix:
         from urllib.parse import urlparse
-        parse_uri = uri_prefix if uri_prefix.startswith('http') else f"https://{uri_prefix}"
+        parse_uri = uri_prefix if uri_prefix.startswith(
+            'http') else f"https://{uri_prefix}"
         uri_host = urlparse(parse_uri).netloc
 
     # 1. Modify pubspec.yaml for version and description
@@ -190,12 +222,19 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
         if match:
             version_code = int(match.group(2)) + 1
             new_version = f'version: {match.group(1)}+{version_code}'
-            pubspec_content = re.sub(r'version: .+', new_version, pubspec_content)
-            log_message(f"Updated version in pubspec.yaml to +{version_code}", app_config.name)
+            pubspec_content = re.sub(
+                r'version: .+', new_version, pubspec_content)
+            log_message(
+                f"Updated version in pubspec.yaml to +{version_code}",
+                app_config.name)
 
         # Update description
         if app_config.app_description:
-            pubspec_content = re.sub(r'description:.*', f'description: {app_config.app_description}', pubspec_content)
+            pubspec_content = re.sub(
+                r'description:.*',
+                f'description: {
+                    app_config.app_description}',
+                pubspec_content)
             log_message("Updated description in pubspec.yaml", app_config.name)
 
         with open(pubspec_path, 'w') as f:
@@ -203,7 +242,8 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
 
     # 2. Modify app display name and Inject Android Strings
     # Android: android/app/src/main/res/values/strings.xml
-    strings_xml_path = os.path.join(temp_dir, 'android/app/src/main/res/values/strings.xml')
+    strings_xml_path = os.path.join(
+        temp_dir, 'android/app/src/main/res/values/strings.xml')
     if os.path.exists(strings_xml_path):
         tree = ET.parse(strings_xml_path)
         root = tree.getroot()
@@ -273,7 +313,9 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
                     dict_element[i + 1].text = app_config.app_display_name
                     break
             tree.write(info_plist_path)
-            log_message("Updated CFBundleDisplayName in Info.plist", app_config.name)
+            log_message(
+                "Updated CFBundleDisplayName in Info.plist",
+                app_config.name)
 
     # 3. Modify app_constants.dart
     constants_path = os.path.join(temp_dir, 'lib/app_constants.dart')
@@ -285,8 +327,12 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
         # Automated baseUrl (Tenant API URL)
         base_url = frappe.utils.get_site_url(frappe.local.site)
 
-        # Match both single and double quotes for the existing URL, with optional const
-        content = re.sub(r"static (?:const\s+)?String baseUrl = ['\"].*?['\"];", f"static const String baseUrl = '{base_url}';", content)
+        # Match both single and double quotes for the existing URL, with
+        # optional const
+        content = re.sub(
+            r"static (?:const\s+)?String baseUrl = ['\"].*?['\"];",
+            f"static const String baseUrl = '{base_url}';",
+            content)
         log_message(f"Set baseUrl to: {base_url}", app_config.name)
 
         # String replacements
@@ -303,13 +349,20 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
         }
         for key, value in string_replacements.items():
             if value:
-                # Use a non-greedy match to avoid issues with multiple similar lines
-                content = re.sub(f"static String {key} = '.*?';", f"static String {key} = '{value}';", content)
+                # Use a non-greedy match to avoid issues with multiple similar
+                # lines
+                content = re.sub(
+                    f"static String {key} = '.*?';",
+                    f"static String {key} = '{value}';",
+                    content)
 
         # Boolean replacements
         if app_config.is_demo is not None:
             bool_val = "true" if app_config.is_demo else "false"
-            content = re.sub(r"static bool isDemo = (true|false);", f"static bool isDemo = {bool_val};", content)
+            content = re.sub(
+                r"static bool isDemo = (true|false);",
+                f"static bool isDemo = {bool_val};",
+                content)
 
         # Numeric replacements (Float/Int)
         numeric_replacements = {
@@ -318,14 +371,18 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
         }
         for key, value in numeric_replacements.items():
             if value is not None:
-                content = re.sub(f"static double {key} = .*;", f"static double {key} = {value};", content)
+                content = re.sub(
+                    f"static double {key} = .*;",
+                    f"static double {key} = {value};",
+                    content)
 
         with open(constants_path, 'w') as f:
             f.write(content)
         log_message("Updated app_constants.dart", app_config.name)
 
     # 3. Modify app_style.dart
-    style_path = os.path.join(temp_dir, 'lib/presentation/theme/app_style.dart')
+    style_path = os.path.join(
+        temp_dir, 'lib/presentation/theme/app_style.dart')
     if os.path.exists(style_path):
         with open(style_path, 'r') as f:
             style_content = f.read()
@@ -342,10 +399,14 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
                 color_hex = color_value.replace("#", "").upper()
                 new_line = f"static const Color {var_name} = Color(0xFF{color_hex});"
                 # Regex to find and replace a color definition line
-                pattern = re.compile(rf"static const Color {var_name} = Color\(0x[0-9a-fA-F]+\);.*", re.IGNORECASE)
+                pattern = re.compile(
+                    rf"static const Color {var_name} = Color\(0x[0-9a-fA-F]+\);.*",
+                    re.IGNORECASE)
                 if pattern.search(style_content):
                     style_content = pattern.sub(new_line, style_content)
-                    log_message(f"Updated {var_name} color in app_style.dart", app_config.name)
+                    log_message(
+                        f"Updated {var_name} color in app_style.dart",
+                        app_config.name)
                     modified = True
 
         if modified:
@@ -357,16 +418,25 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
     if os.path.exists(build_gradle_path):
         with open(build_gradle_path, 'r') as f:
             content = f.read()
-        content = re.sub(r'applicationId ".*"', f'applicationId "{app_config.package_name}"', content)
+        content = re.sub(
+            r'applicationId ".*"',
+            f'applicationId "{
+                app_config.package_name}"',
+            content)
         with open(build_gradle_path, 'w') as f:
             f.write(content)
         log_message("Updated applicationId in build.gradle", app_config.name)
 
-    manifest_path = os.path.join(temp_dir, 'android/app/src/main/AndroidManifest.xml')
+    manifest_path = os.path.join(
+        temp_dir, 'android/app/src/main/AndroidManifest.xml')
     if os.path.exists(manifest_path):
         with open(manifest_path, 'r') as f:
             content = f.read()
-        content = re.sub(r'package=".*"', f'package="{app_config.package_name}"', content)
+        content = re.sub(
+            r'package=".*"',
+            f'package="{
+                app_config.package_name}"',
+            content)
 
         # Replace Placeholders with actual domains
         if web_domain:
@@ -376,7 +446,9 @@ def modify_project_files(temp_dir, app_config):  # noqa: C901
 
         with open(manifest_path, 'w') as f:
             f.write(content)
-        log_message("Updated package and domains in AndroidManifest.xml", app_config.name)
+        log_message(
+            "Updated package and domains in AndroidManifest.xml",
+            app_config.name)
 
     log_message("File modifications complete.", app_config.name)
 
@@ -389,7 +461,8 @@ def handle_custom_font(temp_dir, app_config):
     log_message("Handling custom font...", app_config.name)
 
     # Save the font file to assets/fonts
-    font_file_doc = frappe.get_doc("File", {"file_url": app_config.custom_font_file})
+    font_file_doc = frappe.get_doc(
+        "File", {"file_url": app_config.custom_font_file})
     font_content = font_file_doc.get_content()
     font_filename = font_file_doc.file_name
 
@@ -406,7 +479,8 @@ def handle_custom_font(temp_dir, app_config):
 
     # This assumes a simple structure and replaces any existing font family.
     # A more complex app might need a more nuanced approach.
-    font_family_name = os.path.splitext(font_filename)[0].replace('-', ' ').title()
+    font_family_name = os.path.splitext(
+        font_filename)[0].replace('-', ' ').title()
     pubspec_data['flutter']['fonts'] = [
         {
             'family': font_family_name,
@@ -419,27 +493,40 @@ def handle_custom_font(temp_dir, app_config):
     with open(pubspec_path, 'w') as f:
         yaml.dump(pubspec_data, f, default_flow_style=False)
 
-    log_message(f"Added custom font '{font_family_name}' to pubspec.yaml", app_config.name)
+    log_message(
+        f"Added custom font '{font_family_name}' to pubspec.yaml",
+        app_config.name)
 
     # Also update the default font in app_style.dart
-    style_path = os.path.join(temp_dir, 'lib/presentation/theme/app_style.dart')
+    style_path = os.path.join(
+        temp_dir, 'lib/presentation/theme/app_style.dart')
     if os.path.exists(style_path):
         with open(style_path, 'r') as f:
             style_content = f.read()
 
-        # This is a bit of a guess, assuming GoogleFonts.inter is the one to change.
-        style_content = re.sub(r"GoogleFonts\.(.*?)\(", f"GoogleFonts.getFont('{font_family_name}', ", style_content)
+        # This is a bit of a guess, assuming GoogleFonts.inter is the one to
+        # change.
+        style_content = re.sub(
+            r"GoogleFonts\.(.*?)\(",
+            f"GoogleFonts.getFont('{font_family_name}', ",
+            style_content)
 
         with open(style_path, 'w') as f:
             f.write(style_content)
         log_message("Updated default font in app_style.dart", app_config.name)
 
 
-def replace_image_asset(temp_dir, app_config, field_name, target_path_relative):
+def replace_image_asset(
+        temp_dir,
+        app_config,
+        field_name,
+        target_path_relative):
     """Replaces a specified image asset in the project with an uploaded file."""
     image_url = getattr(app_config, field_name, None)
     if not image_url:
-        log_message(f"No image provided for {field_name}, skipping.", app_config.name)
+        log_message(
+            f"No image provided for {field_name}, skipping.",
+            app_config.name)
         return
 
     try:
@@ -451,38 +538,51 @@ def replace_image_asset(temp_dir, app_config, field_name, target_path_relative):
 
         with open(target_path_full, 'wb') as f:
             f.write(file_content)
-        log_message(f"Replaced asset at {target_path_relative}", app_config.name)
+        log_message(
+            f"Replaced asset at {target_path_relative}",
+            app_config.name)
     except Exception as e:
-        log_message(f"Error replacing image asset for {field_name}: {e}", app_config.name)
+        log_message(
+            f"Error replacing image asset for {field_name}: {e}",
+            app_config.name)
 
 
 def place_google_services_json(temp_dir, app_config):
     if not app_config.google_services_json:
-        log_message("No google-services.json uploaded, skipping.", app_config.name)
+        log_message(
+            "No google-services.json uploaded, skipping.",
+            app_config.name)
         return
 
     try:
-        file_doc = frappe.get_doc("File", {"file_url": app_config.google_services_json})
+        file_doc = frappe.get_doc(
+            "File", {"file_url": app_config.google_services_json})
         file_content = file_doc.get_content()
 
-        target_path = os.path.join(temp_dir, 'android/app/google-services.json')
+        target_path = os.path.join(
+            temp_dir, 'android/app/google-services.json')
         with open(target_path, 'wb') as f:
             f.write(file_content)
         log_message("Placed google-services.json.", app_config.name)
     except Exception as e:
-        log_message(f"Error placing google-services.json: {e}", app_config.name)
+        log_message(
+            f"Error placing google-services.json: {e}",
+            app_config.name)
 
 
 def generate_app_icons(temp_dir, app_config, settings):
     if not app_config.app_icon:
-        log_message("No app icon uploaded, skipping icon generation.", app_config.name)
+        log_message(
+            "No app icon uploaded, skipping icon generation.",
+            app_config.name)
         return
 
     log_message("Starting icon generation...", app_config.name)
 
     try:
         # 1. Save the uploaded icon to the project
-        icon_file_doc = frappe.get_doc("File", {"file_url": app_config.app_icon})
+        icon_file_doc = frappe.get_doc(
+            "File", {"file_url": app_config.app_icon})
         icon_content = icon_file_doc.get_content()
 
         icon_dir = os.path.join(temp_dir, 'assets/icon')
@@ -510,7 +610,9 @@ def generate_app_icons(temp_dir, app_config, settings):
 
         with open(pubspec_path, 'w') as f:
             yaml.dump(pubspec_data, f, default_flow_style=False)
-        log_message("Configured flutter_launcher_icons in pubspec.yaml", app_config.name)
+        log_message(
+            "Configured flutter_launcher_icons in pubspec.yaml",
+            app_config.name)
 
         # 3. Run flutter pub get and the icon generator
         env = os.environ.copy()
@@ -519,11 +621,26 @@ def generate_app_icons(temp_dir, app_config, settings):
         env['PUB_CACHE'] = "/opt/pub-cache"
 
         log_message("Running 'flutter pub get'...", app_config.name)
-        result = subprocess.run(["flutter", "pub", "get"], cwd=temp_dir, check=True, capture_output=True, text=True, env=env)
+        result = subprocess.run(["flutter",
+                                 "pub",
+                                 "get"],
+                                cwd=temp_dir,
+                                check=True,
+                                capture_output=True,
+                                text=True,
+                                env=env)
         log_message(result.stdout, app_config.name)
 
         log_message("Running icon generator...", app_config.name)
-        result = subprocess.run(["flutter", "pub", "run", "flutter_launcher_icons:main"], cwd=temp_dir, check=True, capture_output=True, text=True, env=env)
+        result = subprocess.run(["flutter",
+                                 "pub",
+                                 "run",
+                                 "flutter_launcher_icons:main"],
+                                cwd=temp_dir,
+                                check=True,
+                                capture_output=True,
+                                text=True,
+                                env=env)
         log_message(result.stdout, app_config.name)
 
         log_message("Icon generation complete.", app_config.name)
@@ -537,7 +654,9 @@ def update_splash_screen(temp_dir, app_config, settings):
     """Updates the native splash screen configuration."""
     splash_config_path = os.path.join(temp_dir, 'flutter_native_splash.yaml')
     if not os.path.exists(splash_config_path):
-        log_message("flutter_native_splash.yaml not found, skipping splash screen update.", app_config.name)
+        log_message(
+            "flutter_native_splash.yaml not found, skipping splash screen update.",
+            app_config.name)
         return
 
     log_message("Updating splash screen...", app_config.name)
@@ -551,7 +670,11 @@ def update_splash_screen(temp_dir, app_config, settings):
     if app_config.splash_logo:
         # Save the uploaded splash logo to a known path
         splash_logo_path = os.path.join('assets/icon', 'splash_logo.png')
-        replace_image_asset(temp_dir, app_config, 'splash_logo', splash_logo_path)
+        replace_image_asset(
+            temp_dir,
+            app_config,
+            'splash_logo',
+            splash_logo_path)
         splash_data['flutter_native_splash']['image'] = splash_logo_path
 
     with open(splash_config_path, 'w') as f:
@@ -564,7 +687,15 @@ def update_splash_screen(temp_dir, app_config, settings):
     env['PUB_CACHE'] = "/opt/pub-cache"
 
     log_message("Running splash screen generator...", app_config.name)
-    result = subprocess.run(["flutter", "pub", "run", "flutter_native_splash:create"], cwd=temp_dir, check=True, capture_output=True, text=True, env=env)
+    result = subprocess.run(["flutter",
+                             "pub",
+                             "run",
+                             "flutter_native_splash:create"],
+                            cwd=temp_dir,
+                            check=True,
+                            capture_output=True,
+                            text=True,
+                            env=env)
     log_message(result.stdout, app_config.name)
     log_message("Splash screen update complete.", app_config.name)
 
@@ -577,7 +708,11 @@ def get_project_version(source_project):
 
     try:
         this_dir = os.path.dirname(__file__)
-        source_dir = os.path.abspath(os.path.join(this_dir, 'source_code', source_project))
+        source_dir = os.path.abspath(
+            os.path.join(
+                this_dir,
+                'source_code',
+                source_project))
         pubspec_path = os.path.join(source_dir, 'pubspec.yaml')
 
         if not os.path.exists(pubspec_path):
@@ -588,7 +723,8 @@ def get_project_version(source_project):
 
         return pubspec_data.get('version', 'Version not specified')
     except Exception as e:
-        frappe.log_error(f"Could not get project version for {source_project}: {e}")
+        frappe.log_error(
+            f"Could not get project version for {source_project}: {e}")
         return "Error reading version"
 
 
@@ -632,10 +768,15 @@ def _generate_flutter_app(app_config_name):  # noqa: C901
         # Assumes this script is in `paas/paas/builder/tasks.py`
         # and the source is in `paas/paas/builder/source_code/`
         this_dir = os.path.dirname(__file__)
-        source_dir = os.path.abspath(os.path.join(this_dir, 'source_code', source_project))
+        source_dir = os.path.abspath(
+            os.path.join(
+                this_dir,
+                'source_code',
+                source_project))
 
         if not os.path.isdir(source_dir):
-            raise Exception(f"Source directory not found or is not a directory: {source_dir}")
+            raise Exception(
+                f"Source directory not found or is not a directory: {source_dir}")
 
         log_message(f"Source directory: {source_dir}", app_config.name)
 
@@ -646,18 +787,32 @@ def _generate_flutter_app(app_config_name):  # noqa: C901
                 shutil.copytree(s, d, symlinks=True)
             else:
                 shutil.copy2(s, d)
-        log_message(f"Copied project to temporary directory: {temp_dir}", app_config.name)
+        log_message(
+            f"Copied project to temporary directory: {temp_dir}",
+            app_config.name)
 
         # Get original package name before modifying files
         original_package_name = get_original_package_name(temp_dir)
-        rename_android_package_structure(temp_dir, original_package_name, app_config.package_name, app_config.name)
+        rename_android_package_structure(
+            temp_dir,
+            original_package_name,
+            app_config.package_name,
+            app_config.name)
 
         modify_project_files(temp_dir, app_config)
         handle_custom_font(temp_dir, app_config)
 
         # Handle asset replacements
-        replace_image_asset(temp_dir, app_config, 'brand_logo', 'assets/images/logo.png')
-        replace_image_asset(temp_dir, app_config, 'login_bg_image', 'assets/images/loginBg.png')
+        replace_image_asset(
+            temp_dir,
+            app_config,
+            'brand_logo',
+            'assets/images/logo.png')
+        replace_image_asset(
+            temp_dir,
+            app_config,
+            'login_bg_image',
+            'assets/images/loginBg.png')
 
         place_google_services_json(temp_dir, app_config)
         generate_app_icons(temp_dir, app_config, settings)
@@ -675,13 +830,22 @@ def _generate_flutter_app(app_config_name):  # noqa: C901
         else:
             raise Exception(f"Invalid build target: {build_target}")
 
-        log_message(f"Running build command: {' '.join(build_command)}...", app_config.name)
+        log_message(
+            f"Running build command: {
+                ' '.join(build_command)}...",
+            app_config.name)
         env = os.environ.copy()
         flutter_path = settings.flutter_sdk_path
         env['PATH'] = f"{flutter_path}/bin:{env['PATH']}"
         env['PUB_CACHE'] = "/opt/pub-cache"
 
-        build_result = subprocess.run(build_command, cwd=temp_dir, check=True, capture_output=True, text=True, env=env)
+        build_result = subprocess.run(
+            build_command,
+            cwd=temp_dir,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=env)
         log_message(build_result.stdout, app_config.name)
         log_message("Flutter build command finished.", app_config.name)
 
@@ -689,34 +853,46 @@ def _generate_flutter_app(app_config_name):  # noqa: C901
         artifact_path = ""
         artifact_extension = ""
         if build_target == 'Android APK':
-            artifact_path = os.path.join(temp_dir, 'build/app/outputs/flutter-apk/app-release.apk')
+            artifact_path = os.path.join(
+                temp_dir, 'build/app/outputs/flutter-apk/app-release.apk')
             artifact_extension = "apk"
         elif build_target == 'Android AAB':
-            artifact_path = os.path.join(temp_dir, 'build/app/outputs/bundle/release/app-release.aab')
+            artifact_path = os.path.join(
+                temp_dir, 'build/app/outputs/bundle/release/app-release.aab')
             artifact_extension = "aab"
         elif build_target == 'Windows EXE':
             exe_name = get_windows_exe_name(temp_dir)
-            artifact_path = os.path.join(temp_dir, f"build/windows/runner/Release/{exe_name}.exe")
+            artifact_path = os.path.join(
+                temp_dir, f"build/windows/runner/Release/{exe_name}.exe")
             artifact_extension = "exe"
 
         if not os.path.exists(artifact_path):
-            raise Exception(f"Build succeeded but artifact file not found at expected location: {artifact_path}")
+            raise Exception(
+                f"Build succeeded but artifact file not found at expected location: {artifact_path}")
 
         log_message(f"Artifact found at: {artifact_path}", app_config.name)
 
         with open(artifact_path, 'rb') as f:
             artifact_content = f.read()
 
-        file_doc = frappe.new_doc("File", {
-            "file_name": f"{app_config.name.replace(' ', '_')}-{frappe.utils.now_datetime().strftime('%Y-%m-%d')}.{artifact_extension}",
-            "attached_to_doctype": "Flutter App Configuration",
-            "attached_to_name": app_config.name,
-            "content": artifact_content,
-            "is_private": 0
-        })
+        file_doc = frappe.new_doc(
+            "File",
+            {
+                "file_name": f"{
+                    app_config.name.replace(
+                        ' ',
+                        '_')}-{
+                    frappe.utils.now_datetime().strftime('%Y-%m-%d')}.{artifact_extension}",
+                "attached_to_doctype": "Flutter App Configuration",
+                "attached_to_name": app_config.name,
+                "content": artifact_content,
+                "is_private": 0})
         file_doc.save(ignore_permissions=True)
 
-        log_message(f"Saved artifact to Frappe file: {file_doc.name}", app_config.name)
+        log_message(
+            f"Saved artifact to Frappe file: {
+                file_doc.name}",
+            app_config.name)
 
         app_config.db_set("apk_download_link", file_doc.file_url)
         app_config.db_set("build_status", "Success")

@@ -24,7 +24,9 @@ def get_shop_delivery_zones(shop_id):
     """
     Retrieves all Delivery Zones for a shop.
     """
-    return frappe.get_list("Delivery Zone", filters={"shop": shop_id}, fields=["*"])
+    return frappe.get_list(
+        "Delivery Zone", filters={
+            "shop": shop_id}, fields=["*"])
 
 
 @frappe.whitelist()
@@ -64,7 +66,14 @@ def check_delivery_availability(lat, lng, shop_id=None):
     if shop_id:
         filters["shop"] = shop_id
 
-    zones = frappe.get_list("Delivery Zone", filters=filters, fields=["name", "shop", "address", "coordinates"])
+    zones = frappe.get_list(
+        "Delivery Zone",
+        filters=filters,
+        fields=[
+            "name",
+            "shop",
+            "address",
+            "coordinates"])
 
     available_shops = []
 

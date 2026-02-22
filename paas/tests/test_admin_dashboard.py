@@ -18,7 +18,8 @@ class TestAdminDashboard(FrappeTestCase):
                 "roles": [{"role": "System Manager"}]
             }).insert(ignore_permissions=True)
         else:
-            self.admin_user = frappe.get_doc("User", "admin_tester@example.com")
+            self.admin_user = frappe.get_doc(
+                "User", "admin_tester@example.com")
             self.admin_user.add_roles("System Manager")
 
     def tearDown(self):

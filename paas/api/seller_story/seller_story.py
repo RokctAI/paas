@@ -57,7 +57,9 @@ def update_seller_story(story_name, story_data):
     story = frappe.get_doc("Story", story_name)
 
     if story.shop != shop:
-        frappe.throw("You are not authorized to update this story.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to update this story.",
+            frappe.PermissionError)
 
     story.update(story_data)
     story.save(ignore_permissions=True)
@@ -75,7 +77,9 @@ def delete_seller_story(story_name):
     story = frappe.get_doc("Story", story_name)
 
     if story.shop != shop:
-        frappe.throw("You are not authorized to delete this story.", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to delete this story.",
+            frappe.PermissionError)
 
     frappe.delete_doc("Story", story_name, ignore_permissions=True)
     return {"status": "success", "message": "Story deleted successfully."}

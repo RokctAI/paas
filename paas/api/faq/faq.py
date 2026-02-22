@@ -27,7 +27,14 @@ def get_faqs(type=None):
     if type:
         filters["type"] = type
 
-    return frappe.get_list("FAQ", filters=filters, fields=["name", "question", "answer", "type"])
+    return frappe.get_list(
+        "FAQ",
+        filters=filters,
+        fields=[
+            "name",
+            "question",
+            "answer",
+            "type"])
 
 
 @frappe.whitelist()

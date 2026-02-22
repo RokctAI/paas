@@ -21,7 +21,9 @@ class TestCouponAPI(FrappeTestCase):
             self.shop = frappe.get_doc("Shop", "TestShopAPICoupon")
 
         # Create coupons
-        if not frappe.db.exists("Coupon", {"code": "VALID10", "shop": self.shop.name}):
+        if not frappe.db.exists(
+            "Coupon", {
+                "code": "VALID10", "shop": self.shop.name}):
             self.valid_coupon = frappe.get_doc({
                 "doctype": "Coupon",
                 "code": "VALID10",
@@ -33,9 +35,12 @@ class TestCouponAPI(FrappeTestCase):
                 "quantity": 10
             }).insert(ignore_permissions=True)
         else:
-            self.valid_coupon = frappe.get_doc("Coupon", {"code": "VALID10", "shop": self.shop.name})
+            self.valid_coupon = frappe.get_doc(
+                "Coupon", {"code": "VALID10", "shop": self.shop.name})
 
-        if not frappe.db.exists("Coupon", {"code": "EXPIRED", "shop": self.shop.name}):
+        if not frappe.db.exists(
+            "Coupon", {
+                "code": "EXPIRED", "shop": self.shop.name}):
             self.expired_coupon = frappe.get_doc({
                 "doctype": "Coupon",
                 "code": "EXPIRED",
@@ -46,9 +51,12 @@ class TestCouponAPI(FrappeTestCase):
                 "expired_at": "2020-01-01 00:00:00"
             }).insert(ignore_permissions=True)
         else:
-            self.expired_coupon = frappe.get_doc("Coupon", {"code": "EXPIRED", "shop": self.shop.name})
+            self.expired_coupon = frappe.get_doc(
+                "Coupon", {"code": "EXPIRED", "shop": self.shop.name})
 
-        if not frappe.db.exists("Coupon", {"code": "ZEROQ", "shop": self.shop.name}):
+        if not frappe.db.exists(
+            "Coupon", {
+                "code": "ZEROQ", "shop": self.shop.name}):
             self.zero_quantity_coupon = frappe.get_doc({
                 "doctype": "Coupon",
                 "code": "ZEROQ",
@@ -60,7 +68,8 @@ class TestCouponAPI(FrappeTestCase):
                 "quantity": 0
             }).insert(ignore_permissions=True)
         else:
-            self.zero_quantity_coupon = frappe.get_doc("Coupon", {"code": "ZEROQ", "shop": self.shop.name})
+            self.zero_quantity_coupon = frappe.get_doc(
+                "Coupon", {"code": "ZEROQ", "shop": self.shop.name})
 
     def tearDown(self):
         try:

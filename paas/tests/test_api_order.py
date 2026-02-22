@@ -17,7 +17,8 @@ class TestOrderAPI(FrappeTestCase):
                 "last_name": "User"
             }).insert(ignore_permissions=True)
         else:
-            self.test_user = frappe.get_doc("User", "test_order_user@example.com")
+            self.test_user = frappe.get_doc(
+                "User", "test_order_user@example.com")
 
         # Create a test shop
         if not frappe.db.exists("Shop", "Test Order Shop"):
@@ -34,12 +35,15 @@ class TestOrderAPI(FrappeTestCase):
 
         # Update Permission Settings
         if frappe.db.exists("Permission Settings", "Permission Settings"):
-            permission_settings = frappe.get_doc("Permission Settings", "Permission Settings")
+            permission_settings = frappe.get_doc(
+                "Permission Settings", "Permission Settings")
             permission_settings.service_fee = 10
             permission_settings.save(ignore_permissions=True)
 
         # Create a test product
-        if not frappe.db.exists("Product", {"title": "Test Order Product", "shop": self.test_shop.name}):
+        if not frappe.db.exists("Product",
+                                {"title": "Test Order Product",
+                                 "shop": self.test_shop.name}):
             self.test_product = frappe.get_doc({
                 "doctype": "Product",
                 "title": "Test Order Product",
@@ -47,7 +51,8 @@ class TestOrderAPI(FrappeTestCase):
                 "price": 100
             }).insert(ignore_permissions=True)
         else:
-            self.test_product = frappe.get_doc("Product", {"title": "Test Order Product", "shop": self.test_shop.name})
+            self.test_product = frappe.get_doc(
+                "Product", {"title": "Test Order Product", "shop": self.test_shop.name})
 
         # Ensure USD currency exists
         if not frappe.db.exists("Currency", "USD"):
@@ -60,7 +65,9 @@ class TestOrderAPI(FrappeTestCase):
         self.test_currency = "USD"
 
         # Create Stock record
-        if not frappe.db.exists("Stock", {"shop": self.test_shop.name, "product": self.test_product.name}):
+        if not frappe.db.exists("Stock",
+                                {"shop": self.test_shop.name,
+                                 "product": self.test_product.name}):
             self.test_stock = frappe.get_doc({
                 "doctype": "Stock",
                 "shop": self.test_shop.name,
@@ -69,7 +76,8 @@ class TestOrderAPI(FrappeTestCase):
                 "quantity": 10
             }).insert(ignore_permissions=True)
         else:
-            self.test_stock = frappe.get_doc("Stock", {"shop": self.test_shop.name, "product": self.test_product.name})
+            self.test_stock = frappe.get_doc(
+                "Stock", {"shop": self.test_shop.name, "product": self.test_product.name})
             self.test_stock.quantity = 10
             self.test_stock.save(ignore_permissions=True)
 
@@ -77,16 +85,28 @@ class TestOrderAPI(FrappeTestCase):
         frappe.set_user("Administrator")
         if frappe.db.exists("User", self.test_user.name):
             try:
-                frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "User",
+                    self.test_user.name,
+                    force=True,
+                    ignore_permissions=True)
             except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
                 frappe.db.set_value("User", self.test_user.name, "enabled", 0)
                 frappe.db.commit()
 
-        if hasattr(self, "test_shop") and self.test_shop and frappe.db.exists("Shop", self.test_shop.name):
+        if hasattr(
+                self,
+                "test_shop") and self.test_shop and frappe.db.exists(
+                "Shop",
+                self.test_shop.name):
             try:
                 # Cleanup products for this shop first
                 frappe.db.delete("Product", {"shop": self.test_shop.name})
-                frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "Shop",
+                    self.test_shop.name,
+                    force=True,
+                    ignore_permissions=True)
             except Exception:
                 pass
 
@@ -227,7 +247,9 @@ class TestOrderAPI(FrappeTestCase):
             ]
         }).insert(ignore_permissions=True)
 
-        frappe.set_user(self.test_user.name)  # Though update requires admin/shop owner usually tested as admin in tearDown but here set_user
+        # Though update requires admin/shop owner usually tested as admin in
+        # tearDown but here set_user
+        frappe.set_user(self.test_user.name)
         # We need update_order_status to work.
 
         # 1. Accept Order -> Stock -1

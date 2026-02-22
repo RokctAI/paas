@@ -14,7 +14,9 @@ class PlatformWallet(Document):
             pass
 
     def get_balance(self):
-        if not frappe.db.get_single_value("Permission Settings", "enable_paas_lending"):
+        if not frappe.db.get_single_value(
+            "Permission Settings",
+                "enable_paas_lending"):
             return
 
         control_plane_url = frappe.conf.get("control_plane_url")
@@ -31,13 +33,21 @@ class PlatformWallet(Document):
             response = requests.post(api_url, headers=headers)
             if response.status_code == 200:
                 data = response.json()
-                self.set_onload("current_balance", data.get("message", {}).get("balance", 0))
+                self.set_onload(
+                    "current_balance",
+                    data.get(
+                        "message",
+                        {}).get(
+                        "balance",
+                        0))
         except Exception as e:
             frappe.log_error(f"Failed to fetch wallet balance: {e}")
 
     @frappe.whitelist()
     def request_payout(self, amount):
-        if not frappe.db.get_single_value("Permission Settings", "enable_paas_lending"):
+        if not frappe.db.get_single_value(
+            "Permission Settings",
+                "enable_paas_lending"):
             frappe.throw("Lending feature is disabled.")
 
         control_plane_url = frappe.conf.get("control_plane_url")

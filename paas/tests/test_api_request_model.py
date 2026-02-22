@@ -43,7 +43,9 @@ class TestRequestModelAPI(FrappeTestCase):
     def tearDown(self):
         # Log out
         frappe.set_user("Administrator")
-        frappe.db.delete("Request Model", {"created_by_user": self.test_user.name})
+        frappe.db.delete(
+            "Request Model", {
+                "created_by_user": self.test_user.name})
         try:
             self.product.delete(ignore_permissions=True)
         except Exception:

@@ -42,13 +42,21 @@ class TestSellerDashboard(FrappeTestCase):
         frappe.db.delete("Shop Working Day", {"shop": self.shop.name})
         # Cleanup Shop
         try:
-            frappe.delete_doc("Shop", self.shop.name, force=True, ignore_permissions=True)
+            frappe.delete_doc(
+                "Shop",
+                self.shop.name,
+                force=True,
+                ignore_permissions=True)
         except Exception:
             pass
         # Cleanup User
         if frappe.db.exists("User", self.owner.name):
             try:
-                frappe.delete_doc("User", self.owner.name, force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "User",
+                    self.owner.name,
+                    force=True,
+                    ignore_permissions=True)
             except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
                 frappe.db.set_value("User", self.owner.name, "enabled", 0)
                 frappe.db.commit()
@@ -58,10 +66,12 @@ class TestSellerDashboard(FrappeTestCase):
         frappe.set_user(self.owner.name)
 
         # 1. Update Days
-        days_data = [
-            {"day_of_week": "Monday", "opening_time": "09:00:00", "closing_time": "17:00:00", "is_closed": 0},
-            {"day_of_week": "Sunday", "is_closed": 1}
-        ]
+        days_data = [{"day_of_week": "Monday",
+                      "opening_time": "09:00:00",
+                      "closing_time": "17:00:00",
+                      "is_closed": 0},
+                     {"day_of_week": "Sunday",
+                      "is_closed": 1}]
 
         response = update_seller_shop_working_days(json.dumps(days_data))
         self.assertEqual(response.get("status"), "success")
@@ -70,15 +80,23 @@ class TestSellerDashboard(FrappeTestCase):
         fetched_days = get_seller_shop_working_days()
         self.assertEqual(len(fetched_days), 2)
 
-        monday = next((d for d in fetched_days if d.get('day_of_week') == "Monday"), None)
+        monday = next(
+            (d for d in fetched_days if d.get('day_of_week') == "Monday"),
+            None)
         self.assertIsNotNone(monday)
-        # Time comes back as timedelta or string depending on db, let's just check existence
+        # Time comes back as timedelta or string depending on db, let's just
+        # check existence
         self.assertEqual(monday.get("is_closed"), 0)
 
     def test_get_days_without_shop(self):
         # Create user without shop
         if not frappe.db.exists("User", "no_shop@example.com"):
-            no_shop_user = frappe.get_doc({"doctype": "User", "email": "no_shop@example.com", "first_name": "NoShop"}).insert(ignore_permissions=True)
+            no_shop_user = frappe.get_doc(
+                {
+                    "doctype": "User",
+                    "email": "no_shop@example.com",
+                    "first_name": "NoShop"}).insert(
+                ignore_permissions=True)
         else:
             no_shop_user = frappe.get_doc("User", "no_shop@example.com")
 
@@ -90,7 +108,11 @@ class TestSellerDashboard(FrappeTestCase):
         frappe.set_user("Administrator")
         if frappe.db.exists("User", no_shop_user.name):
             try:
-                frappe.delete_doc("User", no_shop_user.name, force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "User",
+                    no_shop_user.name,
+                    force=True,
+                    ignore_permissions=True)
             except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
                 frappe.db.set_value("User", no_shop_user.name, "enabled", 0)
                 frappe.db.commit()

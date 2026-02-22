@@ -38,14 +38,18 @@ class TestBookingFeature(FrappeTestCase):
             self.shop = frappe.get_doc("Shop", "Test Shop")
 
         # Create a Shop Section
-        if not frappe.db.exists("Shop Section", {"shop": self.shop.name, "area": "Main Hall"}):
+        if not frappe.db.exists(
+            "Shop Section", {
+                "shop": self.shop.name, "area": "Main Hall"}):
             self.section = frappe.get_doc({
                 "doctype": "Shop Section",
                 "shop": self.shop.name,
                 "area": "Main Hall"
             }).insert(ignore_permissions=True)
         else:
-            self.section = frappe.get_doc("Shop Section", {"shop": self.shop.name, "area": "Main Hall"})
+            self.section = frappe.get_doc(
+                "Shop Section", {
+                    "shop": self.shop.name, "area": "Main Hall"})
 
         # Create a Table
         if not frappe.db.exists("Table", "T1"):
@@ -64,7 +68,11 @@ class TestBookingFeature(FrappeTestCase):
         frappe.set_user("Administrator")
         if frappe.db.exists("User", self.user.name):
             try:
-                frappe.delete_doc("User", self.user.name, force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "User",
+                    self.user.name,
+                    force=True,
+                    ignore_permissions=True)
             except frappe.exceptions.LinkExistsError:
                 frappe.db.set_value("User", self.user.name, "enabled", 0)
         # Also clean up Shop and Shop Section if needed, but User delete might cascade if Owner.
@@ -88,7 +96,8 @@ class TestBookingFeature(FrappeTestCase):
         # 2. Create a Reservation (as User)
         frappe.set_user(self.user.name)
         start_date = add_days(now_datetime(), 1)
-        end_date = frappe.utils.add_to_date(start_date, hours=1)  # 1 hour later
+        end_date = frappe.utils.add_to_date(
+            start_date, hours=1)  # 1 hour later
 
         res_data = {
             "booking": slot.name,

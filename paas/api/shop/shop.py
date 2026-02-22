@@ -13,8 +13,11 @@ def create_shop(shop_data):
     Creates a new Shop document.
     Only users with 'System Manager' or 'Seller' roles can create a shop.
     """
-    if "System Manager" not in frappe.get_roles() and "Seller" not in frappe.get_roles():
-        frappe.throw("You are not authorized to create a shop.", frappe.PermissionError)
+    if "System Manager" not in frappe.get_roles(
+    ) and "Seller" not in frappe.get_roles():
+        frappe.throw(
+            "You are not authorized to create a shop.",
+            frappe.PermissionError)
 
     if not isinstance(shop_data, dict):
         frappe.throw("shop_data must be a dictionary.", frappe.ValidationError)
@@ -34,7 +37,9 @@ def create_shop(shop_data):
         })
         shop.insert(ignore_permissions=True)
         frappe.db.commit()
-        return api_response(data=shop.as_dict(), message="Shop created successfully")
+        return api_response(
+            data=shop.as_dict(),
+            message="Shop created successfully")
     except Exception as e:
         frappe.db.rollback()
         frappe.log_error(frappe.get_traceback(), "Shop Creation Failed")
@@ -42,7 +47,12 @@ def create_shop(shop_data):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str = "name", order: str = "desc", **kwargs):
+def get_shops(
+        limit_start: int = 0,
+        limit_page_length: int = 20,
+        order_by: str = "name",
+        order: str = "desc",
+        **kwargs):
     """
     Retrieves a list of shops with pagination and filters.
     """
@@ -63,26 +73,46 @@ def get_shops(limit_start: int = 0, limit_page_length: int = 20, order_by: str =
         "Shop",
         filters=filters,
         fields=[
-            "name", "uuid", "slug", "user", "logo", "cover_photo",
-            "phone", "address", "location", "status", "type", "min_amount",
-            "tax", "delivery_time_type", "delivery_time_from", "delivery_time_to",
-            "open", "visibility", "verify", "service_fee", "percentage", "enable_cod",
-            "shop_type", "is_ecommerce"
-        ],
+            "name",
+            "uuid",
+            "slug",
+            "user",
+            "logo",
+            "cover_photo",
+            "phone",
+            "address",
+            "location",
+            "status",
+            "type",
+            "min_amount",
+            "tax",
+            "delivery_time_type",
+            "delivery_time_from",
+            "delivery_time_to",
+            "open",
+            "visibility",
+            "verify",
+            "service_fee",
+            "percentage",
+            "enable_cod",
+            "shop_type",
+            "is_ecommerce"],
         offset=limit_start,
         limit=limit_page_length,
-        order_by=f"{order_by} {order}"
-    )
+        order_by=f"{order_by} {order}")
 
     # Global COD Check
-    cash_gateway = frappe.db.get_value("PaaS Payment Gateway", {"gateway_controller": "Cash", "enabled": 1})
+    cash_gateway = frappe.db.get_value(
+        "PaaS Payment Gateway", {
+            "gateway_controller": "Cash", "enabled": 1})
     is_global_cod_enabled = bool(cash_gateway)
 
     # Replicating the structure of the legacy ShopResource
     formatted_shops = []
     for shop in shops:
         # Hierarchical COD: Global AND Shop
-        is_cod = is_global_cod_enabled and (shop.enable_cod if shop.enable_cod is not None else 1)
+        is_cod = is_global_cod_enabled and (
+            shop.enable_cod if shop.enable_cod is not None else 1)
 
         formatted_shops.append({
             'id': shop.name,
@@ -127,15 +157,20 @@ def get_shop_details(uuid: str):
     shop = frappe.get_doc("Shop", {"uuid": uuid})
 
     if not shop:
-        frappe.throw(f"Shop with UUID {uuid} not found.", frappe.DoesNotExistError)
+        frappe.throw(
+            f"Shop with UUID {uuid} not found.",
+            frappe.DoesNotExistError)
 
     # Global COD Check
-    cash_gateway = frappe.db.get_value("PaaS Payment Gateway", {"gateway_controller": "Cash", "enabled": 1})
+    cash_gateway = frappe.db.get_value(
+        "PaaS Payment Gateway", {
+            "gateway_controller": "Cash", "enabled": 1})
     is_global_cod_enabled = bool(cash_gateway)
 
     # Hierarchical COD: Global AND Shop
     # Note: shop object from get_doc has attributes directly
-    is_cod = is_global_cod_enabled and (shop.enable_cod if shop.enable_cod is not None else 1)
+    is_cod = is_global_cod_enabled and (
+        shop.enable_cod if shop.enable_cod is not None else 1)
 
     # Replicating the structure of the legacy ShopResource
     return api_response(data={
@@ -172,24 +207,44 @@ def get_shop_details(uuid: str):
 
 
 @frappe.whitelist(allow_guest=True)
-def search_shops(search: str, category_id: int = None, limit_start: int = 0, limit_page_length: int = 20):
+def search_shops(
+        search: str,
+        category_id: int = None,
+        limit_start: int = 0,
+        limit_page_length: int = 20):
     """
     Searches for shops by name, optionally filtered by category.
     """
     t_shop = frappe.qb.DocType("Shop")
     query = (
-        frappe.qb.from_(t_shop)
-        .select(
-            t_shop.name, t_shop.uuid, t_shop.slug, t_shop.user, t_shop.logo, t_shop.cover_photo,
-            t_shop.phone, t_shop.address, t_shop.location, t_shop.status, t_shop.type, t_shop.min_amount,
-            t_shop.tax, t_shop.delivery_time_type, t_shop.delivery_time_from, t_shop.delivery_time_to,
-            t_shop.open, t_shop.visibility, t_shop.verify, t_shop.service_fee, t_shop.percentage, t_shop.enable_cod,
-            t_shop.shop_type, t_shop.is_ecommerce
-        )
-        .where(t_shop.open == 1)
-        .where(t_shop.status == "approved")
-        .where(t_shop.visibility == 1)
-    )
+        frappe.qb.from_(t_shop) .select(
+            t_shop.name,
+            t_shop.uuid,
+            t_shop.slug,
+            t_shop.user,
+            t_shop.logo,
+            t_shop.cover_photo,
+            t_shop.phone,
+            t_shop.address,
+            t_shop.location,
+            t_shop.status,
+            t_shop.type,
+            t_shop.min_amount,
+            t_shop.tax,
+            t_shop.delivery_time_type,
+            t_shop.delivery_time_from,
+            t_shop.delivery_time_to,
+            t_shop.open,
+            t_shop.visibility,
+            t_shop.verify,
+            t_shop.service_fee,
+            t_shop.percentage,
+            t_shop.enable_cod,
+            t_shop.shop_type,
+            t_shop.is_ecommerce) .where(
+            t_shop.open == 1) .where(
+                t_shop.status == "approved") .where(
+                    t_shop.visibility == 1))
 
     if category_id:
         query = query.where(t_shop.category == category_id)
@@ -198,19 +253,27 @@ def search_shops(search: str, category_id: int = None, limit_start: int = 0, lim
     to_tsvector = Function("to_tsvector")
     plainto_tsquery = Function("plainto_tsquery")
     query = query.where(
-        to_tsvector("english", t_shop.shop_name).matches(plainto_tsquery("english", search))
-    )
+        to_tsvector(
+            "english",
+            t_shop.shop_name).matches(
+            plainto_tsquery(
+                "english",
+                search)))
 
-    shops = query.limit(limit_page_length).offset(limit_start).orderby(t_shop.shop_name).run(as_dict=True)
+    shops = query.limit(limit_page_length).offset(
+        limit_start).orderby(t_shop.shop_name).run(as_dict=True)
 
     # Global COD Check
-    cash_gateway = frappe.db.get_value("PaaS Payment Gateway", {"gateway_controller": "Cash", "enabled": 1})
+    cash_gateway = frappe.db.get_value(
+        "PaaS Payment Gateway", {
+            "gateway_controller": "Cash", "enabled": 1})
     is_global_cod_enabled = bool(cash_gateway)
 
     formatted_shops = []
     for shop in shops:
         # Hierarchical COD: Global AND Shop
-        is_cod = is_global_cod_enabled and (shop.enable_cod if shop.enable_cod is not None else 1)
+        is_cod = is_global_cod_enabled and (
+            shop.enable_cod if shop.enable_cod is not None else 1)
 
         formatted_shops.append({
             'id': shop.name,
@@ -252,12 +315,23 @@ def get_shop_types():
     """
     Retrieves all available Shop Types.
     """
-    types = frappe.get_all("Shop Type", fields=["name", "title", "description", "icon"], order_by="title asc")
+    types = frappe.get_all(
+        "Shop Type",
+        fields=[
+            "name",
+            "title",
+            "description",
+            "icon"],
+        order_by="title asc")
     return api_response(data=types)
 
 
 @frappe.whitelist(allow_guest=True)
-def get_nearby_shops(latitude: float, longitude: float, radius_km: float = 10, lang: str = "en"):
+def get_nearby_shops(
+        latitude: float,
+        longitude: float,
+        radius_km: float = 10,
+        lang: str = "en"):
     """
     Retrieves a list of shops within a given radius.
     """
@@ -270,7 +344,8 @@ def get_nearby_shops(latitude: float, longitude: float, radius_km: float = 10, l
     try:
         lat = float(latitude)
         lon = float(longitude)
-        radius = float(radius_km) * 1000  # Convert km to meters for earth_distance
+        # Convert km to meters for earth_distance
+        radius = float(radius_km) * 1000
     except (ValueError, TypeError):
         return get_shops()
 
@@ -280,17 +355,20 @@ def get_nearby_shops(latitude: float, longitude: float, radius_km: float = 10, l
     query = """
         SELECT name
         FROM "tabShop"
-        WHERE 
+        WHERE
             latitude IS NOT NULL AND longitude IS NOT NULL
             AND earth_box(ll_to_earth(%s, %s), %s) @> ll_to_earth(latitude, longitude)
             AND earth_distance(ll_to_earth(%s, %s), ll_to_earth(latitude, longitude)) < %s
     """
 
-    nearby_shops_data = frappe.db.sql(query, (lat, lon, radius, lat, lon, radius), as_dict=True)
+    nearby_shops_data = frappe.db.sql(
+        query, (lat, lon, radius, lat, lon, radius), as_dict=True)
     nearby_shop_ids = [s.name for s in nearby_shops_data]
 
     # Include Ecommerce shops (global reach)
-    ecommerce_shops = frappe.get_all("Shop", filters={"is_ecommerce": 1}, pluck="name")
+    ecommerce_shops = frappe.get_all(
+        "Shop", filters={
+            "is_ecommerce": 1}, pluck="name")
     nearby_shop_ids.extend(ecommerce_shops)
 
     # Unique IDs
@@ -322,16 +400,24 @@ def check_driver_zone(shop_id=None, address=None):
         except ValueError:
             frappe.throw("Invalid address format", frappe.ValidationError)
 
-    if not address or not address.get("latitude") or not address.get("longitude"):
-        frappe.throw("Address must contain latitude and longitude", frappe.ValidationError)
+    if not address or not address.get(
+            "latitude") or not address.get("longitude"):
+        frappe.throw(
+            "Address must contain latitude and longitude",
+            frappe.ValidationError)
 
     user_lat = float(address.get("latitude"))
     user_lon = float(address.get("longitude"))
 
     # Get Shop Location
-    shop = frappe.db.get_value("Shop", shop_id, ["latitude", "longitude"], as_dict=True)
+    shop = frappe.db.get_value(
+        "Shop", shop_id, [
+            "latitude", "longitude"], as_dict=True)
     if not shop or not shop.latitude or not shop.longitude:
-        return api_response(data={"status": False, "message": "Shop location not found"})
+        return api_response(
+            data={
+                "status": False,
+                "message": "Shop location not found"})
 
     shop_lat = float(shop.latitude)
     shop_lon = float(shop.longitude)
@@ -340,9 +426,11 @@ def check_driver_zone(shop_id=None, address=None):
     query = """
         SELECT (earth_distance(ll_to_earth(%s, %s), ll_to_earth(%s, %s)) / 1000) as distance_km
     """
-    distance_km = frappe.db.sql(query, (user_lat, user_lon, shop_lat, shop_lon))[0][0]
+    distance_km = frappe.db.sql(
+        query, (user_lat, user_lon, shop_lat, shop_lon))[0][0]
 
-    # Default Max Radius: 50km (Can be made configurable in Shop settings later)
+    # Default Max Radius: 50km (Can be made configurable in Shop settings
+    # later)
     max_radius_km = 50.0
 
     return api_response(data={
@@ -363,7 +451,10 @@ def get_shops_by_ids(shop_ids: list = None, **kwargs):
     if kwargs.get("shops"):
         try:
             import json
-            ids_to_filter = json.loads(kwargs.get("shops")) if isinstance(kwargs.get("shops"), str) else kwargs.get("shops")
+            ids_to_filter = json.loads(
+                kwargs.get("shops")) if isinstance(
+                kwargs.get("shops"),
+                str) else kwargs.get("shops")
         except Exception:
             ids_to_filter = None
 
@@ -372,15 +463,35 @@ def get_shops_by_ids(shop_ids: list = None, **kwargs):
 
     shops = frappe.get_list(
         "Shop",
-        filters={"name": ["in", ids_to_filter]},
+        filters={
+            "name": [
+                "in",
+                ids_to_filter]},
         fields=[
-            "name", "uuid", "slug", "user", "logo", "cover_photo",
-            "phone", "address", "location", "status", "type", "min_amount",
-            "tax", "delivery_time_type", "delivery_time_from", "delivery_time_to",
-            "open", "visibility", "verify", "service_fee", "percentage", "enable_cod",
-            "shop_type", "is_ecommerce"
-        ]
-    )
+            "name",
+            "uuid",
+            "slug",
+            "user",
+            "logo",
+            "cover_photo",
+            "phone",
+            "address",
+            "location",
+            "status",
+            "type",
+            "min_amount",
+            "tax",
+            "delivery_time_type",
+            "delivery_time_from",
+            "delivery_time_to",
+            "open",
+            "visibility",
+            "verify",
+            "service_fee",
+            "percentage",
+            "enable_cod",
+            "shop_type",
+            "is_ecommerce"])
 
     # Simple formatter (reuse get_shops logic ideally, but keep simple here)
     formatted_shops = []
@@ -394,7 +505,7 @@ def get_shops_by_ids(shop_ids: list = None, **kwargs):
             'translation': {
                 'title': shop.name,
                 'address': shop.address
-                }
+            }
         })
 
     return api_response(data=formatted_shops)
@@ -420,28 +531,35 @@ def check_cashback(shop_id: str, amount: float, lang: str = "en"):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_nearest_delivery_points(latitude: float, longitude: float, radius_km: float = 50):
+def get_nearest_delivery_points(
+        latitude: float,
+        longitude: float,
+        radius_km: float = 50):
     """
     Retrieves a list of active Delivery Points within a given radius.
     """
     if latitude is None or longitude is None:
-        frappe.throw("Latitude and Longitude are required.", frappe.ValidationError)
+        frappe.throw(
+            "Latitude and Longitude are required.",
+            frappe.ValidationError)
 
     try:
         lat = float(latitude)
         lon = float(longitude)
         radius = float(radius_km) * 1000  # meters
     except ValueError:
-        frappe.throw("Invalid Latitude or Longitude format.", frappe.ValidationError)
+        frappe.throw(
+            "Invalid Latitude or Longitude format.",
+            frappe.ValidationError)
 
     # Calculate distance in SQL: earth_distance(ll_to_earth(lat, lon), ll_to_earth(db_lat, db_lon))
     # We select fields matchng the original response
     query = """
-        SELECT 
+        SELECT
             name, latitude, longitude, address, price, active,
             (earth_distance(ll_to_earth(%s, %s), ll_to_earth(latitude, longitude)) / 1000) as distance_km
         FROM "tabDelivery Point"
-        WHERE 
+        WHERE
             active = 1
             AND latitude IS NOT NULL AND longitude IS NOT NULL
             AND earth_box(ll_to_earth(%s, %s), %s) @> ll_to_earth(latitude, longitude)
@@ -449,7 +567,8 @@ def get_nearest_delivery_points(latitude: float, longitude: float, radius_km: fl
         ORDER BY distance_km ASC
     """
 
-    nearby_points = frappe.db.sql(query, (lat, lon, lat, lon, radius, lat, lon, radius), as_dict=True)
+    nearby_points = frappe.db.sql(
+        query, (lat, lon, lat, lon, radius, lat, lon, radius), as_dict=True)
 
     # Format explicitly if needed (frappe.db.sql returns dicts/values)
     # The original returned list of dicts.

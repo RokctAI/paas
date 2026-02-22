@@ -37,7 +37,8 @@ def create_flow():
         resp.raise_for_status()
         flow_id = resp.json().get("id")
     except Exception as e:
-        frappe.log_error(f"Flow Creation Failed: {str(e)} -> {resp.text if 'resp' in locals() else ''}")
+        frappe.log_error(
+            f"Flow Creation Failed: {str(e)} -> {resp.text if 'resp' in locals() else ''}")
         frappe.throw(f"Failed to create Flow container: {str(e)}")
 
     # 2. Upload Layout (flow.json)
@@ -47,7 +48,8 @@ def create_flow():
     payload = {
         "name": "flow.json",
         "asset_type": "FLOW_JSON",
-        "file": json.dumps(layout)  # Meta expects it as a file upload usually? Or JSON body?
+        # Meta expects it as a file upload usually? Or JSON body?
+        "file": json.dumps(layout)
         # Graph API v18+ for Flows allows JSON body for updates?
         # Actually documentation says 'file' parameter with multipart/form-data usually?
         # Let's check typical usage.
@@ -66,10 +68,15 @@ def create_flow():
     headers_multipart = {"Authorization": f"Bearer {config.access_token}"}
 
     try:
-        resp = requests.post(asset_url, headers=headers_multipart, data=data, files=files)
+        resp = requests.post(
+            asset_url,
+            headers=headers_multipart,
+            data=data,
+            files=files)
         resp.raise_for_status()
     except Exception as e:
-        frappe.log_error(f"Flow Asset Upload Failed: {str(e)} -> {resp.text if 'resp' in locals() else ''}")
+        frappe.log_error(
+            f"Flow Asset Upload Failed: {str(e)} -> {resp.text if 'resp' in locals() else ''}")
         frappe.throw(f"Failed to upload Flow JSON: {str(e)}")
 
     # 3. Publish Flow
@@ -78,15 +85,18 @@ def create_flow():
         resp = requests.post(publish_url, headers=headers)
         resp.raise_for_status()
     except Exception as e:
-        frappe.log_error(f"Flow Publish Failed: {str(e)} -> {resp.text if 'resp' in locals() else ''}")
+        frappe.log_error(
+            f"Flow Publish Failed: {str(e)} -> {resp.text if 'resp' in locals() else ''}")
         # We warn but don't stop, saving the ID is useful
-        frappe.msgprint("Flow created but failed to publish. Check Meta Business Manager.")
+        frappe.msgprint(
+            "Flow created but failed to publish. Check Meta Business Manager.")
 
     # 4. Save ID
     config.flow_id = flow_id
     config.save(ignore_permissions=True)
 
-    endpoint_url = frappe.utils.get_url("/api/v1/method/paas.api.whatsapp_flow_endpoint")
+    endpoint_url = frappe.utils.get_url(
+        "/api/v1/method/paas.api.whatsapp_flow_endpoint")
     msg = f"Flow '{flow_name}' created! ID: {flow_id}. <br><b>IMPORTANT:</b> Go to Meta Business Manager -> Flows -> {flow_name} -> Endpoint and paste this URL:<br><b>{endpoint_url}</b>"
 
     return {"status": "success", "flow_id": flow_id, "message": msg}
@@ -141,7 +151,8 @@ def get_generic_flow_layout():
                             "on-click-action": {
                                 "name": "complete",
                                 "payload": {
-                                    "original_product": "${data.product_name}",  # Pass context back
+                                    # Pass context back
+                                    "original_product": "${data.product_name}",
                                     "options": "${form.selected_options}"
                                 }
                             }

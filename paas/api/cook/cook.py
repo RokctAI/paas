@@ -8,7 +8,9 @@ def get_cook_orders(limit_start: int = 0, limit_page_length: int = 20):
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view your orders.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to view your orders.",
+            frappe.AuthenticationError)
 
     orders = frappe.get_list(
         "Order",
@@ -28,7 +30,9 @@ def get_cook_order_report(from_date: str, to_date: str):
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view your order report.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to view your order report.",
+            frappe.AuthenticationError)
 
     orders = frappe.get_all(
         "Order",

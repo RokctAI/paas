@@ -24,12 +24,18 @@ def get_admin_whatsapp_config():
 
 
 @frappe.whitelist()
-def save_whatsapp_config(enabled=0, phone_number_id=None, access_token=None, app_secret=None, verify_token=None):
+def save_whatsapp_config(
+        enabled=0,
+        phone_number_id=None,
+        access_token=None,
+        app_secret=None,
+        verify_token=None):
     """
     Updates the WhatsApp Tenant Config.
     """
     doc = frappe.get_single("WhatsApp Tenant Config")
-    doc.enabled = 1 if (enabled == 1 or enabled == "1" or enabled is True) else 0
+    doc.enabled = 1 if (enabled == 1 or enabled ==
+                        "1" or enabled is True) else 0
     doc.phone_number_id = phone_number_id
     doc.access_token = access_token
     doc.app_secret = app_secret
@@ -42,7 +48,9 @@ def get_or_create_session(wa_id, phone_number=None, name=None):
     """
     Retrieves or creates a WhatsApp Session for the given wa_id.
     """
-    session_name = frappe.db.get_value("WhatsApp Session", {"wa_id": wa_id}, "name")
+    session_name = frappe.db.get_value(
+        "WhatsApp Session", {
+            "wa_id": wa_id}, "name")
 
     if session_name:
         session = frappe.get_doc("WhatsApp Session", session_name)
@@ -57,7 +65,8 @@ def get_or_create_session(wa_id, phone_number=None, name=None):
         user_name = frappe.db.get_value("User", {"phone": wa_id}, "name")
         if not user_name:
             # Try with '+' prefix
-            user_name = frappe.db.get_value("User", {"phone": f"+{wa_id}"}, "name")
+            user_name = frappe.db.get_value(
+                "User", {"phone": f"+{wa_id}"}, "name")
 
         linked_user = user_name
 

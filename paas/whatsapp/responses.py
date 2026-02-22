@@ -172,7 +172,9 @@ def send_product_card(wa_id, product):
         # For now, let's assume image exists or we send text card
         pass
 
-    caption = f"*{product['item_name']}*\n\n{product.get('description', '')}\n\n*Price: R{product.get('standard_rate', 0)}*"
+    caption = f"*{product['item_name']}*\n\n{product.get('description',
+                                                         '')}\n\n*Price: R{product.get('standard_rate',
+                                                                                       0)}*"
 
     interactive = {
         "type": "button",
@@ -212,7 +214,7 @@ def send_product_card(wa_id, product):
                     "text": caption
                 },
                 "action": interactive['action']
-                }
+            }
         }
     else:
         # Text Only Card
@@ -222,7 +224,7 @@ def send_product_card(wa_id, product):
                 "type": "button",
                 "body": {"text": caption},
                 "action": interactive['action']
-                }
+            }
         }
 
     send_message(wa_id, payload)
@@ -258,7 +260,8 @@ def send_product_flow(wa_id, product, flow_id):
                 "name": "flow",
                 "parameters": {
                     "flow_message_version": "3",
-                    "flow_token": f"prod_{product.get('name')}",  # Pass Product ID in token
+                    # Pass Product ID in token
+                    "flow_token": f"prod_{product.get('name')}",
                     "flow_id": flow_id,
                     "flow_cta": "Customize",
                     "flow_action": "navigate",
@@ -267,7 +270,8 @@ def send_product_flow(wa_id, product, flow_id):
                         "data": {
                             "product_name": product.get('item_name'),
                             "price": str(product.get('standard_rate'))
-                            # Add extras/options here if Flow supports dynamic data
+                            # Add extras/options here if Flow supports dynamic
+                            # data
                         }
                     }
                 }
@@ -312,7 +316,8 @@ def send_cart_summary(wa_id, session):
             if opt_list:
                 opts_str = f" _({', '.join(opt_list)})_"
 
-        msg_lines.append(f"• {item['qty']}x *{item['name']}*{opts_str} - {frappe.fmt_money(line_total)}")
+        msg_lines.append(
+            f"• {item['qty']}x *{item['name']}*{opts_str} - {frappe.fmt_money(line_total)}")
 
     msg_lines.append(f"\n*Total: {frappe.fmt_money(total)}*")
 
@@ -358,7 +363,10 @@ def send_static_map_confirmation(wa_id, lat, long):
     from staticmap import StaticMap, CircleMarker
 
     # 1. Generate Map
-    m = StaticMap(400, 400, url_template='http://a.tile.openstreetmap.org/{z}/{x}/{y}.png')
+    m = StaticMap(
+        400,
+        400,
+        url_template='http://a.tile.openstreetmap.org/{z}/{x}/{y}.png')
     marker = CircleMarker((float(long), float(lat)), 'red', 18)
     m.add_marker(marker)
 
@@ -393,10 +401,10 @@ def send_static_map_confirmation(wa_id, lat, long):
             "header": {
                 "type": "image",
                 "image": {"link": image_url}
-                },
+            },
             "body": {
                 "text": "📍 We pinned your location here. Is this accurate?"
-                },
+            },
             "action": {
                 "buttons": [
                     {
@@ -414,7 +422,7 @@ def send_static_map_confirmation(wa_id, lat, long):
                         }
                     }
                 ]
-                }
+            }
         }
     }
     send_message(wa_id, payload)

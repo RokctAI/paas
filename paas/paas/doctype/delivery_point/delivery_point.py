@@ -48,7 +48,8 @@ def get_nearest_delivery_points(latitude, longitude, radius=20):
     d_lat = radians(t_dp.latitude - latitude)
     d_lon = radians(t_dp.longitude - longitude)
 
-    a = power(sin(d_lat / 2), 2) + cos(radians(latitude)) * cos(radians(t_dp.latitude)) * power(sin(d_lon / 2), 2)
+    a = power(sin(d_lat / 2), 2) + cos(radians(latitude)) * \
+        cos(radians(t_dp.latitude)) * power(sin(d_lon / 2), 2)
     c = 2 * asin(sqrt(a))
     distance = 6371 * c
 

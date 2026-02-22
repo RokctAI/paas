@@ -34,7 +34,9 @@ class TestOrderRefundsAPI(FrappeTestCase):
             self.test_shop = frappe.get_doc("Shop", "Test Refund Shop")
 
         # Create a test product
-        if not frappe.db.exists("Product", {"title": "Test Refund Product", "shop": self.test_shop.name}):
+        if not frappe.db.exists("Product",
+                                {"title": "Test Refund Product",
+                                 "shop": self.test_shop.name}):
             self.test_product = frappe.get_doc({
                 "doctype": "Product",
                 "title": "Test Refund Product",
@@ -42,10 +44,13 @@ class TestOrderRefundsAPI(FrappeTestCase):
                 "price": 50
             }).insert(ignore_permissions=True)
         else:
-            self.test_product = frappe.get_doc("Product", {"title": "Test Refund Product", "shop": self.test_shop.name})
+            self.test_product = frappe.get_doc(
+                "Product", {"title": "Test Refund Product", "shop": self.test_shop.name})
 
         # Create a test order
-        if not frappe.db.exists("Order", {"user": self.test_user.name, "status": "Delivered"}):
+        if not frappe.db.exists(
+            "Order", {
+                "user": self.test_user.name, "status": "Delivered"}):
             self.order = frappe.get_doc({
                 "doctype": "Order",
                 "user": self.test_user.name,
@@ -60,7 +65,8 @@ class TestOrderRefundsAPI(FrappeTestCase):
                 ]
             }).insert(ignore_permissions=True)
         else:
-            self.order = frappe.get_doc("Order", {"user": self.test_user.name, "status": "Delivered"})
+            self.order = frappe.get_doc(
+                "Order", {"user": self.test_user.name, "status": "Delivered"})
 
         # Log in as the test user
         frappe.set_user(self.test_user.name)
@@ -70,12 +76,18 @@ class TestOrderRefundsAPI(FrappeTestCase):
         frappe.set_user("Administrator")
         if frappe.db.exists("User", self.test_user.name):
             try:
-                frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "User",
+                    self.test_user.name,
+                    force=True,
+                    ignore_permissions=True)
             except frappe.exceptions.LinkExistsError:
                 frappe.db.set_value("User", self.test_user.name, "enabled", 0)
 
     def test_create_and_get_order_refund(self):
-        refund = create_order_refund(order=self.order.name, cause="Item was damaged")
+        refund = create_order_refund(
+            order=self.order.name,
+            cause="Item was damaged")
         self.assertEqual(refund.get("order"), self.order.name)
         self.assertEqual(refund.get("cause"), "Item was damaged")
         self.assertEqual(refund.get("status"), "Pending")

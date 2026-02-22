@@ -17,7 +17,8 @@ class TestShopAPI(FrappeTestCase):
                 "roles": [{"role": "Seller"}]
             }).insert(ignore_permissions=True)
         else:
-            self.seller_user = frappe.get_doc("User", "test-seller@example.com")
+            self.seller_user = frappe.get_doc(
+                "User", "test-seller@example.com")
 
         if not frappe.db.exists("User", "test-seller-2@example.com"):
             self.seller_user_2 = frappe.get_doc({
@@ -28,7 +29,8 @@ class TestShopAPI(FrappeTestCase):
                 "roles": [{"role": "Seller"}]
             }).insert(ignore_permissions=True)
         else:
-            self.seller_user_2 = frappe.get_doc("User", "test-seller-2@example.com")
+            self.seller_user_2 = frappe.get_doc(
+                "User", "test-seller-2@example.com")
 
         if not frappe.db.exists("User", "non-seller@example.com"):
             self.non_seller_user = frappe.get_doc({
@@ -38,7 +40,8 @@ class TestShopAPI(FrappeTestCase):
                 "last_name": "Seller",
             }).insert(ignore_permissions=True)
         else:
-            self.non_seller_user = frappe.get_doc("User", "non-seller@example.com")
+            self.non_seller_user = frappe.get_doc(
+                "User", "non-seller@example.com")
 
         # Log in as a seller to create shops
         frappe.set_user(self.seller_user.name)
@@ -56,7 +59,10 @@ class TestShopAPI(FrappeTestCase):
             })
             self.shop1 = response
         else:
-            self.shop1 = {"data": frappe.get_doc("Shop", {"shop_name": "Test Shop 1"}).as_dict()}
+            self.shop1 = {
+                "data": frappe.get_doc(
+                    "Shop", {
+                        "shop_name": "Test Shop 1"}).as_dict()}
 
         if not frappe.db.exists("Shop", {"shop_name": "Test Shop 2"}):
             response = create_shop({
@@ -70,9 +76,13 @@ class TestShopAPI(FrappeTestCase):
             })
             self.shop2 = response
         else:
-            self.shop2 = {"data": frappe.get_doc("Shop", {"shop_name": "Test Shop 2"}).as_dict()}
+            self.shop2 = {
+                "data": frappe.get_doc(
+                    "Shop", {
+                        "shop_name": "Test Shop 2"}).as_dict()}
 
-        if not frappe.db.exists("Shop", {"shop_name": "Test Shop 3 Not Approved"}):
+        if not frappe.db.exists("Shop",
+                                {"shop_name": "Test Shop 3 Not Approved"}):
             response = create_shop({
                 "shop_name": "Test Shop 3 Not Approved",
                 "status": "new",
@@ -83,9 +93,11 @@ class TestShopAPI(FrappeTestCase):
             })
             self.shop3_not_approved = response
         else:
-            self.shop3_not_approved = {"data": frappe.get_doc("Shop", {"shop_name": "Test Shop 3 Not Approved"}).as_dict()}
+            self.shop3_not_approved = {"data": frappe.get_doc(
+                "Shop", {"shop_name": "Test Shop 3 Not Approved"}).as_dict()}
 
-        if not frappe.db.exists("Shop", {"shop_name": "Test Shop 4 Not Visible"}):
+        if not frappe.db.exists("Shop",
+                                {"shop_name": "Test Shop 4 Not Visible"}):
             response = create_shop({
                 "shop_name": "Test Shop 4 Not Visible",
                 "status": "approved",
@@ -96,7 +108,8 @@ class TestShopAPI(FrappeTestCase):
             })
             self.shop4_not_visible = response
         else:
-            self.shop4_not_visible = {"data": frappe.get_doc("Shop", {"shop_name": "Test Shop 4 Not Visible"}).as_dict()}
+            self.shop4_not_visible = {"data": frappe.get_doc(
+                "Shop", {"shop_name": "Test Shop 4 Not Visible"}).as_dict()}
 
         # Switch back to administrator
         frappe.set_user("Administrator")
@@ -106,22 +119,32 @@ class TestShopAPI(FrappeTestCase):
         frappe.set_user("Administrator")
 
         # Delete Key Documents First (Children/Linked)
-        shops_to_delete = ["Test Shop 1", "Test Shop 2", "Test Shop 3 Not Approved", "Test Shop 4 Not Visible"]
+        shops_to_delete = [
+            "Test Shop 1",
+            "Test Shop 2",
+            "Test Shop 3 Not Approved",
+            "Test Shop 4 Not Visible"]
         for shop_name in shops_to_delete:
             if frappe.db.exists("Shop", shop_name):
                 try:
-                    frappe.delete_doc("Shop", shop_name, force=True, ignore_permissions=True)
+                    frappe.delete_doc(
+                        "Shop", shop_name, force=True, ignore_permissions=True)
                 except Exception:
                     pass
 
         # Delete Users
-        users_to_delete = ["test-seller@example.com", "test-seller-2@example.com", "non-seller@example.com"]
+        users_to_delete = [
+            "test-seller@example.com",
+            "test-seller-2@example.com",
+            "non-seller@example.com"]
         for user_email in users_to_delete:
             if frappe.db.exists("User", user_email):
                 try:
-                    frappe.delete_doc("User", user_email, force=True, ignore_permissions=True)
+                    frappe.delete_doc(
+                        "User", user_email, force=True, ignore_permissions=True)
                 except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
-                    # If links exist, just disable the user to allow tests to pass
+                    # If links exist, just disable the user to allow tests to
+                    # pass
                     try:
                         frappe.db.set_value("User", user_email, "enabled", 0)
                         frappe.db.commit()
@@ -171,23 +194,36 @@ class TestShopAPI(FrappeTestCase):
         # Strategy: Fetch all (or many) sorted by name, find our shops' indices,
         # then test pagination targeting those specific offsets.
 
-        all_shops_response = get_shops(limit_page_length=100, order_by="shop_name", order="asc")
+        all_shops_response = get_shops(
+            limit_page_length=100,
+            order_by="shop_name",
+            order="asc")
         all_shops = all_shops_response.get("data")
 
         # Find index of Test Shop 1
-        index_1 = next((i for i, s in enumerate(all_shops) if s['id'] == 'Test Shop 1'), -1)
+        index_1 = next((i for i, s in enumerate(all_shops)
+                       if s['id'] == 'Test Shop 1'), -1)
         # Find index of Test Shop 2
-        index_2 = next((i for i, s in enumerate(all_shops) if s['id'] == 'Test Shop 2'), -1)
+        index_2 = next((i for i, s in enumerate(all_shops)
+                       if s['id'] == 'Test Shop 2'), -1)
 
         if index_1 != -1:
             # Test fetching via pagination at the calculated index
-            response1 = get_shops(limit_start=index_1, limit_page_length=1, order_by="shop_name", order="asc")
+            response1 = get_shops(
+                limit_start=index_1,
+                limit_page_length=1,
+                order_by="shop_name",
+                order="asc")
             shops_page1 = response1.get("data")
             self.assertEqual(len(shops_page1), 1)
             self.assertEqual(shops_page1[0]['id'], 'Test Shop 1')
 
         if index_2 != -1:
-            response2 = get_shops(limit_start=index_2, limit_page_length=1, order_by="shop_name", order="asc")
+            response2 = get_shops(
+                limit_start=index_2,
+                limit_page_length=1,
+                order_by="shop_name",
+                order="asc")
             shops_page2 = response2.get("data")
             self.assertEqual(len(shops_page2), 1)
             self.assertEqual(shops_page2[0]['id'], 'Test Shop 2')
@@ -200,9 +236,13 @@ class TestShopAPI(FrappeTestCase):
         shop_details = response.get("data")
 
         self.assertIsNotNone(shop_details)
-        self.assertEqual(shop_details['id'], self.shop1.get("data")['shop_name'])
+        self.assertEqual(
+            shop_details['id'],
+            self.shop1.get("data")['shop_name'])
         self.assertEqual(shop_details['uuid'], uuid)
-        self.assertEqual(shop_details['translation']['title'], self.shop1.get("data")['shop_name'])
+        self.assertEqual(
+            shop_details['translation']['title'],
+            self.shop1.get("data")['shop_name'])
 
     def test_get_shop_details_not_found(self):
         """Test fetching details for a non-existent shop."""
@@ -232,7 +272,10 @@ class TestShopAPI(FrappeTestCase):
         shops_desc = response_desc.get("data")
 
         # Filter to only our shops to verify RELATIVE order
-        our_shops = [s for s in shops_desc if s['id'] in ["Test Shop 1", "Test Shop 2"]]
+        our_shops = [
+            s for s in shops_desc if s['id'] in [
+                "Test Shop 1",
+                "Test Shop 2"]]
         if len(our_shops) >= 2:
             self.assertEqual(our_shops[0]['id'], "Test Shop 2")
             self.assertEqual(our_shops[1]['id'], "Test Shop 1")
@@ -241,7 +284,9 @@ class TestShopAPI(FrappeTestCase):
         response_asc = get_shops(order_by="shop_name", order="asc")
         shops_asc = response_asc.get("data")
 
-        our_shops_asc = [s for s in shops_asc if s['id'] in ["Test Shop 1", "Test Shop 2"]]
+        our_shops_asc = [
+            s for s in shops_asc if s['id'] in [
+                "Test Shop 1", "Test Shop 2"]]
         if len(our_shops_asc) >= 2:
             self.assertEqual(our_shops_asc[0]['id'], "Test Shop 1")
             self.assertEqual(our_shops_asc[1]['id'], "Test Shop 2")
@@ -250,5 +295,6 @@ class TestShopAPI(FrappeTestCase):
 if __name__ == '__main__':
     # This allows running the tests directly
     # Note: This requires a running Frappe instance and site context.
-    # The recommended way to run tests is via `bench --site {site_name} execute ...`
+    # The recommended way to run tests is via `bench --site {site_name}
+    # execute ...`
     pass

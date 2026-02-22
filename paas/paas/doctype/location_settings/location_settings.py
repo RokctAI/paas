@@ -12,17 +12,20 @@ class LocationSettings(Document):
             try:
                 # GeoJSON format: {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [long, lat]}, ...}]}
                 # OR simple geometry: {"type": "Point", "coordinates": [long, lat]}
-                # Frappe Geolocation field typically saves as a JSON string of a FeatureCollection or Geometry.
+                # Frappe Geolocation field typically saves as a JSON string of
+                # a FeatureCollection or Geometry.
 
                 geo_data = json.loads(self.location)
 
                 # Handle FeatureCollection
-                if geo_data.get("type") == "FeatureCollection" and geo_data.get("features"):
+                if geo_data.get(
+                        "type") == "FeatureCollection" and geo_data.get("features"):
                     geometry = geo_data["features"][0].get("geometry", {})
                 else:
                     geometry = geo_data
 
-                if geometry.get("type") == "Point" and geometry.get("coordinates"):
+                if geometry.get("type") == "Point" and geometry.get(
+                        "coordinates"):
                     # coordinates are [longitude, latitude]
                     self.location_longitude = geometry["coordinates"][0]
                     self.location_latitude = geometry["coordinates"][1]

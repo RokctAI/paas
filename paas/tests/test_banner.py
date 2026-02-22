@@ -39,4 +39,9 @@ class TestBanner(FrappeTestCase):
 
         # 3. Like Banner
         like_banner(self.banner.name)
-        self.assertEqual(frappe.db.get_value("Banner", self.banner.name, "likes"), 1)
+        self.assertEqual(
+            frappe.db.get_value(
+                "Banner",
+                self.banner.name,
+                "likes"),
+            1)

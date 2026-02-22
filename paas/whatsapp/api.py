@@ -29,7 +29,9 @@ def verify_webhook():
 
     config = get_whatsapp_config()
     if not config:
-        frappe.throw("WhatsApp is not configured for this tenant.", frappe.AuthenticationError)
+        frappe.throw(
+            "WhatsApp is not configured for this tenant.",
+            frappe.AuthenticationError)
 
     if hub_mode == "subscribe" and hub_verify_token == config.verify_token:
         frappe.response.status_code = 200

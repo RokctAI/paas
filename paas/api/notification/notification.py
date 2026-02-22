@@ -5,19 +5,29 @@ from paas.api.utils import api_response
 
 
 @frappe.whitelist()
-def send_push_notification(user: str, title: str, body: str, data: dict = None):
+def send_push_notification(
+        user: str,
+        title: str,
+        body: str,
+        data: dict = None):
     """
     Sends a push notification to a specific user via FCM.
     """
     try:
         settings = frappe.get_single("Push Notification Settings")
         if not settings.server_key:
-            frappe.log_error("FCM Server Key is missing in Push Notification Settings", "Push Notification Error")
+            frappe.log_error(
+                "FCM Server Key is missing in Push Notification Settings",
+                "Push Notification Error")
             return {"status": "failed", "message": "Server key missing."}
 
-        tokens = frappe.get_all("Device Token", filters={"user": user}, pluck="device_token")
+        tokens = frappe.get_all(
+            "Device Token", filters={
+                "user": user}, pluck="device_token")
         if not tokens:
-            return {"status": "failed", "message": "No device tokens found for user."}
+            return {
+                "status": "failed",
+                "message": "No device tokens found for user."}
 
         headers = {
             "Authorization": f"key={settings.server_key}",
@@ -38,15 +48,24 @@ def send_push_notification(user: str, title: str, body: str, data: dict = None):
             }
 
             try:
-                response = requests.post("https://fcm.googleapis.com/fcm/send", headers=headers, json=payload, timeout=5)
+                response = requests.post(
+                    "https://fcm.googleapis.com/fcm/send",
+                    headers=headers,
+                    json=payload,
+                    timeout=5)
                 if response.status_code == 200:
                     success_count += 1
                 else:
                     failure_count += 1
-                    frappe.log_error(f"FCM Error for {token}: {response.text}", "Push Notification Error")
+                    frappe.log_error(
+                        f"FCM Error for {token}: {
+                            response.text}",
+                        "Push Notification Error")
             except Exception as e:
                 failure_count += 1
-                frappe.log_error(f"Request Error for {token}: {str(e)}", "Push Notification Error")
+                frappe.log_error(
+                    f"Request Error for {token}: {
+                        str(e)}", "Push Notification Error")
 
         return {
             "status": "success",
@@ -92,13 +111,17 @@ def get_notification_settings():
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view notification settings.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to view notification settings.",
+            frappe.AuthenticationError)
 
     # Get all notification types
     # Assuming 'Notification Type' doctype exists from confirmed check
     # If it doesn't exist in some envs, we handle gracefully
     try:
-        types = frappe.get_all("Notification Type", fields=["name", "type", "payload"])
+        types = frappe.get_all(
+            "Notification Type", fields=[
+                "name", "type", "payload"])
     except Exception:
         return api_response(data=[])
 
@@ -122,7 +145,9 @@ def get_notification_settings():
             _pref_id = prefs_map[t.name].name  # noqa: F841
 
         result.append({
-            "id": 0,  # Flutter expects int, send 0 or valid int if available (Doctype doesn't have int id by default)
+            # Flutter expects int, send 0 or valid int if available (Doctype
+            # doesn't have int id by default)
+            "id": 0,
             "type": t.type or t.name,  # Use 'type' field or fallback to name
             "active": is_active,
             "created_at": None,
@@ -130,7 +155,8 @@ def get_notification_settings():
             "payload": []  # Mock payload list
         })
 
-    return api_response(data={"data": result})  # Wrap in data.data as per Flutter model
+    # Wrap in data.data as per Flutter model
+    return api_response(data={"data": result})
 
 
 @frappe.whitelist()
@@ -140,7 +166,9 @@ def update_notification_settings(type: str, active: int):
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to update notification settings.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to update notification settings.",
+            frappe.AuthenticationError)
 
     # Check if preference exists
     # We match by 'notification_type' which is the Link to Notification Type
@@ -156,7 +184,9 @@ def update_notification_settings(type: str, active: int):
             frappe.throw(f"Invalid notification type: {type}")
 
     # Find existing preference
-    pref_name = frappe.db.get_value("User Notification Preference", {"user": user, "notification_type": nt_name}, "name")
+    pref_name = frappe.db.get_value(
+        "User Notification Preference", {
+            "user": user, "notification_type": nt_name}, "name")
 
     if pref_name:
         doc = frappe.get_doc("User Notification Preference", pref_name)
@@ -180,16 +210,24 @@ def get_user_notifications(start=0, limit=20):
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("You must be logged in to view your notifications.", frappe.AuthenticationError)
+        frappe.throw(
+            "You must be logged in to view your notifications.",
+            frappe.AuthenticationError)
 
     return frappe.get_all(
         "Notification Log",
-        filters={"user": user},
-        fields=["name", "subject", "document_type", "document_name", "creation", "read"],
+        filters={
+            "user": user},
+        fields=[
+            "name",
+            "subject",
+            "document_type",
+            "document_name",
+            "creation",
+            "read"],
         order_by="creation desc",
         offset=start,
-        limit=limit
-    )
+        limit=limit)
 
 
 @frappe.whitelist()
@@ -224,7 +262,8 @@ def mark_notification_logs_as_read(ids=None):
         if frappe.db.exists("Notification Log", name):
             doc = frappe.get_doc("Notification Log", name)
             # Check ownership/for_user
-            if (hasattr(doc, 'for_user') and doc.for_user == user) or doc.owner == user:
+            if (hasattr(doc, 'for_user') and doc.for_user ==
+                    user) or doc.owner == user:
                 doc.read = 1
                 doc.save(ignore_permissions=True)
 
@@ -240,7 +279,9 @@ def read_all_notifications():
     if user == "Guest":
         frappe.throw("You must be logged in.", frappe.AuthenticationError)
 
-    logs = frappe.get_all("Notification Log", filters={"for_user": user, "read": 0})
+    logs = frappe.get_all(
+        "Notification Log", filters={
+            "for_user": user, "read": 0})
     # Also check owner if for_user is not used? Standard Frappe uses for_user
     for log in logs:
         frappe.db.set_value("Notification Log", log.name, "read", 1)
@@ -259,7 +300,8 @@ def read_one_notification(name):
 
     if frappe.db.exists("Notification Log", name):
         doc = frappe.get_doc("Notification Log", name)
-        if (hasattr(doc, 'for_user') and doc.for_user == user) or doc.owner == user:
+        if (hasattr(doc, 'for_user') and doc.for_user ==
+                user) or doc.owner == user:
             doc.read = 1
             doc.save(ignore_permissions=True)
 

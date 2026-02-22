@@ -20,7 +20,8 @@ class TestDeliveryPointAPI(FrappeTestCase):
                 "longitude": 56.780000,
             }).insert(ignore_permissions=True)
         else:
-            self.delivery_point = frappe.get_doc("Delivery Point", "Test Delivery Point")
+            self.delivery_point = frappe.get_doc(
+                "Delivery Point", "Test Delivery Point")
 
     def tearDown(self):
         try:
@@ -51,7 +52,8 @@ class TestDeliveryPointAPI(FrappeTestCase):
     def test_invalid_parameters(self):
         # With strict type hints, Frappe might raise FrappeTypeError or standard Python TypeError
         # We need to catch either, or simply assertRaises(Exception) if we want to be broad
-        # But let's try to be specific based on previous error logs: frappe.exceptions.FrappeTypeError
+        # But let's try to be specific based on previous error logs:
+        # frappe.exceptions.FrappeTypeError
         try:
             from frappe.exceptions import FrappeTypeError
             ErrorType = FrappeTypeError
@@ -65,4 +67,5 @@ class TestDeliveryPointAPI(FrappeTestCase):
         with self.assertRaises((frappe.exceptions.ValidationError, ErrorType, ValueError)):
             # "invalid" string might cause ValueError inside float() conversion if it bypasses type check
             # or TypeError if type check catches it.
-            get_nearest_delivery_points(latitude="invalid", longitude="invalid")
+            get_nearest_delivery_points(
+                latitude="invalid", longitude="invalid")

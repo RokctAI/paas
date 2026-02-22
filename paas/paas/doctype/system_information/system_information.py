@@ -23,16 +23,19 @@ class SystemInformation(Document):
         self.flutter_sdk_version = "N/A"
         try:
             if "rcore" in frappe.get_installed_apps():
-                rcore_versions_file = frappe.get_app_path("rcore", "versions.json")
+                rcore_versions_file = frappe.get_app_path(
+                    "rcore", "versions.json")
                 if os.path.exists(rcore_versions_file):
                     with open(rcore_versions_file, "r") as f:
                         rcore_versions = json.load(f)
-                    self.flutter_sdk_version = rcore_versions.get("flutter_sdk_version", "Unknown")
+                    self.flutter_sdk_version = rcore_versions.get(
+                        "flutter_sdk_version", "Unknown")
         except Exception:
             pass  # Fail silently if r core issues
 
         # 2. Control/Brain/Payments Versions
-        # Always try Remote API. If opensource/offline, these remain Unavailable/NA.
+        # Always try Remote API. If opensource/offline, these remain
+        # Unavailable/NA.
 
         self.control = "Unavailable"
         self.brain = "Unavailable"
@@ -41,7 +44,8 @@ class SystemInformation(Document):
         try:
             import requests
             # Get the control platform URL from site config
-            control_url = frappe.conf.get("control_url", "https://platform.rokct.ai")
+            control_url = frappe.conf.get(
+                "control_url", "https://platform.rokct.ai")
 
             # Only try fetching if it looks like a real URL
             if control_url and "http" in control_url:
@@ -68,10 +72,15 @@ class SystemInformation(Document):
 
         # Latest Error
         try:
-            latest_log = frappe.get_all("Error Log", limit=1, order_by="creation desc", fields=["error", "method", "creation"])
+            latest_log = frappe.get_all(
+                "Error Log", limit=1, order_by="creation desc", fields=[
+                    "error", "method", "creation"])
             if latest_log:
                 log = latest_log[0]
-                self.latest_error = f"{log.creation}: {log.method}\n{log.error}"
+                self.latest_error = f"{
+                    log.creation}: {
+                    log.method}\n{
+                    log.error}"
             else:
                 self.latest_error = "No errors found."
         except Exception:

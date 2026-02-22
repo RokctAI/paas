@@ -20,7 +20,8 @@ class TestParcelOrderAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
             self.test_user.add_roles("System Manager")
         else:
-            self.test_user = frappe.get_doc("User", "test_parcel_order@example.com")
+            self.test_user = frappe.get_doc(
+                "User", "test_parcel_order@example.com")
 
         # Create a parcel order setting
         if not frappe.db.exists("Parcel Order Setting", "Standard"):
@@ -31,7 +32,8 @@ class TestParcelOrderAPI(FrappeTestCase):
                 "price": 10
             }).insert(ignore_permissions=True)
         else:
-            self.parcel_setting = frappe.get_doc("Parcel Order Setting", "Standard")
+            self.parcel_setting = frappe.get_doc(
+                "Parcel Order Setting", "Standard")
 
         # Create a delivery point
         if not frappe.db.exists("Delivery Point", "Test Delivery Point"):
@@ -41,7 +43,8 @@ class TestParcelOrderAPI(FrappeTestCase):
                 "address": "123 Test Street"
             }).insert(ignore_permissions=True)
         else:
-            self.delivery_point = frappe.get_doc("Delivery Point", "Test Delivery Point")
+            self.delivery_point = frappe.get_doc(
+                "Delivery Point", "Test Delivery Point")
 
         # Create a test shop (required for Product)
         if not frappe.db.exists("Shop", "Parcel Test Shop"):
@@ -70,7 +73,11 @@ class TestParcelOrderAPI(FrappeTestCase):
 
         # Clean up any stale Test Item
         if frappe.db.exists("Item", "Test Item"):
-            frappe.delete_doc("Item", "Test Item", force=True, ignore_permissions=True)
+            frappe.delete_doc(
+                "Item",
+                "Test Item",
+                force=True,
+                ignore_permissions=True)
 
         # 0. Create Item Group "All Item Groups" if missing
         if not frappe.db.exists("Item Group", "All Item Groups"):
@@ -105,7 +112,8 @@ class TestParcelOrderAPI(FrappeTestCase):
             }).insert(ignore_permissions=True)
             frappe.db.commit()
 
-            # 3. Create Unique Product (The 'item' field in Parcel Order Item links to Product)
+            # 3. Create Unique Product (The 'item' field in Parcel Order Item
+            # links to Product)
 
             # Create Shop Unit "Kg" if missing (Shop Unit is Shop-specific)
             # We create it for this specific shop
@@ -120,7 +128,9 @@ class TestParcelOrderAPI(FrappeTestCase):
                 unit_name = shop_unit.name
             frappe.db.commit()
 
-            self.product_name = f"Test Product {frappe.generate_hash(length=5)}"
+            self.product_name = f"Test Product {
+                frappe.generate_hash(
+                    length=5)}"
             self.product = frappe.get_doc({
                 "doctype": "Product",
                 "title": self.product_name,
@@ -145,23 +155,43 @@ class TestParcelOrderAPI(FrappeTestCase):
         # Clean up created documents
         frappe.db.delete("Parcel Order", {"user": self.test_user.name})
         if hasattr(self, "parcel_setting"):
-            frappe.db.delete("Parcel Order Setting", {"name": self.parcel_setting.name})
+            frappe.db.delete(
+                "Parcel Order Setting", {
+                    "name": self.parcel_setting.name})
         if hasattr(self, "delivery_point"):
-            frappe.db.delete("Delivery Point", {"name": self.delivery_point.name})
+            frappe.db.delete(
+                "Delivery Point", {
+                    "name": self.delivery_point.name})
 
         if hasattr(self, "product") and self.product:
-            frappe.delete_doc("Product", self.product.name, force=True, ignore_permissions=True)
+            frappe.delete_doc(
+                "Product",
+                self.product.name,
+                force=True,
+                ignore_permissions=True)
 
         if hasattr(self, "test_shop") and self.test_shop:
-            frappe.delete_doc("Shop", self.test_shop.name, force=True, ignore_permissions=True)
+            frappe.delete_doc(
+                "Shop",
+                self.test_shop.name,
+                force=True,
+                ignore_permissions=True)
 
         # Clean up Item if we created it previously (legacy cleanup)
         if frappe.db.exists("Item", "Test Item"):
-            frappe.delete_doc("Item", "Test Item", force=True, ignore_permissions=True)
+            frappe.delete_doc(
+                "Item",
+                "Test Item",
+                force=True,
+                ignore_permissions=True)
 
         if frappe.db.exists("User", self.test_user.name):
             try:
-                frappe.delete_doc("User", self.test_user.name, force=True, ignore_permissions=True)
+                frappe.delete_doc(
+                    "User",
+                    self.test_user.name,
+                    force=True,
+                    ignore_permissions=True)
             except (frappe.LinkExistsError, frappe.exceptions.LinkExistsError, Exception):
                 frappe.db.set_value("User", self.test_user.name, "enabled", 0)
                 frappe.db.commit()
@@ -246,6 +276,8 @@ class TestParcelOrderAPI(FrappeTestCase):
         created_order = create_res.get("data")
 
         # Update the status
-        res = update_parcel_status(parcel_order_id=created_order.get("name"), status="Accepted")
+        res = update_parcel_status(
+            parcel_order_id=created_order.get("name"),
+            status="Accepted")
         updated_order = res.get("data")
         self.assertEqual(updated_order.get("status"), "Accepted")

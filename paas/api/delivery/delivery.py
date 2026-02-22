@@ -51,9 +51,13 @@ def check_delivery_zone(shop_id: str, latitude: float, longitude: float):
     point = {"latitude": latitude, "longitude": longitude}
 
     if is_point_in_polygon(point, polygon):
-        return {"status": "success", "message": "Address is within the delivery zone."}
+        return {
+            "status": "success",
+            "message": "Address is within the delivery zone."}
     else:
-        return {"status": "error", "message": "Address is outside the delivery zone."}
+        return {
+            "status": "error",
+            "message": "Address is outside the delivery zone."}
 
 
 @frappe.whitelist(allow_guest=True)

@@ -37,7 +37,10 @@ class TestBrand(FrappeTestCase):
         # 4. Update
         updated_data = {"title": "Updated Brand"}
         update_brand(brand['uuid'], updated_data)
-        self.assertEqual(frappe.db.get_value("Brand", {"uuid": brand['uuid']}, "title"), "Updated Brand")
+        self.assertEqual(
+            frappe.db.get_value(
+                "Brand", {
+                    "uuid": brand['uuid']}, "title"), "Updated Brand")
 
         # 5. Delete
         delete_brand(brand['uuid'])

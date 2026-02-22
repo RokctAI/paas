@@ -34,11 +34,14 @@ def handle_text(text, session):  # noqa: C901
     if text in ['hi', 'hello', 'menu', 'start']:
         greeting = "👋 Hello!"
         if session.linked_user:
-            first_name = frappe.db.get_value("User", session.linked_user, "first_name")
+            first_name = frappe.db.get_value(
+                "User", session.linked_user, "first_name")
             if first_name:
                 greeting = f"👋 Welcome back, {first_name}!"
 
-        send_text(session.wa_id, f"{greeting} Please share your location to find shops near you.\n\nTap 📎 -> Location -> Send Current Location.")
+        send_text(
+            session.wa_id,
+            f"{greeting} Please share your location to find shops near you.\n\nTap 📎 -> Location -> Send Current Location.")
 
     elif text in ['cart', 'checkout', 'basket']:
         send_cart_summary(session.wa_id, session)
@@ -65,7 +68,9 @@ def handle_text(text, session):  # noqa: C901
         if intent == "action_buy":
             entity = extract_entity(text, intent)
             if not entity:
-                send_text(session.wa_id, "What would you like to order? Type the product name.")
+                send_text(
+                    session.wa_id,
+                    "What would you like to order? Type the product name.")
                 return
 
             if session.current_shop:
@@ -75,18 +80,23 @@ def handle_text(text, session):  # noqa: C901
                     # Construct Custom List or Text for now
                     msg = f"🔍 *Found matching items for '{entity}':*\n\n"
                     for p in found_products:
-                        msg += f"• *{p['title']}* (R{p.get('price', '0')})\n"  # Price might need fetching
+                        # Price might need fetching
+                        msg += f"• *{p['title']}* (R{p.get('price', '0')})\n"
                     msg += "\nType exact name to view."
                     send_text(session.wa_id, msg)
                 else:
-                    send_text(session.wa_id, f"🚫 No products found for '{entity}' in this shop.")
+                    send_text(
+                        session.wa_id,
+                        f"🚫 No products found for '{entity}' in this shop.")
             else:
                 # Context: No Shop -> Search Global Shops (selling this item)
                 found_shops = search_global_shops(entity)
                 if found_shops:
                     send_shop_list(session.wa_id, found_shops)
                 else:
-                    send_text(session.wa_id, f"🚫 No shops found selling '{entity}'. Try sending your location.")
+                    send_text(
+                        session.wa_id,
+                        f"🚫 No shops found selling '{entity}'. Try sending your location.")
 
         elif intent == "action_find":
             entity = extract_entity(text, intent)
@@ -101,14 +111,20 @@ def handle_text(text, session):  # noqa: C901
 
         elif intent == "action_check_wallet":
             if session.linked_user:
-                balance = frappe.db.get_value("User", session.linked_user, "wallet_balance") or 0.0
-                send_text(session.wa_id, f"💰 *Wallet Balance*: {frappe.fmt_money(balance)}")
+                balance = frappe.db.get_value(
+                    "User", session.linked_user, "wallet_balance") or 0.0
+                send_text(session.wa_id,
+                          f"💰 *Wallet Balance*: {frappe.fmt_money(balance)}")
             else:
-                send_text(session.wa_id, "🔒 You need to link your account (by placing an order) to check your wallet.")
+                send_text(
+                    session.wa_id,
+                    "🔒 You need to link your account (by placing an order) to check your wallet.")
 
         elif intent == "action_track":
             if not session.linked_user:
-                send_text(session.wa_id, "🔒 Please link your account (by placing an order) to track shipments.")
+                send_text(
+                    session.wa_id,
+                    "🔒 Please link your account (by placing an order) to track shipments.")
                 return
 
             # Find active orders (Open, Confirmed, Preparing, On Delivery)
@@ -116,9 +132,12 @@ def handle_text(text, session):  # noqa: C901
             orders = frappe.get_all("Order",
                                     filters={
                                         "user": session.linked_user,
-                                        "order_status_id": ["not in", [5, 6, 7]]  # Assuming 5=Delivered, 6=Canceled... Checking status IDs later.
-                                        # actually let's just get last 1 order for now
-                                        },
+                                        # Assuming 5=Delivered, 6=Canceled...
+                                        # Checking status IDs later.
+                                        "order_status_id": ["not in", [5, 6, 7]]
+                                        # actually let's just get last 1 order
+                                        # for now
+                                    },
                                     order_by="creation desc",
                                     limit=1,
                                     fields=["name", "order_status_id", "total", "active"])
@@ -126,7 +145,8 @@ def handle_text(text, session):  # noqa: C901
             if orders:
                 order = orders[0]
                 # Fetch Status Name
-                status_name = frappe.db.get_value("Order Status", order.order_status_id, "title") or "Processing"
+                status_name = frappe.db.get_value(
+                    "Order Status", order.order_status_id, "title") or "Processing"
 
                 msg = f"📦 *Order #{order.name}*\n"
                 msg += f"📊 Status: *{status_name}*\n"
@@ -134,10 +154,14 @@ def handle_text(text, session):  # noqa: C901
                 msg += "We will notify you when it moves!"
                 send_text(session.wa_id, msg)
             else:
-                send_text(session.wa_id, "🤷‍♂️ You have no active orders to track.")
+                send_text(
+                    session.wa_id,
+                    "🤷‍♂️ You have no active orders to track.")
 
         elif intent == "misc_greeting":
             send_text(session.wa_id, "👋 Hello! Type 'Menu' to start.")
 
         else:
-            send_text(session.wa_id, "I didn't understand that. You can range shops, buy items, or view your cart.")
+            send_text(
+                session.wa_id,
+                "I didn't understand that. You can range shops, buy items, or view your cart.")

@@ -84,7 +84,9 @@ def delete_point(point_name):
     """
     _require_admin()
     frappe.delete_doc("Point", point_name, ignore_permissions=True)
-    return {"status": "success", "message": "Point record deleted successfully."}
+    return {
+        "status": "success",
+        "message": "Point record deleted successfully."}
 
 
 @frappe.whitelist()
@@ -157,7 +159,9 @@ def get_all_shop_tags(limit_start: int = 0, limit_page_length: int = 20):
 
 
 @frappe.whitelist()
-def get_all_product_extra_groups(limit_start: int = 0, limit_page_length: int = 20):
+def get_all_product_extra_groups(
+        limit_start: int = 0,
+        limit_page_length: int = 20):
     """
     Retrieves a list of all product extra groups on the platform (for admins).
     """
@@ -171,7 +175,9 @@ def get_all_product_extra_groups(limit_start: int = 0, limit_page_length: int = 
 
 
 @frappe.whitelist()
-def get_all_product_extra_values(limit_start: int = 0, limit_page_length: int = 20):
+def get_all_product_extra_values(
+        limit_start: int = 0,
+        limit_page_length: int = 20):
     """
     Retrieves a list of all product extra values on the platform (for admins).
     """
