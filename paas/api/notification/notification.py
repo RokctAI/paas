@@ -115,11 +115,11 @@ def get_notification_settings():
     for t in types:
         # Default to active if no preference set
         is_active = True
-        pref_id = None
+        pref_id = None  # noqa: F841
 
         if t.name in prefs_map:
             is_active = bool(prefs_map[t.name].active)
-            _pref_id = prefs_map[t.name].name
+            _pref_id = prefs_map[t.name].name  # noqa: F841
 
         result.append({
             "id": 0,  # Flutter expects int, send 0 or valid int if available (Doctype doesn't have int id by default)
