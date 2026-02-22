@@ -356,7 +356,7 @@ def get_shops_by_ids(shop_ids: list = None, **kwargs):
     """
     Retrieves shops by a list of IDs.
     """
-    _filters = {}
+    _filters = {}  # noqa: F841
     ids_to_filter = shop_ids
 
     # Handle possible JSON string or alternative kwarg
