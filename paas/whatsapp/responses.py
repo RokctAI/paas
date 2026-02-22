@@ -191,7 +191,7 @@ def send_product_card(wa_id, product):
                 {
                     "type": "reply",
                     "reply": {
-                        "id": f"back_cat",  # Simplified back
+                        "id": "back_cat",  # Simplified back
                         "title": "🔙 Back to Menu"
                     }
                 }
@@ -201,11 +201,7 @@ def send_product_card(wa_id, product):
 
     if image_url:
         payload = {
-            "type": "image",
-            "image": {"link": image_url},
-            "caption": caption,
-            "type": "interactive",  # Wait, type is interactive for image with buttons?
-            # Actually, for Image + Buttons, it is type="interactive", header={"type": "image", ...}
+            "type": "interactive",
             "interactive": {
                 "type": "button",
                 "header": {
