@@ -18,6 +18,11 @@ on:
       - '**.md'
   workflow_dispatch:
     inputs:
+      backfill_ai_notes_cutoff_version:
+        type: string
+        default: ""
+        description: "Regenerate AI release notes starting from this version (use 'all' for full history)"
+
       build-type:
         description: 'Build Type (apk/appbundle) - Ignored for Node'
         required: true
