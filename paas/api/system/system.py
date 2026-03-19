@@ -146,8 +146,9 @@ def get_global_settings():
             settings_data.append(
                 {"key": "google_maps_key", "value": global_settings.google_maps_api_key})
 
-        # Add default language (mock or fetch)
-        settings_data.append({"key": "default_language", "value": "en"})
+        # Add default language
+        lang = frappe.db.get_single_value("System Settings", "language") or "en"
+        settings_data.append({"key": "default_language", "value": lang})
 
         # Add default currency
         currency = frappe.db.get_value("Currency", {"enabled": 1}, "name")
@@ -155,8 +156,10 @@ def get_global_settings():
             settings_data.append(
                 {"key": "default_currency", "value": currency})
 
-        # Add distance unit (mock)
-        settings_data.append({"key": "distance_unit", "value": "km"})
+        # Add distance unit
+        # Check if defined in any relevant settings, otherwise default to km
+        distance_unit = frappe.db.get_single_value("System Settings", "distance_unit") or "km"
+        settings_data.append({"key": "distance_unit", "value": distance_unit})
 
     except Exception as e:
         frappe.log_error(f"Error fetching global settings: {e}")

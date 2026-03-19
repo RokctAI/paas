@@ -67,55 +67,68 @@ def get_payment_gateway(id: str):
 
 @frappe.whitelist()
 def initiate_flutterwave_payment(order_id: str):
+    return _initiate_flutterwave_logic("Order", order_id)
+
+
+@frappe.whitelist()
+def initiate_flutterwave_parcel_payment(order_id: str):
+    return _initiate_flutterwave_logic("Parcel Order", order_id)
+
+
+def _initiate_flutterwave_logic(doctype: str, docname: str):  # noqa: C901
     """
-    Initiates a payment with Flutterwave for a given order.
+    Internal logic for Flutterwave initiation across different doctypes.
     """
     user = frappe.session.user
     if user == "Guest":
         frappe.throw("You must be logged in to make a payment.")
 
     try:
-        order = frappe.get_doc("Order", order_id)
-        if order.owner != user:
+        doc = frappe.get_doc(doctype, docname)
+        # Check authorization - for Order it's 'user', for Parcel Order it's 'user'
+        if doc.user != user:
             frappe.throw(
-                "You are not authorized to pay for this order.",
+                "You are not authorized to pay for this document.",
                 frappe.PermissionError)
 
-        if order.payment_status == "Paid":
-            frappe.throw("This order has already been paid for.")
+        if doc.payment_status == "Paid":
+            frappe.throw("This document has already been paid for.")
 
         flutterwave_settings = frappe.get_doc("Flutterwave Settings")
         if not flutterwave_settings.enabled:
             frappe.throw("Flutterwave payments are not enabled.")
 
         # Prepare the request to Flutterwave
-        tx_ref = f"{order.name}-{frappe.utils.now_datetime().strftime('%Y%m%d%H%M%S')}"
+        tx_ref = f"{doc.name}-{frappe.utils.now_datetime().strftime('%Y%m%d%H%M%S')}"
 
         # Get customer details
-        customer = frappe.get_doc("User", user)
+        customer_email = frappe.db.get_value("User", user, "email")
+        customer_phone = frappe.db.get_value("User", user, "phone")
+        customer_full_name = frappe.db.get_value("User", user, "full_name")
+
+        # Handle potential grand_total vs total_price naming differences
+        amount = doc.get("grand_total") or doc.get("total_price") or 0
 
         payload = {
             "tx_ref": tx_ref,
-            "amount": order.grand_total,
-            "currency": frappe.db.get_single_value(
-                "System Settings",
-                "currency"),
-            "redirect_url": f"{
-                frappe.utils.get_url()}/api/method/paas.api.flutterwave_callback",
+            "amount": amount,
+            "currency": doc.get("currency") or frappe.db.get_single_value("System Settings", "currency"),
+            "redirect_url": f"{frappe.utils.get_url()}/api/method/paas.api.flutterwave_callback",
             "customer": {
-                "email": customer.email,
-                "phonenumber": customer.phone,
-                "name": customer.get_fullscreen(),
+                "email": customer_email,
+                "phonenumber": customer_phone,
+                "name": customer_full_name,
             },
             "customizations": {
-                "title": f"Payment for Order {
-                    order.name}",
-                "logo": frappe.get_website_settings("website_logo")}}
+                "title": f"Payment for {doctype} {doc.name}",
+                "logo": frappe.get_website_settings("website_logo")
+            }
+        }
 
         headers = {
-            "Authorization": f"Bearer {
-                flutterwave_settings.get_password('secret_key')}",
-            "Content-Type": "application/json"}
+            "Authorization": f"Bearer {flutterwave_settings.get_password('secret_key')}",
+            "Content-Type": "application/json"
+        }
 
         # Make the request to Flutterwave
         response = requests.post(
@@ -126,16 +139,14 @@ def initiate_flutterwave_payment(order_id: str):
         response_data = response.json()
 
         if response_data.get("status") == "success":
-            # Update the order with the transaction reference
-            order.custom_payment_transaction_id = tx_ref
-            order.save(ignore_permissions=True)
+            # Update the document with the transaction reference
+            doc.db_set("custom_payment_transaction_id", tx_ref)
             frappe.db.commit()
 
             return {"payment_url": response_data["data"]["link"]}
         else:
             frappe.log_error(
-                f"Flutterwave initiation failed: {
-                    response_data.get('message')}",
+                f"Flutterwave initiation failed: {response_data.get('message')}",
                 "Flutterwave Error")
             frappe.throw("Failed to initiate payment with Flutterwave.")
 
@@ -422,17 +433,24 @@ def handle_paypal_callback():
 
 @frappe.whitelist()
 def initiate_paypal_payment(order_id: str):
+    return _initiate_paypal_logic("Order", order_id)
+
+
+@frappe.whitelist()
+def initiate_paypal_parcel_payment(order_id: str):
+    return _initiate_paypal_logic("Parcel Order", order_id)
+
+
+def _initiate_paypal_logic(doctype: str, docname: str):
     """
-    Initiates a PayPal payment for a specific order.
+    Internal logic for PayPal initiation across different doctypes.
     """
-    order = frappe.get_doc("Order", order_id)
+    doc = frappe.get_doc(doctype, docname)
 
     paypal_settings_doc = frappe.get_doc("PaaS Payment Gateway", "PayPal")
     settings = {s.key: s.value for s in paypal_settings_doc.settings}
-    success_url = paypal_settings_doc.success_redirect_url or f"{
-        frappe.utils.get_url()}/api/method/paas.api.handle_paypal_callback"
-    failure_url = paypal_settings_doc.failure_redirect_url or f"{
-        frappe.utils.get_url()}/api/method/paas.api.handle_paypal_callback"
+    success_url = paypal_settings_doc.success_redirect_url or f"{frappe.utils.get_url()}/api/method/paas.api.handle_paypal_callback"
+    failure_url = paypal_settings_doc.failure_redirect_url or f"{frappe.utils.get_url()}/api/method/paas.api.handle_paypal_callback"
 
     auth_url = "https://api-m.sandbox.paypal.com/v1/oauth2/token" if settings.get(
         "paypal_mode") == "sandbox" else "https://api-m.paypal.com/v1/oauth2/token"
@@ -452,23 +470,22 @@ def initiate_paypal_payment(order_id: str):
     order_url = "https://api-m.sandbox.paypal.com/v2/checkout/orders" if settings.get(
         "paypal_mode") == "sandbox" else "https://api-m.paypal.com/v2/checkout/orders"
 
+    amount = doc.get("total_price") or doc.get("grand_total") or 0
+    currency = doc.get("currency") or "USD"
+
     order_payload = {
         "intent": "CAPTURE",
         "purchase_units": [
             {
                 "amount": {
-                    "currency_code": order.currency,
-                    "value": str(order.total_price)
+                    "currency_code": currency,
+                    "value": str(amount)
                 }
             }
         ],
-        "payment_source": {
-            "paypal": {
-                "experience_context": {
-                    "return_url": success_url,
-                    "cancel_url": failure_url
-                }
-            }
+        "experience_context": {
+            "return_url": success_url,
+            "cancel_url": failure_url
         }
     }
 
@@ -485,10 +502,10 @@ def initiate_paypal_payment(order_id: str):
 
     frappe.get_doc({
         "doctype": "Transaction",
-        "payable_type": "Order",
-        "payable_id": order.name,
+        "payable_type": doctype,
+        "payable_id": doc.name,
         "payment_reference": paypal_order["id"],
-        "amount": order.total_price,
+        "amount": amount,
         "status": "Pending"
     }).insert(ignore_permissions=True)
 
@@ -504,10 +521,19 @@ def initiate_paypal_payment(order_id: str):
 
 @frappe.whitelist()
 def initiate_paystack_payment(order_id: str):
+    return _initiate_paystack_logic("Order", order_id)
+
+
+@frappe.whitelist()
+def initiate_paystack_parcel_payment(order_id: str):
+    return _initiate_paystack_logic("Parcel Order", order_id)
+
+
+def _initiate_paystack_logic(doctype: str, docname: str):
     """
-    Initiates a PayStack payment for a specific order.
+    Internal logic for PayStack initiation across different doctypes.
     """
-    order = frappe.get_doc("Order", order_id)
+    doc = frappe.get_doc(doctype, docname)
 
     paystack_settings = frappe.get_doc("PaaS Payment Gateway", "PayStack")
     settings = {s.key: s.value for s in paystack_settings.settings}
@@ -517,12 +543,14 @@ def initiate_paystack_payment(order_id: str):
         "Content-Type": "application/json"
     }
 
+    amount = doc.get("total_price") or doc.get("grand_total") or 0
+
     body = {
         "email": frappe.session.user,
-        "amount": order.total_price * 100,
-        "currency": order.currency,
-        "callback_url": f"{
-            frappe.utils.get_url()}/api/method/paas.api.handle_paystack_callback"}
+        "amount": int(amount * 100),
+        "currency": doc.get("currency") or "ZAR",
+        "callback_url": f"{frappe.utils.get_url()}/api/method/paas.api.handle_paystack_callback"
+    }
 
     response = requests.post(
         "https://api.paystack.co/transaction/initialize",
@@ -534,10 +562,10 @@ def initiate_paystack_payment(order_id: str):
     # Create a new transaction
     frappe.get_doc({
         "doctype": "Transaction",
-        "payable_type": "Order",
-        "payable_id": order.name,
+        "payable_type": doctype,
+        "payable_id": doc.name,
         "payment_reference": paystack_data["data"]["reference"],
-        "amount": order.total_price,
+        "amount": amount,
         "status": "Pending"
     }).insert(ignore_permissions=True)
 

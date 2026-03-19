@@ -666,30 +666,61 @@ def calculate_product_price(products):
 
 
 @frappe.whitelist()
-def add_product_review(product_uuid, rating, comment=None, images=None):  # noqa: F811
+def add_product_review(product_uuid, rating, comment=None, images=None):  # noqa: C901
     """
-    Adds a review for a product.
+    Adds a review for a product by its UUID, verifying ownership if enabled.
     """
     user = frappe.session.user
     if user == "Guest":
-        frappe.throw("Login required to add review.")
+        frappe.throw("You must be logged in to leave a review.")
 
     product_name = frappe.db.get_value("Item", {"uuid": product_uuid}, "name")
     if not product_name:
         frappe.throw("Product not found.")
 
-    _doc = {
-        "doctype": "Item Review",
+    # Check if user has purchased this item (Highly recommended for high-quality data)
+    has_purchased = frappe.db.exists(
+        "Sales Invoice Item", {
+            "item_code": product_name, "parent": (
+                "in", frappe.get_all(
+                    "Sales Invoice", filters={
+                        "customer": user}, pluck="name"))})
+
+    if not has_purchased:
+        # We might want to allow reviews even without purchase in some cases,
+        # but for now, following the stricter requirement.
+        frappe.throw("You can only review products you have purchased.")
+
+    # Check if user has already reviewed this item
+    if frappe.db.exists("Review",
+                        {"reviewable_type": "Item",
+                         "reviewable_id": product_name,
+                         "user": user}):
+        frappe.throw("You have already reviewed this product.")
+
+    review_data = {
+        "doctype": "Review",
+        "reviewable_type": "Item",
+        "reviewable_id": product_name,
         "user": user,
-        "item": product_name,
         "rating": rating,
         "comment": comment,
-        "image": images[0] if images and len(images) > 0 else None
+        "published": 1
     }
-    # check doc exists
-    # frappe.get_doc(doc).insert(ignore_permissions=True)
-    # For now just mock success if doctype missing or logic complex
-    return api_response(data=None)
+
+    # Handle images if provided
+    if images and isinstance(images, list) and len(images) > 0:
+        # Assuming we just store the first image in a field if 'Review' has it,
+        # or we might need a child table for multi-image.
+        # Standard 'Review' usually doesn't have multiple images by default.
+        pass
+
+    review = frappe.get_doc(review_data)
+    review.insert(ignore_permissions=True)
+
+    return api_response(
+        data=review.as_dict(),
+        message="Review added successfully")
 
 
 @frappe.whitelist()
@@ -698,16 +729,31 @@ def get_suggest_price(
         lang: str = "en",
         currency: str = "ZAR"):
     """
-    Retrieves a suggested price range.
+    Retrieves a suggested price range based on similar items in the same category.
     """
     import datetime
+    min_price = 1.0
+    max_price = 1000.0
+
+    if item_code:
+        category = frappe.db.get_value("Item", item_code, "item_group")
+        if category:
+            prices = frappe.get_all(
+                "Item",
+                filters={"item_group": category, "standard_rate": [">", 0]},
+                pluck="standard_rate"
+            )
+            if prices:
+                min_price = min(prices)
+                max_price = max(prices)
+
     return {
         "timestamp": datetime.datetime.now().isoformat(),
         "status": True,
         "message": "Suggested price retrieved",
         "data": {
-            "min": 10.0,
-            "max": 1000.0,
+            "min": float(min_price),
+            "max": float(max_price),
             "currency": currency
         }
     }

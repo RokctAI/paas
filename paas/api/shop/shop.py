@@ -52,10 +52,14 @@ def get_shops(
         limit_page_length: int = 20,
         order_by: str = "name",
         order: str = "desc",
+        latitude: float = None,
+        longitude: float = None,
         **kwargs):
     """
-    Retrieves a list of shops with pagination and filters.
+    Retrieves a list of shops with pagination and filters. Supports geo-sorting.
     """
+    from paas.api.utils import haversine
+    import json
 
     filters = {
         "status": "approved",
@@ -69,37 +73,53 @@ def get_shops(
     if kwargs.get("takeaway"):
         filters["pickup"] = 1
 
-    shops = frappe.get_list(
+    # If we are sorting by distance, we might need to fetch more items or all items
+    # and then paginate in Python. For simplicity, we'll fetch all matching and then slice.
+    # For a few hundred shops, this is fine.
+    # Note: Using get_all for potential performance if many shops.
+    shops = frappe.get_all(
         "Shop",
         filters=filters,
         fields=[
-            "name",
-            "uuid",
-            "slug",
-            "user",
-            "logo",
-            "cover_photo",
-            "phone",
-            "address",
-            "location",
-            "status",
-            "type",
-            "min_amount",
-            "tax",
-            "delivery_time_type",
-            "delivery_time_from",
-            "delivery_time_to",
-            "open",
-            "visibility",
-            "verify",
-            "service_fee",
-            "percentage",
-            "enable_cod",
-            "shop_type",
-            "is_ecommerce"],
-        offset=limit_start,
-        limit=limit_page_length,
-        order_by=f"{order_by} {order}")
+            "name", "uuid", "slug", "user", "logo", "cover_photo", "phone",
+            "address", "location", "status", "type", "min_amount", "tax",
+            "delivery_time_type", "delivery_time_from", "delivery_time_to",
+            "open", "visibility", "verify", "service_fee", "percentage",
+            "enable_cod", "shop_type", "is_ecommerce"
+        ]
+    )
+
+    # Calculate distance if coordinates provided
+    if latitude and longitude:
+        for shop in shops:
+            loc = shop.get("location")
+            if isinstance(loc, str) and loc:
+                try:
+                    loc_data = json.loads(loc)
+                    s_lat = loc_data.get("latitude") or loc_data.get("lat")
+                    s_lon = loc_data.get("longitude") or loc_data.get("long")
+                    if s_lat and s_lon:
+                        shop["distance"] = haversine(
+                            float(latitude), float(longitude),
+                            float(s_lat), float(s_lon)
+                        )
+                    else:
+                        shop["distance"] = 99999.0
+                except (ValueError, json.JSONDecodeError):
+                    shop["distance"] = 99999.0
+            else:
+                shop["distance"] = 99999.0
+
+    # Sort
+    if order_by == "distance" and latitude and longitude:
+        shops.sort(key=lambda x: x.get("distance", 99999.0))
+    else:
+        # Standard sorting
+        rev = True if order.lower() == "desc" else False
+        shops.sort(key=lambda x: str(x.get(order_by or "name")).lower(), reverse=rev)
+
+    # Paginate
+    shops_slice = shops[limit_start: limit_start + limit_page_length]
 
     # Global COD Check
     cash_gateway = frappe.db.get_value(
@@ -109,10 +129,10 @@ def get_shops(
 
     # Replicating the structure of the legacy ShopResource
     formatted_shops = []
-    for shop in shops:
+    for shop in shops_slice:
         # Hierarchical COD: Global AND Shop
         is_cod = is_global_cod_enabled and (
-            shop.enable_cod if shop.enable_cod is not None else 1)
+            shop.enable_cod if shop.get('enable_cod') is not None else 1)
 
         formatted_shops.append({
             'id': shop.name,
@@ -131,15 +151,18 @@ def get_shops(
             'min_amount': shop.min_amount,
             'status': shop.status,
             'enable_cod': bool(is_cod),
-            'type': shop.shop_type or shop.type,  # Map new shop_type to legacy type field
+            'type': shop.shop_type or shop.get('type'),
             'shop_type': shop.shop_type,
             'is_ecommerce': bool(shop.is_ecommerce),
+            'distance': shop.get("distance"),
             'delivery_time': {
                 'type': shop.delivery_time_type,
                 'from': shop.delivery_time_from,
                 'to': shop.delivery_time_to
             },
             'location': shop.location,
+            'working_hours': frappe.get_all("Shop Booking Working Day", filters={"parent": shop.name}, fields=["day", "opening_time", "closing_time"]),
+            'closed_dates': frappe.get_all("Shop Booking Closed Date", filters={"parent": shop.name}, fields=["date", "reason"]),
             'translation': {
                 'title': shop.name,
                 'address': shop.address
@@ -147,6 +170,7 @@ def get_shops(
         })
 
     return api_response(data=formatted_shops)
+
 
 
 @frappe.whitelist(allow_guest=True)
@@ -199,6 +223,8 @@ def get_shop_details(uuid: str):
             'to': shop.delivery_time_to
         },
         'location': shop.location,
+        'working_hours': [d.as_dict() for d in shop.booking_working_days],
+        'closed_dates': [d.as_dict() for d in shop.booking_closed_dates],
         'translation': {
             'title': shop.name,
             'address': shop.address

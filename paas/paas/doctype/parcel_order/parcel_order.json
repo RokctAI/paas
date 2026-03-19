@@ -144,6 +144,12 @@
             "fieldtype": "Table",
             "label": "Items",
             "options": "Parcel Order Item"
+        },
+        {
+            "fieldname": "offline_uuid",
+            "fieldtype": "Data",
+            "label": "Offline UUID",
+            "unique": 1
         }
     ]
 }

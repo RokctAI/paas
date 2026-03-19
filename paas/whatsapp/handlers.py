@@ -62,18 +62,22 @@ def handle_interactive(reply, session):
 
         if item_id.startswith("shop_"):
             shop_uuid = item_id.split("_")[1]
-            session.current_shop = frappe.db.get_value(
-                "Shop", {"uuid": shop_uuid}, "name")
+            shop_name = frappe.db.get_value("Shop", {"uuid": shop_uuid}, "name")
+            session.current_shop = shop_name
             session.save(ignore_permissions=True)
-            # Fetch Categories for this shop
-            # Using paas.api... logic? Or just generic category fetch?
-            # Assuming Categories are linked to Shop or Global?
-            # Ideally fetch categories that have items in this shop.
-            # detailed implementation needed here, for now mocking global
-            # categories or top categories
+
+            # Fetch Categories that actually have items in this shop
+            category_names = frappe.get_all(
+                "Item",
+                filters={"shop": shop_name, "disabled": 0},
+                pluck="item_group",
+                distinct=True
+            )
             categories = frappe.get_list(
-                "Category", fields=[
-                    "name", "uuid"])  # Filter by shop later
+                "Category",
+                filters={"name": ["in", category_names]},
+                fields=["name", "uuid"]
+            )
             send_category_list(session.wa_id, categories, shop_uuid)
 
         elif item_id.startswith("cat_"):
@@ -101,12 +105,14 @@ def handle_interactive(reply, session):
             config = get_whatsapp_config()
 
             if config.is_multi_vendor:
-                # Geo Search
-                # Mocking logic: Fetch all shops for now or use geodistance
-                # paas.api.shop.shop.get_shops doesn't native support lat/long sorting yet in the snippet I saw?
-                # We can implement a simple Haversine here or in utils.
-                # Default to all approved
-                shops = get_shops(limit_page_length=10)
+                # Geo Search using session location
+                loc = json.loads(session.location) if session.location else {}
+                shops = get_shops(
+                    limit_page_length=10,
+                    latitude=loc.get("lat"),
+                    longitude=loc.get("long"),
+                    order_by="distance"
+                )
                 send_shop_list(session.wa_id, shops)
             else:
                 # Single Vendor -> Go to Default Shop

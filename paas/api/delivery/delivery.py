@@ -86,5 +86,39 @@ def get_driver_location(driver_id: str):
     """
     Retrieves the current location of a driver.
     """
-    # Mock response or fetch from Redis/Driver Doc
-    return {"latitude": 0.0, "longitude": 0.0}
+    location = frappe.db.get_value(
+        "Driver Location",
+        {"driver": driver_id},
+        ["latitude", "longitude"],
+        order_by="creation desc",
+        as_dict=True
+    )
+
+    if not location:
+        return {"latitude": 0.0, "longitude": 0.0}
+
+    return location
+
+
+@frappe.whitelist()
+def update_driver_location(latitude, longitude, order_id=None, parcel_order_id=None):
+    """
+    Endpoint for the Driver App to send real-time coordinates.
+    """
+    user = frappe.session.user
+    if user == "Guest":
+        frappe.throw("Authentication required to update location.")
+
+    frappe.get_doc({
+        "doctype": "Driver Location",
+        "driver": user,
+        "latitude": float(latitude),
+        "longitude": float(longitude),
+        "order": order_id,
+        "parcel_order": parcel_order_id
+    }).insert(ignore_permissions=True)
+
+    # Optional: Log to database commit
+    frappe.db.commit()
+
+    return {"status": "success", "message": "Location updated."}

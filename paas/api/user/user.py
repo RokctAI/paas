@@ -572,9 +572,57 @@ def send_wallet_balance(
     if recipient == sender:
         frappe.throw("You cannot send money to yourself.")
 
-    # Logic to transfer funds (Mock implementation if Wallet logic is complex/hidden)
-    # Ideally calls a Wallet service
-    # wallet_service.transfer(sender, recipient, amount, message)
+    # Ensure sender has a wallet
+    sender_wallet_name = frappe.db.get_value("Wallet", {"user": sender}, "name")
+    if not sender_wallet_name:
+        frappe.throw("You do not have a wallet.")
+
+    sender_wallet = frappe.get_doc("Wallet", sender_wallet_name)
+
+    # Check balance
+    amount_val = float(amount)
+    if sender_wallet.balance < amount_val:
+        frappe.throw("Insufficient balance.")
+
+    # Ensure recipient has a wallet (get or create)
+    recipient_wallet_name = frappe.db.get_value(
+        "Wallet", {"user": recipient}, "name")
+    if not recipient_wallet_name:
+        recipient_wallet = frappe.get_doc({
+            "doctype": "Wallet",
+            "user": recipient,
+            "balance": 0
+        }).insert(ignore_permissions=True)
+        recipient_wallet_name = recipient_wallet.name
+    else:
+        recipient_wallet = frappe.get_doc("Wallet", recipient_wallet_name)
+
+    # Atomic Transfer
+    sender_wallet.balance -= amount_val
+    recipient_wallet.balance += amount_val
+
+    sender_wallet.save(ignore_permissions=True)
+    recipient_wallet.save(ignore_permissions=True)
+
+    # Log History – Sender
+    frappe.get_doc({
+        "doctype": "Wallet History",
+        "wallet": sender_wallet_name,
+        "transaction_type": "Withdraw",
+        "amount": amount_val,
+        "status": "Processed",
+        "description": f"Transfer to {recipient}"
+    }).insert(ignore_permissions=True)
+
+    # Log History – Recipient
+    frappe.get_doc({
+        "doctype": "Wallet History",
+        "wallet": recipient_wallet_name,
+        "transaction_type": "Topup",
+        "amount": amount_val,
+        "status": "Processed",
+        "description": f"Transfer from {sender}"
+    }).insert(ignore_permissions=True)
 
     return {"status": "success", "message": "Funds transferred successfully."}
 

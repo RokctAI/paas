@@ -18,6 +18,16 @@ def create_parcel_order(order_data):  # noqa: C901
             "You must be logged in to create a parcel order.",
             frappe.AuthenticationError)
 
+    # 1. Idempotency Check (Offline UUID)
+    offline_uuid = order_data.get("offline_uuid")
+    if offline_uuid:
+        existing_order = frappe.db.exists(
+            "Parcel Order", {"offline_uuid": offline_uuid})
+        if existing_order:
+            return api_response(
+                data=frappe.get_doc("Parcel Order", existing_order).as_dict(),
+                message="Duplicate order detected. Returning existing order.")
+
     # Get Permission Settings for auto-approval
     paas_settings = frappe.get_single("Permission Settings")
     initial_status = "Accepted" if paas_settings.auto_approve_parcel_orders else "New"
@@ -43,6 +53,7 @@ def create_parcel_order(order_data):  # noqa: C901
         # Default address values, can be overwritten by destination logic
         "address_from": json.dumps(order_data.get("address_from")),
         "address_to": json.dumps(order_data.get("address_to")),
+        "offline_uuid": offline_uuid,
     }
 
     # Handle different destination types
@@ -237,32 +248,60 @@ def update_parcel_status(parcel_order_id, status):  # noqa: C901
 @frappe.whitelist(allow_guest=True)
 def get_types():
     """
-    Retrieves all available Parcel Types.
+    Retrieves all available Parcel Types (Parcel Order Settings).
     """
     types = frappe.get_all(
-        "Parcel Type",
+        "Parcel Order Setting",
         fields=[
             "name",
             "type",
-            "min_weight",
-            "max_weight",
-            "min_price",
-            "max_price"],
+            "img",
+            "price",
+            "price_per_km"
+        ],
         order_by="name asc")
     return api_response(data=types)
+
+
+def haversine(lat1, lon1, lat2, lon2):
+    from paas.api.utils import haversine as _haversine
+    return _haversine(lat1, lon1, lat2, lon2)
 
 
 @frappe.whitelist(allow_guest=True)
 def calculate_price(type_id, address_from, address_to):
     """
-    Calculates the delivery price based on distance and parcel type.
+    Calculates the delivery price based on distance and parcel type settings.
     address_from/to: JSON strings or dicts with latitude/longitude.
     """
+    if isinstance(address_from, str):
+        address_from = json.loads(address_from)
+    if isinstance(address_to, str):
+        address_to = json.loads(address_to)
+
+    try:
+        lat1 = float(address_from.get("latitude") or address_from.get("lat"))
+        lon1 = float(address_from.get("longitude") or address_from.get("long"))
+        lat2 = float(address_to.get("latitude") or address_to.get("lat"))
+        lon2 = float(address_to.get("longitude") or address_to.get("long"))
+    except (ValueError, TypeError, AttributeError):
+        # Fallback if coordinates missing or invalid
+        return api_response(data={"price": 0, "km": 0, "status": "error", "message": "Invalid coordinates"})
+
+    km = haversine(lat1, lon1, lat2, lon2)
+
+    # Fetch rates from Parcel Order Setting
+    setting = frappe.get_doc("Parcel Order Setting", type_id)
+    base_price = float(setting.price or 0)
+    per_km = float(setting.price_per_km or 0)
+
+    total_price = base_price + (km * per_km)
+
     return api_response(data={
-        "price": 50.0,  # Mock price
-        "delivery_fee": 10.0,
-        "km": 5.2,
-        "time": "15-20 min"
+        "price": round(total_price, 2),
+        "delivery_fee": round(km * per_km, 2),
+        "km": round(km, 2),
+        "time": f"{max(15, int(km * 3))}-{max(20, int(km * 4))} min"
     })
 
 
