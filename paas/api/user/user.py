@@ -573,7 +573,8 @@ def send_wallet_balance(
         frappe.throw("You cannot send money to yourself.")
 
     # Ensure sender has a wallet
-    sender_wallet_name = frappe.db.get_value("Wallet", {"user": sender}, "name")
+    sender_wallet_name = frappe.db.get_value(
+        "Wallet", {"user": sender}, "name")
     if not sender_wallet_name:
         frappe.throw("You do not have a wallet.")
 
