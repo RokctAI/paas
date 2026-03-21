@@ -268,3 +268,9 @@ def update_seller_deliveryman_settings(settings_data):
     settings.update(settings_data)
     settings.save(ignore_permissions=True)
     return settings.as_dict()
+
+# --- ALIASES FOR FLUTTER ENDPOINTS ---
+
+@frappe.whitelist()
+def update_shop_working_days(working_days_data=None):
+    return update_seller_shop_working_days(working_days_data)

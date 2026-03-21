@@ -100,3 +100,9 @@ def set_working_status(status):
     shop.save(ignore_permissions=True)
 
     return shop.open
+
+# --- ALIASES FOR FLUTTER ENDPOINTS ---
+
+@frappe.whitelist()
+def set_shop_working_status(status=None):
+    return set_working_status(status)
