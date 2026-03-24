@@ -143,7 +143,8 @@ def _initiate_flutterwave_logic(doctype: str, docname: str):  # noqa: C901
 
         if response_data.get("status") == "success":
             # Update the document with the transaction reference
-            doc.db_set("custom_payment_transaction_id", tx_ref)
+            doc.custom_payment_transaction_id = tx_ref
+            doc.save(ignore_permissions=True)
             frappe.db.commit()
 
             return {"payment_url": response_data["data"]["link"]}
