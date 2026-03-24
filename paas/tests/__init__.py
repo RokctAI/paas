@@ -33,7 +33,8 @@ if 'frappe' not in sys.modules:
         m.__spec__ = MagicMock()
         sys.modules[mod] = m
 
-    # Mock core attributes/functions frequently used at top level or during class definition
+    # Mock core attributes/functions frequently used at top level or during
+    # class definition
     mock_frappe._ = lambda x: x
     mock_frappe.whitelist = lambda *args, **kwargs: (lambda f: f)
 
@@ -42,7 +43,13 @@ if 'frappe' not in sys.modules:
         @classmethod
         def setUpClass(cls):
             # Check if frappe is mocked
-            if 'frappe' in sys.modules and (isinstance(sys.modules['frappe'], MagicMock) or getattr(sys.modules['frappe'], '_is_mock', False)):
+            if 'frappe' in sys.modules and (
+                isinstance(
+                    sys.modules['frappe'],
+                    MagicMock) or getattr(
+                    sys.modules['frappe'],
+                    '_is_mock',
+                    False)):
                 raise unittest.SkipTest(
                     "Skipping Frappe test in mocked environment")
             if hasattr(super(), 'setUpClass'):
@@ -76,12 +83,16 @@ for dep in missing_deps:
 # Special handling for cryptography as it's often imported deeply
 if 'cryptography' not in sys.modules:
     for crypto_sub in [
-        'cryptography', 'cryptography.hazmat', 'cryptography.hazmat.primitives',
-        'cryptography.hazmat.primitives.asymmetric', 'cryptography.hazmat.primitives.ciphers',
-        'cryptography.hazmat.primitives.ciphers.algorithms', 'cryptography.hazmat.primitives.ciphers.modes',
-        'cryptography.hazmat.primitives.kdf', 'cryptography.hazmat.primitives.kdf.pbkdf2',
-        'cryptography.hazmat.backends'
-    ]:
+        'cryptography',
+        'cryptography.hazmat',
+        'cryptography.hazmat.primitives',
+        'cryptography.hazmat.primitives.asymmetric',
+        'cryptography.hazmat.primitives.ciphers',
+        'cryptography.hazmat.primitives.ciphers.algorithms',
+        'cryptography.hazmat.primitives.ciphers.modes',
+        'cryptography.hazmat.primitives.kdf',
+        'cryptography.hazmat.primitives.kdf.pbkdf2',
+            'cryptography.hazmat.backends']:
         if crypto_sub not in sys.modules:
             m = MagicMock()
             m.__path__ = []
