@@ -458,6 +458,8 @@ def register_user(password, first_name, last_name, email=None, phone=None):
     if phone:
         frappe.cache.set_value(f"phone_otp:{phone}", otp, expires_in_sec=600)
 
+    # Store token in user doc for verification fallback/tests
+    user.email_verification_token = otp
     user.insert(ignore_permissions=True)
 
     # Deliver OTP based on registration type

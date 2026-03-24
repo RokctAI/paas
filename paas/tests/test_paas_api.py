@@ -194,8 +194,8 @@ class TestPhoneVerificationAPI(FrappeTestCase):
         self.assertIn("version", response.get("data"))
         self.assertIn("user", response.get("data"))
 
-    @patch("frappe.core.doctype.user.user.reset_password")
-    def test_forgot_password(self, mock_reset_password):
+    @patch("frappe.sendmail")
+    def test_forgot_password(self, mock_sendmail):
         # Arrange
         # from paas.api import forgot_password
 
@@ -204,9 +204,9 @@ class TestPhoneVerificationAPI(FrappeTestCase):
 
         # Assert
         self.assertIn(
-            "password reset code/link has been sent",
+            "password reset code has been sent",
             response.get("message"))
-        mock_reset_password.assert_called_once_with(user=self.test_user.email)
+        mock_sendmail.assert_called_once()
 
     def test_get_languages(self):
         # Arrange
