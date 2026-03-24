@@ -102,7 +102,7 @@ def create_order(order_data):
         current_price = frappe.db.get_value(
             "Product", product_id, "price") or 0
         cost_price = frappe.db.get_value(
-            "Product", product_id, "cost_price") or 0
+            "Product", product_id, "cost") or 0
 
         order.append("order_items", {
             "product": product_id,
