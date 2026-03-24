@@ -181,7 +181,7 @@ def get_shops(
                     "Shop Booking Closed Date",
                     filters={
                         "parent": shop.name},
-                        "date"]),
+                    fields=["date"]),
                 'translation': {
                     'title': shop.name,
                     'address': shop.address}})
