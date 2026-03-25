@@ -2,12 +2,12 @@
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)  
 [![Frappe Framework](https://img.shields.io/badge/Frappe‑v15-orange)](https://frappeframework.com)  
-[![Latest Version](https://img.shields.io/github/v/release/rokctAI/paas?label=Stable%20Version)](https://github.com/rokctAI/paas/releases)  
-[![Build Status](https://github.com/rokctAI/paas/actions/workflows/auto_release.yml/badge.svg)](https://github.com/rokctAI/paas/actions)
+[![Latest Version](https://img.shields.io/github/v/release/RokctAI/rPaaS?label=Stable%20Version)](https://github.com/RokctAI/rPaaS/releases)
+[![Build Status](https://github.com/RokctAI/rPaaS/actions/workflows/auto_release.yml/badge.svg)](https://github.com/RokctAI/rPaaS/actions)
 
 ## 📖 Overview
 
-**PaaS** is a lightweight, open‑source Frappe app that adds a platform‑as‑a‑service layer. It enables self‑service provisioning of tenant sites based on subscription plans while remaining fully functional when used on its own.
+**rPaaS** is a lightweight, open‑source Frappe app that adds a platform‑as‑a‑service layer. It enables self‑service provisioning of tenant sites based on subscription plans while remaining fully functional when used on its own.
 
 - **Standalone mode** – works without any external dependencies, providing dummy data where needed.
 - **Enhanced mode** – automatically runs sensitive seeders when the optional components are present.
@@ -37,26 +37,18 @@
 
 ## 📦 Installation
 
+Developers should use this version of bench: [https://github.com/Frappinize/bench](https://github.com/Frappinize/bench) branch `rokct`.
+
 ```bash
 # From your bench directory
-bench get-app https://github.com/rokctAI/paas.git
+bench get-app https://github.com/RokctAI/rPaaS.git --app-name paas
 bench --site <your-site> install-app paas
-bench --site <your-site> migrate
-```
-
-### Optional: Install optional helpers
-
-If you have the optional helper package installed, the seeders will run automatically after installation.
-
-```bash
-bench get-app https://github.com/rokctAI/optional-helpers.git
-bench --site <your-site> install-app optional-helpers
 bench --site <your-site> migrate
 ```
 
 ## ⚙️ Configuration
 
-Settings are available under **PaaS Settings** in the UI or can be overridden in `site_config.json`:
+Settings are available under **rPaaS Settings** in the UI or can be overridden in `site_config.json`:
 
 ```json
 {
@@ -100,7 +92,7 @@ AGPLv3 © Rokct Holdings. See the [LICENSE](LICENSE) file for details.
 
 - **Standalone** – works out‑of‑the‑box.
 - **Enhanced** – runs seeders when optional helpers are present.
-- **Clear separation** – all core logic lives inside the PaaS app.
+- **Clear separation** – all core logic lives inside the rPaaS app.
 
 Enjoy building on a lean, flexible platform!
 
@@ -122,7 +114,7 @@ paas/paas/builder/source_code/
 ```
 
 ### Auto-Fetch (Control App)
-If the Control app is installed, PaaS will automatically request it to fetch the latest sources during installation via:
+If the Control app is installed, rPaaS will automatically request it to fetch the latest sources during installation via:
 `control.control.api.fetch_paas_sources()`
 
 ### Manual Setup
